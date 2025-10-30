@@ -1,0 +1,20 @@
+﻿bookstore_Management
+
+
+winexe
+C#
+.cs
+D:\hk3\lttq\ĐỒ ÁN CK\bookstore_Management\bookstore_Management\obj\Debug\
+bookstore_Management
+none
+false
+DEBUG;TRACE
+D:\hk3\lttq\ĐỒ ÁN CK\bookstore_Management\bookstore_Management\App.xaml
+17708687104
+1-600760770
+64-1292651904
+13-1310406943
+MainWindow.xaml;Resources\Styles\ButtonStyles.xaml;Resources\Styles\Colors.xaml;Resources\Styles\DataGridStyles.xaml;Resources\Styles\TextBoxStyles.xaml;Views\Books\BookDetailView.xaml;Views\Books\BookListView.xaml;Views\Customers\CustomerDetailView.xaml;Views\Customers\CustomerListView.xaml;Views\Dialogs\ConfirmDialog.xaml;Views\Dialogs\MessageDialog.xaml;Views\MainWindow.xaml;Views\Orders\CreateOrderView.xaml;Views\Orders\OrderDetailView.xaml;Views\Orders\OrderListView.xaml;Views\Statistics\DashboardView.xaml;Views\Statistics\ReportView.xaml;
+
+False
+
