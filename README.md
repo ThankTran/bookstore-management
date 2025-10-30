@@ -12,5 +12,6 @@ Cách 2: Dùng ternminal
 
 # 2. Chuyển sang branch cần thực hiện
 Bước 1: Nhấn "Ctr + ~"
+
 Bước 2: git checkout "tên nhánh"
 VD: git checkout AiMy_UI_features
