@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\hk3\lttq\ĐỒ ÁN CK\bookstore_Management\bookstore_Management\obj\Debug\
+D:\hk3\lttq\DO AN CK\bookstore_Management\bookstore_Management\obj\Debug\
 bookstore_Management
 none
 false
 DEBUG;TRACE
-D:\hk3\lttq\ĐỒ ÁN CK\bookstore_Management\bookstore_Management\App.xaml
-17708687104
+D:\hk3\lttq\DO AN CK\bookstore_Management\bookstore_Management\App.xaml
+281580720799
 1-600760770
-64-1292651904
+103-1237088208
 13-1310406943
-MainWindow.xaml;Resources\Styles\ButtonStyles.xaml;Resources\Styles\Colors.xaml;Resources\Styles\DataGridStyles.xaml;Resources\Styles\TextBoxStyles.xaml;Views\Books\BookDetailView.xaml;Views\Books\BookListView.xaml;Views\Customers\CustomerDetailView.xaml;Views\Customers\CustomerListView.xaml;Views\Dialogs\ConfirmDialog.xaml;Views\Dialogs\MessageDialog.xaml;Views\MainWindow.xaml;Views\Orders\CreateOrderView.xaml;Views\Orders\OrderDetailView.xaml;Views\Orders\OrderListView.xaml;Views\Statistics\DashboardView.xaml;Views\Statistics\ReportView.xaml;
+MainWindow.xaml;Presentation\Resources\Styles\ButtonStyles.xaml;Presentation\Resources\Styles\CardStyles.xaml;Presentation\Resources\Styles\Colors.xaml;Presentation\Resources\Styles\DataGridStyles.xaml;Presentation\Resources\Styles\TextBoxStyles.xaml;Presentation\Views\Books\BookDetailView.xaml;Presentation\Views\Books\BookListView.xaml;Presentation\Views\Customers\CustomerDetailView.xaml;Presentation\Views\Customers\CustomerListView.xaml;Presentation\Views\Dialogs\ConfirmDialog.xaml;Presentation\Views\Dialogs\InputDialog.xaml;Presentation\Views\Dialogs\MessageDialog.xaml;Presentation\Views\Inventory\ImportBooksView.xaml;Presentation\Views\Inventory\StockView.xaml;Presentation\Views\MainWindow.xaml;Presentation\Views\Orders\CreateOrderView.xaml;Presentation\Views\Orders\InvoiceView.xaml;Presentation\Views\Orders\OrderDetailView.xaml;Presentation\Views\Orders\OrderListView.xaml;Presentation\Views\Statistics\ChartView.xaml;Presentation\Views\Statistics\DashboardView.xaml;Presentation\Views\Statistics\ReportView.xaml;Presentation\Views\Suppliers\SupplierDetailView.xaml;Presentation\Views\Suppliers\SupplierListView.xaml;Presentation\Views\Users\LoginView.xaml;Presentation\Views\Users\RoleManagementView.xaml;Presentation\Views\Users\UserListView.xaml;
 
-False
+True
 
