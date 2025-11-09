@@ -16,3 +16,16 @@ Bước 1: Nhấn "Ctr + ~"
 Bước 2: git checkout "tên nhánh"
 
 VD: git checkout AiMy_UI_features
+
+# 3. Update code mới nhất từ branch main
+Bước 1: Nhấn "Ctr + ~"
+
+Bước 2: git checkout main
+
+Bước 3: git pull origin main
+
+Bước 4: git checkout "tên nhánh"
+
+Bước 5: git merge main
+
+
