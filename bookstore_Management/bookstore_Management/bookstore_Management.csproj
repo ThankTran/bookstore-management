@@ -49,6 +49,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+      
+      <!-- thêm reference cho app.config -->
+      <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -56,6 +59,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Core\Constants\AppConstants.cs" />
+    <Compile Include="Core\Constants\CustomerConstants.cs" />
+    <Compile Include="Core\Constants\PermissionConstants.cs" />
     <Compile Include="Core\Constants\RoleConstants.cs" />
     <Compile Include="Core\Constants\MessageConstants.cs" />
     <Compile Include="Core\Enums\OrderStatus.cs" />
@@ -64,6 +69,7 @@
     <Compile Include="Core\Interfaces\IAuditable.cs" />
     <Compile Include="Core\Interfaces\IExportable.cs" />
     <Compile Include="Core\Utils\FileHelper.cs" />
+    <Compile Include="Core\Utils\PermissionHelper.cs" />
     <Compile Include="Data\Context\BookstoreDbContext.cs" />
     <Compile Include="Data\Repositories\BookRepository.cs" />
     <Compile Include="Data\Repositories\CategoryRepository.cs" />
