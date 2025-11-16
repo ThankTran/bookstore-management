@@ -10,14 +10,8 @@ Cách 2: Dùng ternminal
 - git clone https://github.com/ThankTran/bookstore-management
 - Mở visual studio 2022 và chọn folder bookstore_Management vừa clone về
 
-# 2. Chuyển sang branch cần thực hiện và update code mới nhất từ branch main
-Bước 1: Nhấn "Ctr + ~"
-
-Bước 2: git checkout "tên nhánh"
-
-VD: git checkout AiMy_UI_features
-
-Bước 3: git merge main
+# 2. Update code mới nhất từ branch main
+git pull origin main 
 
 
 
