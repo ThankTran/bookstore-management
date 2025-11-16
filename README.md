@@ -11,6 +11,8 @@ Cách 2: Dùng ternminal
 - Mở visual studio 2022 và chọn folder bookstore_Management vừa clone về
 
 # 2. Update code mới nhất từ branch main
+git fetch origin 
+// git branch -r -- vào nhánh đã tạo
 git pull origin main 
 
 
