@@ -12,10 +12,15 @@ Cách 2: Dùng ternminal
 
 # 2. Update code mới nhất từ branch main
 git fetch origin 
+
 // git branch -r -- vào nhánh đã tạo
+
 git checkout main
+
 git pull origin main
+
 git checkout ten_branch
+
 git merge origin/main
 
 
