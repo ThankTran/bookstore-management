@@ -162,21 +162,8 @@
                 </StackPanel>
             </Border>
             <!-- LEFT SIDEBAR -->
-            <Border Grid.Column="1"
-                    Background="#e9e9f4"
-                    CornerRadius="0,50,50,0"
-                    Padding="5">
-                <Border Background="White" 
-                        BorderThickness="1" 
-                        Margin="-5,-5,-5,735"
-                        CornerRadius="0,50,0,0"/>
-                <TextBox Text="THM BOOKSTORE MANAGEMENT"
-                         VerticalAlignment="Center"
-                        FontFamily="Quicksand Medium"
-                        FontSize="18"/>
-            </Border>
+            
 
-            </Border>
         </Grid>
     </Border>
 </Window>
