@@ -25,24 +25,7 @@
             CornerRadius="50,0,0,50"
             Padding="5">
                 <StackPanel>
-                    <!-- Logo -->
-                    <Border Background="#585ab8"
-                    CornerRadius="15"
-                    Padding="55"
-                    Margin="0,0,0,10" Width="207">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📚" FontSize="32" Margin="0,0,10,0"/>
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Kinetic"
-                                 FontSize="20"
-                                 FontWeight="Bold"
-                                 Foreground="White"/>
-                                <TextBlock Text="Bookstore"
-                                 FontSize="12"
-                                 Foreground="#C0FFFFFF"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
+                    
 
                     <!-- Menu Item -->
                     <!-- Trang chủ -->
