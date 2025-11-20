@@ -277,7 +277,7 @@
                                           Width="40" Height="40"
                                           CornerRadius="10"
                                           Padding="8">
-										<TextBlock Text="📚" FontSize="20" TextAlignment="Center"/>
+										<TextBlock Text="📚" FontSize="20" TextAlignment="Center" Margin="0,-2,-1,0"/>
 									</Border>
 									<TextBlock Text="+11"
                                              FontSize="14"
