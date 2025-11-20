@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bookstore_Management.Resources.Styles"
         mc:Ignorable="d"
-        Title="ButtonStyles" Height="450" Width="800">
-    <Grid>
+        Title="ButtonStyles" Height="49" Width="321"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#e9e9f4"
+        >
+    <Border CornerRadius="15">
+        <Grid>
         
-    </Grid>
+    </Grid> 
+    </Border>
+    
 </Window>

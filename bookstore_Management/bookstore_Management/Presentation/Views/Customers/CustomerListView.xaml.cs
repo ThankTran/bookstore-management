@@ -23,5 +23,7 @@ namespace bookstore_Management.Views.Customers
         {
             InitializeComponent();
         }
+
+
     }
 }
