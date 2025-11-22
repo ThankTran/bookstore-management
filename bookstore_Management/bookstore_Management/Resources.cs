@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace bookstore_Management
 {
-    internal class Resources
-    {
-    }
+   
 }
