@@ -21,7 +21,7 @@ namespace bookstore_Management.Views
     {
         public MainWindow()
         {
-            InitializeComponent();
+           //InitializeComponent();
         }
     }
 }

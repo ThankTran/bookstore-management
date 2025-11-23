@@ -120,7 +120,7 @@
     <Compile Include="Presentation\ViewModels\OrderViewModel.cs" />
     <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
     <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
-    <Compile Include="Presentation\Views\Dialogs\InputDialog.xaml.cs">
+    <Compile Include="Presentation\Views\Dialogs\Shared\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Inventory\ImportBooksView.xaml.cs">
@@ -184,10 +184,10 @@
     <Compile Include="Presentation\Views\Customers\CustomerListView.xaml.cs">
       <DependentUpon>CustomerListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Dialogs\ConfirmDialog.xaml.cs">
+    <Compile Include="Presentation\Views\Dialogs\Shared\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Dialogs\MessageDialog.xaml.cs">
+    <Compile Include="Presentation\Views\Dialogs\Shared\MessageDialog.xaml.cs">
       <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\MainWindow.xaml.cs">
@@ -208,16 +208,8 @@
     <Compile Include="Presentation\Views\Statistics\ReportView.xaml.cs">
       <DependentUpon>ReportView.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Presentation\AppResources\Styles\ButtonStyles.xaml">
@@ -256,15 +248,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\ConfirmDialog.xaml">
+    <Page Include="Presentation\Views\Dialogs\Shared\ConfirmDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\InputDialog.xaml">
+    <Page Include="Presentation\Views\Dialogs\Shared\InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\MessageDialog.xaml">
+    <Page Include="Presentation\Views\Dialogs\Shared\MessageDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -367,11 +359,20 @@
     <Folder Include="Presentation\Resources\Images\icons\" />
     <Folder Include="Presentation\Resources\Images\logo\" />
     <Folder Include="Presentation\Resources\Templates\" />
+    <Folder Include="Presentation\Views\Dialogs\Books\" />
+    <Folder Include="Presentation\Views\Dialogs\Customers\" />
+    <Folder Include="Presentation\Views\Dialogs\Employees\" />
+    <Folder Include="Presentation\Views\Dialogs\Inventory\" />
+    <Folder Include="Presentation\Views\Dialogs\Orders\" />
+    <Folder Include="Presentation\Views\Dialogs\Payments\" />
     <Folder Include="Test\IntegrationTests\" />
     <Folder Include="Test\UnitTests\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Resource Include="Presentation\AppResources\Images\Icons\THM.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\inf.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\DX.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\IN4.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\profile.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\QLHD.png" />
