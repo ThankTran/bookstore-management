@@ -24,15 +24,26 @@
                 <Border Grid.Column="0" Background="#585AB8" CornerRadius="0,0,0,30" Margin="0,41,0,0">
                     <Grid>
                         <!--stack panel for the features item-->
-                        <!--user-->
-                        <StackPanel Margin="0,145,0,327" RenderTransformOrigin="0.5,0.5" Background="#aaaada" Orientation="Horizontal">
-                          
-                            <Image Source="/Presentation/AppResources/Images/Icons/profile.png" Width="40"/>
-                            <StackPanel>
-                                <TextBlock Text="Quản lý" FontSize="13" HorizontalAlignment="Center" Margin="5,8,0,0" FontFamily="/Presentation/AppResources/Fonts/#Quicksand"/>
-                                <TextBlock Text="Trần Thị Hồng Thanh" FontWeight="Bold" FontSize="17" Margin="5,0,0,0" Foreground="#585AB8" FontFamily="/Presentation/AppResources/Fonts/#Quicksand"/>
+                        
+                        <!--user and logout-->
+                        <StackPanel  Margin="0,125,0,327"  Orientation="Vertical">
+                            
+                            <!--logout-->
+                            <StackPanel HorizontalAlignment="Left" Height="24" Orientation="Horizontal">
+                                <Image Source="/Presentation/AppResources/Images/Icons/DX.png" Width="15" Margin="0,0,0,0" />
+                                <Button Content="Đăng xuất" Height="23" Background="Transparent" Foreground="White" Margin="0,0,0,0" Width="58"/>
+                            </StackPanel>
+                            
+                            <!--user-->
+                            <StackPanel Background="#aaaada" Orientation="Horizontal">
+                                <Image Source="/Presentation/AppResources/Images/Icons/profile.png" Width="40"/>
+                                <StackPanel>
+                                    <TextBlock Text="Quản lý" FontSize="13" HorizontalAlignment="Center" Margin="5,8,0,0" FontFamily="/Presentation/AppResources/Fonts/#Quicksand"/>
+                                    <TextBlock Text="Trần Thị Hồng Thanh" FontWeight="Bold" FontSize="17" Margin="5,0,0,0" Foreground="#585AB8" FontFamily="/Presentation/AppResources/Fonts/#Quicksand"/>
+                                </StackPanel>
                             </StackPanel>
                         </StackPanel>
+                        
                         <!--features button-->
                         <StackPanel Margin="0,200,0,78">
                             <!--Home-->
@@ -75,19 +86,21 @@
                                 <Image Source="/Presentation/AppResources/Images/Icons/QLHD.png" Width="30"/>
                                 <TextBlock Text="Hóa đơn" Margin="5,7,0,0" Foreground="#ffffff" FontWeight="Bold" FontSize="15" FontFamily="/Presentation/AppResources/Fonts/#Quicksand"/>
                             </StackPanel>
-                            
+
                         </StackPanel>
+                        
                         <!--panel for the information-->
-                        <StackPanel Margin="0,466,0,-1">
-                            <TextBlock Text="THM Bookstore" FontSize="12" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" Foreground="#aaaada" HorizontalAlignment="Center" FontWeight="Bold"/>
+                        <StackPanel Margin="0,466,0,-1">                           
+                            <TextBlock Text="THM Bookstore" FontSize="12" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" Foreground="#aaaada" HorizontalAlignment="Center" FontWeight="Bold"/>                                        
                             <TextBlock Text="Admin Manager" FontSize="11" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" Foreground="#aaaada" HorizontalAlignment="Center" FontWeight="Bold"/>
-
+                            <TextBlock Text="© 2025 All Rights Reserved" FontSize="11" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" Foreground="#aaaada" HorizontalAlignment="Center" />
                         </StackPanel>
+                        
                         <!--panel for logo-->
-                        <StackPanel Margin="0,0,0,579" Orientation="Vertical">
-                            <Image Source="/Presentation/AppResources/Images/Icons/THM.jpeg" Width="200"/>
+                        <StackPanel Margin="0,0,0,397" Orientation="Vertical">
+                            <Image Source="/Presentation/AppResources/Images/Icons/inf.png"  Width="15" Margin="0,0,0,0" HorizontalAlignment="Left"/>                                                  
+                            <Image Source="/Presentation/AppResources/Images/Icons/THM.png" Width="180" Height="123" Margin="0,0,0,0"/>
                         </StackPanel>
-
                     </Grid>
                 </Border>
 
