@@ -25,7 +25,7 @@
             CornerRadius="50,0,0,50"
             Padding="5">
                 <StackPanel>
-                    
+
 
                     <!-- Menu Item -->
                     <!-- Trang chủ -->
@@ -66,7 +66,7 @@
                             <TextBlock Text="Quản Lý Sách" 
                                        VerticalAlignment="Center" 
                                        FontFamily="Quicksand Medium" 
-                                       FontSize="18"/>  
+                                       FontSize="18"/>
                         </StackPanel>
                     </Button>
 
@@ -76,7 +76,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Image Width="64" Height="64"
                                    Source="/Presentation/AppResources/Images/Icons/QLNS.png"
-                                   Margin="0,0,30,0"/>      
+                                   Margin="0,0,30,0"/>
                             <TextBlock Text="Quản Lý Nhân Sự " 
                                        VerticalAlignment="Center"
                                        FontFamily="Quicksand Medium"
@@ -113,8 +113,7 @@
                     </Button>
 
                     <!-- Quản Lý Hóa Đơn -->
-                    <Button Style="{StaticResource MenuButtonStyle}"
-                            Margin="0,0,0,8">
+                    <Button Margin="0,0,0,8">
                         <StackPanel Orientation="Horizontal">
                             <Image Width="64" Height="64"
                                    Source="/Presentation/AppResources/Images/Icons/QLHD.png"
@@ -122,10 +121,10 @@
                             <TextBlock Text="Thống kê" 
                                        VerticalAlignment="Center"
                                        FontFamily="Quicksand Medium"
-                                       FontSize="18"/>  
+                                       FontSize="18"/>
                         </StackPanel>
                     </Button>
-                    
+
                     <!-- Bottom Section -->
                     <Border Background="#30FFFFFF"
                     CornerRadius="15"
@@ -145,7 +144,7 @@
                 </StackPanel>
             </Border>
             <!-- LEFT SIDEBAR -->
-            
+
 
         </Grid>
     </Border>

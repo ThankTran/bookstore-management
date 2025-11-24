@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Views
+namespace bookstore_Management.Presentation.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -21,7 +21,7 @@ namespace bookstore_Management.Views
     {
         public MainWindow()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
     }
 }
