@@ -368,11 +368,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="Test\IntegrationTests\" />
-    <Folder Include="Test\UnitTests\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".gitignore" />
     <Resource Include="Presentation\AppResources\Images\Icons\TT.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\QLHD.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\IN4.png" />
