@@ -42,6 +42,7 @@ bld/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
+
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
@@ -416,3 +417,20 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# JetBrains IDE
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Rider
+*.sln.iml
+
+# Specific JetBrains files
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/tasks.xml
+/.idea/dataSources/
+/.idea/dataSources.ids
+/.idea/sonarlint/
