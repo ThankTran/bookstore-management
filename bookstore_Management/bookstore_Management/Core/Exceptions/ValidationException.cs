@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace bookstore_Management.Exceptions
 {
-    internal class ValidationException
+    internal class ValidationException 
     {
+        
     }
 }
