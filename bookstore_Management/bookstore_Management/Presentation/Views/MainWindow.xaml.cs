@@ -1,4 +1,5 @@
-﻿using System;
+﻿using bookstore_Management.Views.Customers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Presentation.Views
+namespace bookstore_Management
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -21,7 +22,14 @@ namespace bookstore_Management.Presentation.Views
     {
         public MainWindow()
         {
-            //InitializeComponent();
+            InitializeComponent();
+        }
+
+        private void btnCustomerManagement_Click(object sender, RoutedEventArgs e)
+        {
+            CustomerListView customerListView = new CustomerListView();
+            customerListView.Show(); 
+            // this.Close();
         }
     }
 }
