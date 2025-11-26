@@ -8,12 +8,13 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent">
-    <Border Background="#FFFFFF" CornerRadius="20" Padding="5">
+    <Border Background="#FFFFFF" CornerRadius="20" Padding="0">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="66*"/>
-                <RowDefinition Height="45*"/>
-                <RowDefinition Height="599*"/>
+                <RowDefinition Height="67*"/>
+                <RowDefinition Height="46*"/>
+                <RowDefinition Height="302*"/>
+                <RowDefinition Height="305*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="34*"/>
@@ -31,7 +32,8 @@
                        Background="Transparent" 
                        BorderThickness="0"
                        Cursor="Hand"
-                       ToolTip="Minimize">
+                       ToolTip="Minimize"
+                       Click="btnMinimize_Click">
                     <Image Source="/Presentation/AppResources/Images/Icons/winctr1.png" 
                           Width="18" Height="18" Stretch="Uniform"/>
                 </Button>
@@ -40,7 +42,8 @@
                        Background="Transparent" 
                        BorderThickness="0"
                        Cursor="Hand"
-                       ToolTip="Maximize/Restore">
+                       ToolTip="Maximize/Restore"
+                       Click="btnMaximize_Click">
                     <Image Source="/Presentation/AppResources/Images/Icons/winctr2.png" 
                           Width="15" Height="15" Stretch="Uniform"/>
                 </Button>
@@ -49,13 +52,14 @@
                        Background="Transparent" 
                        BorderThickness="0"
                        Cursor="Hand"
-                       ToolTip="Close">
+                       ToolTip="Close"
+                       Click="btnClose_Click">
                     <Image Source="/Presentation/AppResources/Images/Icons/winctr3.png" 
                           Width="25" Height="25" Stretch="Uniform"/>
                 </Button>
             </StackPanel>
 
-            <Grid Grid.ColumnSpan="3" Grid.RowSpan="3">
+            <Grid Grid.ColumnSpan="3" Grid.RowSpan="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="260"/>
                     <ColumnDefinition Width="*"/>
@@ -64,8 +68,8 @@
                 <!-- Sidebar -->
                 <Border Grid.Column="0" 
                        Background="#585AB8" 
-                       CornerRadius="15,0,0,15" 
-                       Margin="5,5,0,5">
+                       CornerRadius="0,0,0,15" 
+                       Margin="0,29.5,0,0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -164,7 +168,8 @@
                                        HorizontalContentAlignment="Left"
                                        Padding="12,3"
                                        Cursor="Hand"
-                                       Margin="0,0,0,0">
+                                       Margin="0,0,0,0"
+                                        Click="btnHome_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/Presentation/AppResources/Images/Icons/trangchu.png" 
                                               Width="24" 
@@ -364,6 +369,28 @@
                                                   VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
+
+                                <!-- Account -->
+                                <Button x:Name="btnBills_Copy1"
+                                        Background="Transparent" 
+                                        BorderThickness="0"
+                                        HorizontalContentAlignment="Left"
+                                        Padding="12,3"
+                                        Cursor="Hand"
+       >
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image  Source="/Presentation/AppResources/Images/Icons/QLTK.png" 
+                                                Width="24" 
+                                                Height="24"
+                                                Margin="0,0,12,0"/>
+                                        <TextBlock  Text="Quản lý tài khoản" 
+                                                    Foreground="#FFFFFF" 
+                                                    FontWeight="SemiBold" 
+                                                    FontSize="14"
+                                                    FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                    VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
                         </StackPanel>
 
@@ -403,9 +430,11 @@
                 <!-- Main Content Area -->
                 <Border Grid.Column="1" 
                        Background="#E9E9F4" 
-                       CornerRadius="0,15,15,0" 
-                       Margin="0,5,5,5">
-
+                       CornerRadius="0,0,15,0" 
+                       Margin="0,29.5,0,0">
+                    <Frame x:Name="MainFrame" 
+                           NavigationUIVisibility="Hidden"
+                           Background="Transparent"/>
                 </Border>
             </Grid>
         </Grid>

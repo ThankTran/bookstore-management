@@ -1,414 +1,270 @@
-﻿<Window x:Class="bookstore_Management.Views.Customers.CustomerListView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Bookstore Management"
-        Height="720" Width="1280"
-        MinHeight="600" MinWidth="1024"
-        WindowStartupLocation="CenterScreen"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent">
-    <Border Background="#FFFFFF" CornerRadius="20" Padding="5">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="66*"/>
-                <RowDefinition Height="45*"/>
-                <RowDefinition Height="599*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="34*"/>
-                <ColumnDefinition Width="161*"/>
-                <ColumnDefinition Width="440*"/>
-            </Grid.ColumnDefinitions>
-            <!-- Window Controls -->
-            <StackPanel Orientation="Horizontal" 
-                       HorizontalAlignment="Right" 
-                       VerticalAlignment="Top"
-                       Margin="0,0,15,0"
-                       Panel.ZIndex="100" Grid.Column="2">
-                <Button x:Name="btnMinimize" 
-                       Width="40" Height="30" 
-                       Background="Transparent" 
-                       BorderThickness="0"
-                       Cursor="Hand"
-                       ToolTip="Minimize">
-                    <Image Source="/Presentation/AppResources/Images/Icons/winctr1.png" 
-                          Width="18" Height="18" Stretch="Uniform"/>
-                </Button>
-                <Button x:Name="btnMaximize"
-                       Width="40" Height="30" 
-                       Background="Transparent" 
-                       BorderThickness="0"
-                       Cursor="Hand"
-                       ToolTip="Maximize/Restore">
-                    <Image Source="/Presentation/AppResources/Images/Icons/winctr2.png" 
-                          Width="15" Height="15" Stretch="Uniform"/>
-                </Button>
-                <Button x:Name="btnClose"
-                       Width="40" Height="30" 
-                       Background="Transparent" 
-                       BorderThickness="0"
-                       Cursor="Hand"
-                       ToolTip="Close">
-                    <Image Source="/Presentation/AppResources/Images/Icons/winctr3.png" 
-                          Width="25" Height="25" Stretch="Uniform"/>
-                </Button>
-            </StackPanel>
+﻿<UserControl x:Class="bookstore_Management.Views.Customers.CustomerListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#E9E9F4" Height="680.5" Width="1020">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <Grid Grid.ColumnSpan="3" Grid.RowSpan="3">
+        <!-- Search Bar -->
+        <Border Grid.Row="0" 
+                Background="#989AD4" 
+                CornerRadius="20" 
+                Padding="15,10"
+                Margin="0,0,0,15"
+                HorizontalAlignment="Right"
+                Width="300"
+                Height="40">
+            <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="260"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Sidebar -->
-                <Border Grid.Column="0" 
-                       Background="#585AB8" 
-                       CornerRadius="15,0,0,15" 
-                       Margin="5,5,0,5">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                <TextBox x:Name="txtSearch"
+                         Grid.Column="0"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         VerticalContentAlignment="Center"
+                         FontSize="13"
+                         FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                         Text="Tìm kiếm ..." 
+                         Foreground="White"/>
 
-                        <!-- Logo Section -->
-                        <StackPanel Grid.Row="0" Margin="8,8,8,0">
-                            <Grid Width="20" Height="20" 
-                                  HorizontalAlignment="Left" 
-                                  Margin="5,0,0,0">
-                                <!-- Circular background -->
-                                <Ellipse Fill="#7577C3" 
-                                        Width="20" 
-                                        Height="20"/>
-                                <!-- Info icon -->
-                                <Image Source="/Presentation/AppResources/Images/Icons/inf.png" 
-                                      Width="14" 
-                                      Height="14"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"/>
-                            </Grid>
-                            <Image Source="/Presentation/AppResources/Images/Icons/THM.png" 
-                                  Width="150" 
-                                  Height="150"
-                                  Stretch="Uniform"
-                                  />
-                        </StackPanel>
-
-                        <!-- User Profile Section -->
-                        <StackPanel Grid.Row="1" Margin="15,10,15,20">
-                            <!-- Logout Button -->
-                            <Button x:Name="btnLogout"
-                                   Background="Transparent" 
-                                   BorderThickness="0"
-                                   HorizontalAlignment="Left"
-                                   Cursor="Hand"
-                                   Padding="0"
-                                   Margin="5,0,0,12">
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="/Presentation/AppResources/Images/Icons/DX.png" 
-                                          Width="16" 
-                                          Height="16"
-                                          Margin="0,0,8,0"/>
-                                    <TextBlock Text="Đăng xuất" 
-                                              Foreground="White" 
-                                              FontSize="13"
-                                              FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                              VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-
-                            <!-- User Info Card -->
-                            <Border Background="#7577C3" 
-                                   CornerRadius="12" 
-                                   Padding="5">
-                                <StackPanel Orientation="Horizontal">
-                                    <Border Width="50" Height="50" 
-                                           CornerRadius="25"
-                                           Background="White"
-                                           Margin="0,0,12,0">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/profile.png" 
-                                              Width="50" 
-                                              Height="50"
-                                              Stretch="UniformToFill"/>
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="Quản lý" 
-                                                  FontSize="12" 
-                                                  Foreground="White"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  Opacity="0.85"
-                                                  Margin="0,0,0,2"/>
-                                        <TextBlock Text="Trần Thị Hồng Thanh" 
-                                                  FontWeight="Bold" 
-                                                  FontSize="13" 
-                                                  Foreground="White"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  TextWrapping="Wrap"
-                                                  MaxWidth="140"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
-
-                        <!-- Menu Items -->
-                        <StackPanel Grid.Row="1" Margin="10,103,10,10" Grid.RowSpan="2">
-                            <StackPanel Margin="10,0,10,0">
-                                <!-- Home -->
-                                <Button x:Name="btnHome"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/trangchu.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Trang chủ" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
-                                <!-- Payment -->
-                                <Button x:Name="btnPayment"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/TT.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Thanh toán" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
-                                <!-- Customer -->
-                                <Button x:Name="btnCustomer"
-                                        Background="Transparent" 
-                                        BorderThickness="0"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Left"
-                                        Padding="12,3"
-                                        Cursor="Hand"
-                                        Margin="0,0,0,0"
-                                        
-  
->
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLKH.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Quản lý khách hàng" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-                                <Button x:Name="btnBills_Copy"
-                                    Background="Transparent" 
-                                    BorderThickness="0"
-                                    HorizontalContentAlignment="Left"
-                                    Padding="12,3"
-                                    Cursor="Hand"
-                                       >
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLHD.png" 
-                                            Width="24" 
-                                            Height="24"
-                                            Margin="0,0,12,0"/>
-                                        <TextBlock Text="Quản lý nhà xuất bản" 
-                                            Foreground="#FFFFFF" 
-                                            FontWeight="SemiBold" 
-                                            FontSize="14"
-                                            FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                            VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
-
-
-                                <!-- Books -->
-                                <Button x:Name="btnBooks"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLS.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Quản lý sách" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
-                                <!-- Employees -->
-                                <Button x:Name="btnEmployees"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLNS.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Quản lý nhân sự" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
-                                <!-- Statistics -->
-                                <Button x:Name="btnStatistics"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/TK.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Thống kê" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
-                                <!-- Stock -->
-                                <Button x:Name="btnStock"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLKHO.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Kho hàng" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
-                                <!-- Bills -->
-                                <Button x:Name="btnBills"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLHD.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Hóa đơn" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <!-- Footer Info -->
-                        <Border Grid.Row="3"
-                               Background="#4A4C9E"
-                               CornerRadius="10"
-                               Padding="15"
-                               Margin="15,0,15,15">
-                            <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Text="THM Bookstore" 
-                                          FontSize="13" 
-                                          FontFamily="/Presentation/AppResources/Fonts/#Quicksand" 
-                                          Foreground="White" 
-                                          HorizontalAlignment="Center" 
-                                          FontWeight="Bold"/>
-                                <TextBlock Text="Admin Manager" 
-                                          FontSize="11" 
-                                          FontFamily="/Presentation/AppResources/Fonts/#Quicksand" 
-                                          Foreground="White" 
-                                          HorizontalAlignment="Center" 
-                                          FontWeight="SemiBold"
-                                          Opacity="0.9"
-                                          Margin="0,3,0,0"/>
-                                <TextBlock Text="© 2025 All Rights Reserved" 
-                                          FontSize="10" 
-                                          FontFamily="/Presentation/AppResources/Fonts/#Quicksand" 
-                                          Foreground="White" 
-                                          HorizontalAlignment="Center"
-                                          Opacity="0.8"
-                                          Margin="0,5,0,0"/>
-                            </StackPanel>
-                        </Border>
-                    </Grid>
-                </Border>
-
-                <!-- Main Content Area -->
-                <Border Grid.Column="1" 
-                       Background="#E9E9F4" 
-                       CornerRadius="0,15,15,0" 
-                       Margin="0,5,5,5">
-                    <TextBox TextWrapping="Wrap" Text="QUẢN LÝ KHÁCH HÀNG" Margin="87,187,503,350"/>
-
-                </Border>
+                <Button Grid.Column="1"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Width="40"
+                        Height="40"
+                        Cursor="Hand"
+                        Margin="5,-10,-5,-10">
+                    <Image Source="/Presentation/AppResources/Images/Icons/search.png" 
+                           Width="15" 
+                           Height="15"/>
+                </Button>
             </Grid>
-        </Grid>
-    </Border>
-</Window>
+        </Border>
+
+        <!-- Data Grid -->
+        <Border Grid.Row="1" 
+                Background="White" 
+                CornerRadius="15" 
+                Padding="0">
+            <DataGrid x:Name="dgCustomers"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserResizeRows="False"
+                      SelectionMode="Single"
+                      GridLinesVisibility="Horizontal"
+                      HeadersVisibility="Column"
+                      BorderThickness="0"
+                      Background="White"
+                      RowBackground="White"
+                      AlternatingRowBackground="#F8F8FF"
+                      FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                      FontSize="13"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.CanContentScroll="True">
+
+                <!-- Custom ScrollBar Style -->
+                <DataGrid.Resources>
+                    <Style TargetType="ScrollBar">
+                        <Setter Property="Background" Value="#F0F0F0"/>
+                        <Setter Property="Foreground" Value="#7577C3"/>
+                        <Setter Property="Width" Value="10"/>
+                        <Setter Property="MinWidth" Value="10"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Style.Triggers>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter Property="Height" Value="10"/>
+                                <Setter Property="MinHeight" Value="10"/>
+                                <Setter Property="Width" Value="Auto"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Resources>
+
+                <!-- Column Headers Style -->
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#7577C3"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="FontSize" Value="13"/>
+                        <Setter Property="Padding" Value="15,12"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                        <Setter Property="BorderBrush" Value="#8E90CC"/>
+                        <Setter Property="FontFamily" Value="/Presentation/AppResources/Fonts/#Quicksand"/>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+
+                <!-- Row Style -->
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Height" Value="45"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                        <Setter Property="BorderBrush" Value="#E0E0E0"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F0F0FF"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+
+                <!-- Cell Style -->
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="10,0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Border Background="{TemplateBinding Background}" 
+                                            BorderThickness="0" 
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.CellStyle>
+
+                <!-- Columns -->
+                <DataGrid.Columns>
+                    <!-- STT -->
+                    <DataGridTextColumn Header="STT" 
+                                        Binding="{Binding STT}" 
+                                        Width="60"
+                                        IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <!-- Mã khách hàng -->
+                    <DataGridTextColumn Header="Mã khách hàng" 
+                                        Binding="{Binding MaKH}" 
+                                        Width="140"
+                                        IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Foreground" Value="#7577C3"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <!-- Tên khách hàng -->
+                    <DataGridTextColumn Header="Tên khách hàng" 
+                                        Binding="{Binding TenKH}" 
+                                        Width="*"
+                                        MinWidth="180"
+                                        IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <!-- Hạng thành viên -->
+                    <DataGridTextColumn Header="Hạng thành viên" 
+                                        Binding="{Binding HangThanhVien}" 
+                                        Width="140"
+                                        IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <!-- SDT -->
+                    <DataGridTextColumn Header="SDT" 
+                                        Binding="{Binding SDT}" 
+                                        Width="120"
+                                        IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <!-- Doanh thu -->
+                    <DataGridTextColumn Header="Doanh thu" 
+                                        Binding="{Binding DoanhThu, StringFormat={}{0:N0}}" 
+                                        Width="140"
+                                        IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Margin" Value="0,0,15,0"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <!-- Sửa -->
+                    <DataGridTemplateColumn Header="Sửa" Width="60">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Background="Transparent" 
+                                        BorderThickness="0" 
+                                        Width="30" 
+                                        Height="30"
+                                        Cursor="Hand"
+                                        HorizontalAlignment="Center"
+                                        Click="btnEdit_Click">
+                                    <Image Source="/Presentation/AppResources/Images/Icons/edit.png" 
+                                           Width="20" 
+                                           Height="20"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Xóa -->
+                    <DataGridTemplateColumn Header="Xóa" Width="60">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Background="Transparent" 
+                                        BorderThickness="0" 
+                                        Width="30" 
+                                        Height="30"
+                                        Cursor="Hand"
+                                        HorizontalAlignment="Center"
+                                        Click="btnDelete_Click">
+                                    <Image Source="/Presentation/AppResources/Images/Icons/recyclebin.png" 
+                                           Width="20" 
+                                           Height="20"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</UserControl>

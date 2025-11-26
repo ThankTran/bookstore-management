@@ -23,13 +23,46 @@ namespace bookstore_Management
         public MainWindow()
         {
             InitializeComponent();
+            LoadHomePage(); 
+        }
+
+        private void LoadHomePage()
+        {
+            MainFrame.Content = null; 
         }
 
         private void btnCustomerManagement_Click(object sender, RoutedEventArgs e)
         {
-            CustomerListView customerListView = new CustomerListView();
-            customerListView.Show(); 
-            // this.Close();
+            try
+            {
+                MainFrame.Content = new CustomerListView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Normal)
+                this.WindowState = WindowState.Maximized;
+            else
+                this.WindowState = WindowState.Normal;
+        }
+
+        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void btnHome_Click(object sender, RoutedEventArgs e)
+        {
+            LoadHomePage();
         }
     }
 }
