@@ -1,20 +1,20 @@
-﻿using System.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations;
 using bookstore_Management.Core.Constants;
 
 namespace bookstore_Management.Core.Enums
 {
     public enum OrderStatus
     {
-        [Description(MessageConstants.Pending)]
+        [Display(Name = MessageConstants.Pending)]
         Pending = 1,
     
-        [Description(MessageConstants.Success)]
+        [Display(Name = MessageConstants.Success)]
         Complete = 2,
     
-        [Description(MessageConstants.Error)]
+        [Display(Name = MessageConstants.Error)]
         Error = 3,
         
-        [Description(MessageConstants.Cancelled)]
+        [Display(Name = MessageConstants.Cancelled)]
         Cancelled = 4,
     }
 }

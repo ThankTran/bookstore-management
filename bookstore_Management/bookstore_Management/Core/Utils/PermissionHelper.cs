@@ -13,22 +13,22 @@ namespace bookstore_Management.Core.Utils
         /// <summary>
         /// Kiểm tra quyền xem của user với feature
         /// </summary>
-        public static bool CanView(UserRole userRole, string feature)
+        public static bool CanView(Role role, string feature)
         {
             switch (feature)
             {
                 case "Book":
-                    return PermissionConstants.BookManagement.View.Contains(userRole);
+                    return PermissionConstants.BookManagement.View.Contains(role);
                 case "Billing":
-                    return PermissionConstants.BillingManagement.View.Contains(userRole);
+                    return PermissionConstants.BillingManagement.View.Contains(role);
                 case "Stock":
-                    return PermissionConstants.StockManagement.View.Contains(userRole);
+                    return PermissionConstants.StockManagement.View.Contains(role);
                 case "Employee":
-                    return PermissionConstants.EmployeeManagement.View.Contains(userRole);
+                    return PermissionConstants.EmployeeManagement.View.Contains(role);
                 case "Customer":
-                    return PermissionConstants.CustomerManagement.View.Contains(userRole);
+                    return PermissionConstants.CustomerManagement.View.Contains(role);
                 case "Report":
-                    return PermissionConstants.ReportManagement.View.Contains(userRole);
+                    return PermissionConstants.ReportManagement.View.Contains(role);
                 default:
                     return false;
             }
@@ -38,20 +38,20 @@ namespace bookstore_Management.Core.Utils
         /// <summary>
         /// Kiểm tra quyền tạo mới của user với feature
         /// </summary>
-        public static bool CanCreate(UserRole userRole, string feature)
+        public static bool CanCreate(Role role, string feature)
         {
             switch (feature)
             {
                 case "Book":
-                    return PermissionConstants.BookManagement.Create.Contains(userRole);
+                    return PermissionConstants.BookManagement.Create.Contains(role);
                 case "Billing":
-                    return PermissionConstants.BillingManagement.Create.Contains(userRole);
+                    return PermissionConstants.BillingManagement.Create.Contains(role);
                 case "Stock":
-                    return PermissionConstants.StockManagement.Create.Contains(userRole);
+                    return PermissionConstants.StockManagement.Create.Contains(role);
                 case "Employee":
-                    return PermissionConstants.EmployeeManagement.Create.Contains(userRole);
+                    return PermissionConstants.EmployeeManagement.Create.Contains(role);
                 case "Customer":
-                    return PermissionConstants.CustomerManagement.Create.Contains(userRole);
+                    return PermissionConstants.CustomerManagement.Create.Contains(role);
                 default:
                     return false;
             }
@@ -61,20 +61,20 @@ namespace bookstore_Management.Core.Utils
         /// <summary>
         /// Kiểm tra quyền chỉnh sửa của user với feature
         /// </summary>
-        public static bool CanEdit(UserRole userRole, string feature)
+        public static bool CanEdit(Role role, string feature)
         {
             switch (feature)
             {
                 case "Book":
-                    return PermissionConstants.BookManagement.Edit.Contains(userRole);
+                    return PermissionConstants.BookManagement.Edit.Contains(role);
                 case "Billing":
-                    return PermissionConstants.BillingManagement.Edit.Contains(userRole);
+                    return PermissionConstants.BillingManagement.Edit.Contains(role);
                 case "Stock":
-                    return PermissionConstants.StockManagement.Edit.Contains(userRole);
+                    return PermissionConstants.StockManagement.Edit.Contains(role);
                 case "Employee":
-                    return PermissionConstants.EmployeeManagement.Edit.Contains(userRole);
+                    return PermissionConstants.EmployeeManagement.Edit.Contains(role);
                 case "Customer":
-                    return PermissionConstants.CustomerManagement.Edit.Contains(userRole);
+                    return PermissionConstants.CustomerManagement.Edit.Contains(role);
                 default:
                     return false;
             }
@@ -84,16 +84,16 @@ namespace bookstore_Management.Core.Utils
         /// <summary>
         /// Kiểm tra quyền xóa của user với feature
         /// </summary>
-        public static bool CanDelete(UserRole userRole, string feature)
+        public static bool CanDelete(Role role, string feature)
         {
             switch (feature)
             {
                 case "Book":
-                    return PermissionConstants.BookManagement.Delete.Contains(userRole);
+                    return PermissionConstants.BookManagement.Delete.Contains(role);
                 case "Billing":
-                    return PermissionConstants.BillingManagement.Delete.Contains(userRole);
+                    return PermissionConstants.BillingManagement.Delete.Contains(role);
                 case "Employee":
-                    return PermissionConstants.EmployeeManagement.Delete.Contains(userRole);
+                    return PermissionConstants.EmployeeManagement.Delete.Contains(role);
                 default:
                     return false;
             }
@@ -102,12 +102,12 @@ namespace bookstore_Management.Core.Utils
         /// <summary>
         /// Kiểm tra quyền export của user với feature
         /// </summary>
-        public static bool CanExport(UserRole userRole, string feature)
+        public static bool CanExport(Role role, string feature)
         {
             switch (feature)
             {
                 case "Report":
-                    return PermissionConstants.ReportManagement.Export.Contains(userRole);
+                    return PermissionConstants.ReportManagement.Export.Contains(role);
                 default:
                     return false;
             }
