@@ -46,7 +46,7 @@ namespace bookstore_Management.Models
         // trạng thái nhân viên
         [Required]
         [Column("status")]
-        public EmployeeStatus Status { get; set; }
+        public StaffStatus Status { get; set; }
         
         // vai trò
         [Required]

@@ -181,7 +181,7 @@
     <Compile Include="Core\Enums\MemberTier.cs" />
     <Compile Include="Core\Enums\OrderStatus.cs" />
     <Compile Include="Core\Enums\PaymentType.cs" />
-    <Compile Include="Core\Enums\EmployeeStatus.cs" />
+    <Compile Include="Core\Enums\StaffStatus.cs" />
     <Compile Include="Core\Enums\Role.cs" />
     <Compile Include="Core\Exceptions\BookstoreException.cs" />
     <Compile Include="Core\Exceptions\DataNotFoundException.cs" />
