@@ -23,7 +23,7 @@ namespace bookstore_Management.Data.Repositories
         private readonly DbSet<T> _dbSet;
 
         // gán các thông tin cơ bản bằng constructor
-        public Repository(DbContext context)
+        protected Repository(DbContext context)
         {
             _dbContext = context;
             _dbSet = context.Set<T>();

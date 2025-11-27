@@ -192,12 +192,12 @@
     <Compile Include="Core\Utils\PermissionHelper.cs" />
     <Compile Include="Data\Context\BookstoreDbContext.cs" />
     <Compile Include="Data\Repositories\BookRepository.cs" />
-    <Compile Include="Data\Repositories\CategoryRepository.cs" />
     <Compile Include="Data\Repositories\CustomerRepository.cs" />
     <Compile Include="Data\Repositories\IBookRepository.cs" />
     <Compile Include="Data\Repositories\ICustomerRepository.cs" />
     <Compile Include="Data\Repositories\IOrderRepository.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />
+    <Compile Include="Data\Repositories\ISupplierRepository.cs" />
     <Compile Include="Data\Repositories\IUserRepository.cs" />
     <Compile Include="Data\Repositories\OrderRepository.cs" />
     <Compile Include="Data\Repositories\Repository.cs" />
