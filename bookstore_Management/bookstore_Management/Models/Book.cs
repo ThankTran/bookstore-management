@@ -12,7 +12,7 @@ namespace bookstore_Management.Models
     /// <summary>
     /// Các thông tin cần lưu trữ của sách
     /// </summary>
-    internal class Book
+    public class Book
     {
         // mã sách - khóa chính 
         [Required]

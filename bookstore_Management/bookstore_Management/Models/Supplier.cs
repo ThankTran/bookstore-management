@@ -8,7 +8,7 @@ namespace bookstore_Management.Models
     /// <summary>
     /// Thông tin của các nhà cung cấp cần quản lý
     /// </summary>
-    internal class Supplier
+    public class Supplier
     {
         // mã nhà cung cấp - khóa chính
         [Column("id")]
@@ -29,10 +29,12 @@ namespace bookstore_Management.Models
         
         // địa chỉ nhà cung cấp - có thể null
         [Column("address")]
+        [StringLength(50)]
         public string Address { get; set; }
         
         // email nhà cung cấp - có thể null
         [Column("email")]
+        [StringLength(50)]
         public string Email { get; set; }
         
         // navigation properties

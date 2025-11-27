@@ -20,13 +20,13 @@ namespace bookstore_Management.Models
         [Required]
         [Column("day")]
         [DataType(DataType.Date)]
-        public DateTime Day { get; set; }
+        public DateTime Day { get; set; } = DateTime.Now;
 
         // doanh thu
         [Required]
         [Column("revenue")]
         [DataType(DataType.Currency)]
-        public decimal Revenue { get; set; }
+        public decimal Revenue { get; set; } = 0;
         
         // navigation properties
         public virtual Staff Staff { get; set; } // 1 doanh thu chỉ có 1 nhân viên

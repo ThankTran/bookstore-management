@@ -3,11 +3,11 @@ using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.Models
 {
-    
+
     /// <summary>
     /// Thông tin cần quản lý của tài khoản
     /// </summary>
-    internal class User
+    public class User
     {
         [Key]
         [StringLength(6)]

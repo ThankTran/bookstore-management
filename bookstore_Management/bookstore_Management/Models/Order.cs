@@ -9,7 +9,7 @@ namespace bookstore_Management.Models
     /// <summary>
     /// Thông tin cần quản lý của hóa đơn - tổng quát
     /// </summary>
-    internal class Order
+    public class Order
     {
         // mã hóa đơn - khóa chính
         [Required]
@@ -30,7 +30,6 @@ namespace bookstore_Management.Models
 
         // phương thức thanh toán
         [Required]
-        [StringLength(50)]
         [Column("payment_method")]
         public PaymentType PaymentMethod { get; set; }
 

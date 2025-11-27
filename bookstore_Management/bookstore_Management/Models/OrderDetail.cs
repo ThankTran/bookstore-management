@@ -8,7 +8,7 @@ namespace bookstore_Management.Models
     /// <summary>
     /// Thông tin cần quản lí của hóa đơn - chi tiết
     /// </summary>
-    internal class OrderDetail
+    public class OrderDetail
     {
         // mã hóa đơn - khóa chính - khóa ngoại
         [Required]

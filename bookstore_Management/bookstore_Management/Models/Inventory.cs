@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace bookstore_Management.Models
 {
-    internal class Inventory
+    public class Inventory
     {
     }
 }

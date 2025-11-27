@@ -11,6 +11,7 @@ namespace bookstore_Management.Models
     public class Staff
     {
         // mã nhân viên - khóa chính
+        [Required]
         [Column("id")]
         [StringLength(6)]
         public string Id { get; set; }
@@ -47,18 +48,19 @@ namespace bookstore_Management.Models
         [Required]
         [Column("status")]
         public StaffStatus Status { get; set; }
-        
+
         // vai trò
         [Required]
         [Column("role")]
-        public Role Role { get; set; }
-        
+        public Role Role { get; set; } = Role.SalesStaff;
+
         // hệ số lương
         [Required]
         [Column("salary_rate")]
-        public decimal SalaryRate { get; set; }
+        public decimal SalaryRate { get; set; } = 0;
         
         // navigation properties
         public virtual ICollection<StaffDailyRevenue> DailyRevenues { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

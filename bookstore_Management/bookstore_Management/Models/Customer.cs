@@ -13,7 +13,7 @@ namespace bookstore_Management.Models
     ///      + hạng thành viên chỉ tồn tại trong vòng 1 năm ( xem xét )
     ///      + Các khách hàng vãng lai không được lưu trữ
     /// </summary>
-    internal class Customer
+    public class Customer
     {
         // mã khách hàng - khóa chính
         [Column("id")]
