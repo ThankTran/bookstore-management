@@ -23,6 +23,9 @@ namespace bookstore_Management.Core.Enums
         Biography = 6,
         
         [Display(Name = "Sách ngoại ngữ")]
-        ForeignLanguage = 7
+        ForeignLanguage = 7,
+        
+        [Display(Name = "Tiểu thuyết")]
+        Novel = 8
     }
 }
