@@ -366,6 +366,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Resource Include="Presentation\AppResources\Images\Icons\add.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\search.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\edit.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\recyclebin.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLTK.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\winctr1.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\winctr2.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\winctr3.png" />

@@ -64,5 +64,17 @@ namespace bookstore_Management
         {
             LoadHomePage();
         }
+
+        private void btnBills_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MainFrame.Content = new CustomerDetailView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }
