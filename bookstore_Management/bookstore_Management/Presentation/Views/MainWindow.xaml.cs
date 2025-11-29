@@ -1,17 +1,7 @@
-﻿using bookstore_Management.Views.Customers;
+﻿using bookstore_Management.Views.Books;
+using bookstore_Management.Views.Customers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace bookstore_Management
 {
@@ -20,61 +10,115 @@ namespace bookstore_Management
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Khởi tạo cửa sổ chính
         public MainWindow()
         {
             InitializeComponent();
-            LoadHomePage(); 
+            LoadHomePage();
         }
 
+        #region Navigation helpers
+
+        // Hiển thị trang chủ mặc định
         private void LoadHomePage()
         {
-            MainFrame.Content = null; 
+            MainFrame.Content = null;
         }
 
-        private void btnCustomerManagement_Click(object sender, RoutedEventArgs e)
+        // Hiển thị danh sách khách hàng
+        private void LoadCustomerListPage()
         {
-            try
+            var customerListPage = new CustomerListView();
+
+            customerListPage.CustomerSelected += (s, customer) =>
             {
-                MainFrame.Content = new CustomerListView();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                LoadCustomerDetailPage(customer);
+            };
+
+            MainFrame.Content = customerListPage;
         }
+
+        // Hiển thị chi tiết một khách hàng được chọn
+        private void LoadCustomerDetailPage(Customer customer)
+        {
+            var customerDetailView = new CustomerDetailView();
+
+            customerDetailView.LoadCustomer(customer);
+
+            customerDetailView.ReturnToList += (s, e) =>
+            {
+                LoadCustomerListPage();
+            };
+
+            MainFrame.Content = customerDetailView;
+        }
+
+        #endregion
+
+        #region Window control events
+
+        // Xử lý nút đóng cửa sổ
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
+        // Xử lý nút phóng to / khôi phục kích thước
         private void btnMaximize_Click(object sender, RoutedEventArgs e)
         {
-            if (this.WindowState == WindowState.Normal)
-                this.WindowState = WindowState.Maximized;
-            else
-                this.WindowState = WindowState.Normal;
+            WindowState = WindowState == WindowState.Normal
+                ? WindowState.Maximized
+                : WindowState.Normal;
         }
 
+        // Xử lý nút thu nhỏ cửa sổ
         private void btnMinimize_Click(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
+            WindowState = WindowState.Minimized;
         }
 
+        #endregion
+
+        #region Sidebar menu events
+
+        // Xử lý click menu Trang chủ
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
             LoadHomePage();
         }
 
-        private void btnBills_Click(object sender, RoutedEventArgs e)
+        // Xử lý click menu Quản lý khách hàng
+        private void btnCustomerManagement_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                MainFrame.Content = new CustomerDetailView();
+                LoadCustomerListPage();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        // Xử lý click menu Hóa đơn (chưa cài đặt nội dung)
+        private void btnBills_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: Mở màn hình quản lý hóa đơn khi bạn xây dựng view tương ứng
+        }
+
+        // Xử lý click menu Quản lý sách
+        private void btnBooks_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MainFrame.Content = new BookListView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        #endregion
     }
 }

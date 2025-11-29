@@ -263,7 +263,8 @@
                                        HorizontalContentAlignment="Left"
                                        Padding="12,3"
                                        Cursor="Hand"
-                                       Margin="0,0,0,0">
+                                       Margin="0,0,0,0"
+                                       Click="btnBooks_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/Presentation/AppResources/Images/Icons/QLS.png" 
                                               Width="24" 
