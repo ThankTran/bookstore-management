@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,14 +15,5 @@ using System.Windows.Shapes;
 
 namespace bookstore_Management.Views.Books
 {
-    /// <summary>
-    /// Interaction logic for BookDetailView.xaml
-    /// </summary>
-    public partial class BookDetailView : Window
-    {
-        public BookDetailView()
-        {
-            InitializeComponent();
-        }
-    }
+  
 }

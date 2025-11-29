@@ -17,7 +17,7 @@ namespace bookstore_Management.Views.Books
     /// <summary>
     /// Interaction logic for BookListView.xaml
     /// </summary>
-    public partial class BookListView : Window
+    public partial class BookListView : UserControl
     {
         public BookListView()
         {
