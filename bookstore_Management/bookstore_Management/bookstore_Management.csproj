@@ -184,6 +184,7 @@
     <Compile Include="Core\Exceptions\ValidationException.cs" />
     <Compile Include="Core\Interfaces\IAuditable.cs" />
     <Compile Include="Core\Interfaces\IExportable.cs" />
+    <Compile Include="Core\Results\Result.cs" />
     <Compile Include="Core\Utils\BackupManager.cs" />
     <Compile Include="Core\Utils\ConfigManager.cs" />
     <Compile Include="Core\Utils\Encryptor.cs" />
@@ -202,6 +203,12 @@
     <Compile Include="Data\Repositories\OrderRepository.cs" />
     <Compile Include="Data\Repositories\Repository.cs" />
     <Compile Include="Data\Repositories\SupplierRepository.cs" />
+    <Compile Include="DTOs\BookDto.cs" />
+    <Compile Include="DTOs\CustomerDto.cs" />
+    <Compile Include="DTOs\OrderDto.cs" />
+    <Compile Include="DTOs\StaffDto.cs" />
+    <Compile Include="DTOs\SupplierDto.cs" />
+    <Compile Include="DTOs\UserDto.cs" />
     <Compile Include="Helpers\ExcelExporter.cs" />
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
@@ -339,8 +346,10 @@
     <Compile Include="Services\Interfaces\ICustomerService.cs" />
     <Compile Include="Services\Interfaces\IOrderService.cs" />
     <Compile Include="Services\Interfaces\IReportService.cs" />
+    <Compile Include="Services\Interfaces\IStaffService.cs" />
     <Compile Include="Services\Interfaces\ISupplierService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
+    <Compile Include="Services\Interfaces\StaffService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202511270825429_FixStaffEnumMapping.resx">

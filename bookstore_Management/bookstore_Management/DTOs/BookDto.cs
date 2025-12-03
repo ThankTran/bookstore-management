@@ -9,22 +9,10 @@ namespace bookstore_Management.DTOs
     /// </summary>
     public class BookDto
     {
-        [Required(ErrorMessage = "Tên sách không được để trống")]
-        [StringLength(50, ErrorMessage = "Tên sách không quá 50 ký tự")]
         public string Name { get; set; }
-
-        [Required(ErrorMessage = "Chưa chọn nhà cung cấp")]
-        [StringLength(6, ErrorMessage = "Mã NCC không hợp lệ")]
         public string SupplierId { get; set; }
-        
-        [Required(ErrorMessage = "Chưa chọn thể loại")]
         public BookCategory Category { get; set; }
-
-        [Required(ErrorMessage = "Giá nhập không được để trống")]
-        [Range(0.01, 10000000, ErrorMessage = "Giá nhập phải từ 0.01 đến 10,000,000")]
         public decimal ImportPrice { get; set; }
-
-        [Range(0, 10000, ErrorMessage = "Số lượng phải từ 0 đến 10,000")]
         public int InitialStock { get; set; } = 0;
     }
     
@@ -33,12 +21,8 @@ namespace bookstore_Management.DTOs
     /// </summary>
     public class UpdateBookPriceDto
     {
-        [Required]
-        [StringLength(6)]
+        
         public string BookId { get; set; }
-
-        [Required]
-        [Range(0.01, 10000000)]
         public decimal NewSalePrice { get; set; }
     }
 

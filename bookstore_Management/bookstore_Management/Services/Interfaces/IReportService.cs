@@ -8,5 +8,6 @@ namespace bookstore_Management.Services.Interfaces
 {
     internal interface IReportService
     {
+        
     }
 }
