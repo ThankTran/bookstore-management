@@ -49,54 +49,175 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-      
-      <!-- thêm reference cho app.config -->
-      <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Presentation\AppResources\Styles\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\AppResources\Styles\CardStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\AppResources\Styles\Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\AppResources\Styles\DataGridStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\AppResources\Styles\TextBoxStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Books\BookDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Books\BookListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Customers\CustomerDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Customers\CustomerListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\ConfirmDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\InputDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\MessageDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Inventory\ImportBooksView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Inventory\StockView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Orders\CreateOrderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Orders\InvoiceView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Orders\OrderDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Orders\OrderListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Statistics\ChartView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Statistics\DashboardView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Statistics\ReportView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Suppliers\SupplierDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Suppliers\SupplierListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Users\LoginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Users\RoleManagementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Users\UserListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AppResources.cs" />
     <Compile Include="Core\Constants\AppConstants.cs" />
     <Compile Include="Core\Constants\CustomerConstants.cs" />
+    <Compile Include="Core\Constants\MessageConstants.cs" />
     <Compile Include="Core\Constants\PermissionConstants.cs" />
     <Compile Include="Core\Constants\RoleConstants.cs" />
-    <Compile Include="Core\Constants\MessageConstants.cs" />
+    <Compile Include="Core\Enums\BookCategory.cs" />
+    <Compile Include="Core\Enums\MemberTier.cs" />
     <Compile Include="Core\Enums\OrderStatus.cs" />
     <Compile Include="Core\Enums\PaymentType.cs" />
-    <Compile Include="Core\Enums\UserRole.cs" />
+    <Compile Include="Core\Enums\StaffStatus.cs" />
+    <Compile Include="Core\Enums\Role.cs" />
+    <Compile Include="Core\Exceptions\BookstoreException.cs" />
+    <Compile Include="Core\Exceptions\DataNotFoundException.cs" />
+    <Compile Include="Core\Exceptions\ValidationException.cs" />
     <Compile Include="Core\Interfaces\IAuditable.cs" />
     <Compile Include="Core\Interfaces\IExportable.cs" />
+    <Compile Include="Core\Utils\BackupManager.cs" />
+    <Compile Include="Core\Utils\ConfigManager.cs" />
+    <Compile Include="Core\Utils\Encryptor.cs" />
     <Compile Include="Core\Utils\FileHelper.cs" />
+    <Compile Include="Core\Utils\Logger.cs" />
     <Compile Include="Core\Utils\PermissionHelper.cs" />
     <Compile Include="Data\Context\BookstoreDbContext.cs" />
     <Compile Include="Data\Repositories\BookRepository.cs" />
-    <Compile Include="Data\Repositories\CategoryRepository.cs" />
     <Compile Include="Data\Repositories\CustomerRepository.cs" />
     <Compile Include="Data\Repositories\IBookRepository.cs" />
     <Compile Include="Data\Repositories\ICustomerRepository.cs" />
     <Compile Include="Data\Repositories\IOrderRepository.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />
+    <Compile Include="Data\Repositories\ISupplierRepository.cs" />
     <Compile Include="Data\Repositories\IUserRepository.cs" />
     <Compile Include="Data\Repositories\OrderRepository.cs" />
     <Compile Include="Data\Repositories\Repository.cs" />
-    <Compile Include="Core\Exceptions\BookstoreException.cs" />
-    <Compile Include="Core\Exceptions\DataNotFoundException.cs" />
-    <Compile Include="Core\Exceptions\ValidationException.cs" />
     <Compile Include="Data\Repositories\SupplierRepository.cs" />
     <Compile Include="Helpers\ExcelExporter.cs" />
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
+    <Compile Include="Migrations\202511270825429_FixStaffEnumMapping.cs" />
+    <Compile Include="Migrations\202511270825429_FixStaffEnumMapping.Designer.cs">
+      <DependentUpon>202511270825429_FixStaffEnumMapping.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
     <Compile Include="Models\Book.cs" />
-    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Staff.cs" />
+    <Compile Include="Models\StaffDailyRevenue.cs" />
     <Compile Include="Models\Inventory.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />
-    <Compile Include="Models\Payment.cs" />
-    <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Presentation\AppResources\Styles\ButtonStyles.xaml.cs">
@@ -119,6 +240,8 @@
     <Compile Include="Presentation\Converters\DateConverter.cs" />
     <Compile Include="Presentation\Converters\RoleToVisibilityConverter.cs" />
     <Compile Include="Presentation\ViewModels\BaseViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\BookViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\CustomerViewModel.cs" />
     <Compile Include="Presentation\ViewModels\DashboardViewModel.cs" />
     <Compile Include="Presentation\ViewModels\InventoryViewModel.cs" />
     <Compile Include="Presentation\ViewModels\LoginViewModel.cs" />
@@ -126,8 +249,30 @@
     <Compile Include="Presentation\ViewModels\OrderViewModel.cs" />
     <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
     <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
+<<<<<<< HEAD
     <Compile Include="Presentation\Views\Dialogs\Shared\InputDialog.xaml.cs">
+=======
+    <Compile Include="Presentation\Views\Books\BookDetailView.xaml.cs">
+      <DependentUpon>BookDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Books\BookListView.xaml.cs">
+      <DependentUpon>BookListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Customers\CustomerDetailView.xaml.cs">
+      <DependentUpon>CustomerDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Customers\CustomerListView.xaml.cs">
+      <DependentUpon>CustomerListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\ConfirmDialog.xaml.cs">
+      <DependentUpon>ConfirmDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\InputDialog.xaml.cs">
+>>>>>>> origin/feature/hien
       <DependentUpon>InputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\MessageDialog.xaml.cs">
+      <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Inventory\ImportBooksView.xaml.cs">
       <DependentUpon>ImportBooksView.xaml</DependentUpon>
@@ -135,11 +280,29 @@
     <Compile Include="Presentation\Views\Inventory\StockView.xaml.cs">
       <DependentUpon>StockView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Orders\CreateOrderView.xaml.cs">
+      <DependentUpon>CreateOrderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Orders\InvoiceView.xaml.cs">
       <DependentUpon>InvoiceView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Orders\OrderDetailView.xaml.cs">
+      <DependentUpon>OrderDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Orders\OrderListView.xaml.cs">
+      <DependentUpon>OrderListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Statistics\ChartView.xaml.cs">
       <DependentUpon>ChartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Statistics\DashboardView.xaml.cs">
+      <DependentUpon>DashboardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Statistics\ReportView.xaml.cs">
+      <DependentUpon>ReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Suppliers\SupplierDetailView.xaml.cs">
       <DependentUpon>SupplierDetailView.xaml</DependentUpon>
@@ -156,6 +319,7 @@
     <Compile Include="Presentation\Views\Users\UserListView.xaml.cs">
       <DependentUpon>UserListView.xaml</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Resources.cs" />
     <Compile Include="Services\Implementations\AuthService.cs" />
     <Compile Include="Services\Implementations\BookService.cs" />
@@ -328,6 +492,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+=======
+>>>>>>> origin/feature/hien
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -341,24 +507,62 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Services\Implementations\AuthService.cs" />
+    <Compile Include="Services\Implementations\BookService.cs" />
+    <Compile Include="Services\Implementations\CustomerService.cs" />
+    <Compile Include="Services\Implementations\OrderService.cs" />
+    <Compile Include="Services\Implementations\ReportService.cs" />
+    <Compile Include="Services\Implementations\SupplierService.cs" />
+    <Compile Include="Services\Interfaces\IAuthService.cs" />
+    <Compile Include="Services\Interfaces\IBookService.cs" />
+    <Compile Include="Services\Interfaces\ICustomerService.cs" />
+    <Compile Include="Services\Interfaces\IOrderService.cs" />
+    <Compile Include="Services\Interfaces\IReportService.cs" />
+    <Compile Include="Services\Interfaces\ISupplierService.cs" />
+    <Compile Include="Services\Interfaces\IUserService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202511270825429_FixStaffEnumMapping.resx">
+      <DependentUpon>202511270825429_FixStaffEnumMapping.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+<<<<<<< HEAD
     <Resource Include="Presentation\AppResources\Fonts\Quicksand-Bold.ttf" />
     <Resource Include="Presentation\AppResources\Fonts\Quicksand-Light.ttf" />
     <Resource Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
     <Resource Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
     <Resource Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
+=======
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+>>>>>>> origin/feature/hien
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <Resource Include="Presentation\AppResources\Fonts\Quicksand-Bold.ttf" />
+    <Resource Include="Presentation\AppResources\Fonts\Quicksand-Light.ttf" />
+    <Resource Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
+    <Resource Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
+    <Resource Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
+    <Resource Include="Presentation\AppResources\Images\Icons\IN4.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLHD.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLKH.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLKHO.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLNS.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLS.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\TK.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\trangchu.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\TT.png" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Folder Include="Data\Migrations\" />
     <Folder Include="Presentation\Resources\Fonts\" />
     <Folder Include="Presentation\Resources\Images\backgrounds\" />
@@ -393,6 +597,17 @@
     <Resource Include="Presentation\AppResources\Images\Icons\winctr1.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\winctr2.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\winctr3.png" />
+=======
+    <PackageReference Include="EntityFramework">
+      <Version>6.4.4</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.1</Version>
+    </PackageReference>
+    <PackageReference Include="AutoMapper">
+      <Version>12.0.1</Version>
+    </PackageReference>
+>>>>>>> origin/feature/hien
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

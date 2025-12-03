@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace bookstore_Management.Core.Enums
 {
@@ -6,7 +8,7 @@ namespace bookstore_Management.Core.Enums
     /// Các role được gán số để sử dụng
     /// có thể sử dụng .Description để ra tên tiếng việt
     /// </summary>
-    public enum UserRole
+    public enum Role
     {
         [Description("Quản trị viên")]
         Administrator = 1,
@@ -22,5 +24,14 @@ namespace bookstore_Management.Core.Enums
     
         [Description("Quản lý khách hàng")]
         CustomerManager = 5
+    }
+    public static class EnumExtensions
+    {
+        public static string GetDescription(this Enum value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+            var attribute = field?.GetCustomAttribute<DescriptionAttribute>();
+            return attribute?.Description ?? value.ToString();
+        }
     }
 }

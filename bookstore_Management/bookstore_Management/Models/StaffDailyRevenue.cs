@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 ﻿
 using System;
+=======
+﻿using System;
+>>>>>>> origin/feature/hien
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -28,8 +32,16 @@ namespace bookstore_Management.Models
         [Column("revenue")]
         [DataType(DataType.Currency)]
         public decimal Revenue { get; set; } = 0;
+<<<<<<< HEAD
 
         // navigation properties
         public virtual Staff Staff { get; set; } // 1 doanh thu chỉ có 1 nhân viên
     }
 }
+=======
+        
+        // navigation properties
+        public virtual Staff Staff { get; set; } // 1 doanh thu chỉ có 1 nhân viên
+    }
+}
+>>>>>>> origin/feature/hien

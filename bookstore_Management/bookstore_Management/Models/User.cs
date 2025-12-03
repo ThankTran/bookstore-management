@@ -1,12 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.Models
 {
-    internal class User
+
+    /// <summary>
+    /// Thông tin cần quản lý của tài khoản
+    /// </summary>
+    public class User
     {
+        [Key]
+        [StringLength(6)]
+        public string UserId { get; set; }  // mã số nhân viên : NV001,NV002,...
+
+        [Required]
+        [StringLength(50)]
+        public string Username { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string PasswordHash { get; set; }
+        
     }
-}
+}    

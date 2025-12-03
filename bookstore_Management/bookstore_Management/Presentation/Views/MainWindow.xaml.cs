@@ -21,7 +21,10 @@ namespace bookstore_Management.Views
     {
         public MainWindow()
         {
+<<<<<<< HEAD
            //InitializeComponent();
+=======
+>>>>>>> origin/feature/hien
         }
     }
 }

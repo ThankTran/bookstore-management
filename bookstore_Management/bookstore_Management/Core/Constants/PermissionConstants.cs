@@ -14,25 +14,25 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class BookManagement
         {
-            public static readonly UserRole[] View =
+            public static readonly Role[] View =
             {
-                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
-                UserRole.InventoryManager, UserRole.CustomerManager
+                Role.Administrator, Role.SalesManager, Role.SalesStaff,
+                Role.InventoryManager, Role.CustomerManager
             };
 
-            public static readonly UserRole[] Create =
+            public static readonly Role[] Create =
             {
-                UserRole.Administrator, UserRole.InventoryManager
+                Role.Administrator, Role.InventoryManager
             };
 
-            public static readonly UserRole[] Edit =
+            public static readonly Role[] Edit =
             {
-                UserRole.Administrator, UserRole.InventoryManager
+                Role.Administrator, Role.InventoryManager
             };
 
-            public static readonly UserRole[] Delete =
+            public static readonly Role[] Delete =
             {
-                UserRole.Administrator
+                Role.Administrator
             };
         }
 
@@ -42,25 +42,25 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class BillingManagement
         {
-            public static readonly UserRole[] View =
+            public static readonly Role[] View =
             {
-                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
-                UserRole.InventoryManager, UserRole.CustomerManager
+                Role.Administrator, Role.SalesManager, Role.SalesStaff,
+                Role.InventoryManager, Role.CustomerManager
             };
 
-            public static readonly UserRole[] Create =
+            public static readonly Role[] Create =
             {
-                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff
+                Role.Administrator, Role.SalesManager, Role.SalesStaff
             };
 
-            public static readonly UserRole[] Edit =
+            public static readonly Role[] Edit =
             {
-                UserRole.Administrator, UserRole.SalesManager
+                Role.Administrator, Role.SalesManager
             };
 
-            public static readonly UserRole[] Delete =
+            public static readonly Role[] Delete =
             {
-                UserRole.Administrator
+                Role.Administrator
             };
         }
 
@@ -70,20 +70,20 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class StockManagement
         {
-            public static readonly UserRole[] View =
+            public static readonly Role[] View =
             {
-                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
-                UserRole.InventoryManager
+                Role.Administrator, Role.SalesManager, Role.SalesStaff,
+                Role.InventoryManager
             };
 
-            public static readonly UserRole[] Create =
+            public static readonly Role[] Create =
             {
-                UserRole.Administrator, UserRole.InventoryManager
+                Role.Administrator, Role.InventoryManager
             };
 
-            public static readonly UserRole[] Edit =
+            public static readonly Role[] Edit =
             {
-                UserRole.Administrator, UserRole.InventoryManager
+                Role.Administrator, Role.InventoryManager
             };
         }
 
@@ -93,24 +93,24 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class EmployeeManagement
         {
-            public static readonly UserRole[] View =
+            public static readonly Role[] View =
             {
-                UserRole.Administrator, UserRole.SalesManager
+                Role.Administrator, Role.SalesManager
             };
 
-            public static readonly UserRole[] Create =
+            public static readonly Role[] Create =
             {
-                UserRole.Administrator
+                Role.Administrator
             };
 
-            public static readonly UserRole[] Edit =
+            public static readonly Role[] Edit =
             {
-                UserRole.Administrator
+                Role.Administrator
             };
 
-            public static readonly UserRole[] Delete =
+            public static readonly Role[] Delete =
             {
-                UserRole.Administrator
+                Role.Administrator
             };
         }
 
@@ -120,21 +120,21 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class CustomerManagement
         {
-            public static readonly UserRole[] View =
+            public static readonly Role[] View =
             {
-                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
-                UserRole.CustomerManager, UserRole.InventoryManager
+                Role.Administrator, Role.SalesManager, Role.SalesStaff,
+                Role.CustomerManager, Role.InventoryManager
             };
 
-            public static readonly UserRole[] Create =
+            public static readonly Role[] Create =
             {
-                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
-                UserRole.CustomerManager
+                Role.Administrator, Role.SalesManager, Role.SalesStaff,
+                Role.CustomerManager
             };
 
-            public static readonly UserRole[] Edit =
+            public static readonly Role[] Edit =
             {
-                UserRole.Administrator, UserRole.SalesManager, UserRole.CustomerManager
+                Role.Administrator, Role.SalesManager, Role.CustomerManager
             };
         }
 
@@ -144,15 +144,15 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class ReportManagement
         {
-            public static readonly UserRole[] View =
+            public static readonly Role[] View =
             {
-                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
-                UserRole.InventoryManager, UserRole.CustomerManager
+                Role.Administrator, Role.SalesManager, Role.SalesStaff,
+                Role.InventoryManager, Role.CustomerManager
             };
 
-            public static readonly UserRole[] Export =
+            public static readonly Role[] Export =
             {
-                UserRole.Administrator, UserRole.SalesManager
+                Role.Administrator, Role.SalesManager
             };
         }
     }
