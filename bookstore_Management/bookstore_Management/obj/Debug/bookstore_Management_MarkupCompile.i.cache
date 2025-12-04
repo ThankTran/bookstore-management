@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\hk3\lttq\DO AN CK\bookstore_Management\bookstore_Management\App.xaml
-28-1866923972
+301256625893
 1-600760770
-1031513580778
+105484510225
 13-1310406943
-Presentation\AppResources\Styles\ButtonStyles.xaml;Presentation\AppResources\Styles\CardStyles.xaml;Presentation\AppResources\Styles\Colors.xaml;Presentation\AppResources\Styles\DataGridStyles.xaml;Presentation\AppResources\Styles\TextBoxStyles.xaml;Presentation\Views\Books\BookDetailView.xaml;Presentation\Views\Books\BookListView.xaml;Presentation\Views\Customers\CustomerDetailView.xaml;Presentation\Views\Customers\CustomerListView.xaml;Presentation\Views\Dialogs\ConfirmDialog.xaml;Presentation\Views\Dialogs\InputDialog.xaml;Presentation\Views\Dialogs\MessageDialog.xaml;Presentation\Views\Inventory\ImportBooksView.xaml;Presentation\Views\Inventory\StockView.xaml;Presentation\Views\LogIn.xaml;Presentation\Views\MainWindow.xaml;Presentation\Views\Orders\CreateOrderView.xaml;Presentation\Views\Orders\InvoiceView.xaml;Presentation\Views\Orders\OrderDetailView.xaml;Presentation\Views\Orders\OrderListView.xaml;Presentation\Views\Statistics\ChartView.xaml;Presentation\Views\Statistics\DashboardView.xaml;Presentation\Views\Statistics\ReportView.xaml;Presentation\Views\Suppliers\SupplierDetailView.xaml;Presentation\Views\Suppliers\SupplierListView.xaml;Presentation\Views\Users\LoginView.xaml;Presentation\Views\Users\RoleManagementView.xaml;Presentation\Views\Users\UserListView.xaml;
+Presentation\AppResources\Styles\ButtonStyles.xaml;Presentation\AppResources\Styles\CardStyles.xaml;Presentation\AppResources\Styles\Colors.xaml;Presentation\AppResources\Styles\DataGridStyles.xaml;Presentation\AppResources\Styles\TextBoxStyles.xaml;Presentation\Views\Books\BookDetailView.xaml;Presentation\Views\Books\BookListView.xaml;Presentation\Views\Customers\CustomerDetailView.xaml;Presentation\Views\Customers\CustomerListView.xaml;Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml;Presentation\Views\Dialogs\Books\InputBooksDialog.xaml;Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml;Presentation\Views\Dialogs\Customers\AddCustomer.xaml;Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml;Presentation\Views\Dialogs\Customers\EditCustomer.xaml;Presentation\Views\Inventory\ImportBooksView.xaml;Presentation\Views\Inventory\StockView.xaml;Presentation\Views\MainWindow.xaml;Presentation\Views\Orders\CreateOrderView.xaml;Presentation\Views\Orders\InvoiceView.xaml;Presentation\Views\Orders\OrderDetailView.xaml;Presentation\Views\Orders\OrderListView.xaml;Presentation\Views\Statistics\ChartView.xaml;Presentation\Views\Statistics\DashboardView.xaml;Presentation\Views\Statistics\ReportView.xaml;Presentation\Views\Suppliers\SupplierDetailView.xaml;Presentation\Views\Suppliers\SupplierListView.xaml;Presentation\Views\Users\LoginView.xaml;Presentation\Views\Users\RoleManagementView.xaml;Presentation\Views\Users\UserListView.xaml;
 
-False
+True
 

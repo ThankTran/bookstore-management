@@ -108,17 +108,29 @@
     <Compile Include="Presentation\ViewModels\OrderViewModel.cs" />
     <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
     <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
-    <Compile Include="Presentation\Views\Dialogs\InputDialog.xaml.cs">
-      <DependentUpon>InputDialog.xaml</DependentUpon>
+    <Compile Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml.cs">
+      <DependentUpon>ConfirmBooksDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml.cs">
+      <DependentUpon>InputBooksDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml.cs">
+      <DependentUpon>UpdateBooksDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml.cs">
+      <DependentUpon>AddCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml.cs">
+      <DependentUpon>DeleteCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml.cs">
+      <DependentUpon>EditCustomer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Inventory\ImportBooksView.xaml.cs">
       <DependentUpon>ImportBooksView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Inventory\StockView.xaml.cs">
       <DependentUpon>StockView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\LogIn.xaml.cs">
-      <DependentUpon>LogIn.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -190,12 +202,6 @@
     <Compile Include="Presentation\Views\Customers\CustomerListView.xaml.cs">
       <DependentUpon>CustomerListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Dialogs\ConfirmDialog.xaml.cs">
-      <DependentUpon>ConfirmDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\Dialogs\MessageDialog.xaml.cs">
-      <DependentUpon>MessageDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Presentation\Views\Orders\CreateOrderView.xaml.cs">
       <DependentUpon>CreateOrderView.xaml</DependentUpon>
     </Compile>
@@ -251,15 +257,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\ConfirmDialog.xaml">
+    <Page Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\InputDialog.xaml">
+    <Page Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\MessageDialog.xaml">
+    <Page Include="Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -268,10 +286,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\Views\Inventory\StockView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Presentation\Views\LogIn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -366,6 +380,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Resource Include="Presentation\AppResources\Images\Icons\return.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\add.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\search.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\edit.png" />
