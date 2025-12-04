@@ -12,16 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Views.Dialogs
+namespace bookstore_Management.Presentation.Views.Dialogs.Books
 {
     /// <summary>
-    /// Interaction logic for ConfirmDialog.xaml
+    /// Interaction logic for UpdateBooksDialog.xaml
     /// </summary>
-    public partial class ConfirmDialog : Window
+    public partial class UpdateBooksDialog : Window
     {
-        public ConfirmDialog()
+        public UpdateBooksDialog()
         {
-            InitializeComponent();
+           // InitializeComponent();
         }
     }
 }

@@ -1,46 +1,143 @@
-﻿using System;
+﻿using bookstore_Management.Presentation.Views.Dialogs.Customers;
+using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace bookstore_Management.Views.Customers
 {
-    /// <summary>
-    /// Interaction logic for CustomerListView.xaml
-    /// </summary>
     public partial class CustomerListView : UserControl
     {
         public ObservableCollection<Customer> Customers { get; set; }
         public event EventHandler<Customer> CustomerSelected;
 
-        // Khởi tạo danh sách khách hàng mẫu
         public CustomerListView()
         {
             InitializeComponent();
+            DataContext = this;
             LoadSampleData();
         }
 
-        // Xử lý click nút thêm khách hàng
-        private void btnAdd_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
+            var owner = Window.GetWindow(this);
+            var dialog = new AddCustomer();
+
+            if (owner != null)
+            {
+                dialog.Owner = owner;
+                UpdateLayout();
+
+                var pos = PointToScreen(new Point(0, 0));
+
+                double left = pos.X + (ActualWidth - dialog.Width) / 2;
+                double top = pos.Y + (ActualHeight - dialog.Height) / 2;
+
+                dialog.Left = Math.Round(left);
+                dialog.Top = Math.Round(top);
+            }
+
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                var newCustomer = new Customer
+                {
+                    STT = Customers.Count + 1,
+                    MaKH = $"KH{100 + Customers.Count}",
+                    TenKH = dialog.CustomerName,
+                    SDT = dialog.Phone,
+                    HangThanhVien = "Đồng",
+                    DoanhThu = 0
+                };
+
+                Customers.Add(newCustomer);
+            }
         }
 
-        // Xử lý click nút sửa trong từng dòng
-        private void btnEdit_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is Button button && button.DataContext is Customer customer)
+            {
+                var owner = Window.GetWindow(this);
+                var editDialog = new EditCustomer(customer);
+
+                // Ép trạng thái & kích thước đúng như design
+                editDialog.WindowState = WindowState.Normal;
+                editDialog.Width = 456;
+                editDialog.Height = 316;
+
+                if (owner != null)
+                {
+                    editDialog.Owner = owner;
+                    UpdateLayout();
+
+                    var pos = PointToScreen(new Point(0, 0));
+
+                    double left = pos.X + (ActualWidth - editDialog.Width) / 2;
+                    double top = pos.Y + (ActualHeight - editDialog.Height) / 2;
+
+                    editDialog.Left = Math.Round(left);
+                    editDialog.Top = Math.Round(top);
+                }
+
+                bool? result = editDialog.ShowDialog();
+
+                if (result == true)
+                {
+                    dgCustomers.Items.Refresh();
+
+                    MessageBox.Show("Đã cập nhật thông tin khách hàng!",
+                        "Thành công",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+            }
         }
 
-        // Xử lý click nút xóa trong từng dòng
-        private void btnDelete_Click(object sender, System.Windows.RoutedEventArgs e)
+
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is Button btn && btn.DataContext is Customer selectedCustomer)
+            {
+                var owner = Window.GetWindow(this);
+                var dialog = new DeleteCustomer();
+
+                if (owner != null)
+                {
+                    dialog.Owner = owner;
+                    UpdateLayout();
+
+                    var pos = PointToScreen(new Point(0, 0));
+
+                    double left = pos.X + (ActualWidth - dialog.Width) / 2;
+                    double top = pos.Y + (ActualHeight - dialog.Height) / 2;
+
+                    dialog.Left = Math.Round(left);
+                    dialog.Top = Math.Round(top);
+                }
+
+                bool? result = dialog.ShowDialog();
+
+                if (result == true && dialog.IsConfirmed)
+                {
+                    Customers.Remove(selectedCustomer);
+                    ReindexCustomers();
+                }
+            }
         }
 
-        // Xử lý thay đổi lựa chọn khách hàng (dùng khi cần mở rộng)
-        private void dgCustomers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ReindexCustomers()
         {
+            int index = 1;
+            foreach (var c in Customers)
+                c.STT = index++;
+
+            dgCustomers.Items.Refresh();
         }
 
-        // Xử lý double-click trên một dòng để mở màn chi tiết khách hàng
         private void dgCustomers_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (dgCustomers.SelectedItem is Customer selectedCustomer)
@@ -49,7 +146,6 @@ namespace bookstore_Management.Views.Customers
             }
         }
 
-        // Tải dữ liệu khách hàng mẫu cho DataGrid
         private void LoadSampleData()
         {
             Customers = new ObservableCollection<Customer>

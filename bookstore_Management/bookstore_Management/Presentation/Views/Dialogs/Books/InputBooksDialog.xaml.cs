@@ -12,16 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Presentation.Views.Dialogs
+namespace bookstore_Management.Presentation.Views.Dialogs.Books
 {
     /// <summary>
-    /// Interaction logic for InputDialog.xaml
+    /// Interaction logic for InputBooksDialog.xaml
     /// </summary>
-    public partial class InputDialog : Window
+    public partial class InputBooksDialog : Window
     {
-        public InputDialog()
+        public InputBooksDialog()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
     }
 }
