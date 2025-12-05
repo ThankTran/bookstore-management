@@ -9,7 +9,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Services.Interfaces
 {
-    internal interface ISupplierService
+    public interface ISupplierService
     {
         // CRUD cho Supplier
         Result<string> AddSupplier(SupplierDto dto);
@@ -21,7 +21,7 @@ namespace bookstore_Management.Services.Interfaces
         // Tìm kiếm
         Result<Supplier> GetSupplierByPhone(string phone);
         Result<IEnumerable<Supplier>> SearchByName(string name);
-        Result<IEnumerable<Supplier>> SearchByEmail(string email);
+        Result<Supplier> SearchByEmail(string email);
         
         // Quản lý sách từ NCC
         Result<IEnumerable<Book>> GetBooksBySupplier(string supplierId);

@@ -8,14 +8,14 @@ using bookstore_Management.Core.Results;
 using bookstore_Management.DTOs;
 using bookstore_Management.Models;
 
-namespace bookstore_Management.Services
+namespace bookstore_Management.Services.Interfaces
 {
     internal interface IOrderService
     {
         // CRUD cho Order
         Result<string> CreateOrder(OrderDto dto);
         Result UpdateOrder(string orderId, UpdateOrderDto dto);
-        Result CancelOrder(string orderId);
+        Result DeleteOrder(string orderId);
         Result<Order> GetOrderById(string orderId);
         Result<IEnumerable<Order>> GetAllOrders();
         

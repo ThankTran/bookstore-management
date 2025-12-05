@@ -4,13 +4,13 @@ using bookstore_Management.Core.Results;
 using bookstore_Management.DTOs;
 using bookstore_Management.Models;
 
-namespace bookstore_Management.Services
+namespace bookstore_Management.Services.Interfaces
 {
     internal interface ICustomerService
     {
         // CRUD cho Customer
         Result<string> AddCustomer(CustomerDto dto);
-        Result UpdateCustomer(string customerId, CustomerDto dto);
+        Result UpdateCustomer(string customerName, CustomerDto dto);
         Result DeleteCustomer(string customerId);
         Result<Customer> GetCustomerById(string customerId);
         Result<IEnumerable<Customer>> GetAllCustomers();

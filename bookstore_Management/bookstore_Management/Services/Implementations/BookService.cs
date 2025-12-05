@@ -4,8 +4,10 @@ using System.Linq;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories;
+using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.DTOs;
 using bookstore_Management.Models;
+using bookstore_Management.Services.Interfaces;
 
 namespace bookstore_Management.Services.Implementations
 {
@@ -32,15 +34,15 @@ namespace bookstore_Management.Services.Implementations
                     return Result<string>.Fail("Giá nhập phải > 0");
                     
                 // Check supplier exists
-                var supplier = _supplierRepository.Get(dto.SupplierId);
+                var supplier = _supplierRepository.GetById(dto.SupplierId);
                 if (supplier == null)
                     return Result<string>.Fail("Nhà cung cấp không tồn tại");
                 
                 // Generate Book ID
-                string bookId = GenerateBookId();
+                var bookId = GenerateBookId();
                 
                 // Calculate sale price (import price + 30%)
-                decimal salePrice = dto.ImportPrice * 1.3m;
+                var salePrice = dto.ImportPrice * 1.3m;
                 
                 // Create book
                 var book = new Book
@@ -68,7 +70,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var book = _bookRepository.Get(bookId);
+                var book = _bookRepository.GetById(bookId);
                 if (book == null)
                     return Result.Fail("Sách không tồn tại");
                 
@@ -114,7 +116,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var book = _bookRepository.Get(bookId);
+                var book = _bookRepository.GetById(bookId);
                 if (book == null)
                     return Result<Book>.Fail("Sách không tồn tại");
                     
@@ -182,12 +184,11 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var book = _bookRepository.Get(bookId);
+                var book = _bookRepository.GetById(bookId);
                 if (book == null)
                     return Result.Fail("Sách không tồn tại");
                 
-                // Simple stock update logic
-                // In real app, you'd track import/export
+                // logic
                 return Result.Success("Cập nhật tồn kho thành công");
             }
             catch (Exception ex)
@@ -200,11 +201,11 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var book = _bookRepository.Get(bookId);
+                var book = _bookRepository.GetById(bookId);
                 if (book == null)
                     return Result.Fail("Sách không tồn tại");
                 
-                // Simplified - always return success for demo
+                // logic
                 return Result.Success("Còn hàng");
             }
             catch (Exception ex)
@@ -217,7 +218,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                // Simplified - always return empty for demo
+                // logic
                 return Result<IEnumerable<Book>>.Success(new List<Book>());
             }
             catch (Exception ex)
@@ -230,7 +231,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var book = _bookRepository.Get(bookId);
+                var book = _bookRepository.GetById(bookId);
                 if (book == null)
                     return Result.Fail("Sách không tồn tại");
                 
@@ -250,14 +251,14 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var book = _bookRepository.Get(bookId);
+                var book = _bookRepository.GetById(bookId);
                 if (book == null)
                     return Result<decimal>.Fail("Sách không tồn tại");
                 
                 if (!book.SalePrice.HasValue || book.ImportPrice == 0)
                     return Result<decimal>.Fail("Không thể tính lợi nhuận");
                 
-                decimal profit = book.SalePrice.Value - book.ImportPrice;
+                var profit = book.SalePrice.Value - book.ImportPrice;
                 return Result<decimal>.Success(profit);
             }
             catch (Exception ex)
@@ -266,6 +267,11 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
+        
+        /// <summary>
+        /// Hàm book id generate
+        /// </summary>
+        /// <returns></returns>
         private string GenerateBookId()
         {
             var lastBook = _bookRepository.GetAll()
@@ -275,7 +281,7 @@ namespace bookstore_Management.Services.Implementations
             if (lastBook == null || !lastBook.BookId.StartsWith("S"))
                 return "S00001";
                 
-            int lastNumber = int.Parse(lastBook.BookId.Substring(1));
+            var lastNumber = int.Parse(lastBook.BookId.Substring(1));
             return $"S{(lastNumber + 1):D5}";
         }
     }

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using bookstore_Management.Core.Enums;
-using bookstore_Management.Core.Results;
-using bookstore_Management.DTOs;
-using bookstore_Management.Models;
+﻿
+ using System.Collections.Generic;
+ using bookstore_Management.Core.Enums;
+ using bookstore_Management.Core.Results;
+ using bookstore_Management.DTOs;
+ using bookstore_Management.Models;
 
-namespace bookstore_Management.Services
+namespace bookstore_Management.Services.Interfaces
 {
     internal interface IBookService
     {

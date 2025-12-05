@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories;
+using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.DTOs;
 using bookstore_Management.Models;
+using bookstore_Management.Services.Interfaces;
 
-namespace bookstore_Management.Services
+namespace bookstore_Management.Services.Implementations
 {
      public class OrderService : IOrderService
     {
@@ -19,8 +19,8 @@ namespace bookstore_Management.Services
         private readonly ICustomerRepository _customerRepository;
         private readonly IStaffRepository _staffRepository;
 
-        public OrderService(
-            IOrderRepository orderRepository,
+        internal OrderService(
+            IOrderRepository orderRepository,   
             IOrderDetailRepository orderDetailRepository,
             IBookRepository bookRepository,
             ICustomerRepository customerRepository,
@@ -33,7 +33,7 @@ namespace bookstore_Management.Services
             _staffRepository = staffRepository;
         }
 
-        public Result<string> CreateOrder(CreateOrderDto dto)
+        public Result<string> CreateOrder(OrderDto dto)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace bookstore_Management.Services
                 if (staff == null)
                     return Result<string>.Fail("Nhân viên không tồn tại");
                 
-                // Validate customer (if provided)
+                // Validate customer 
                 if (!string.IsNullOrEmpty(dto.CustomerId))
                 {
                     var customer = _customerRepository.GetById(dto.CustomerId);
@@ -57,7 +57,7 @@ namespace bookstore_Management.Services
                 decimal totalPrice = 0;
                 var orderDetails = new List<OrderDetail>();
                 
-                // Calculate total and prepare order details
+                // Calculate total
                 foreach (var item in dto.Items)
                 {
                     var book = _bookRepository.GetById(item.BookId);
@@ -70,7 +70,7 @@ namespace bookstore_Management.Services
                     if (!book.SalePrice.HasValue)
                         return Result<string>.Fail($"Sách {book.Name} chưa có giá bán");
                     
-                    decimal itemTotal = book.SalePrice.Value * item.Quantity;
+                    var itemTotal = book.SalePrice.Value * item.Quantity;
                     totalPrice += itemTotal;
                     
                     orderDetails.Add(new OrderDetail
@@ -78,8 +78,7 @@ namespace bookstore_Management.Services
                         OrderId = "", // Will be set after order created
                         BookId = item.BookId,
                         SalePrice = book.SalePrice.Value,
-                        Quantity = item.Quantity,
-                        Notes = item.Notes
+                        Quantity = item.Quantity
                     });
                 }
                 
@@ -127,28 +126,29 @@ namespace bookstore_Management.Services
             try
             {
                 var order = _orderRepository.GetById(orderId);
-                if (order == null)
+                if (order == null || order.DeletedDate != null)
                     return Result.Fail("Đơn hàng không tồn tại");
-                
-                // Only allow update notes for now
+
                 if (!string.IsNullOrEmpty(dto.Notes))
                     order.Notes = dto.Notes;
-                
+
                 if (dto.PaymentMethod.HasValue)
                     order.PaymentMethod = dto.PaymentMethod.Value;
-                
+
                 if (dto.Discount.HasValue)
                 {
-                    // Recalculate total with new discount
                     var orderDetails = _orderDetailRepository.Find(od => od.OrderId == orderId);
-                    decimal subtotal = orderDetails.Sum(od => od.SalePrice * od.Quantity);
-                    order.Discount = dto.Discount.Value;
-                    order.TotalPrice = subtotal - dto.Discount.Value;
+                    var subtotal = orderDetails.Sum(od => od.SalePrice * od.Quantity);
+
+                    // discount theo %
+                    var discountAmount = subtotal * (dto.Discount.Value / 100m);
+                    order.Discount = discountAmount;
+                    order.TotalPrice = subtotal - discountAmount;
                 }
-                
+
                 _orderRepository.Update(order);
                 _orderRepository.SaveChanges();
-                
+
                 return Result.Success("Cập nhật đơn hàng thành công");
             }
             catch (Exception ex)
@@ -157,20 +157,20 @@ namespace bookstore_Management.Services
             }
         }
 
-        public Result CancelOrder(string orderId)
+        public Result DeleteOrder(string orderId)
         {
             try
             {
                 var order = _orderRepository.GetById(orderId);
-                if (order == null)
+                if (order == null || order.DeletedDate != null)
                     return Result.Fail("Đơn hàng không tồn tại");
-                
-                // In real app, you might want to add a status field
-                // For now, just delete
-                _orderRepository.Delete(orderId);
+
+                // Soft delete
+                order.DeletedDate = DateTime.Now;
+                _orderRepository.Update(order);
                 _orderRepository.SaveChanges();
-                
-                return Result.Success("Hủy đơn hàng thành công");
+
+                return Result.Success("Hủy đơn hàng thành công (soft delete)");
             }
             catch (Exception ex)
             {
@@ -237,9 +237,9 @@ namespace bookstore_Management.Services
         {
             try
             {
-                // Note: Order model doesn't have OrderDate field
-                // You might need to add it
-                var orders = _orderRepository.GetAll(); // Simplified
+                var orders = _orderRepository.Find(o => 
+                    o.CreatedDate >= fromDate && o.CreatedDate <= toDate && o.DeletedDate == null);
+
                 return Result<IEnumerable<Order>>.Success(orders);
             }
             catch (Exception ex)
@@ -252,25 +252,32 @@ namespace bookstore_Management.Services
         {
             try
             {
-                var query = _orderRepository.GetAll().AsQueryable();
-                
+                var query = _orderRepository.GetAll()
+                    .Where(o => o.DeletedDate == null)
+                    .AsQueryable();
+
                 if (!string.IsNullOrEmpty(criteria.StaffId))
                     query = query.Where(o => o.StaffId == criteria.StaffId);
-                    
+
                 if (!string.IsNullOrEmpty(criteria.CustomerId))
                     query = query.Where(o => o.CustomerId == criteria.CustomerId);
-                    
+
                 if (criteria.PaymentMethod.HasValue)
                     query = query.Where(o => o.PaymentMethod == criteria.PaymentMethod.Value);
-                    
+
                 if (criteria.MinTotal.HasValue)
                     query = query.Where(o => o.TotalPrice >= criteria.MinTotal.Value);
-                    
+
                 if (criteria.MaxTotal.HasValue)
                     query = query.Where(o => o.TotalPrice <= criteria.MaxTotal.Value);
-                
-                var orders = query.ToList();
-                return Result<IEnumerable<Order>>.Success(orders);
+
+                if (criteria.FromDate.HasValue)
+                    query = query.Where(o => o.CreatedDate >= criteria.FromDate.Value);
+
+                if (criteria.ToDate.HasValue)
+                    query = query.Where(o => o.CreatedDate <= criteria.ToDate.Value);
+
+                return Result<IEnumerable<Order>>.Success(query.ToList());
             }
             catch (Exception ex)
             {
@@ -326,7 +333,7 @@ namespace bookstore_Management.Services
             }
         }
 
-        public Result<decimal> CalculateOrderTotal(CreateOrderDto dto)
+        public Result<decimal> CalculateOrderTotal(OrderDto dto)
         {
             try
             {
@@ -384,8 +391,7 @@ namespace bookstore_Management.Services
                         OrderId = orderId,
                         BookId = item.BookId,
                         SalePrice = book.SalePrice.Value,
-                        Quantity = item.Quantity,
-                        Notes = item.Notes
+                        Quantity = item.Quantity
                     };
                     _orderDetailRepository.Add(detail);
                 }
@@ -412,7 +418,7 @@ namespace bookstore_Management.Services
                 if (detail == null)
                     return Result.Fail("Không tìm thấy sách trong đơn hàng");
                 
-                _orderDetailRepository.Delete(detail);
+                //_orderDetailRepository.Delete(detail);
                 _orderDetailRepository.SaveChanges();
                 
                 // Recalculate order total
@@ -487,9 +493,9 @@ namespace bookstore_Management.Services
             if (order == null) return;
             
             var orderDetails = _orderDetailRepository.Find(od => od.OrderId == orderId);
-            decimal subtotal = orderDetails.Sum(od => od.SalePrice * od.Quantity);
+            var subtotal = orderDetails.Sum(od => od.SalePrice * od.Quantity);
             
-            order.TotalPrice = subtotal - (order.Discount ?? 0);
+            //order.TotalPrice = subtotal - (order.Discount ?? 0);
             _orderRepository.Update(order);
             _orderRepository.SaveChanges();
         }
