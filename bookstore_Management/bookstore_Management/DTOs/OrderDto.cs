@@ -10,7 +10,6 @@ namespace bookstore_Management.DTOs
     /// </summary>
     public class OrderDto
     {
-
         public string StaffId { get; set; }
         public string CustomerId { get; set; } 
         public PaymentType PaymentMethod { get; set; }

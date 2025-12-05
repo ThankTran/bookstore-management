@@ -9,11 +9,12 @@ namespace bookstore_Management.DTOs
     /// </summary>
     public class BookDto
     {
+        public string BookId { get; set; }
         public string Name { get; set; }
         public string SupplierId { get; set; }
         public BookCategory Category { get; set; }
         public decimal ImportPrice { get; set; }
-        public int InitialStock { get; set; } = 0;
+        
     }
     
     /// <summary>
