@@ -4,8 +4,6 @@ namespace bookstore_Management.Core.Enums
 {
     public enum MemberTier
     {
-        [Display(Name = "Vãng lai")]
-        WalkIn = 0,
         
         [Display(Name = "Thành viên đồng")]
         Bronze = 1,

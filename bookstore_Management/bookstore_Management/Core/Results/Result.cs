@@ -10,7 +10,7 @@ namespace bookstore_Management.Core.Results
     public class Result
     {
         public bool IsSuccess { get; } // trạng thái thành công
-        public bool IsFailure => !IsSuccess; // trạng thái thất bại - đảo của IsSuccess
+        public bool IsFailure => !IsSuccess; // trạng thái thất bại 
         public string ErrorMessage { get; } // tin nhắn báo lỗi
         public List<string> ValidationErrors { get; } // danh sách lỗi
 

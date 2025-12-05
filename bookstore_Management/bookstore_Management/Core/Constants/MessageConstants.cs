@@ -24,7 +24,7 @@ namespace bookstore_Management.Core.Constants
 
         // Cảnh báo
         public const string ConfirmDelete = "Bạn có chắc muốn xóa?";
-        public const string UnsavedChanges = "Có thay đổi chưa lưu. Bạn có muốn tiếp tục ?";
+        public const string UnsavedChanges = "Có thay đổi chưa lưu. Bạn có muốn tiếp tục?";
 
         // Validation
         public const string Required = "Mục này là bắt buộc";

@@ -7,8 +7,6 @@ namespace bookstore_Management.Core.Constants
     /// </summary>
     public class PermissionConstants
     {
-
-        
         /// <summary>
         /// Quyền truy cập Quản Lý Sách
         /// </summary>
@@ -36,7 +34,6 @@ namespace bookstore_Management.Core.Constants
             };
         }
 
-        
         /// <summary>
         /// Quyền truy cập Quản Lý Hóa Đơn
         /// </summary>
@@ -64,7 +61,6 @@ namespace bookstore_Management.Core.Constants
             };
         }
 
-        
         /// <summary>
         /// Quyền truy cập Quản Lý Kho
         /// </summary>
@@ -85,9 +81,14 @@ namespace bookstore_Management.Core.Constants
             {
                 Role.Administrator, Role.InventoryManager
             };
+
+            // THÊM: Delete quyền cho Stock
+            public static readonly Role[] Delete =
+            {
+                Role.Administrator
+            };
         }
 
-        
         /// <summary>
         /// Quyền truy cập Quản Lý Nhân Viên
         /// </summary>
@@ -114,7 +115,6 @@ namespace bookstore_Management.Core.Constants
             };
         }
 
-
         /// <summary>
         /// Quyền truy cập Quản Lý Khách Hàng
         /// </summary>
@@ -136,9 +136,14 @@ namespace bookstore_Management.Core.Constants
             {
                 Role.Administrator, Role.SalesManager, Role.CustomerManager
             };
+
+            // THÊM: Delete quyền cho Customer
+            public static readonly Role[] Delete =
+            {
+                Role.Administrator
+            };
         }
 
-        
         /// <summary>
         /// Quyền truy cập Báo Cáo Doanh Thu
         /// </summary>
@@ -156,4 +161,5 @@ namespace bookstore_Management.Core.Constants
             };
         }
     }
+
 }
