@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Data.Context;
+using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
 
-namespace bookstore_Management.Data.Repositories
+namespace bookstore_Management.Data.Repositories.Implementations
 {
     internal class BookRepository : Repository<Book,string>,IBookRepository
     {

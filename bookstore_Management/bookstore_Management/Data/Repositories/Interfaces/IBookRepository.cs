@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Models;
 
-namespace bookstore_Management.Data.Repositories
+namespace bookstore_Management.Data.Repositories.Interfaces
 {
     /// <summary>
     /// thêm các phương thức cần thiết cho sách

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using bookstore_Management.Data.Repositories.Interfaces;
 
-namespace bookstore_Management.Data.Repositories
+namespace bookstore_Management.Data.Repositories.Implementations
 {
     /// <summary>
     /// Class implement từ IRepository
@@ -35,7 +33,7 @@ namespace bookstore_Management.Data.Repositories
             return _dbSet.ToList();
         }
 
-        public T Get(TKey id)
+        public T GetById(TKey id)
         {
             return _dbSet.Find(id);
         }

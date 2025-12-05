@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace bookstore_Management.Data.Repositories
+namespace bookstore_Management.Data.Repositories.Interfaces
 {
     internal interface IUserRepository
     {

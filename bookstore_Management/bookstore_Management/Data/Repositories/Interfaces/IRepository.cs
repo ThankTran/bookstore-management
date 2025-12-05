@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace bookstore_Management.Data.Repositories
+namespace bookstore_Management.Data.Repositories.Interfaces
 {
     /// <summary>
     /// Generic repository interface cho CRUD operations
@@ -17,7 +17,7 @@ namespace bookstore_Management.Data.Repositories
     {
         // Get
         IEnumerable<T> GetAll(); // lấy hết thông tin từ bảng
-        T Get(TKey id); // lấy thông tin dựa trên khóa chính
+        T GetById(TKey id); // lấy thông tin dựa trên khóa chính
         IEnumerable<T> Find(Expression<Func<T, bool>> predicate); // tìm thông tin
         bool Exists(Expression<Func<T, bool>> predicate); // kiểm tra tồn tại
         int Count(); // đếm
