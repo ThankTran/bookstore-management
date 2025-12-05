@@ -7,52 +7,53 @@ using bookstore_Management.Core.Enums;
 namespace bookstore_Management.Models
 {
     /// <summary>
-    /// Thông tin cần quản lý của hóa đơn - tổng quát
+    /// Thông tin của hóa đơn bán hàng
     /// </summary>
     public class Order
     {
-        // mã hóa đơn - khóa chính
         [Required]
         [StringLength(6)]
-        [Column("order_id")]
+        [Column("id")]
         public string OrderId { get; set; }
 
-        // mã nhân viên - khóa ngoại
         [Required]
         [StringLength(6)]
         [Column("staff_id")]
         public string StaffId { get; set; }
 
-        // CustomerId có thể NULL (khách vãng lai) - khóa ngoại
         [StringLength(6)]
         [Column("customer_id")]
         public string CustomerId { get; set; }
 
-        // phương thức thanh toán
         [Required]
         [Column("payment_method")]
         public PaymentType PaymentMethod { get; set; }
 
-        // giảm giá
         [Required]
-        [Column("discount")] 
-        public decimal? Discount { get; set; } = 0;
+        [Column("discount", TypeName = "decimal(18,2)")]
+        public decimal Discount { get; set; } = 0;
 
-        // tổng tiền
         [Required]
-        [Column("total_price")]
-        [DataType(DataType.Currency)]
+        [Column("total_price", TypeName = "decimal(18,2)")]
         public decimal TotalPrice { get; set; }
-        
-        // ghi chú
+
         [Column("note")]
         [StringLength(500)]
         public string Notes { get; set; }
-        
-        // Navigation properties 
-        public virtual Staff Staff { get; set; } // chỉ có 1 nhân viên tọa hóa đơn
-        public virtual Customer Customer { get; set; } // chỉ có 1 hoặc không có khách hàng
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; } // có 1 hoặc nhiều chi tiết đơn hàng
 
+        [Required]
+        [Column("created_date")]
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+
+        [Column("updated_date")]
+        public DateTime? UpdatedDate { get; set; }
+
+        [Column("deleted_date")]
+        public DateTime? DeletedDate { get; set; }
+
+        // Navigation properties
+        public virtual Staff Staff { get; set; }
+        public virtual Customer Customer { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

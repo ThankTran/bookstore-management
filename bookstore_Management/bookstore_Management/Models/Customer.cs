@@ -1,60 +1,62 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.Models
 {
     /// <summary>
     /// Thông tin cần quản lý của khách hàng
-    /// Note :
+    /// Note:
     ///      + Hiển thị tổng chi của khách hàng ở service
-    ///      + hạng thành viên chỉ tồn tại trong vòng 1 năm ( xem xét )
+    ///      + Hạng thành viên chỉ tồn tại trong vòng 1 năm (xem xét)
     ///      + Các khách hàng vãng lai không được lưu trữ
     /// </summary>
     public class Customer
     {
-        // mã khách hàng - khóa chính
+        [Required]
         [Column("id")]
         [StringLength(6)]
         public string CustomerId { get; set; }
 
-        // tên khách hàng
         [Required]
         [Column("name")]
         [StringLength(50)]
-        public string Name { get; set; } 
-        
-        // điện thoại khách hàng
+        public string Name { get; set; }
+
         [Required]
         [Column("phone")]
-        [StringLength(30)]
+        [StringLength(20)]
         public string Phone { get; set; }
-        
-        // email - có thể null
+
         [Column("email")]
         [StringLength(100)]
-        [EmailAddress]
         public string Email { get; set; }
-        
-        // địa chỉ - có thể null
+
         [Column("address")]
         [StringLength(200)]
         public string Address { get; set; }
-        
-        // điểm tích lũy
+
         [Required]
-        [Column("loyalty_points")]
+        [Column("loyalty_points", TypeName = "decimal(18,2)")]
         public decimal LoyaltyPoints { get; set; } = 0;
 
-        // hạng thành viên
-        [Required] 
-        [Column("member_level")] 
-        public MemberTier MemberLevel { get; set; } = MemberTier.WalkIn;
-        
-        // Navigation properties 
-        public virtual ICollection<Order> Orders { get; set; } // 1 khách hàng có thể có nhiều hóa đơn
+        [Required]
+        [Column("member_level")]
+        public MemberTier MemberLevel { get; set; } = MemberTier.Bronze;
 
+        [Required]
+        [Column("created_date")]
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+
+        [Column("updated_date")]
+        public DateTime? UpdatedDate { get; set; }
+        
+        [Column("deleted_date")]
+        public DateTime? DeletedDate { get; set; }
+
+        // Navigation properties
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

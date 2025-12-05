@@ -6,41 +6,38 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace bookstore_Management.Models
 {
     /// <summary>
-    /// Thông tin cần quản lí của hóa đơn - chi tiết
+    /// Chi tiết của hóa đơn bán hàng
     /// </summary>
     public class OrderDetail
     {
-        // mã hóa đơn - khóa chính - khóa ngoại
         [Required]
-        [StringLength(20)]
-        [Column("Order_id")]
+        [StringLength(6)]
+        [Column("order_id")]
         public string OrderId { get; set; }
 
-        // mã sách - khóa chính - khóa ngoại
         [Required]
-        [StringLength(6)] 
-        [Column("book_id")] 
-        public string BookId { get; set; } 
-        
-        // tiền bán tại thời điểm đó
-        [Required]
-        [Column("sale_price")]
-        [DataType(DataType.Currency)]
-        public decimal SalePrice { get; set; }  
+        [StringLength(6)]
+        [Column("book_id")]
+        public string BookId { get; set; }
 
-        // số lượng
+        [Required]
+        [Column("sale_price", TypeName = "decimal(18,2)")]
+        public decimal SalePrice { get; set; }
+
         [Required]
         [Column("quantity")]
         public int Quantity { get; set; }
-        
-        // ghi chú
+
+        [Required]
+        [Column("subtotal", TypeName = "decimal(18,2)")]
+        public decimal Subtotal { get; set; }
+
         [Column("note")]
         [StringLength(500)]
         public string Notes { get; set; }
-        
-        // navigation properties
-        public virtual Book Book { get; set; } 
-        public virtual Order Order { get; set; } 
-    
+
+        // Navigation properties
+        public virtual Book Book { get; set; }
+        public virtual Order Order { get; set; }
     }
 }

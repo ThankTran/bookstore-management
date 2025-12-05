@@ -10,47 +10,48 @@ using bookstore_Management.Core.Enums;
 namespace bookstore_Management.Models
 {
     /// <summary>
-    /// Các thông tin cần lưu trữ của sách
+    /// Thông tin cần lưu trữ của sách
     /// </summary>
     public class Book
     {
-        // mã sách - khóa chính 
         [Required]
         [StringLength(6)]
         [Column("id")]
         public string BookId { get; set; }
 
-        // tên sách
         [Required]
         [StringLength(50)]
         [Column("name")]
         public string Name { get; set; }
 
-        // mã nhà cung cấp - khóa ngoại
         [Required]
         [StringLength(6)]
-        [Column("Supplier_id")]
+        [Column("supplier_id")]
         public string SupplierId { get; set; }
-        
-        // thể loại sách 
+
         [Required]
         [Column("category")]
         public BookCategory Category { get; set; }
 
-        // giá bán - có thể null
-        [Column("sale_price")]
-        [DataType(DataType.Currency)]
-        public decimal? SalePrice { get; set; }  
+        [Column("sale_price", TypeName = "decimal(18,2)")]
+        public decimal? SalePrice { get; set; }
 
-        // giá nhập
         [Required]
-        [Column("import_price")]
-        [DataType(DataType.Currency)]
+        [Column("import_price", TypeName = "decimal(18,2)")]
         public decimal ImportPrice { get; set; }
-        
-        // navigation properties
+
+        [Required]
+        [Column("created_date")]
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+
+        [Column("updated_date")]
+        public DateTime? UpdatedDate { get; set; }
+
+        [Column("deleted_date")]
+        public DateTime? DeletedDate { get; set; }
+
+        // Navigation properties
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual Supplier Supplier { get; set; }
-        
     }
 }
