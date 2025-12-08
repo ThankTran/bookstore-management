@@ -4,6 +4,20 @@
              xmlns:local="clr-namespace:bookstore_Management"
             StartupUri="Presentation/Views/MainWindow.xaml">
     <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Colors -->
+                <ResourceDictionary Source="Presentation/AppResources/Colors/Colors.xaml"/>
 
+                <!-- Fonts -->
+                <ResourceDictionary Source="Presentation/AppResources/Fonts/Fonts.xaml"/>
+
+                <!-- Control Styles -->
+                <ResourceDictionary Source="Presentation/AppResources/Styles/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="Presentation/AppResources/Styles/TextBoxStyles.xaml"/>
+                <ResourceDictionary Source="Presentation/AppResources/Styles/DataGridStyles.xaml"/>
+                <ResourceDictionary Source="Presentation/AppResources/Styles/DialogStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
