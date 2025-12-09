@@ -1,12 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.Models
 {
-    internal class User
+
+    /// <summary>
+    /// Thông tin cần quản lý của tài khoản
+    /// </summary>
+    public class User
     {
+        [Key]
+        [Column("user_id")]
+        [StringLength(10)] // tăng lên để tránh tràn
+        public string UserId { get; set; } // mã số nhân viên : NV001,NV002,...
+
+        [Required] 
+        [Column("username")]
+        [StringLength(50)] 
+        public string Username { get; set; }
+
+        [Required] 
+        [Column("password_hash")]
+        [StringLength(255)] 
+        public string PasswordHash { get; set; }
+
+        
+        [StringLength(100)] 
+        [Column("email")]
+        public string Email { get; set; }
+
+        [Required] 
+        [Column("role")]
+        public Role Role { get; set; } // enum: Admin, Staff, Customer
+
+        [Required]
+        [Column("created_date")]
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+
+        [Column("updated_date")]
+        public DateTime? UpdatedDate { get; set; }
+
+        [Column("deleted_date")]
+        public DateTime? DeletedDate { get; set; }
+
     }
-}
+}    
