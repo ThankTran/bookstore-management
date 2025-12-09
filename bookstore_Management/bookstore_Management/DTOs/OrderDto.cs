@@ -10,12 +10,24 @@ namespace bookstore_Management.DTOs
     /// </summary>
     public class OrderDto
     {
+        [Required(ErrorMessage = "Mã nhân viên không được để trống")]
+        [StringLength(6)]
         public string StaffId { get; set; }
-        public string CustomerId { get; set; } 
+
+        [StringLength(6)]
+        public string CustomerId { get; set; }  // Null nếu khách vãng lai
+
+        [Required(ErrorMessage = "Phương thức thanh toán không được để trống")]
         public PaymentType PaymentMethod { get; set; }
-        public decimal DiscountPercent { get; set; } = 0;
+
+        [Range(0, double.MaxValue)]
+        public decimal Discount { get; set; } = 0;
+
+        [StringLength(500)]
         public string Notes { get; set; }
-        public List<OrderItemDto> Items { get; set; }
+
+        [Required(ErrorMessage = "Danh sách sản phẩm không được để trống")]
+        public List<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
     }
 
     /// <summary>
@@ -23,7 +35,12 @@ namespace bookstore_Management.DTOs
     /// </summary>
     public class OrderItemDto
     {
-        public string BookId { get; set; } 
+        [Required(ErrorMessage = "Mã sách không được để trống")]
+        [StringLength(6)]
+        public string BookId { get; set; }
+
+        [Required(ErrorMessage = "Số lượng không được để trống")]
+        [Range(1, int.MaxValue, ErrorMessage = "Số lượng phải >= 1")]
         public int Quantity { get; set; }
     }
 
@@ -32,8 +49,12 @@ namespace bookstore_Management.DTOs
     /// </summary>
     public class UpdateOrderDto
     {
+        [StringLength(500)]
         public string Notes { get; set; }
+
         public PaymentType? PaymentMethod { get; set; }
+
+        [Range(0, double.MaxValue)]
         public decimal? Discount { get; set; }
     }
 

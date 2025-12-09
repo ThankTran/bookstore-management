@@ -31,7 +31,7 @@ namespace bookstore_Management.Models
 
         [Required]
         [Column("discount", TypeName = "decimal(18,2)")]
-        public decimal Discount { get; set; } = 0;
+        public decimal? Discount { get; set; } = 0;
 
         [Required]
         [Column("total_price", TypeName = "decimal(18,2)")]

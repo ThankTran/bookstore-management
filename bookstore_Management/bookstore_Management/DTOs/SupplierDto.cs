@@ -7,9 +7,20 @@ namespace bookstore_Management.DTOs
     /// </summary>
     public class SupplierDto
     {
-        public string Name { get; set; } 
+        [Required(ErrorMessage = "Tên nhà cung cấp không được để trống")]
+        [StringLength(50)]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Số điện thoại không được để trống")]
+        [Phone]
+        [StringLength(20)]
         public string Phone { get; set; }
+
+        [StringLength(200)]
         public string Address { get; set; }
+
+        [EmailAddress]
+        [StringLength(100)]
         public string Email { get; set; }
     }
 

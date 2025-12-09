@@ -8,7 +8,7 @@ namespace bookstore_Management.DTOs
     /// </summary>
     public class CustomerDto
     {
-        public string Name { get; set; } 
+        public string Name { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
@@ -24,6 +24,4 @@ namespace bookstore_Management.DTOs
         public decimal? MinPoints { get; set; }
         public decimal? MaxPoints { get; set; }
     }
-
-
 }

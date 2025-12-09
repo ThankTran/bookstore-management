@@ -10,5 +10,7 @@ namespace bookstore_Management.Data.Repositories.Interfaces
         IEnumerable<Order> GetByCustomer(string customerId);
         IEnumerable<Order> GetByStaff(string staffId);
         IEnumerable<Order> GetByDateRange(DateTime start, DateTime end);
+        
+        
     }
 }

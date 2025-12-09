@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
-using bookstore_Management.Data.Repositories;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.DTOs;
 using bookstore_Management.Models;
@@ -15,13 +14,21 @@ namespace bookstore_Management.Services.Implementations
     {
         private readonly IBookRepository _bookRepository;
         private readonly ISupplierRepository _supplierRepository;
+        private readonly IStockRepository _stockRepository;
 
-        internal BookService(IBookRepository bookRepository, ISupplierRepository supplierRepository)
+        internal BookService(
+            IBookRepository bookRepository, 
+            ISupplierRepository supplierRepository,
+            IStockRepository stockRepository)
         {
             _bookRepository = bookRepository;
             _supplierRepository = supplierRepository;
+            _stockRepository = stockRepository;
         }
 
+        // ==================================================================
+        // ---------------------- THÊM DỮ LIỆU ------------------------------
+        // ==================================================================
         public Result<string> AddBook(BookDto dto)
         {
             try
@@ -33,7 +40,6 @@ namespace bookstore_Management.Services.Implementations
                 if (dto.ImportPrice <= 0)
                     return Result<string>.Fail("Giá nhập phải > 0");
                     
-                // Check supplier exists
                 var supplier = _supplierRepository.GetById(dto.SupplierId);
                 if (supplier == null)
                     return Result<string>.Fail("Nhà cung cấp không tồn tại");
@@ -41,8 +47,8 @@ namespace bookstore_Management.Services.Implementations
                 // Generate Book ID
                 var bookId = GenerateBookId();
                 
-                // Calculate sale price (import price + 30%)
-                var salePrice = dto.ImportPrice * 1.3m;
+                // Auto set SalePrice nếu không có
+                decimal? salePrice = dto.SalePrice.HasValue ? dto.SalePrice : (dto.ImportPrice * 1.3m);
                 
                 // Create book
                 var book = new Book
@@ -51,12 +57,24 @@ namespace bookstore_Management.Services.Implementations
                     Name = dto.Name.Trim(),
                     SupplierId = dto.SupplierId,
                     Category = dto.Category,
+                    SalePrice = salePrice,
                     ImportPrice = dto.ImportPrice,
-                    SalePrice = salePrice
+                    CreatedDate = DateTime.Now,
+                    UpdatedDate = null,
+                    DeletedDate = null
                 };
                 
                 _bookRepository.Add(book);
                 _bookRepository.SaveChanges();
+
+                // Tạo stock record
+                var stock = new Stock
+                {
+                    BookId = bookId,
+                    StockQuantity = 0
+                };
+                _stockRepository.Add(stock);
+                _stockRepository.SaveChanges();
                 
                 return Result<string>.Success(bookId, "Thêm sách thành công");
             }
@@ -66,24 +84,32 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
+        // ==================================================================
+        // ----------------------- SỬA DỮ LIỆU ------------------------------
+        // ==================================================================
         public Result UpdateBook(string bookId, BookDto dto)
         {
             try
             {
                 var book = _bookRepository.GetById(bookId);
-                if (book == null)
+                if (book == null || book.DeletedDate != null)
                     return Result.Fail("Sách không tồn tại");
+                
+                var supplier = _supplierRepository.GetById(dto.SupplierId);
+                if (supplier == null)
+                    return Result.Fail("Nhà cung cấp không tồn tại");
                 
                 book.Name = dto.Name.Trim();
                 book.SupplierId = dto.SupplierId;
                 book.Category = dto.Category;
                 book.ImportPrice = dto.ImportPrice;
-                book.SalePrice = dto.ImportPrice * 1.3m;
+                book.SalePrice = dto.SalePrice.HasValue ? dto.SalePrice : (dto.ImportPrice * 1.3m);
+                book.UpdatedDate = DateTime.Now;
                 
                 _bookRepository.Update(book);
                 _bookRepository.SaveChanges();
                 
-                return Result.Success("Cập nhật thành công");
+                return Result.Success("Cập nhật sách thành công");
             }
             catch (Exception ex)
             {
@@ -91,16 +117,20 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-         public Result DeleteBook(string bookId)
+        // ==================================================================
+        // ---------------------- XÓA DỮ LIỆU -------------------------------
+        // ==================================================================
+        public Result DeleteBook(string bookId)
         {
-            /*
             try
             {
-                var book = _bookRepository.Get(bookId);
-                if (book == null)
+                var book = _bookRepository.GetById(bookId);
+                if (book == null || book.DeletedDate != null)
                     return Result.Fail("Sách không tồn tại");
                 
-                _bookRepository.(bookId);
+                // Soft delete
+                book.DeletedDate = DateTime.Now;
+                _bookRepository.Update(book);
                 _bookRepository.SaveChanges();
                 
                 return Result.Success("Xóa sách thành công");
@@ -108,16 +138,18 @@ namespace bookstore_Management.Services.Implementations
             catch (Exception ex)
             {
                 return Result.Fail($"Lỗi: {ex.Message}");
-            }*/
-            return Result.Fail($"Lỗi: hehe");
-        } 
+            }
+        }
 
+        // ==================================================================
+        // ----------------------- LẤY DỮ LIỆU ------------------------------
+        // ==================================================================
         public Result<Book> GetBookById(string bookId)
         {
             try
             {
                 var book = _bookRepository.GetById(bookId);
-                if (book == null)
+                if (book == null || book.DeletedDate != null)
                     return Result<Book>.Fail("Sách không tồn tại");
                     
                 return Result<Book>.Success(book);
@@ -132,7 +164,9 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var books = _bookRepository.GetAll();
+                var books = _bookRepository.GetAll()
+                    .Where(b => b.DeletedDate == null)
+                    .ToList();
                 return Result<IEnumerable<Book>>.Success(books);
             }
             catch (Exception ex)
@@ -145,7 +179,12 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var books = _bookRepository.SearchByName(keyword);
+                if (string.IsNullOrWhiteSpace(keyword))
+                    return Result<IEnumerable<Book>>.Success(new List<Book>());
+
+                var books = _bookRepository.SearchByName(keyword)
+                    .Where(b => b.DeletedDate == null)
+                    .ToList();
                 return Result<IEnumerable<Book>>.Success(books);
             }
             catch (Exception ex)
@@ -158,7 +197,9 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var books = _bookRepository.GetByCategory(category);
+                var books = _bookRepository.GetByCategory(category)
+                    .Where(b => b.DeletedDate == null)
+                    .ToList();
                 return Result<IEnumerable<Book>>.Success(books);
             }
             catch (Exception ex)
@@ -171,7 +212,9 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var books = _bookRepository.Find(b => b.SupplierId == supplierId);
+                var books = _bookRepository.Find(b => 
+                    b.SupplierId == supplierId && b.DeletedDate == null)
+                    .ToList();
                 return Result<IEnumerable<Book>>.Success(books);
             }
             catch (Exception ex)
@@ -180,46 +223,19 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result UpdateStock(string bookId, int quantity)
-        {
-            try
-            {
-                var book = _bookRepository.GetById(bookId);
-                if (book == null)
-                    return Result.Fail("Sách không tồn tại");
-                
-                // logic
-                return Result.Success("Cập nhật tồn kho thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        public Result CheckStock(string bookId, int requiredQuantity)
-        {
-            try
-            {
-                var book = _bookRepository.GetById(bookId);
-                if (book == null)
-                    return Result.Fail("Sách không tồn tại");
-                
-                // logic
-                return Result.Success("Còn hàng");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
         public Result<IEnumerable<Book>> GetLowStockBooks(int minStock = 5)
         {
             try
             {
-                // logic
-                return Result<IEnumerable<Book>>.Success(new List<Book>());
+                var stocks = _stockRepository.Find(s => 
+                    s.StockQuantity > 0 && s.StockQuantity <= minStock);
+
+                var bookIds = stocks.Select(s => s.BookId).ToList();
+                var books = _bookRepository.Find(b => 
+                    bookIds.Contains(b.BookId) && b.DeletedDate == null)
+                    .ToList();
+
+                return Result<IEnumerable<Book>>.Success(books);
             }
             catch (Exception ex)
             {
@@ -227,19 +243,45 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result UpdatePrice(string bookId, decimal newSalePrice)
+        public Result<IEnumerable<Book>> GetOutOfStockBooks()
         {
             try
             {
+                var outOfStocks = _stockRepository.Find(s => s.StockQuantity == 0);
+                var bookIds = outOfStocks.Select(s => s.BookId).ToList();
+                
+                var books = _bookRepository.Find(b => 
+                    bookIds.Contains(b.BookId) && b.DeletedDate == null)
+                    .ToList();
+
+                return Result<IEnumerable<Book>>.Success(books);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<Book>>.Fail($"Lỗi: {ex.Message}");
+            }
+        }
+
+        // ==================================================================
+        // ---------------------- QUẢN LÝ GIÁ -------------------------------
+        // ==================================================================
+        public Result UpdateSalePrice(string bookId, decimal newSalePrice)
+        {
+            try
+            {
+                if (newSalePrice <= 0)
+                    return Result.Fail("Giá bán phải > 0");
+
                 var book = _bookRepository.GetById(bookId);
-                if (book == null)
+                if (book == null || book.DeletedDate != null)
                     return Result.Fail("Sách không tồn tại");
                 
                 book.SalePrice = newSalePrice;
+                book.UpdatedDate = DateTime.Now;
                 _bookRepository.Update(book);
                 _bookRepository.SaveChanges();
                 
-                return Result.Success("Cập nhật giá thành công");
+                return Result.Success("Cập nhật giá bán thành công");
             }
             catch (Exception ex)
             {
@@ -252,14 +294,17 @@ namespace bookstore_Management.Services.Implementations
             try
             {
                 var book = _bookRepository.GetById(bookId);
-                if (book == null)
+                if (book == null || book.DeletedDate != null)
                     return Result<decimal>.Fail("Sách không tồn tại");
                 
                 if (!book.SalePrice.HasValue || book.ImportPrice == 0)
                     return Result<decimal>.Fail("Không thể tính lợi nhuận");
                 
                 var profit = book.SalePrice.Value - book.ImportPrice;
-                return Result<decimal>.Success(profit);
+                var profitPercent = (profit / book.ImportPrice) * 100;
+                
+                return Result<decimal>.Success(profit, 
+                    $"Lợi nhuận: {profit:N0} VND ({profitPercent:F2}%)");
             }
             catch (Exception ex)
             {
@@ -267,11 +312,9 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        
-        /// <summary>
-        /// Hàm book id generate
-        /// </summary>
-        /// <returns></returns>
+        // ==================================================================
+        // ----------------------- HÀM HELPER --------------------------------
+        // ==================================================================
         private string GenerateBookId()
         {
             var lastBook = _bookRepository.GetAll()

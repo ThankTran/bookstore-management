@@ -216,8 +216,11 @@
     <Compile Include="Data\Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="DTOs\BookDto.cs" />
     <Compile Include="DTOs\CustomerDto.cs" />
+    <Compile Include="DTOs\ImportBillDto.cs" />
     <Compile Include="DTOs\OrderDto.cs" />
+    <Compile Include="DTOs\ReportDto.cs" />
     <Compile Include="DTOs\StaffDto.cs" />
+    <Compile Include="DTOs\StockDto.cs" />
     <Compile Include="DTOs\SupplierDto.cs" />
     <Compile Include="DTOs\UserDto.cs" />
     <Compile Include="Helpers\ExcelExporter.cs" />
@@ -352,16 +355,22 @@
     <Compile Include="Services\Implementations\AuthService.cs" />
     <Compile Include="Services\Implementations\BookService.cs" />
     <Compile Include="Services\Implementations\CustomerService.cs" />
+    <Compile Include="Services\Implementations\ImportBillService.cs" />
     <Compile Include="Services\Implementations\OrderService.cs" />
     <Compile Include="Services\Implementations\ReportService.cs" />
+    <Compile Include="Services\Implementations\StaffDailyRevenueService.cs" />
     <Compile Include="Services\Implementations\StaffService.cs" />
+    <Compile Include="Services\Implementations\StockService.cs" />
     <Compile Include="Services\Implementations\SupplierService.cs" />
     <Compile Include="Services\Interfaces\IAuthService.cs" />
     <Compile Include="Services\Interfaces\IBookService.cs" />
     <Compile Include="Services\Interfaces\ICustomerService.cs" />
+    <Compile Include="Services\Interfaces\IImportBillService.cs" />
     <Compile Include="Services\Interfaces\IOrderService.cs" />
     <Compile Include="Services\Interfaces\IReportService.cs" />
+    <Compile Include="Services\Interfaces\IStaffDailyRevenue.cs" />
     <Compile Include="Services\Interfaces\IStaffService.cs" />
+    <Compile Include="Services\Interfaces\IStockService.cs" />
     <Compile Include="Services\Interfaces\ISupplierService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
   </ItemGroup>

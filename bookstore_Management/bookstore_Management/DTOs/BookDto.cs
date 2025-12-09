@@ -5,16 +5,16 @@ namespace bookstore_Management.DTOs
 {
     /// <summary>
     /// DTO cho thêm/sửa sách từ Form
-    /// Form chỉ nhập những fields này
     /// </summary>
     public class BookDto
     {
+
         public string BookId { get; set; }
         public string Name { get; set; }
         public string SupplierId { get; set; }
         public BookCategory Category { get; set; }
         public decimal ImportPrice { get; set; }
-        
+        public decimal? SalePrice { get; set; }
     }
     
     /// <summary>
@@ -22,7 +22,6 @@ namespace bookstore_Management.DTOs
     /// </summary>
     public class UpdateBookPriceDto
     {
-        
         public string BookId { get; set; }
         public decimal NewSalePrice { get; set; }
     }
@@ -39,5 +38,4 @@ namespace bookstore_Management.DTOs
         public string SupplierId { get; set; }
         public bool? InStockOnly { get; set; } = true;
     }
-
 }
