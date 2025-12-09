@@ -57,15 +57,9 @@
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </ApplicationDefinition>
+        <Page Include="Presentation\AppResources\Colors\Colors.xaml" />
+        <Page Include="Presentation\AppResources\Fonts\Fonts.xaml" />
         <Page Include="Presentation\AppResources\Styles\ButtonStyles.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\AppResources\Styles\CardStyles.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\AppResources\Styles\Colors.xaml">
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </Page>
@@ -73,6 +67,8 @@
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </Page>
+        <Page Include="Presentation\AppResources\Styles\DialogStyles.xaml" />
+        <Page Include="Presentation\AppResources\Styles\TestHover.xaml" />
         <Page Include="Presentation\AppResources\Styles\TextBoxStyles.xaml">
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
@@ -259,21 +255,6 @@
         <Compile Include="Models\Stock.cs"/>
         <Compile Include="Models\Supplier.cs"/>
         <Compile Include="Models\User.cs"/>
-        <Compile Include="Presentation\AppResources\Styles\ButtonStyles.xaml.cs">
-            <DependentUpon>ButtonStyles.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\AppResources\Styles\CardStyles.xaml.cs">
-            <DependentUpon>CardStyles.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\AppResources\Styles\Colors.xaml.cs">
-            <DependentUpon>Colors.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\AppResources\Styles\DataGridStyles.xaml.cs">
-            <DependentUpon>DataGridStyles.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\AppResources\Styles\TextBoxStyles.xaml.cs">
-            <DependentUpon>TextBoxStyles.xaml</DependentUpon>
-        </Compile>
         <Compile Include="Presentation\Converters\BoolToVisibilityConverter.cs"/>
         <Compile Include="Presentation\Converters\CurrencyConverter.cs"/>
         <Compile Include="Presentation\Converters\DateConverter.cs"/>
@@ -451,6 +432,13 @@
         <PackageReference Include="AutoMapper">
             <Version>12.0.1</Version>
         </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="Presentation\AppResources\Fonts\Quicksand-Bold.ttf" />
+      <Content Include="Presentation\AppResources\Fonts\Quicksand-Light.ttf" />
+      <Content Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
+      <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
+      <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 </Project>
