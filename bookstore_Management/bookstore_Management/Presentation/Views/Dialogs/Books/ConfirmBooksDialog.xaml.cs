@@ -12,16 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Resources.Styles
+namespace bookstore_Management.Presentation.Views.Dialogs.Books
 {
     /// <summary>
-    /// Interaction logic for DataGridStyles.xaml
+    /// Interaction logic for ConfirmBooksDialog.xaml
     /// </summary>
-    public partial class DataGridStyles : Window
+    public partial class ConfirmBooksDialog : Window
     {
-        public DataGridStyles()
+        public ConfirmBooksDialog()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
     }
 }

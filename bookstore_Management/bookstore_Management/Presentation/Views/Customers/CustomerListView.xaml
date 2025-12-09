@@ -1,152 +1,145 @@
-﻿<Window x:Name="CustomerViewWindow" x:Class="bookstore_Management.Views.Customers.CustomerListView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:bookstore_Management.Views.Customers"
-        mc:Ignorable="d"
-        Title="CustomerListView"
-        Height="800" Width="1400"
-        WindowStartupLocation="CenterScreen"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent">
+﻿<UserControl x:Class="bookstore_Management.Views.Customers.CustomerListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BackgroundBrush}">
 
-    <Border CornerRadius="50">
-        <Grid>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top Bar with Add Button and Search -->
+        <Grid Grid.Row="0" Margin="0,0,0,15">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="326"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- LEFT SIDEBAR -->
-            <Border Grid.Column="0"
-            Background="#585ab8"
-            CornerRadius="50,0,0,50"
-            Padding="5">
-                <StackPanel>
-                    
+            <!-- Add Button (Icon Only) -->
+            <Button x:Name="btnAdd"
+                    Grid.Column="0"
+                    Style="{StaticResource IconButton}"
+                    HorizontalAlignment="Left"
+                    Click="btnAdd_Click"
+                    ToolTip="Thêm khách hàng mới">
+                <Image Source="/Presentation/AppResources/Images/Icons/add.png" 
+                       Width="30" 
+                       Height="30"/>
+            </Button>
 
-                    <!-- Menu Item -->
-                    <!-- Trang chủ -->
-                    <Button Style="{StaticResource MenuButtonStyle}"
-                    Margin="0,0,0,8" Width="231">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="64" Height="64"
-                                   Source="/Presentation/AppResources/Images/Icons/trangchu.png"
-                                   Margin="0,0,30,0"/>
-                            <TextBlock Text="Trang chủ" 
-                                       VerticalAlignment="Center" 
-                                       FontFamily="Quicksand Medium" 
-                                       FontSize="18"/>
-                        </StackPanel>
-                    </Button>
+            <!-- Search Bar -->
+            <Border Grid.Column="2" 
+                    Style="{StaticResource SearchBorderContainer}"
+                    HorizontalAlignment="Right">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                    <!-- Quản Lý Khách Hàng -->
-                    <Button Style="{StaticResource MenuButtonStyle}"
-                    Margin="0,0,0,8">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="64" Height="64"
-                                   Source="/Presentation/AppResources/Images/Icons/QLKH.png"
-                                   Margin="0,0,30,0"/>
-                            <TextBlock Text="Quản Lý Khách Hàng" 
-                                       VerticalAlignment="Center" 
-                                       FontFamily="Quicksand Medium" 
-                                       FontSize="18"/>
-                        </StackPanel>
-                    </Button>
+                    <TextBox x:Name="txtSearch"
+                             Grid.Column="0"
+                             Style="{StaticResource SearchTextBox}"
+                             Text="Tìm kiếm ..."/>
 
-                    <!-- Quản Lý Sách-->
-                    <Button Style="{StaticResource MenuButtonStyle}"
-                    Margin="0,0,0,8">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="64" Height="64"
-                                   Source="/Presentation/AppResources/Images/Icons/QLS.png"
-                                   Margin="0,0,30,0"/>
-                            <TextBlock Text="Quản Lý Sách" 
-                                       VerticalAlignment="Center" 
-                                       FontFamily="Quicksand Medium" 
-                                       FontSize="18"/>  
-                        </StackPanel>
+                    <Button Grid.Column="1"
+                            Style="{StaticResource SearchButton}">
+                        <Image Source="/Presentation/AppResources/Images/Icons/search.png" 
+                               Width="15" 
+                               Height="15"/>
                     </Button>
-
-                    <!-- Quản Lý Nhân Sự -->
-                    <Button Style="{StaticResource MenuButtonStyle}"
-                            Margin="0,0,0,8">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="64" Height="64"
-                                   Source="/Presentation/AppResources/Images/Icons/QLNS.png"
-                                   Margin="0,0,30,0"/>      
-                            <TextBlock Text="Quản Lý Nhân Sự " 
-                                       VerticalAlignment="Center"
-                                       FontFamily="Quicksand Medium"
-                                       FontSize="18"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Thống kê -->
-                    <Button Style="{StaticResource MenuButtonStyle}"
-                            Margin="0,0,0,8">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="64" Height="64"
-                                   Source="/Presentation/AppResources/Images/Icons/TK.png"
-                                   Margin="0,0,30,0"/>
-                            <TextBlock Text="Thống kê" 
-                                       VerticalAlignment="Center"
-                                       FontFamily="Quicksand Medium"
-                                       FontSize="18"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Quản Lý Kho Hàng -->
-                    <Button Style="{StaticResource MenuButtonStyle}"
-                            Margin="0,0,0,8">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="64" Height="64"
-                                   Source="/Presentation/AppResources/Images/Icons/QLKHO.png"
-                                   Margin="0,0,30,0"/>
-                            <TextBlock Text="Quản Lý Kho Hàng" 
-                                       VerticalAlignment="Center"
-                                       FontFamily="Quicksand Medium"
-                                       FontSize="18"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Quản Lý Hóa Đơn -->
-                    <Button Style="{StaticResource MenuButtonStyle}"
-                            Margin="0,0,0,8">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="64" Height="64"
-                                   Source="/Presentation/AppResources/Images/Icons/QLHD.png"
-                                   Margin="0,0,30,0"/>
-                            <TextBlock Text="Thống kê" 
-                                       VerticalAlignment="Center"
-                                       FontFamily="Quicksand Medium"
-                                       FontSize="18"/>  
-                        </StackPanel>
-                    </Button>
-                    
-                    <!-- Bottom Section -->
-                    <Border Background="#30FFFFFF"
-                    CornerRadius="15"
-                    Padding="15"
-                    Margin="0,300,0,0"
-                    VerticalAlignment="Bottom">
-                        <StackPanel>
-                            <TextBlock Text="👤 Admin User"
-                             Foreground="White"
-                             FontWeight="SemiBold"
-                             Margin="0,0,0,5"/>
-                            <TextBlock Text="admin@bookstore.com"
-                             Foreground="#A0FFFFFF"
-                             FontSize="11"/>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
+                </Grid>
             </Border>
-            <!-- LEFT SIDEBAR -->
-            
-
         </Grid>
-    </Border>
-</Window>
+
+        <!-- Data Grid -->
+        <Border Grid.Row="1" 
+                Style="{StaticResource DataGridContainerBorder}">
+            <DataGrid x:Name="dgCustomers"
+                      Style="{StaticResource MainDataGrid}"
+                      MouseDoubleClick="dgCustomers_MouseDoubleClick">
+
+                <!-- Custom ScrollBar Style -->
+                <DataGrid.Resources>
+                    <Style TargetType="ScrollBar" BasedOn="{StaticResource DataGridScrollBar}"/>
+                </DataGrid.Resources>
+
+                <!-- Columns -->
+                <DataGrid.Columns>
+                    <!-- STT -->
+                    <DataGridTextColumn Header="STT" 
+                                        Binding="{Binding STT}" 
+                                        Width="60"
+                                        IsReadOnly="True"
+                                        ElementStyle="{StaticResource CenterAlignedCell}"/>
+
+                    <!-- Mã khách hàng -->
+                    <DataGridTextColumn Header="Mã khách hàng" 
+                                        Binding="{Binding MaKH}" 
+                                        Width="140"
+                                        IsReadOnly="True"
+                                        ElementStyle="{StaticResource PrimaryColorCell}"/>
+
+                    <!-- Tên khách hàng -->
+                    <DataGridTextColumn Header="Tên khách hàng" 
+                                        Binding="{Binding TenKH}" 
+                                        Width="*"
+                                        MinWidth="180"
+                                        IsReadOnly="True"
+                                        ElementStyle="{StaticResource CenterAlignedCell}"/>
+
+                    <!-- Hạng thành viên -->
+                    <DataGridTextColumn Header="Hạng thành viên" 
+                                        Binding="{Binding HangThanhVien}" 
+                                        Width="140"
+                                        IsReadOnly="True"
+                                        ElementStyle="{StaticResource CenterAlignedCell}"/>
+
+                    <!-- SDT -->
+                    <DataGridTextColumn Header="SDT" 
+                                        Binding="{Binding SDT}" 
+                                        Width="120"
+                                        IsReadOnly="True"
+                                        ElementStyle="{StaticResource CenterAlignedCell}"/>
+
+                    <!-- Doanh thu -->
+                    <DataGridTextColumn Header="Doanh thu" 
+                                        Binding="{Binding DoanhThu, StringFormat={}{0:N0}}" 
+                                        Width="140"
+                                        IsReadOnly="True"
+                                        ElementStyle="{StaticResource RightAlignedCell}"/>
+
+                    <!-- Sửa -->
+                    <DataGridTemplateColumn Header="Sửa" Width="60">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource SmallIconButton}"
+                                        Click="btnEdit_Click">
+                                    <Image Source="/Presentation/AppResources/Images/Icons/edit.png" 
+                                           Width="20" 
+                                           Height="20"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Xóa -->
+                    <DataGridTemplateColumn Header="Xóa" Width="60">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource SmallIconButton}"
+                                        Click="btnDelete_Click">
+                                    <Image Source="/Presentation/AppResources/Images/Icons/recyclebin.png" 
+                                           Width="20" 
+                                           Height="20"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</UserControl>

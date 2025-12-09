@@ -1,13 +1,444 @@
-﻿<Window x:Class="bookstore_Management.Views.MainWindow"
+﻿<Window x:Class="bookstore_Management.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:bookstore_Management.Views"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Bookstore Management"
+        Height="720" Width="1280"
+        MinHeight="600" MinWidth="1024"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+    <Border Background="#FFFFFF" CornerRadius="20" Padding="0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="67*"/>
+                <RowDefinition Height="46*"/>
+                <RowDefinition Height="302*"/>
+                <RowDefinition Height="305*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="34*"/>
+                <ColumnDefinition Width="161*"/>
+                <ColumnDefinition Width="440*"/>
+            </Grid.ColumnDefinitions>
+            <!-- Window Controls -->
+            <StackPanel Orientation="Horizontal" 
+                       HorizontalAlignment="Right" 
+                       VerticalAlignment="Top"
+                       Margin="0,0,15,0"
+                       Panel.ZIndex="100" Grid.Column="2">
+                <Button x:Name="btnMinimize" 
+                       Width="40" Height="30" 
+                       Background="Transparent" 
+                       BorderThickness="0"
+                       Cursor="Hand"
+                       ToolTip="Minimize"
+                       Click="btnMinimize_Click">
+                    <Image Source="/Presentation/AppResources/Images/Icons/winctr1.png" 
+                          Width="18" Height="18" Stretch="Uniform"/>
+                </Button>
+                <Button x:Name="btnMaximize"
+                       Width="40" Height="30" 
+                       Background="Transparent" 
+                       BorderThickness="0"
+                       Cursor="Hand"
+                       ToolTip="Maximize/Restore"
+                       Click="btnMaximize_Click">
+                    <Image Source="/Presentation/AppResources/Images/Icons/winctr2.png" 
+                          Width="15" Height="15" Stretch="Uniform"/>
+                </Button>
+                <Button x:Name="btnClose"
+                       Width="40" Height="30" 
+                       Background="Transparent" 
+                       BorderThickness="0"
+                       Cursor="Hand"
+                       ToolTip="Close"
+                       Click="btnClose_Click">
+                    <Image Source="/Presentation/AppResources/Images/Icons/winctr3.png" 
+                          Width="25" Height="25" Stretch="Uniform"/>
+                </Button>
+            </StackPanel>
+
+            <Grid Grid.ColumnSpan="3" Grid.RowSpan="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="260"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Sidebar -->
+                <Border Grid.Column="0" 
+                       Background="#585AB8" 
+                       CornerRadius="0,0,0,15" 
+                       Margin="0,29.5,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Logo Section -->
+                        <StackPanel Grid.Row="0" Margin="8,8,8,0">
+                            <Grid Width="20" Height="20" 
+                                  HorizontalAlignment="Left" 
+                                  Margin="5,0,0,0">
+                                <!-- Circular background -->
+                                <Ellipse Fill="#7577C3" 
+                                        Width="20" 
+                                        Height="20"/>
+                                <!-- Info icon -->
+                                <Image Source="/Presentation/AppResources/Images/Icons/inf.png" 
+                                      Width="14" 
+                                      Height="14"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                            </Grid>
+                            <Image Source="/Presentation/AppResources/Images/Icons/THM.png" 
+                                  Width="150" 
+                                  Height="150"
+                                  Stretch="Uniform"
+                                  />
+                        </StackPanel>
+
+                        <!-- User Profile Section -->
+                        <StackPanel Grid.Row="1" Margin="15,10,15,20">
+                            <!-- Logout Button -->
+                            <Button x:Name="btnLogout"
+                                   Background="Transparent" 
+                                   BorderThickness="0"
+                                   HorizontalAlignment="Left"
+                                   Cursor="Hand"
+                                   Padding="0"
+                                   Margin="5,0,0,12">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Presentation/AppResources/Images/Icons/DX.png" 
+                                          Width="16" 
+                                          Height="16"
+                                          Margin="0,0,8,0"/>
+                                    <TextBlock Text="Đăng xuất" 
+                                              Foreground="White" 
+                                              FontSize="13"
+                                              FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                              VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- User Info Card -->
+                            <Border Background="#7577C3" 
+                                   CornerRadius="12" 
+                                   Padding="5">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="50" Height="50" 
+                                           CornerRadius="25"
+                                           Background="White"
+                                           Margin="0,0,12,0">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/profile.png" 
+                                              Width="50" 
+                                              Height="50"
+                                              Stretch="UniformToFill"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="Quản lý" 
+                                                  FontSize="12" 
+                                                  Foreground="White"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  Opacity="0.85"
+                                                  Margin="0,0,0,2"/>
+                                        <TextBlock Text="Trần Thị Hồng Thanh" 
+                                                  FontWeight="Bold" 
+                                                  FontSize="13" 
+                                                  Foreground="White"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  TextWrapping="Wrap"
+                                                  MaxWidth="140"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Menu Items -->
+                        <StackPanel Grid.Row="1" Margin="10,103,10,10" Grid.RowSpan="2">
+                            <StackPanel Margin="10,0,10,0">
+                                <!-- Home -->
+                                <Button x:Name="btnHome"
+                                       Background="Transparent" 
+                                       BorderThickness="0"
+                                       HorizontalAlignment="Stretch"
+                                       HorizontalContentAlignment="Left"
+                                       Padding="12,3"
+                                       Cursor="Hand"
+                                       Margin="0,0,0,0"
+                                        Click="btnHome_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/trangchu.png" 
+                                              Width="24" 
+                                              Height="24"
+                                              Margin="0,0,12,0"/>
+                                        <TextBlock Text="Trang chủ" 
+                                                  Foreground="#FFFFFF" 
+                                                  FontWeight="SemiBold" 
+                                                  FontSize="14"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Payment -->
+                                <Button x:Name="btnPayment"
+                                       Background="Transparent" 
+                                       BorderThickness="0"
+                                       HorizontalAlignment="Stretch"
+                                       HorizontalContentAlignment="Left"
+                                       Padding="12,3"
+                                       Cursor="Hand"
+                                       Margin="0,0,0,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/TT.png" 
+                                              Width="24" 
+                                              Height="24"
+                                              Margin="0,0,12,0"/>
+                                        <TextBlock Text="Thanh toán" 
+                                                  Foreground="#FFFFFF" 
+                                                  FontWeight="SemiBold" 
+                                                  FontSize="14"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Customer -->
+                                <Button x:Name="btnCustomer"
+                                        Background="Transparent" 
+                                        BorderThickness="0"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Padding="12,3"
+                                        Cursor="Hand"
+                                        Margin="0,0,0,0"
+                                        Click="btnCustomerManagement_Click"
+  
+>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/QLKH.png" 
+                                              Width="24" 
+                                              Height="24"
+                                              Margin="0,0,12,0"/>
+                                        <TextBlock Text="Quản lý khách hàng" 
+                                                  Foreground="#FFFFFF" 
+                                                  FontWeight="SemiBold" 
+                                                  FontSize="14"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button x:Name="btnBills_Copy"
+                                    Background="Transparent" 
+                                    BorderThickness="0"
+                                    HorizontalContentAlignment="Left"
+                                    Padding="12,3"
+                                    Cursor="Hand"
+                                       >
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/QLHD.png" 
+                                            Width="24" 
+                                            Height="24"
+                                            Margin="0,0,12,0"/>
+                                        <TextBlock Text="Quản lý nhà xuất bản" 
+                                            Foreground="#FFFFFF" 
+                                            FontWeight="SemiBold" 
+                                            FontSize="14"
+                                            FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                            VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
 
 
-    </Grid>
+
+                                <!-- Books -->
+                                <Button x:Name="btnBooks"
+                                       Background="Transparent" 
+                                       BorderThickness="0"
+                                       HorizontalAlignment="Stretch"
+                                       HorizontalContentAlignment="Left"
+                                       Padding="12,3"
+                                       Cursor="Hand"
+                                       Margin="0,0,0,0"
+                                       Click="btnBooks_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/QLS.png" 
+                                              Width="24" 
+                                              Height="24"
+                                              Margin="0,0,12,0"/>
+                                        <TextBlock Text="Quản lý sách" 
+                                                  Foreground="#FFFFFF" 
+                                                  FontWeight="SemiBold" 
+                                                  FontSize="14"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Employees -->
+                                <Button x:Name="btnEmployees"
+                                       Background="Transparent" 
+                                       BorderThickness="0"
+                                       HorizontalAlignment="Stretch"
+                                       HorizontalContentAlignment="Left"
+                                       Padding="12,3"
+                                       Cursor="Hand"
+                                       Margin="0,0,0,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/QLNS.png" 
+                                              Width="24" 
+                                              Height="24"
+                                              Margin="0,0,12,0"/>
+                                        <TextBlock Text="Quản lý nhân sự" 
+                                                  Foreground="#FFFFFF" 
+                                                  FontWeight="SemiBold" 
+                                                  FontSize="14"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Statistics -->
+                                <Button x:Name="btnStatistics"
+                                       Background="Transparent" 
+                                       BorderThickness="0"
+                                       HorizontalAlignment="Stretch"
+                                       HorizontalContentAlignment="Left"
+                                       Padding="12,3"
+                                       Cursor="Hand"
+                                       Margin="0,0,0,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/TK.png" 
+                                              Width="24" 
+                                              Height="24"
+                                              Margin="0,0,12,0"/>
+                                        <TextBlock Text="Thống kê" 
+                                                  Foreground="#FFFFFF" 
+                                                  FontWeight="SemiBold" 
+                                                  FontSize="14"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Stock -->
+                                <Button x:Name="btnStock"
+                                       Background="Transparent" 
+                                       BorderThickness="0"
+                                       HorizontalAlignment="Stretch"
+                                       HorizontalContentAlignment="Left"
+                                       Padding="12,3"
+                                       Cursor="Hand"
+                                       Margin="0,0,0,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/QLKHO.png" 
+                                              Width="24" 
+                                              Height="24"
+                                              Margin="0,0,12,0"/>
+                                        <TextBlock Text="Kho hàng" 
+                                                  Foreground="#FFFFFF" 
+                                                  FontWeight="SemiBold" 
+                                                  FontSize="14"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Bills -->
+                                <Button x:Name="btnBills"
+                                       Background="Transparent" 
+                                       BorderThickness="0"
+                                       HorizontalAlignment="Stretch"
+                                       HorizontalContentAlignment="Left"
+                                       Padding="12,3"
+                                       Cursor="Hand"
+                                       Margin="0,0,0,0"
+                                       Click="btnBills_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/QLHD.png" 
+                                              Width="24" 
+                                              Height="24"
+                                              Margin="0,0,12,0"/>
+                                        <TextBlock Text="Hóa đơn" 
+                                                  Foreground="#FFFFFF" 
+                                                  FontWeight="SemiBold" 
+                                                  FontSize="14"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Account -->
+                                <Button x:Name="btnBills_Copy1"
+                                        Background="Transparent" 
+                                        BorderThickness="0"
+                                        HorizontalContentAlignment="Left"
+                                        Padding="12,3"
+                                        Cursor="Hand"
+       >
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image  Source="/Presentation/AppResources/Images/Icons/QLTK.png" 
+                                                Width="24" 
+                                                Height="24"
+                                                Margin="0,0,12,0"/>
+                                        <TextBlock  Text="Quản lý tài khoản" 
+                                                    Foreground="#FFFFFF" 
+                                                    FontWeight="SemiBold" 
+                                                    FontSize="14"
+                                                    FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                    VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Footer Info -->
+                        <Border Grid.Row="3"
+                               Background="#4A4C9E"
+                               CornerRadius="10"
+                               Padding="15"
+                               Margin="15,0,15,15">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="THM Bookstore" 
+                                          FontSize="13" 
+                                          FontFamily="/Presentation/AppResources/Fonts/#Quicksand" 
+                                          Foreground="White" 
+                                          HorizontalAlignment="Center" 
+                                          FontWeight="Bold"/>
+                                <TextBlock Text="Admin Manager" 
+                                          FontSize="11" 
+                                          FontFamily="/Presentation/AppResources/Fonts/#Quicksand" 
+                                          Foreground="White" 
+                                          HorizontalAlignment="Center" 
+                                          FontWeight="SemiBold"
+                                          Opacity="0.9"
+                                          Margin="0,3,0,0"/>
+                                <TextBlock Text="© 2025 All Rights Reserved" 
+                                          FontSize="10" 
+                                          FontFamily="/Presentation/AppResources/Fonts/#Quicksand" 
+                                          Foreground="White" 
+                                          HorizontalAlignment="Center"
+                                          Opacity="0.8"
+                                          Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Main Content Area -->
+                <Border Grid.Column="1" 
+                       Background="#E9E9F4" 
+                       CornerRadius="0,0,15,0" 
+                       Margin="0,29.5,0,0">
+                    <Frame x:Name="MainFrame" 
+                           NavigationUIVisibility="Hidden"
+                           Background="Transparent"/>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

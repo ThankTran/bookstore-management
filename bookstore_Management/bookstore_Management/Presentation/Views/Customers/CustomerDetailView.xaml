@@ -1,12 +1,255 @@
-﻿<Window x:Class="bookstore_Management.Views.Customers.CustomerDetailView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:bookstore_Management.Views.Customers"
-        mc:Ignorable="d"
-        Title="CustomerDetailView" Height="450" Width="800">
-    <Grid>
-        
+﻿<UserControl x:Class="bookstore_Management.Views.Customers.CustomerDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#E9E9F4">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top Bar with Return Button -->
+        <Grid Grid.Row="0" Margin="0,-16,0,15">
+            <Button x:Name="btnReturn"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Width="40"
+                    Height="40"
+                    Cursor="Hand"
+                    HorizontalAlignment="Left"
+                    Click="btnReturn_Click"
+                    ToolTip="Quay lại danh sách">
+                <Image Source="/Presentation/AppResources/Images/Icons/return.png" 
+                       Width="15" 
+                       Height="15"/>
+            </Button>
+        </Grid>
+
+        <!-- Main Content -->
+        <Border Grid.RowSpan="2"
+                Background="White"
+                CornerRadius="15"
+                Padding="30"
+                Margin="0,24,0,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="0">
+
+                    <!-- Tiêu đề -->
+                    <TextBlock Text="Chi tiết khách hàng"
+                               FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="#585AB8"
+                               Margin="0,0,0,10"/>
+
+                    <!-- Thông tin khách hàng -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Cột trái -->
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Mã khách hàng" 
+                                       FontWeight="SemiBold" 
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="14"
+                                       Foreground="#666666"
+                                       Margin="0,0,0,5"/>
+                            <TextBlock x:Name="txtMaKH"
+                                       Text="KH001"
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="16"
+                                       Foreground="#7577C3"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Tên khách hàng" 
+                                       FontWeight="SemiBold" 
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="14"
+                                       Foreground="#666666"
+                                       Margin="0,0,0,5"/>
+                            <TextBlock x:Name="txtTenKH"
+                                       Text="Nguyễn Văn A"
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="16"
+                                       Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Số điện thoại" 
+                                       FontWeight="SemiBold" 
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="14"
+                                       Foreground="#666666"
+                                       Margin="0,0,0,5"/>
+                            <TextBlock x:Name="txtSDT"
+                                       Text="0123456789"
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="16"
+                                       Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Email"
+                                       FontWeight="SemiBold" 
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="14"
+                                       Foreground="#666666"
+                                       Margin="0,0,0,5"/>
+                            <TextBlock x:Name="txtEmail"
+                                       Text="email@example.com"
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="16"
+                                       Margin="0,0,0,15"/>
+                        </StackPanel>
+
+                        <!-- Cột phải -->
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Địa chỉ" 
+                                       FontWeight="SemiBold" 
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="14"
+                                       Foreground="#666666"
+                                       Margin="0,0,0,5"/>
+                            <TextBlock x:Name="txtDiaChi"
+                                       Text="123 Nguyễn Văn Linh, Q7, TP.HCM"
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="16"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Tổng doanh thu" 
+                                       FontWeight="SemiBold" 
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="14"
+                                       Foreground="#666666"
+                                       Margin="0,0,0,5"/>
+                            <TextBlock x:Name="txtDoanhThu"
+                                       Text="1,000,000 VNĐ"
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="16"
+                                       Foreground="#FF5722"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Hạng thành viên" 
+                                       FontWeight="SemiBold" 
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="14"
+                                       Foreground="#666666"
+                                       Margin="0,0,0,5"/>
+                            <TextBlock x:Name="txtHangThanhVien"
+                                       Text="Vàng"
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="16"
+                                       Margin="0,0,0,15"/>
+                            
+                            <TextBlock Text="Điểm tích lũy"
+                                       FontWeight="SemiBold"
+                                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                       FontSize="14"
+                                       Foreground="#666666"
+                                       Margin="0,0,0,5"/>
+                            <TextBlock x:Name="txtDiemTichLuy"
+                                        Text="1500 điểm"
+                                        FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                        FontSize="16"
+                                        Margin="0,0,0,15"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Separator -->
+                    <Border Height="1"
+                            Background="#E0E0E0"
+                            Margin="0,10,0,20"/>
+
+                    <!-- Lịch sử mua hàng -->
+                    <TextBlock Text="Lịch sử mua hàng" 
+                               Foreground="#585AB8" 
+                               FontFamily="/Presentation/AppResources/Fonts/#Quicksand" 
+                               FontSize="18" 
+                               FontWeight="Bold"
+                               Margin="0,0,0,15"/>
+
+                    <Border BorderThickness="1"
+                            BorderBrush="#E0E0E0"
+                            CornerRadius="8"
+                            Height="300">
+                        <DataGrid x:Name="dgHistories"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  HeadersVisibility="Column"
+                                  IsReadOnly="True"
+                                  BorderThickness="0"
+                                  Background="White"
+                                  GridLinesVisibility="Horizontal"
+                                  RowBackground="White"
+                                  AlternatingRowBackground="#F8F8FF"
+                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                  FontSize="13">
+
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#7577C3"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Padding" Value="10,8"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                                    <Setter Property="BorderBrush" Value="#8E90CC"/>
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="STT" Binding="{Binding STT}" Width="60">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Header="Mã hóa đơn" Binding="{Binding MaHD}" Width="120">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Setter Property="Foreground" Value="#7577C3"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Header="Tổng tiền" Binding="{Binding TongTien}" Width="150">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="Margin" Value="0,0,10,0"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Header="Ngày mua hàng" Binding="{Binding NgayMuaHang}" Width="150">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Header="Ghi chú" Binding="{Binding GhiChu}" Width="*" MinWidth="150">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextWrapping" Value="Wrap"/>
+                                            <Setter Property="Margin" Value="10,5"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
     </Grid>
-</Window>
+</UserControl>

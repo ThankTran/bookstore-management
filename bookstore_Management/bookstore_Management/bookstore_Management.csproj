@@ -57,6 +57,172 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\Constants\AppConstants.cs" />
+    <Compile Include="Core\Constants\RoleConstants.cs" />
+    <Compile Include="Core\Constants\MessageConstants.cs" />
+    <Compile Include="Core\Enums\OrderStatus.cs" />
+    <Compile Include="Core\Enums\PaymentType.cs" />
+    <Compile Include="Core\Enums\UserRole.cs" />
+    <Compile Include="Core\Interfaces\IAuditable.cs" />
+    <Compile Include="Core\Interfaces\IExportable.cs" />
+    <Compile Include="Core\Utils\FileHelper.cs" />
+    <Compile Include="Data\Context\BookstoreDbContext.cs" />
+    <Compile Include="Data\Repositories\BookRepository.cs" />
+    <Compile Include="Data\Repositories\CategoryRepository.cs" />
+    <Compile Include="Data\Repositories\CustomerRepository.cs" />
+    <Compile Include="Data\Repositories\IBookRepository.cs" />
+    <Compile Include="Data\Repositories\ICustomerRepository.cs" />
+    <Compile Include="Data\Repositories\IOrderRepository.cs" />
+    <Compile Include="Data\Repositories\IRepository.cs" />
+    <Compile Include="Data\Repositories\IUserRepository.cs" />
+    <Compile Include="Data\Repositories\OrderRepository.cs" />
+    <Compile Include="Data\Repositories\Repository.cs" />
+    <Compile Include="Core\Exceptions\BookstoreException.cs" />
+    <Compile Include="Core\Exceptions\DataNotFoundException.cs" />
+    <Compile Include="Core\Exceptions\ValidationException.cs" />
+    <Compile Include="Data\Repositories\SupplierRepository.cs" />
+    <Compile Include="Helpers\ExcelExporter.cs" />
+    <Compile Include="Helpers\PdfExporter.cs" />
+    <Compile Include="Helpers\PrintHelper.cs" />
+    <Compile Include="Models\AuditLog.cs" />
+    <Compile Include="Models\Book.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Inventory.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderDetail.cs" />
+    <Compile Include="Models\Payment.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Presentation\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Presentation\Converters\CurrencyConverter.cs" />
+    <Compile Include="Presentation\Converters\DateConverter.cs" />
+    <Compile Include="Presentation\Converters\RoleToVisibilityConverter.cs" />
+    <Compile Include="Presentation\AppResources\Styles\CardStyles.xaml.cs">
+      <DependentUpon>CardStyles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\ViewModels\BaseViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\DashboardViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\InventoryViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\LoginViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\MainViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\OrderViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
+    <Compile Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml.cs">
+      <DependentUpon>ConfirmBooksDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml.cs">
+      <DependentUpon>InputBooksDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml.cs">
+      <DependentUpon>UpdateBooksDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml.cs">
+      <DependentUpon>AddCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml.cs">
+      <DependentUpon>DeleteCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml.cs">
+      <DependentUpon>EditCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Inventory\ImportBooksView.xaml.cs">
+      <DependentUpon>ImportBooksView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Inventory\StockView.xaml.cs">
+      <DependentUpon>StockView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Orders\InvoiceView.xaml.cs">
+      <DependentUpon>InvoiceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Statistics\ChartView.xaml.cs">
+      <DependentUpon>ChartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Suppliers\SupplierDetailView.xaml.cs">
+      <DependentUpon>SupplierDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Suppliers\SupplierListView.xaml.cs">
+      <DependentUpon>SupplierListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Users\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Users\RoleManagementView.xaml.cs">
+      <DependentUpon>RoleManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Users\UserListView.xaml.cs">
+      <DependentUpon>UserListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AppResources.cs" />
+    <Compile Include="Presentation\AppResources\Styles\ButtonStyles.xaml.cs">
+      <DependentUpon>ButtonStyles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\AppResources\Styles\Colors.xaml.cs">
+      <DependentUpon>Colors.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\AppResources\Styles\DataGridStyles.xaml.cs">
+      <DependentUpon>DataGridStyles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\AppResources\Styles\TextBoxStyles.xaml.cs">
+      <DependentUpon>TextBoxStyles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Implementations\AuthService.cs" />
+    <Compile Include="Services\Implementations\BookService.cs" />
+    <Compile Include="Services\Implementations\CustomerService.cs" />
+    <Compile Include="Services\Implementations\ReportService.cs" />
+    <Compile Include="Services\Implementations\SupplierService.cs" />
+    <Compile Include="Services\Interfaces\IAuthService.cs" />
+    <Compile Include="Services\Interfaces\IBookService.cs" />
+    <Compile Include="Services\Interfaces\ICustomerService.cs">
+      <Generator>MSBuild:Compile</Generator>
+    </Compile>
+    <Compile Include="Services\Interfaces\IOrderService.cs" />
+    <Compile Include="Services\Interfaces\IReportService.cs" />
+    <Compile Include="Services\Interfaces\ISupplierService.cs" />
+    <Compile Include="Services\Interfaces\IUserService.cs" />
+    <Compile Include="Services\Implementations\OrderService.cs" />
+    <Compile Include="Core\Utils\BackupManager.cs" />
+    <Compile Include="Core\Utils\ConfigManager.cs" />
+    <Compile Include="Core\Utils\Encryptor.cs" />
+    <Compile Include="Core\Utils\Logger.cs" />
+    <Compile Include="Presentation\ViewModels\BookViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\CustomerViewModel.cs" />
+    <Compile Include="Presentation\Views\Books\BookDetailView.xaml.cs">
+      <DependentUpon>BookDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Books\BookListView.xaml.cs">
+      <DependentUpon>BookListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Customers\CustomerDetailView.xaml.cs">
+      <DependentUpon>CustomerDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Customers\CustomerListView.xaml.cs">
+      <DependentUpon>CustomerListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Orders\CreateOrderView.xaml.cs">
+      <DependentUpon>CreateOrderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Orders\OrderDetailView.xaml.cs">
+      <DependentUpon>OrderDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Orders\OrderListView.xaml.cs">
+      <DependentUpon>OrderListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Statistics\DashboardView.xaml.cs">
+      <DependentUpon>DashboardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Statistics\ReportView.xaml.cs">
+      <DependentUpon>ReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Page Include="Presentation\AppResources\Styles\ButtonStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -93,15 +259,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\ConfirmDialog.xaml">
+    <Page Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\InputDialog.xaml">
+    <Page Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\MessageDialog.xaml">
+    <Page Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -391,11 +572,32 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Presentation\AppResources\Fonts\Quicksand-Bold.ttf" />
-    <Resource Include="Presentation\AppResources\Fonts\Quicksand-Light.ttf" />
-    <Resource Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
-    <Resource Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
-    <Resource Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+    <Folder Include="Test\IntegrationTests\" />
+    <Folder Include="Test\UnitTests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitignore" />
+    <Resource Include="Presentation\AppResources\Images\Icons\return.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\add.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\search.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\edit.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\recyclebin.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLTK.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\winctr1.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\winctr2.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\winctr3.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\DX.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\inf.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\lock.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\logInBG.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\THM.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\profile.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\TT.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLHD.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\IN4.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\QLHD.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\QLKH.png" />

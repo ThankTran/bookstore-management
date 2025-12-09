@@ -1,19 +1,61 @@
-﻿<Window x:Class="bookstore_Management.Resources.Styles.ButtonStyles"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:bookstore_Management.Resources.Styles"
-        mc:Ignorable="d"
-        Title="ButtonStyles" Height="49" Width="321"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="#e9e9f4"
-        >
-    <Border CornerRadius="15">
-        <Grid>
-        
-    </Grid> 
-    </Border>
-    
-</Window>
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Base Button Style -->
+    <Style x:Key="BaseButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    </Style>
+
+    <!-- Primary Button Container (Border) -->
+    <Style x:Key="PrimaryButtonBorder" TargetType="Border">
+        <Setter Property="Width" Value="90"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+    </Style>
+
+    <!-- Secondary Button Container (Border) -->
+    <Style x:Key="SecondaryButtonBorder" TargetType="Border">
+        <Setter Property="Width" Value="90"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Background" Value="{StaticResource SecondaryLightBrush}"/>
+    </Style>
+
+    <!-- Primary Button Style (White text on primary background) -->
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Foreground" Value="{StaticResource TextWhiteBrush}"/>
+    </Style>
+
+    <!-- Secondary Button Style (Primary text on light background) -->
+    <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+    </Style>
+
+    <!-- Icon Button Style (For Add, Edit, Delete buttons) -->
+    <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+    </Style>
+
+    <!-- Small Icon Button Style (For DataGrid actions) -->
+    <Style x:Key="SmallIconButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Search Button Style -->
+    <Style x:Key="SearchButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Margin" Value="5,-10,-5,-10"/>
+    </Style>
+
+</ResourceDictionary>
