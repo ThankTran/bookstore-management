@@ -395,6 +395,23 @@
                                                   VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
+                                
+                                <!-- Timeline -->
+                                <Button x:Name="btnStock"
+                                       Style="{StaticResource RoundedButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/timeline.png" 
+                                              Width="24" 
+                                              Height="24"
+                                              Margin="0,0,12,0"/>
+                                        <TextBlock Text="Phân ca" 
+                                                  Foreground="#FFFFFF" 
+                                                  FontWeight="SemiBold" 
+                                                  FontSize="14"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
 
                                 <!-- Statistics -->
                                 <Button x:Name="btnStatistics"
@@ -413,23 +430,7 @@
                                     </StackPanel>
                                 </Button>
 
-                                <!-- Stock -->
-                                <Button x:Name="btnStock"
-                                       Style="{StaticResource RoundedButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLKHO.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Kho hàng" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
+                                
                                 <!-- Bills -->
                                 <Button x:Name="btnBills"
                                        Style="{StaticResource RoundedButtonStyle}"
