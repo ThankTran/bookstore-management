@@ -11,7 +11,7 @@ namespace bookstore_Management.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
             AutomaticMigrationDataLossAllowed = true;
         }
 
@@ -175,60 +175,35 @@ namespace bookstore_Management.Migrations
                 { 
                     Id = "NV0001", 
                     Name = "Nguyễn Văn A", 
-                    BaseSalary = 8000000, 
-                    CitizenIdCard = "001234567", 
-                    Phone = "0912345678", 
-                    Status = StaffStatus.Working, 
-                    Role = Role.SalesManager, 
-                    SalaryRate = 1.2m,
+                    UserRole = UserRole.SalesManager, 
                     CreatedDate = DateTime.Now
                 },
                 new Staff 
                 { 
                     Id = "NV0002", 
                     Name = "Trần Thị B", 
-                    BaseSalary = 7500000, 
-                    CitizenIdCard = "001234567", 
-                    Phone = "0923456789", 
-                    Status = StaffStatus.Rest, 
-                    Role = Role.CustomerManager, 
-                    SalaryRate = 1.0m,
+                    UserRole = UserRole.CustomerManager, 
                     CreatedDate = DateTime.Now
                 },
                 new Staff 
                 { 
                     Id = "NV0003", 
                     Name = "Phạm Quang C", 
-                    BaseSalary = 6000000, 
-                    CitizenIdCard = "011119876", 
-                    Phone = "0923456789", 
-                    Status = StaffStatus.Working, 
-                    Role = Role.SalesStaff, 
-                    SalaryRate = 0.8m,
+                    UserRole = UserRole.SalesStaff, 
                     CreatedDate = DateTime.Now
                 },
                 new Staff 
                 { 
                     Id = "NV0004", 
                     Name = "Lê Hoàng D", 
-                    BaseSalary = 6500000, 
-                    CitizenIdCard = "011119877", 
-                    Phone = "0934567890", 
-                    Status = StaffStatus.Working, 
-                    Role = Role.InventoryManager, 
-                    SalaryRate = 1.1m,
+                    UserRole = UserRole.InventoryManager, 
                     CreatedDate = DateTime.Now
                 },
                 new Staff 
                 { 
                     Id = "NV0005", 
                     Name = "Võ Thị E", 
-                    BaseSalary = 7000000, 
-                    CitizenIdCard = "011119878", 
-                    Phone = "0945678901", 
-                    Status = StaffStatus.Working, 
-                    Role = Role.SalesStaff, 
-                    SalaryRate = 0.9m,
+                    UserRole = UserRole.SalesStaff, 
                     CreatedDate = DateTime.Now
                 }
             };
