@@ -24,6 +24,10 @@ namespace bookstore_Management.Views.Customers
             var owner = Window.GetWindow(this);
             var dialog = new AddCustomer();
 
+            dialog.WindowState = WindowState.Normal;
+            dialog.Width = 456;
+            dialog.Height = 220;
+
             if (owner != null)
             {
                 dialog.Owner = owner;

@@ -111,6 +111,22 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
+        <!-- Style for user infor card  -->
+        <Style x:Key="UserInforCardEffect" TargetType="Border">       
+
+            <Setter Property="CornerRadius" Value=" 12"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Background" Value="#7577c3"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    
+                </Trigger>
+                
+
+
+            </Style.Triggers>
+        </Style>
 
 
     </Window.Resources>
@@ -237,9 +253,8 @@
                             </Button>
 
                             <!-- User Info Card -->
-                            <Border Background="#7577C3" 
-                                   CornerRadius="12" 
-                                   Padding="5">
+                            <Border 
+                                   Style="{StaticResource UserInforCardEffect}">
                                 <StackPanel Orientation="Horizontal">
                                     <Border Width="50" Height="50" 
                                            CornerRadius="25"

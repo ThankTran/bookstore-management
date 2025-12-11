@@ -55,7 +55,7 @@
                     <Setter Property="Background">
                         <Setter.Value>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                <GradientStop Color="#Ffffff" Offset="0"/>
+                                <GradientStop Color="#Ffffff" Offset="0.5"/>
                                 <GradientStop Color="#7F81E5" Offset="1"/>
                             </LinearGradientBrush>
                         </Setter.Value>
@@ -73,14 +73,14 @@
             <Setter Property="Background">
                 <Setter.Value>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#FFFFFF" Offset="0.2"/>
+                        <GradientStop Color="#FFFFFF" Offset="0.5"/>
                         <GradientStop Color="#8a90c8" Offset="1"/>
                     </LinearGradientBrush>
                 </Setter.Value>
             </Setter>
 
             <Style.Triggers>
-                <EventTrigger RoutedEvent="MouseEnter">
+                <EventTrigger RoutedEvent="MouseMove">
                     <BeginStoryboard>
                         <Storyboard>
                             <!-- Animate EndPoint.Y từ 0 sang 1 -->
