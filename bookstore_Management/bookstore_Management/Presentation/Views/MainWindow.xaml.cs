@@ -1,7 +1,11 @@
 ﻿using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
 using System;
+using System.Security.Principal;
 using System.Windows;
+using System.Windows.Controls;
+//namespace bookstore_Management.Presentation.Views.Users;
+using bookstore_Management.Presentation.Views.Users;
 
 namespace bookstore_Management
 {
@@ -79,11 +83,35 @@ namespace bookstore_Management
 
         #endregion
 
+        #region menu click events
+        public void ResetAllButtons()
+        {
+            btnHome.Tag = null;
+            btnPayment.Tag = null;
+            btnCustomer.Tag = null;
+            btnSupplier.Tag = null;
+            btnBills.Tag = null;
+            btnBooks.Tag = null;
+            btnEmployees.Tag = null;
+            btnStatistics.Tag = null;
+            btnStock.Tag = null;
+            btnAccount.Tag = null;
+        }
+
+        public void SetClickedButtonColor(Button btn)
+        {
+            ResetAllButtons();
+            btn.Tag = "Selected";
+        }
+        #endregion
+
         #region Sidebar menu events
 
         // Xử lý click menu Trang chủ
+
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
+            SetClickedButtonColor(btnHome);
             LoadHomePage();
         }
 
@@ -92,6 +120,7 @@ namespace bookstore_Management
         {
             try
             {
+                SetClickedButtonColor(btnCustomer);
                 LoadCustomerListPage();
             }
             catch (Exception ex)
@@ -103,6 +132,7 @@ namespace bookstore_Management
         // Xử lý click menu Hóa đơn (chưa cài đặt nội dung)
         private void btnBills_Click(object sender, RoutedEventArgs e)
         {
+            SetClickedButtonColor(btnBills);
             // TODO: Mở màn hình quản lý hóa đơn khi bạn xây dựng view tương ứng
         }
 
@@ -111,6 +141,7 @@ namespace bookstore_Management
         {
             try
             {
+                SetClickedButtonColor(btnBooks);
                 MainFrame.Content = new BookListView();
             }
             catch (Exception ex)
@@ -119,6 +150,14 @@ namespace bookstore_Management
             }
         }
 
+        private void btnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            var loginView = new LoginView();
+            Application.Current.MainWindow = loginView;
+            loginView.Show();
+            this.Close();
+        }
         #endregion
+
     }
 }

@@ -5,8 +5,198 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bookstore_Management.Presentation.Views.Users"
         mc:Ignorable="d"
-        Title="LoginView" Height="450" Width="800">
+        Title="LogIn" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True">
+    <Window.Resources>
+        <!--STYLE FOR LOGIN AND CANCEL BTN-->
+        <Style x:Key="btnLoginEffect" TargetType="Button">
+            <!--BorderThickness="0"-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            CornerRadius="10"
+                            BorderThickness="0"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <!--Mặc định-->
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+
+            <!--effect khi mouseover-->
+            <Style.Triggers >
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#7F81E5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--sTYLE FOR BORDER LOGIN-->
+        <Style x:Key="loginGridEffect" TargetType="Border">
+            <!--<Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
+            <Setter Property="RenderTransform" >
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>-->
+            <Setter Property="Background" Value="Transparent"/>
+            <Style.Triggers >
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#Ffffff" Offset="0.5"/>
+                                <GradientStop Color="#7F81E5" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <!--<Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                        </Setter.Value>
+                    </Setter>-->
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="login2GridEffect" TargetType="Border">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#FFFFFF" Offset="0.5"/>
+                        <GradientStop Color="#8a90c8" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseMove">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <!-- Animate EndPoint.Y từ 0 sang 1 -->
+                            <PointAnimation Storyboard.TargetProperty="Background.(LinearGradientBrush.EndPoint)"
+                                    To="0,1" Duration="0:0:1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <!-- Quay lại trạng thái ban đầu -->
+                            <PointAnimation Storyboard.TargetProperty="Background.(LinearGradientBrush.EndPoint)"
+                                    To="1,0.3" Duration="0:0:1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+    </Window.Resources>
+
+    <Window.Background>
+        <ImageBrush ImageSource="/Presentation/AppResources/Images/Icons/logInBG.png"/>
+    </Window.Background>
     <Grid>
-        
+        <!--name and quotes-->
+        <StackPanel Margin="96,88,430,305">
+            <TextBlock Text="Organizing the world, one book at a time." FontWeight="Light" Foreground="White" FontStyle="Italic" FontSize="10" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" HorizontalAlignment="Center"/>
+            <TextBlock Text="THM BOOKSTORE MANAGEMENT" FontWeight="Bold" Foreground="White" FontSize="17" FontFamily="/Presentation/AppResources/Fonts/#Quicksand"/>
+        </StackPanel>
+        <!--Login-->
+        <!--<Border Margin="84,63,92,54" Style="{StaticResource loginGridEffect}">-->
+
+        <!--</Border>-->
+        <Border Margin="454,88,105,67"
+                CornerRadius="20" 
+                Style="{StaticResource login2GridEffect}">
+            <Border.Effect>
+                <DropShadowEffect Color="Black"
+                            BlurRadius="20"
+                            ShadowDepth="10"
+                            Direction="315"
+                            Opacity="0.4"/>
+            </Border.Effect>
+            <Grid>
+                <TextBlock Margin="0,15,0,255"  
+                            Text="LOGIN" 
+                            FontWeight="ExtraBold" 
+                            Foreground="#585ab8" 
+                            FontSize="20" 
+                            FontFamily="/Presentation/AppResources/Fonts/#Quicksand" 
+                            HorizontalAlignment="Center"/>
+                <StackPanel Margin="0,80,0,16">
+
+                    <!--user and pw-->
+                    <Border CornerRadius="10" 
+                            Margin="10,0,10,0" 
+                            Background="#E9E9F5" 
+                            Height="35" 
+                            BorderThickness="2" 
+                            BorderBrush="#F9F8FD">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Presentation/AppResources/Images/Icons/user.png" 
+                                    Width="15" 
+                                    Margin="8,0,0,0"/>
+                            <TextBox Background="Transparent" 
+                                        Width="195" 
+                                        HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center" 
+                                        BorderBrush="Transparent"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border CornerRadius="10"                             
+                            Margin="10,10,10,0" 
+                            Background="#E9E9F5" 
+                            Height="35" 
+                            BorderThickness="2" 
+                            BorderBrush="#F9F8FD">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Presentation/AppResources/Images/Icons/lock.png" 
+                                    Width="15" 
+                                    Margin="8,0,0,0"/>
+                            <PasswordBox Background="Transparent" 
+                                            Width="195" 
+                                            HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center" 
+                                            BorderBrush="Transparent"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!--LOGIN AND Cancel-->
+                    <Grid Height="99">
+
+                        <Border CornerRadius="10" Background="#585ab8" Margin="10,29,10,40" BorderThickness="0" >
+                            <Button x:Name="btnLogin" 
+                                    Click="btnLogin_Click"                                
+                                    Style="{StaticResource btnLoginEffect}">
+                                <TextBlock Text="LOGIN" FontWeight="ExtraBold" Foreground="White" FontSize="15" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Button>
+                        </Border>
+
+                        <Border CornerRadius="10" Background="#E9E9F5" Margin="10,64,10,10" BorderThickness="0"  >
+                            <Button x:Name="btnCancelLogin" 
+                                    Style="{StaticResource btnLoginEffect}"
+                                    Click="btnCancelLogin_Click">
+                                <TextBlock Text="Cancel" FontWeight="ExtraBold" Foreground="#5858B5" FontSize="10" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Button>
+                        </Border>
+
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
