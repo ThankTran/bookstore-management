@@ -30,11 +30,11 @@ namespace bookstore_Management.Models
         public PaymentType PaymentMethod { get; set; }
 
         [Required]
-        [Column("discount", TypeName = "decimal(18,2)")]
+        [Column("discount")]
         public decimal? Discount { get; set; } = 0;
 
         [Required]
-        [Column("total_price", TypeName = "decimal(18,2)")]
+        [Column("total_price")]
         public decimal TotalPrice { get; set; }
 
         [Column("note")]

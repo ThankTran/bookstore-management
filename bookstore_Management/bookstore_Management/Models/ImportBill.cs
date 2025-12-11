@@ -10,18 +10,11 @@ namespace bookstore_Management.Models
     /// </summary>
     public class ImportBill
     {
+
         [Required]
+        [StringLength(6)]
         [Column("id")]
-        public int ImportBillId { get; set; }
-
-        [Required]
-        [StringLength(20)]
-        [Column("code")]
-        public string ImportBillCode { get; set; }
-
-        [Required]
-        [Column("import_date")]
-        public DateTime ImportDate { get; set; }
+        public string ImportBillId { get; set; }
 
         [Required]
         [StringLength(6)]
@@ -29,7 +22,7 @@ namespace bookstore_Management.Models
         public string SupplierId { get; set; }
 
         [Required]
-        [Column("total_amount", TypeName = "decimal(18,2)")]
+        [Column("total_amount")]
         public decimal TotalAmount { get; set; }
 
         [Column("notes")]

@@ -32,10 +32,10 @@ namespace bookstore_Management.Models
         [Column("action")]
         public string Action { get; set; }  // "Create", "Update", "Delete"
 
-        [Column("old_values", TypeName = "nvarchar(max)")]
+        [Column("old_values")]
         public string OldValues { get; set; }  // JSON của giá trị cũ (null nếu Create)
 
-        [Column("new_values", TypeName = "nvarchar(max)")]
+        [Column("new_values")]
         public string NewValues { get; set; }  // JSON của giá trị mới
 
         [Required]

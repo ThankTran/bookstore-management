@@ -33,7 +33,7 @@ namespace bookstore_Management.Models
 
         [Required] 
         [Column("role")]
-        public Role Role { get; set; } // enum: Admin, Staff, Customer
+        public UserRole UserRole { get; set; } // enum: Admin, Staff, Customer
 
         [Required]
         [Column("created_date")]

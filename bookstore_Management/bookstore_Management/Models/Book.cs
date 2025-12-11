@@ -25,19 +25,14 @@ namespace bookstore_Management.Models
         public string Name { get; set; }
 
         [Required]
-        [StringLength(6)]
-        [Column("supplier_id")]
-        public string SupplierId { get; set; }
-
-        [Required]
         [Column("category")]
         public BookCategory Category { get; set; }
 
-        [Column("sale_price", TypeName = "decimal(18,2)")]
+        [Column("sale_price")]
         public decimal? SalePrice { get; set; }
 
         [Required]
-        [Column("import_price", TypeName = "decimal(18,2)")]
+        [Column("import_price")]
         public decimal ImportPrice { get; set; }
 
         [Required]
@@ -52,6 +47,8 @@ namespace bookstore_Management.Models
 
         // Navigation properties
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual Supplier Supplier { get; set; }
+        public virtual Stock Stock { get; set; }
+        
+        public virtual ICollection<BookAuthor> BookAuthors { get; set; }
     }
 }
