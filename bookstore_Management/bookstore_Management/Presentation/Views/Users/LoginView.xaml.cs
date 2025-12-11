@@ -23,5 +23,17 @@ namespace bookstore_Management.Presentation.Views.Users
         {
             InitializeComponent();
         }
+
+        private void btnLogin_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            this.Close();
+            mainWindow.ShowDialog();
+        }
+
+        private void btnCancelLogin_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
