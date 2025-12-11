@@ -33,35 +33,27 @@
                            FontFamily="/Presentation/AppResources/Fonts/#Quicksand"/>
 
                 <!-- Form nhập liệu -->
-                <Grid Margin="40,10,40,0">
+                <Grid Style="{StaticResource DialogFormContainer}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="45"/>
+                        <RowDefinition Height="45"/>
+                        <RowDefinition Height="45"/>
+                        <RowDefinition Height="45"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
+                    
                     <!-- Tên khách hàng -->
                     <TextBlock Grid.Row="0" Grid.Column="0"
                                Text="Tên khách hàng"
-                               Margin="0,5,20,0"
-                               FontWeight="Bold"
-                               Foreground="#585ab8"
-                               FontSize="13"
-                               FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                               VerticalAlignment="Center"/>
+                               Style="{StaticResource FormLabel}"
+                               Margin="0,5,20,5"/>
 
                     <Border Grid.Row="0" Grid.Column="1"
-                            Margin="0,5,0,0"
-                            CornerRadius="5"
-                            BorderBrush="#585ab8"
-                            BorderThickness="1"
-                            Width="250"
-                            Height="23">
+                            Style="{StaticResource FormReadOnlyInputBorder}"
+                            Margin="0,5,0,5">
                         <TextBox x:Name="txtCustomerName"
                                  Style="{StaticResource FlatTextBox}"/>
                     </Border>
@@ -69,20 +61,12 @@
                     <!-- Số điện thoại -->
                     <TextBlock Grid.Row="1" Grid.Column="0"
                                Text="Số điện thoại"
-                               Margin="0,5,20,0"
-                               FontWeight="Bold"
-                               Foreground="#585ab8"
-                               FontSize="13"
-                               FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                               VerticalAlignment="Center"/>
+                               Style="{StaticResource FormLabel}"
+                               Margin="0,5,20,5"/>
 
                     <Border Grid.Row="1" Grid.Column="1"
-                            Margin="0,5,0,0"
-                            CornerRadius="5"
-                            BorderBrush="#585ab8"
-                            BorderThickness="1"
-                            Width="250"
-                            Height="23">
+                            Style="{StaticResource FormReadOnlyInputBorder}"
+                            Margin="0,5,0,5">
                         <TextBox x:Name="txtPhone"
                                  Style="{StaticResource FlatTextBox}"/>
                     </Border>
@@ -90,20 +74,12 @@
                     <!-- Email -->
                     <TextBlock Grid.Row="2" Grid.Column="0"
                                Text="Email"
-                               Margin="0,5,20,0"
-                               FontWeight="Bold"
-                               Foreground="#585ab8"
-                               FontSize="13"
-                               FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                               VerticalAlignment="Center"/>
+                               Style="{StaticResource FormLabel}"
+                               Margin="0,5,20,5"/>
 
                     <Border Grid.Row="2" Grid.Column="1"
-                            Margin="0,5,0,0"
-                            CornerRadius="5"
-                            BorderBrush="#585ab8"
-                            BorderThickness="1"
-                            Width="250"
-                            Height="23">
+                            Style="{StaticResource FormReadOnlyInputBorder}"
+                            Margin="0,5,0,5">
                         <TextBox x:Name="txtEmail"
                                  Style="{StaticResource FlatTextBox}"/>
                     </Border>
@@ -111,20 +87,12 @@
                     <!-- Địa chỉ -->
                     <TextBlock Grid.Row="3" Grid.Column="0"
                                Text="Địa chỉ"
-                               Margin="0,5,20,0"
-                               FontWeight="Bold"
-                               Foreground="#585ab8"
-                               FontSize="13"
-                               FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                               VerticalAlignment="Center"/>
+                               Style="{StaticResource FormLabel}"
+                               Margin="0,5,20,5"/>
 
                     <Border Grid.Row="3" Grid.Column="1"
-                            Margin="0,5,0,0"
-                            CornerRadius="5"
-                            BorderBrush="#585ab8"
-                            BorderThickness="1"
-                            Width="250"
-                            Height="23">
+                            Style="{StaticResource FormReadOnlyInputBorder}"
+                            Margin="0,5,0,5">
                         <TextBox x:Name="txtAddress"
                                  Style="{StaticResource FlatTextBox}"/>
                     </Border>
