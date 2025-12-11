@@ -10,6 +10,7 @@
         Background="Transparent">
 
     <Window.Resources>
+        
         <!-- Style cho nút bo góc + hiệu ứng hover -->
         <Style x:Key="RoundedButtonStyle" TargetType="Button">
             <Setter Property="Template">
@@ -46,19 +47,72 @@
                     <!-- nền tím nhạt -->
                     <Setter Property="Foreground" Value="#7F81E5"/>
                     <!-- chữ tím đậm -->
-
-                    <!--<Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                    <Setter Property="Padding" Value="12,3"/>
-                    <Setter Property="Cursor" Value="Hand"/>
-                    <Setter Property="Margin" Value="0,0,0,0"/>-->
                 </Trigger>
                 <Trigger Property="Tag" Value="Selected">
                     <Setter Property="Background" Value="#DE7E9E"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
+        <!--Infor button effect-->
+        <Style x:Key="InforEffect" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="35"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E9E9F5"/>
+                </Trigger>
+            </Style.Triggers>           
+        </Style>
+
+        <!--Logout button effect-->
+        <Style x:Key="logoutEffect" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="2"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        RecognizesAccessKey="True"
+                                        TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#8a90c8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
     </Window.Resources>
     <Border Background="#FFFFFF" CornerRadius="20" Padding="0">
         <Grid>
@@ -140,7 +194,8 @@
                                         Width="20" 
                                         Height="20"/>-->
                                 <Border CornerRadius="35" Background="#7577C3">
-                                    <Button x:Name="btnI" Background="Transparent"  BorderThickness="0" >
+                                    <Button x:Name="btnI"  
+                                            Style="{StaticResource InforEffect}" >
                                         <Image Source="/Presentation/AppResources/Images/Icons/inf.png" 
                                                Width="14" 
                                                Height="14"
@@ -162,12 +217,12 @@
                         <StackPanel Grid.Row="1" Margin="15,10,15,20">
                             <!-- Logout Button -->
                             <Button x:Name="btnLogout"
-                                   Background="Transparent" 
                                    BorderThickness="0"
                                    HorizontalAlignment="Left"
                                    Cursor="Hand"
                                    Padding="0"
-                                   Margin="5,0,0,12">
+                                   Margin="5,0,0,12"
+                                   Style="{StaticResource logoutEffect}" Click="btnLogout_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Presentation/AppResources/Images/Icons/DX.png" 
                                           Width="16" 

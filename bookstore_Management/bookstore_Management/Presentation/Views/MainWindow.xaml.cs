@@ -4,6 +4,8 @@ using System;
 using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
+//namespace bookstore_Management.Presentation.Views.Users;
+using bookstore_Management.Presentation.Views.Users;
 
 namespace bookstore_Management
 {
@@ -148,6 +150,14 @@ namespace bookstore_Management
             }
         }
 
+        private void btnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            var loginView = new LoginView();
+            Application.Current.MainWindow = loginView;
+            loginView.Show();
+            this.Close();
+        }
         #endregion
+
     }
 }
