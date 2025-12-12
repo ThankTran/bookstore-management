@@ -24,7 +24,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<string> AddCustomer(CustomerDto dto)
+        public Result<string> AddCustomer(CustomerCreateDto dto)
         {
             try
             {
@@ -49,8 +49,6 @@ namespace bookstore_Management.Services.Implementations
                     CustomerId = customerId,
                     Name = dto.Name.Trim(),
                     Phone = dto.Phone,
-                    Email = string.IsNullOrWhiteSpace(dto.Email) ? null : dto.Email.Trim(),
-                    Address = string.IsNullOrWhiteSpace(dto.Address) ? null : dto.Address.Trim(),
                     LoyaltyPoints = 0,
                     MemberLevel = MemberTier.Bronze,
                     CreatedDate = DateTime.Now,
@@ -72,7 +70,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- SỬA DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result UpdateCustomer(string customerId, CustomerDto dto)
+        public Result UpdateCustomer(string customerId, CustomerUpdateDto dto)
         {
             try
             {
@@ -99,8 +97,10 @@ namespace bookstore_Management.Services.Implementations
 
                 customer.Name = dto.Name.Trim();
                 customer.Phone = dto.Phone;
-                customer.Email = string.IsNullOrWhiteSpace(dto.Email) ? null : dto.Email.Trim();
-                customer.Address = string.IsNullOrWhiteSpace(dto.Address) ? null : dto.Address.Trim();
+                if (dto.MemberLevel.HasValue)
+                    customer.MemberLevel = dto.MemberLevel.Value;
+                if (dto.LoyaltyPoints.HasValue)
+                    customer.LoyaltyPoints = dto.LoyaltyPoints.Value;
                 customer.UpdatedDate = DateTime.Now;
 
                 _customerRepository.Update(customer);
@@ -281,6 +281,7 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
+        
         public Result UsePoints(string customerId, decimal points)
         {
             try
@@ -309,6 +310,7 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
+        
         public Result<decimal> GetPoints(string customerId)
         {
             try
@@ -350,6 +352,7 @@ namespace bookstore_Management.Services.Implementations
                         customer.MemberLevel = MemberTier.Diamond;
                         break;
                     case MemberTier.Diamond:
+                    default:
                         return Result.Fail("Khách hàng đã ở mức cao nhất");
                 }
 
@@ -459,7 +462,7 @@ namespace bookstore_Management.Services.Implementations
         /// <summary>
         /// Tính tổng tiền đã chi của khách hàng
         /// </summary>
-        public Result<decimal> GetCustomerTotalSpent(string customerId)
+        public Result<decimal> CustomerTotalSpentPerDay(string customerId, DateTime date)
         {
             try
             {
@@ -469,9 +472,55 @@ namespace bookstore_Management.Services.Implementations
 
                 var orders = _orderRepository.Find(o =>
                     o.CustomerId == customerId &&
-                    o.DeletedDate == null);
+                    o.DeletedDate == null &&
+                    o.CreatedDate == date );
 
-                decimal totalSpent = orders.Sum(o => o.TotalPrice);
+                var totalSpent = orders.Sum(o => o.TotalPrice);
+                return Result<decimal>.Success(totalSpent);
+            }
+            catch (Exception ex)
+            {
+                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
+            }
+        }
+        
+        public Result<decimal> CustomerTotalSpentPerMonth(string customerId, int month, int year)
+        {
+            try
+            {
+                var customer = _customerRepository.GetById(customerId);
+                if (customer == null || customer.DeletedDate != null)
+                    return Result<decimal>.Fail("Khách hàng không tồn tại");
+
+                var orders = _orderRepository.Find(o =>
+                    o.CustomerId == customerId &&
+                    o.DeletedDate == null &&
+                    o.CreatedDate.Month == month &&
+                    o.CreatedDate.Year == year);
+
+                var totalSpent = orders.Sum(o => o.TotalPrice);
+                return Result<decimal>.Success(totalSpent);
+            }
+            catch (Exception ex)
+            {
+                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
+            }
+        }
+        
+        public Result<decimal> CustomerTotalSpentPerYear(string customerId, int year)
+        {
+            try
+            {
+                var customer = _customerRepository.GetById(customerId);
+                if (customer == null || customer.DeletedDate != null)
+                    return Result<decimal>.Fail("Khách hàng không tồn tại");
+
+                var orders = _orderRepository.Find(o =>
+                    o.CustomerId == customerId &&
+                    o.DeletedDate == null &&
+                    o.CreatedDate.Year == year);
+
+                var totalSpent = orders.Sum(o => o.TotalPrice);
                 return Result<decimal>.Success(totalSpent);
             }
             catch (Exception ex)

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace bookstore_Management.Exceptions
 {
-    internal class BookstoreException
+    internal class BookstoreException : System.Exception
     {
+        public BookstoreException() { }
+        public BookstoreException(string message) : base(message) { }
+        public BookstoreException(string message, System.Exception inner) : base(message, inner) { }
     }
 }

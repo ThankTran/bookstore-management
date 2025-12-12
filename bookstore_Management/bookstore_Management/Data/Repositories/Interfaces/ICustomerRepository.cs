@@ -8,7 +8,6 @@ namespace bookstore_Management.Data.Repositories.Interfaces
     internal interface ICustomerRepository : IRepository<Customer,string>
     {
         IEnumerable<Customer> SearchByName(string name);
-        IEnumerable<Customer> SearchByEmail(string email);
         IEnumerable<Customer> GetByMemberLevel(MemberTier tier);
         Customer SearchByPhone(string phone);
     }

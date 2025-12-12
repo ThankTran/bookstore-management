@@ -5,7 +5,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Implementations
 {
-    internal class OrderDetailRepository : Repository<OrderDetail,int>, IOrderDetailRepository
+    internal class OrderDetailRepository : Repository<OrderDetail, (string BookId, string OrderId)>, IOrderDetailRepository
     {
         public OrderDetailRepository(BookstoreDbContext context) : base(context) { }
 

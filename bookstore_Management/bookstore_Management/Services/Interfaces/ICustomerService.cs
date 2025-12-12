@@ -9,8 +9,8 @@ namespace bookstore_Management.Services.Interfaces
     public interface ICustomerService
     {
         // CRUD
-        Result<string> AddCustomer(CustomerDto dto);
-        Result UpdateCustomer(string customerId, CustomerDto dto);
+        Result<string> AddCustomer(CustomerCreateDto dto);
+        Result UpdateCustomer(string customerId, CustomerUpdateDto dto);
         Result DeleteCustomer(string customerId);
         Result<Customer> GetCustomerById(string customerId);
         Result<IEnumerable<Customer>> GetAllCustomers();
@@ -20,7 +20,7 @@ namespace bookstore_Management.Services.Interfaces
         Result<IEnumerable<Customer>> GetByMemberLevel(MemberTier level);
         Result<IEnumerable<Customer>> SearchByTotalSpent(decimal minimum, decimal maximum, DateTime startDate, DateTime endDate);
 
-        // Quản lý điểm tích lũy
+        // Quản lý điểm tích lũy, doanh thu trên tháng
         Result AddPoints(string customerId, decimal points);
         Result UsePoints(string customerId, decimal points);
         Result<decimal> GetPoints(string customerId);
@@ -32,6 +32,8 @@ namespace bookstore_Management.Services.Interfaces
 
         // Lịch sử mua hàng
         Result<IEnumerable<Order>> GetCustomerOrderHistory(string customerId, DateTime fromDate, DateTime toDate);
-        Result<decimal> GetCustomerTotalSpent(string customerId);
+        Result <decimal> CustomerTotalSpentPerDay(string customerId, DateTime date);
+        Result<decimal> CustomerTotalSpentPerMonth(string customerId, int month, int year);
+        Result<decimal> CustomerTotalSpentPerYear(string customerId, int year);
     }
 }

@@ -11,6 +11,7 @@ namespace bookstore_Management.Data.Repositories.Interfaces
     {
         IEnumerable<Book> GetByCategory(BookCategory category); // tìm kiếm theo thể loại
         IEnumerable<Book> SearchByName(string keyword); // tìm kiếm theo tên
-        IEnumerable<Book> GetLowPriceBooks(decimal maxPrice); // lấy giá thấp dưới...
+        IEnumerable<Book> GetByAuthor(string author);
+        IEnumerable<Book> GetByPriceRange(decimal? minPrice, decimal? maxPrice);
     }
 }

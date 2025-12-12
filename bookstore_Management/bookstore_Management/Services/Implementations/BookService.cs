@@ -13,69 +13,62 @@ namespace bookstore_Management.Services.Implementations
     public class BookService : IBookService
     {
         private readonly IBookRepository _bookRepository;
-        private readonly ISupplierRepository _supplierRepository;
         private readonly IStockRepository _stockRepository;
+        private readonly ISupplierRepository _supplierRepository;
 
         internal BookService(
-            IBookRepository bookRepository, 
-            ISupplierRepository supplierRepository,
-            IStockRepository stockRepository)
+            IBookRepository bookRepository,
+            IStockRepository stockRepository,
+            ISupplierRepository supplierRepository)
         {
             _bookRepository = bookRepository;
-            _supplierRepository = supplierRepository;
             _stockRepository = stockRepository;
+            _supplierRepository = supplierRepository;
         }
 
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<string> AddBook(BookDto dto)
+        public Result<string> CreateBook(BookCreateDto dto)
         {
             try
             {
                 // Validate
                 if (string.IsNullOrWhiteSpace(dto.Name))
                     return Result<string>.Fail("Tên sách không được trống");
-                    
-                if (dto.ImportPrice <= 0)
-                    return Result<string>.Fail("Giá nhập phải > 0");
-                    
-                var supplier = _supplierRepository.GetById(dto.SupplierId);
-                if (supplier == null)
-                    return Result<string>.Fail("Nhà cung cấp không tồn tại");
-                
+                if (string.IsNullOrWhiteSpace(dto.Author))
+                    return Result<string>.Fail("Tác giả không được trống");
+
+                if (!string.IsNullOrWhiteSpace(dto.SupplierId))
+                {
+                    var sup = _supplierRepository.GetById(dto.SupplierId);
+                    if (sup == null || sup.DeletedDate != null)
+                        return Result<string>.Fail("Nhà cung cấp không tồn tại");
+                }
+
                 // Generate Book ID
-                var bookId = GenerateBookId();
-                
+                var bookId = string.IsNullOrWhiteSpace(dto.Id) ? GenerateBookId() : dto.Id.Trim();
+                if (_bookRepository.Exists(b => b.BookId == bookId))
+                    return Result<string>.Fail("Mã sách đã tồn tại");
+
                 // Auto set SalePrice nếu không có
-                decimal? salePrice = dto.SalePrice.HasValue ? dto.SalePrice : (dto.ImportPrice * 1.3m);
+                decimal? salePrice = dto.SalePrice;
                 
                 // Create book
                 var book = new Book
                 {
                     BookId = bookId,
                     Name = dto.Name.Trim(),
-                    SupplierId = dto.SupplierId,
+                    Author = dto.Author?.Trim(),
+                    SupplierId = string.IsNullOrWhiteSpace(dto.SupplierId) ? null : dto.SupplierId.Trim(),
                     Category = dto.Category,
                     SalePrice = salePrice,
-                    ImportPrice = dto.ImportPrice,
-                    CreatedDate = DateTime.Now,
-                    UpdatedDate = null,
-                    DeletedDate = null
+                    CreatedDate = DateTime.Now
                 };
                 
                 _bookRepository.Add(book);
                 _bookRepository.SaveChanges();
 
-                // Tạo stock record
-                var stock = new Stock
-                {
-                    BookId = bookId,
-                    StockQuantity = 0
-                };
-                _stockRepository.Add(stock);
-                _stockRepository.SaveChanges();
-                
                 return Result<string>.Success(bookId, "Thêm sách thành công");
             }
             catch (Exception ex)
@@ -87,23 +80,29 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- SỬA DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result UpdateBook(string bookId, BookDto dto)
+        public Result UpdateBook(string bookId, BookUpdateDto dto)
         {
             try
             {
                 var book = _bookRepository.GetById(bookId);
                 if (book == null || book.DeletedDate != null)
                     return Result.Fail("Sách không tồn tại");
-                
-                var supplier = _supplierRepository.GetById(dto.SupplierId);
-                if (supplier == null)
-                    return Result.Fail("Nhà cung cấp không tồn tại");
-                
-                book.Name = dto.Name.Trim();
-                book.SupplierId = dto.SupplierId;
-                book.Category = dto.Category;
-                book.ImportPrice = dto.ImportPrice;
-                book.SalePrice = dto.SalePrice.HasValue ? dto.SalePrice : (dto.ImportPrice * 1.3m);
+
+                if (!string.IsNullOrWhiteSpace(dto.Name))
+                    book.Name = dto.Name.Trim();
+                if (!string.IsNullOrWhiteSpace(dto.Author))
+                    book.Author = dto.Author.Trim();
+                if (dto.Category.HasValue)
+                    book.Category = dto.Category.Value;
+                if (dto.SalePrice.HasValue)
+                    book.SalePrice = dto.SalePrice.Value;
+                if (!string.IsNullOrWhiteSpace(dto.SupplierId))
+                {
+                    var sup = _supplierRepository.GetById(dto.SupplierId);
+                    if (sup == null || sup.DeletedDate != null)
+                        return Result.Fail("Nhà cung cấp không tồn tại");
+                    book.SupplierId = dto.SupplierId.Trim();
+                }
                 book.UpdatedDate = DateTime.Now;
                 
                 _bookRepository.Update(book);
@@ -208,12 +207,30 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result<IEnumerable<Book>> GetBySupplier(string supplierId)
+        public Result<IEnumerable<Book>> GetByAuthor(string author)
         {
             try
             {
-                var books = _bookRepository.Find(b => 
-                    b.SupplierId == supplierId && b.DeletedDate == null)
+                if (string.IsNullOrWhiteSpace(author))
+                    return Result<IEnumerable<Book>>.Success(new List<Book>());
+
+                var books = _bookRepository.GetByAuthor(author)
+                    .Where(b => b.DeletedDate == null)
+                    .ToList();
+                return Result<IEnumerable<Book>>.Success(books);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<Book>>.Fail($"Lỗi: {ex.Message}");
+            }
+        }
+
+        public Result<IEnumerable<Book>> GetByPriceRange(decimal? minPrice, decimal? maxPrice)
+        {
+            try
+            {
+                var books = _bookRepository.GetByPriceRange(minPrice, maxPrice)
+                    .Where(b => b.DeletedDate == null)
                     .ToList();
                 return Result<IEnumerable<Book>>.Success(books);
             }
@@ -227,14 +244,9 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var stocks = _stockRepository.Find(s => 
-                    s.StockQuantity > 0 && s.StockQuantity <= minStock);
-
-                var bookIds = stocks.Select(s => s.BookId).ToList();
-                var books = _bookRepository.Find(b => 
-                    bookIds.Contains(b.BookId) && b.DeletedDate == null)
-                    .ToList();
-
+                var stocks = _stockRepository.GetLowStock(minStock);
+                var bookIds = stocks.Select(s => s.BookId).Distinct().ToList();
+                var books = _bookRepository.Find(b => bookIds.Contains(b.BookId) && b.DeletedDate == null).ToList();
                 return Result<IEnumerable<Book>>.Success(books);
             }
             catch (Exception ex)
@@ -248,12 +260,8 @@ namespace bookstore_Management.Services.Implementations
             try
             {
                 var outOfStocks = _stockRepository.Find(s => s.StockQuantity == 0);
-                var bookIds = outOfStocks.Select(s => s.BookId).ToList();
-                
-                var books = _bookRepository.Find(b => 
-                    bookIds.Contains(b.BookId) && b.DeletedDate == null)
-                    .ToList();
-
+                var bookIds = outOfStocks.Select(s => s.BookId).Distinct().ToList();
+                var books = _bookRepository.Find(b => bookIds.Contains(b.BookId) && b.DeletedDate == null).ToList();
                 return Result<IEnumerable<Book>>.Success(books);
             }
             catch (Exception ex)
@@ -296,20 +304,16 @@ namespace bookstore_Management.Services.Implementations
                 var book = _bookRepository.GetById(bookId);
                 if (book == null || book.DeletedDate != null)
                     return Result<decimal>.Fail("Sách không tồn tại");
-                
-                if (!book.SalePrice.HasValue || book.ImportPrice == 0)
-                    return Result<decimal>.Fail("Không thể tính lợi nhuận");
-                
-                var profit = book.SalePrice.Value - book.ImportPrice;
-                var profitPercent = (profit / book.ImportPrice) * 100;
-                
-                return Result<decimal>.Success(profit, 
-                    $"Lợi nhuận: {profit:N0} VND ({profitPercent:F2}%)");
+                if (!book.SalePrice.HasValue || !book.ImportPrice.HasValue)
+                    return Result<decimal>.Fail("Chưa hỗ trợ tính lợi nhuận (không có giá bán hoặc giá nhập)");
+                  var profit = book.SalePrice.Value - book.ImportPrice.Value;
+                return Result<decimal>.Success(profit, $"Lợi nhuận: {profit:N0} VND");
             }
             catch (Exception ex)
             {
                 return Result<decimal>.Fail($"Lỗi: {ex.Message}");
             }
+            
         }
 
         // ==================================================================

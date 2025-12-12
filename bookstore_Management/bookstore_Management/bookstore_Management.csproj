@@ -1,444 +1,480 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{C4B0D1A5-4DDE-48E6-A753-C5BDC52DE653}</ProjectGuid>
-        <OutputType>WinExe</OutputType>
-        <RootNamespace>bookstore_Management</RootNamespace>
-        <AssemblyName>bookstore_Management</AssemblyName>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-        <WarningLevel>4</WarningLevel>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <Deterministic>true</Deterministic>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="System"/>
-        <Reference Include="System.Data"/>
-        <Reference Include="System.Xml"/>
-        <Reference Include="Microsoft.CSharp"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Xml.Linq"/>
-        <Reference Include="System.Data.DataSetExtensions"/>
-        <Reference Include="System.Net.Http"/>
-        <Reference Include="System.Xaml">
-            <RequiredTargetFramework>4.0</RequiredTargetFramework>
-        </Reference>
-        <Reference Include="WindowsBase"/>
-        <Reference Include="PresentationCore"/>
-        <Reference Include="PresentationFramework"/>
-        <Reference Include="System.Configuration"/>
-        <Reference Include="System.ComponentModel.DataAnnotations"/>
-    </ItemGroup>
-    <ItemGroup>
-        <ApplicationDefinition Include="App.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </ApplicationDefinition>
-        <Page Include="Presentation\AppResources\Colors\Colors.xaml" />
-        <Page Include="Presentation\AppResources\Fonts\Fonts.xaml" />
-        <Page Include="Presentation\AppResources\Styles\ButtonStyles.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\AppResources\Styles\DataGridStyles.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\AppResources\Styles\DialogStyles.xaml" />
-        <Page Include="Presentation\AppResources\Styles\TestHover.xaml" />
-        <Page Include="Presentation\AppResources\Styles\TextBoxStyles.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Books\BookDetailView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Books\BookListView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Customers\CustomerDetailView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Customers\CustomerListView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml">
-            <SubType>Designer</SubType>
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml">
-            <SubType>Designer</SubType>
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Include="Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml">
-            <SubType>Designer</SubType>
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml">
-            <SubType>Designer</SubType>
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml">
-            <SubType>Designer</SubType>
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml">
-            <SubType>Designer</SubType>
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Include="Presentation\Views\Inventory\ImportBooksView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Inventory\StockView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\MainWindow.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Orders\CreateOrderView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Orders\InvoiceView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Orders\OrderDetailView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Orders\OrderListView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Statistics\ChartView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Statistics\DashboardView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Statistics\ReportView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Suppliers\SupplierDetailView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Suppliers\SupplierListView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Users\LoginView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Users\RoleManagementView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Page Include="Presentation\Views\Users\UserListView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="App.xaml.cs">
-            <DependentUpon>App.xaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Include="AppResources.cs"/>
-        <Compile Include="Core\Constants\AppConstants.cs"/>
-        <Compile Include="Core\Constants\CustomerConstants.cs"/>
-        <Compile Include="Core\Constants\FeatureConstant.cs"/>
-        <Compile Include="Core\Constants\MessageConstants.cs"/>
-        <Compile Include="Core\Constants\PermissionConstants.cs"/>
-        <Compile Include="Core\Constants\RoleConstants.cs"/>
-        <Compile Include="Core\Enums\BookCategory.cs"/>
-        <Compile Include="Core\Enums\MemberTier.cs"/>
-        <Compile Include="Core\Enums\OrderStatus.cs"/>
-        <Compile Include="Core\Enums\PaymentType.cs"/>
-        <Compile Include="Core\Enums\PermissionAction.cs"/>
-        <Compile Include="Core\Enums\StaffStatus.cs"/>
-        <Compile Include="Core\Enums\Role.cs"/>
-        <Compile Include="Core\Exceptions\BookstoreException.cs"/>
-        <Compile Include="Core\Exceptions\DataNotFoundException.cs"/>
-        <Compile Include="Core\Exceptions\ValidationException.cs"/>
-        <Compile Include="Core\Interfaces\IAuditable.cs"/>
-        <Compile Include="Core\Interfaces\IExportable.cs"/>
-        <Compile Include="Core\Results\Result.cs"/>
-        <Compile Include="Core\Utils\BackupManager.cs"/>
-        <Compile Include="Core\Utils\ConfigManager.cs"/>
-        <Compile Include="Core\Utils\Encryptor.cs"/>
-        <Compile Include="Core\Utils\FileHelper.cs"/>
-        <Compile Include="Core\Utils\Logger.cs"/>
-        <Compile Include="Core\Utils\PermissionHelper.cs"/>
-        <Compile Include="Data\Context\BookstoreDbContext.cs"/>
-        <Compile Include="Data\Repositories\Implementations\BookRepository.cs"/>
-        <Compile Include="Data\Repositories\Implementations\CustomerRepository.cs"/>
-        <Compile Include="Data\Repositories\Implementations\ImportBillRepository.cs"/>
-        <Compile Include="Data\Repositories\Implementations\OrderDetailRepository.cs"/>
-        <Compile Include="Data\Repositories\Implementations\OrderRepository.cs"/>
-        <Compile Include="Data\Repositories\Implementations\Repository.cs"/>
-        <Compile Include="Data\Repositories\Implementations\StaffRepository.cs"/>
-        <Compile Include="Data\Repositories\Implementations\StockRepository.cs"/>
-        <Compile Include="Data\Repositories\Implementations\SupplierRepository.cs"/>
-        <Compile Include="Data\Repositories\Implementations\UnitOfWork.cs"/>
-        <Compile Include="Data\Repositories\Interfaces\IBookRepository.cs"/>
-        <Compile Include="Data\Repositories\Interfaces\ICustomerRepository.cs"/>
-        <Compile Include="Data\Repositories\Interfaces\IImportBillRepository.cs"/>
-        <Compile Include="Data\Repositories\Interfaces\IOrderDetailRepository.cs"/>
-        <Compile Include="Data\Repositories\Interfaces\IOrderRepository.cs"/>
-        <Compile Include="Data\Repositories\Interfaces\IRepository.cs"/>
-        <Compile Include="Data\Repositories\Interfaces\IStaffRepository.cs"/>
-        <Compile Include="Data\Repositories\Interfaces\IStockRepository.cs"/>
-        <Compile Include="Data\Repositories\Interfaces\ISupplierRepository.cs"/>
-        <Compile Include="Data\Repositories\Interfaces\IUserRepository.cs"/>
-        <Compile Include="DTOs\BookDto.cs"/>
-        <Compile Include="DTOs\CustomerDto.cs"/>
-        <Compile Include="DTOs\ImportBillDto.cs"/>
-        <Compile Include="DTOs\OrderDto.cs"/>
-        <Compile Include="DTOs\ReportDto.cs"/>
-        <Compile Include="DTOs\StaffDto.cs"/>
-        <Compile Include="DTOs\StockDto.cs"/>
-        <Compile Include="DTOs\SupplierDto.cs"/>
-        <Compile Include="DTOs\UserDto.cs"/>
-        <Compile Include="Helpers\ExcelExporter.cs"/>
-        <Compile Include="Helpers\PdfExporter.cs"/>
-        <Compile Include="Helpers\PrintHelper.cs"/>
-        <Compile Include="Migrations\202511270825429_FixStaffEnumMapping.cs"/>
-        <Compile Include="Migrations\202511270825429_FixStaffEnumMapping.Designer.cs">
-            <DependentUpon>202511270825429_FixStaffEnumMapping.cs</DependentUpon>
-        </Compile>
-        <Compile Include="Migrations\Configuration.cs"/>
-        <Compile Include="Models\AuditLog.cs"/>
-        <Compile Include="Models\Book.cs"/>
-        <Compile Include="Models\Customer.cs"/>
-        <Compile Include="Models\ImportBill.cs"/>
-        <Compile Include="Models\ImportBillDetail.cs"/>
-        <Compile Include="Models\Staff.cs"/>
-        <Compile Include="Models\StaffDailyRevenue.cs"/>
-        <Compile Include="Models\Order.cs"/>
-        <Compile Include="Models\OrderDetail.cs"/>
-        <Compile Include="Models\Stock.cs"/>
-        <Compile Include="Models\Supplier.cs"/>
-        <Compile Include="Models\User.cs"/>
-        <Compile Include="Presentation\Converters\BoolToVisibilityConverter.cs"/>
-        <Compile Include="Presentation\Converters\CurrencyConverter.cs"/>
-        <Compile Include="Presentation\Converters\DateConverter.cs"/>
-        <Compile Include="Presentation\Converters\RoleToVisibilityConverter.cs"/>
-        <Compile Include="Presentation\ViewModels\BaseViewModel.cs"/>
-        <Compile Include="Presentation\ViewModels\BookViewModel.cs"/>
-        <Compile Include="Presentation\ViewModels\CustomerViewModel.cs"/>
-        <Compile Include="Presentation\ViewModels\DashboardViewModel.cs"/>
-        <Compile Include="Presentation\ViewModels\InventoryViewModel.cs"/>
-        <Compile Include="Presentation\ViewModels\LoginViewModel.cs"/>
-        <Compile Include="Presentation\ViewModels\MainViewModel.cs"/>
-        <Compile Include="Presentation\ViewModels\OrderViewModel.cs"/>
-        <Compile Include="Presentation\ViewModels\SupplierViewModel.cs"/>
-        <Compile Include="Presentation\ViewModels\UserViewModel.cs"/>
-        <Compile Include="Presentation\Views\Books\BookDetailView.xaml.cs">
-            <DependentUpon>BookDetailView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Books\BookListView.xaml.cs">
-            <DependentUpon>BookListView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Customers\CustomerDetailView.xaml.cs">
-            <DependentUpon>CustomerDetailView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Customers\CustomerListView.xaml.cs">
-            <DependentUpon>CustomerListView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml.cs">
-            <DependentUpon>ConfirmBooksDialog.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml.cs">
-            <DependentUpon>InputBooksDialog.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml.cs">
-            <DependentUpon>UpdateBooksDialog.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml.cs">
-            <DependentUpon>AddCustomer.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml.cs">
-            <DependentUpon>DeleteCustomer.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml.cs">
-            <DependentUpon>EditCustomer.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Inventory\ImportBooksView.xaml.cs">
-            <DependentUpon>ImportBooksView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Inventory\StockView.xaml.cs">
-            <DependentUpon>StockView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\MainWindow.xaml.cs">
-            <DependentUpon>MainWindow.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Orders\CreateOrderView.xaml.cs">
-            <DependentUpon>CreateOrderView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Orders\InvoiceView.xaml.cs">
-            <DependentUpon>InvoiceView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Orders\OrderDetailView.xaml.cs">
-            <DependentUpon>OrderDetailView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Orders\OrderListView.xaml.cs">
-            <DependentUpon>OrderListView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Statistics\ChartView.xaml.cs">
-            <DependentUpon>ChartView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Statistics\DashboardView.xaml.cs">
-            <DependentUpon>DashboardView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Statistics\ReportView.xaml.cs">
-            <DependentUpon>ReportView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Suppliers\SupplierDetailView.xaml.cs">
-            <DependentUpon>SupplierDetailView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Suppliers\SupplierListView.xaml.cs">
-            <DependentUpon>SupplierListView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Users\LoginView.xaml.cs">
-            <DependentUpon>LoginView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Users\RoleManagementView.xaml.cs">
-            <DependentUpon>RoleManagementView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Presentation\Views\Users\UserListView.xaml.cs">
-            <DependentUpon>UserListView.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="Properties\AssemblyInfo.cs">
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Include="Properties\Resources.Designer.cs">
-            <AutoGen>True</AutoGen>
-            <DesignTime>True</DesignTime>
-            <DependentUpon>Resources.resx</DependentUpon>
-        </Compile>
-        <Compile Include="Properties\Settings.Designer.cs">
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Settings.settings</DependentUpon>
-            <DesignTimeSharedInput>True</DesignTimeSharedInput>
-        </Compile>
-        <Compile Include="Services\Implementations\AuditLogService.cs"/>
-        <Compile Include="Services\Implementations\AuthService.cs"/>
-        <Compile Include="Services\Implementations\BookService.cs"/>
-        <Compile Include="Services\Implementations\CustomerService.cs"/>
-        <Compile Include="Services\Implementations\ImportBillService.cs"/>
-        <Compile Include="Services\Implementations\OrderService.cs"/>
-        <Compile Include="Services\Implementations\ReportService.cs"/>
-        <Compile Include="Services\Implementations\StaffDailyRevenueService.cs"/>
-        <Compile Include="Services\Implementations\StaffService.cs"/>
-        <Compile Include="Services\Implementations\StockService.cs"/>
-        <Compile Include="Services\Implementations\SupplierService.cs"/>
-        <Compile Include="Services\Interfaces\IAuthService.cs"/>
-        <Compile Include="Services\Interfaces\IBookService.cs"/>
-        <Compile Include="Services\Interfaces\ICustomerService.cs"/>
-        <Compile Include="Services\Interfaces\IImportBillService.cs"/>
-        <Compile Include="Services\Interfaces\IOrderService.cs"/>
-        <Compile Include="Services\Interfaces\IReportService.cs"/>
-        <Compile Include="Services\Interfaces\IStaffDailyRevenue.cs"/>
-        <Compile Include="Services\Interfaces\IStaffService.cs"/>
-        <Compile Include="Services\Interfaces\IStockService.cs"/>
-        <Compile Include="Services\Interfaces\ISupplierService.cs"/>
-        <Compile Include="Services\Interfaces\IUserService.cs"/>
-    </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="Migrations\202511270825429_FixStaffEnumMapping.resx">
-            <DependentUpon>202511270825429_FixStaffEnumMapping.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Properties\Resources.resx">
-            <Generator>ResXFileCodeGenerator</Generator>
-            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="App.config"/>
-        <None Include="Properties\Settings.settings">
-            <Generator>SettingsSingleFileGenerator</Generator>
-            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-        </None>
-    </ItemGroup>
-    <ItemGroup>
-        <Resource Include="Presentation\AppResources\Images\Icons\return.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\add.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\search.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\edit.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\recyclebin.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\QLTK.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\winctr1.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\winctr2.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\winctr3.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\DX.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\inf.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\lock.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\logInBG.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\THM.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\profile.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\TT.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\QLHD.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\IN4.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\QLKH.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\QLKHO.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\QLNS.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\QLS.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\TK.png"/>
-        <Resource Include="Presentation\AppResources\Images\Icons\trangchu.png"/>
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="EntityFramework">
-            <Version>6.4.4</Version>
-        </PackageReference>
-        <PackageReference Include="CommunityToolkit.Mvvm">
-            <Version>8.2.1</Version>
-        </PackageReference>
-        <PackageReference Include="AutoMapper">
-            <Version>12.0.1</Version>
-        </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
-      <Content Include="Presentation\AppResources\Fonts\Quicksand-Bold.ttf" />
-      <Content Include="Presentation\AppResources\Fonts\Quicksand-Light.ttf" />
-      <Content Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
-      <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
-      <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C4B0D1A5-4DDE-48E6-A753-C5BDC52DE653}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>bookstore_Management</RootNamespace>
+    <AssemblyName>bookstore_Management</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="EntityFramework">
+      <HintPath>$(NuGetPackageRoot)entityframework\6.4.4\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>$(NuGetPackageRoot)entityframework\6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="Presentation\AppResources\Colors\Colors.xaml" />
+    <Page Include="Presentation\AppResources\Fonts\Fonts.xaml" />
+    <Page Include="Presentation\AppResources\Styles\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\AppResources\Styles\DataGridStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\AppResources\Styles\DialogStyles.xaml" />
+    <Page Include="Presentation\AppResources\Styles\TestHover.xaml" />
+    <Page Include="Presentation\AppResources\Styles\TextBoxStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Books\BookDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Books\BookListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Customers\CustomerDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Customers\CustomerListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Inventory\ImportBooksView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Inventory\StockView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Orders\CreateOrderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Orders\InvoiceView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Orders\OrderDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Orders\OrderListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Statistics\ChartView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Statistics\DashboardView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Statistics\ReportView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Suppliers\SupplierDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Suppliers\SupplierListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Users\LoginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Users\RoleManagementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Users\UserListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AppResources.cs" />
+    <Compile Include="Core\Constants\AppConstants.cs" />
+    <Compile Include="Core\Constants\CustomerConstants.cs" />
+    <Compile Include="Core\Constants\FeatureConstant.cs" />
+    <Compile Include="Core\Constants\MessageConstants.cs" />
+    <Compile Include="Core\Constants\PermissionConstants.cs" />
+    <Compile Include="Core\Constants\RoleConstants.cs" />
+    <Compile Include="Core\Enums\AuthorRole.cs" />
+    <Compile Include="Core\Enums\BookCategory.cs" />
+    <Compile Include="Core\Enums\MemberTier.cs" />
+    <Compile Include="Core\Enums\OrderStatus.cs" />
+    <Compile Include="Core\Enums\PaymentType.cs" />
+    <Compile Include="Core\Enums\PermissionAction.cs" />
+    <Compile Include="Core\Enums\StaffStatus.cs" />
+    <Compile Include="Core\Enums\UserRole.cs" />
+    <Compile Include="Core\Exceptions\BookstoreException.cs" />
+    <Compile Include="Core\Exceptions\DataNotFoundException.cs" />
+    <Compile Include="Core\Exceptions\ValidationException.cs" />
+    <Compile Include="Core\Interfaces\IAuditable.cs" />
+    <Compile Include="Core\Interfaces\IExportable.cs" />
+    <Compile Include="Core\Results\Result.cs" />
+    <Compile Include="Core\Utils\BackupManager.cs" />
+    <Compile Include="Core\Utils\ConfigManager.cs" />
+    <Compile Include="Core\Utils\Encryptor.cs" />
+    <Compile Include="Core\Utils\FileHelper.cs" />
+    <Compile Include="Core\Utils\Logger.cs" />
+    <Compile Include="Core\Utils\PermissionHelper.cs" />
+    <Compile Include="Data\Context\BookstoreDbContext.cs" />
+    <Compile Include="Data\Repositories\Implementations\BookRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\CustomerRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\ImportBillRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\ImportBillDetailRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\OrderDetailRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\OrderRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\Repository.cs" />
+    <Compile Include="Data\Repositories\Implementations\StaffRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\StockRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\SupplierRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\UserRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\AuditLogRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\ShiftTemplateRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\WorkWeekRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\WorkScheduleRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\StaffShiftRegistrationRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\UnitOfWork.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IBookRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\ICustomerRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IImportBillRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IImportBillDetailRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IOrderDetailRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IOrderRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IStaffRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IStockRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\ISupplierRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IUserRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IAuditLogRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IShiftTemplateRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IWorkWeekRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IWorkScheduleRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IStaffShiftRegistrationRepository.cs" />
+    <Compile Include="DTOs\BookDto.cs" />
+    <Compile Include="DTOs\CustomerDto.cs" />
+    <Compile Include="DTOs\ImportBillDto.cs" />
+    <Compile Include="DTOs\OrderDto.cs" />
+    <Compile Include="DTOs\ReportDto.cs" />
+    <Compile Include="DTOs\StaffDto.cs" />
+    <Compile Include="DTOs\StockDto.cs" />
+    <Compile Include="DTOs\SupplierDto.cs" />
+    <Compile Include="DTOs\UserDto.cs" />
+    <Compile Include="DTOs\WareHouseDto.cs" />
+    <Compile Include="DTOs\WorkScheduleDto.cs" />
+    <Compile Include="Helpers\ExcelExporter.cs" />
+    <Compile Include="Helpers\PdfExporter.cs" />
+    <Compile Include="Helpers\PrintHelper.cs" />
+    <Compile Include="Migrations\202512100720599_InitialCreate.cs" />
+    <Compile Include="Migrations\202512100720599_InitialCreate.Designer.cs">
+      <DependentUpon>202512100720599_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AuditLog.cs" />
+    <Compile Include="Models\Book.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\ImportBill.cs" />
+    <Compile Include="Models\ImportBillDetail.cs" />
+    <Compile Include="Models\ShiftTemplate.cs" />
+    <Compile Include="Models\Staff.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderDetail.cs" />
+    <Compile Include="Models\StaffShiftRegistration.cs" />
+    <Compile Include="Models\Stock.cs" />
+    <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\WareHouse.cs" />
+    <Compile Include="Models\WorkSchedule.cs" />
+    <Compile Include="Models\WorkWeek.cs" />
+    <Compile Include="Presentation\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Presentation\Converters\CurrencyConverter.cs" />
+    <Compile Include="Presentation\Converters\DateConverter.cs" />
+    <Compile Include="Presentation\Converters\RoleToVisibilityConverter.cs" />
+    <Compile Include="Presentation\ViewModels\BaseViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\BookViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\CustomerViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\DashboardViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\InventoryViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\LoginViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\MainViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\OrderViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
+    <Compile Include="Presentation\Views\Books\BookDetailView.xaml.cs">
+      <DependentUpon>BookDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Books\BookListView.xaml.cs">
+      <DependentUpon>BookListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Customers\CustomerDetailView.xaml.cs">
+      <DependentUpon>CustomerDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Customers\CustomerListView.xaml.cs">
+      <DependentUpon>CustomerListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml.cs">
+      <DependentUpon>ConfirmBooksDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml.cs">
+      <DependentUpon>InputBooksDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml.cs">
+      <DependentUpon>UpdateBooksDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml.cs">
+      <DependentUpon>AddCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml.cs">
+      <DependentUpon>DeleteCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml.cs">
+      <DependentUpon>EditCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Inventory\ImportBooksView.xaml.cs">
+      <DependentUpon>ImportBooksView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Inventory\StockView.xaml.cs">
+      <DependentUpon>StockView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Orders\CreateOrderView.xaml.cs">
+      <DependentUpon>CreateOrderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Orders\InvoiceView.xaml.cs">
+      <DependentUpon>InvoiceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Orders\OrderDetailView.xaml.cs">
+      <DependentUpon>OrderDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Orders\OrderListView.xaml.cs">
+      <DependentUpon>OrderListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Statistics\ChartView.xaml.cs">
+      <DependentUpon>ChartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Statistics\DashboardView.xaml.cs">
+      <DependentUpon>DashboardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Statistics\ReportView.xaml.cs">
+      <DependentUpon>ReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Suppliers\SupplierDetailView.xaml.cs">
+      <DependentUpon>SupplierDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Suppliers\SupplierListView.xaml.cs">
+      <DependentUpon>SupplierListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Users\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Users\RoleManagementView.xaml.cs">
+      <DependentUpon>RoleManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Users\UserListView.xaml.cs">
+      <DependentUpon>UserListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Services\Implementations\AuditLogService.cs" />
+    <Compile Include="Services\Implementations\AuthService.cs" />
+    <Compile Include="Services\Implementations\BookService.cs" />
+    <Compile Include="Services\Implementations\CustomerService.cs" />
+    <Compile Include="Services\Implementations\ImportBillService.cs" />
+    <Compile Include="Services\Implementations\OrderService.cs" />
+    <Compile Include="Services\Implementations\ReportService.cs" />
+    <Compile Include="Services\Implementations\StaffService.cs" />
+    <Compile Include="Services\Implementations\StockService.cs" />
+    <Compile Include="Services\Implementations\SupplierService.cs" />
+    <Compile Include="Services\Implementations\UserService.cs" />
+    <Compile Include="Services\Implementations\ShiftTemplateService.cs" />
+    <Compile Include="Services\Implementations\WorkWeekService.cs" />
+    <Compile Include="Services\Implementations\StaffShiftRegistrationService.cs" />
+    <Compile Include="Services\Implementations\WorkScheduleService.cs" />
+    <Compile Include="Services\Interfaces\IAuthService.cs" />
+    <Compile Include="Services\Interfaces\IBookService.cs" />
+    <Compile Include="Services\Interfaces\ICustomerService.cs" />
+    <Compile Include="Services\Interfaces\IImportBillService.cs" />
+    <Compile Include="Services\Interfaces\IOrderService.cs" />
+    <Compile Include="Services\Interfaces\IReportService.cs" />
+    <Compile Include="Services\Interfaces\IStaffService.cs" />
+    <Compile Include="Services\Interfaces\IStockService.cs" />
+    <Compile Include="Services\Interfaces\ISupplierService.cs" />
+    <Compile Include="Services\Interfaces\IAuditLogService.cs" />
+    <Compile Include="Services\Interfaces\IUserService.cs" />
+    <Compile Include="Services\Interfaces\IShiftTemplateService.cs" />
+    <Compile Include="Services\Interfaces\IWorkWeekService.cs" />
+    <Compile Include="Services\Interfaces\IStaffShiftRegistrationService.cs" />
+    <Compile Include="Services\Interfaces\IWorkScheduleService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202512100720599_InitialCreate.resx">
+      <DependentUpon>202512100720599_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Presentation\AppResources\Images\Icons\return.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\add.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\search.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\edit.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\recyclebin.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLTK.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\winctr1.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\winctr2.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\winctr3.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\DX.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\inf.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\lock.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\logInBG.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\THM.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\profile.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\TT.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLHD.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\IN4.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLKH.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLKHO.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLNS.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\QLS.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\TK.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\trangchu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EntityFramework">
+      <Version>6.4.4</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.1</Version>
+    </PackageReference>
+    <PackageReference Include="AutoMapper">
+      <Version>10.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Presentation\AppResources\Fonts\Quicksand-Bold.ttf" />
+    <Content Include="Presentation\AppResources\Fonts\Quicksand-Light.ttf" />
+    <Content Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
+    <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
+    <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

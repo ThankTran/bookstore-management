@@ -32,9 +32,10 @@ namespace bookstore_Management.Models
         [Column("action")]
         public string Action { get; set; }  // "Create", "Update", "Delete"
 
+
         [Column("old_values")]
         public string OldValues { get; set; }  // JSON của giá trị cũ (null nếu Create)
-
+        
         [Column("new_values")]
         public string NewValues { get; set; }  // JSON của giá trị mới
 
@@ -46,9 +47,6 @@ namespace bookstore_Management.Models
         [Required]
         [Column("changed_date")]
         public DateTime ChangedDate { get; set; } = DateTime.Now;
-
-        [Column("description")]
-        [StringLength(500)]
-        public string Description { get; set; }  // Mô tả chi tiết thay đổi
+        
     }
 }

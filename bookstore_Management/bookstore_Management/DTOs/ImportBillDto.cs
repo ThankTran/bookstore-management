@@ -4,47 +4,49 @@ using System.ComponentModel.DataAnnotations;
 
 namespace bookstore_Management.DTOs
 {
-    /// <summary>
-    /// DTO cho tạo/sửa hóa đơn nhập
-    /// </summary>
-    public class ImportBillDto
+    public class ImportBillCreateDto
     {
-
-        public string ImportBillCode { get; set; }
-        public DateTime ImportDate { get; set; }
         public string SupplierId { get; set; }
+        public string WarehouseId { get; set; }
         public string Notes { get; set; }
-        public List<ImportBillDetailDto> Items { get; set; } = new List<ImportBillDetailDto>();
+        public string CreatedBy { get; set; }
+        public List<ImportBillDetailCreateDto> ImportBillDetails { get; set; } = new List<ImportBillDetailCreateDto>();
     }
 
-    /// <summary>
-    /// DTO cho từng item trong hóa đơn nhập
-    /// </summary>
-    public class ImportBillDetailDto
+    public class ImportBillUpdateDto
     {
-        [Required(ErrorMessage = "Mã sách không được để trống")]
-        [StringLength(6)]
+        public string Notes { get; set; }
+    }
+
+    public class ImportBillResponseDto
+    {
+        public string Id { get; set; }
+        public string SupplierId { get; set; }
+        public string SupplierName { get; set; }
+        public string WarehouseId { get; set; }
+        public string WarehouseName { get; set; }
+        public decimal TotalAmount { get; set; }
+        public string Notes { get; set; }
+        public string CreatedBy { get; set; }
+        public string CreatedByName { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public List<ImportBillDetailResponseDto> ImportBillDetails { get; set; } = new List<ImportBillDetailResponseDto>();
+    }
+
+    public class ImportBillDetailCreateDto
+    {
         public string BookId { get; set; }
-
-        [Required(ErrorMessage = "Số lượng không được để trống")]
-        [Range(1, int.MaxValue, ErrorMessage = "Số lượng phải >= 1")]
         public int Quantity { get; set; }
-
-        [Required(ErrorMessage = "Giá nhập không được để trống")]
-        [Range(0, double.MaxValue)]
         public decimal ImportPrice { get; set; }
     }
 
-    /// <summary>
-    /// DTO cho tìm kiếm hóa đơn nhập
-    /// </summary>
-    public class ImportBillSearchDto
+    public class ImportBillDetailResponseDto
     {
-        public string ImportBillCode { get; set; }
-        public string SupplierId { get; set; }
-        public DateTime? FromDate { get; set; }
-        public DateTime? ToDate { get; set; }
-        public decimal? MinTotal { get; set; }
-        public decimal? MaxTotal { get; set; }
+        public string BookId { get; set; }
+        public string BookName { get; set; }
+        public string Author { get; set; }
+        public int Quantity { get; set; }
+        public decimal ImportPrice { get; set; }
+        public decimal Subtotal { get; set; }
     }
 }

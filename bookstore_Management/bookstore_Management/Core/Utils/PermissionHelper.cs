@@ -28,7 +28,7 @@ namespace bookstore_Management.Core.Utils
         /// <summary>
         /// Kiểm tra quyền của user với feature và action
         /// </summary>
-        private static bool HasPermission(Role role, string feature, string action)
+        private static bool HasPermission(UserRole userRole, string feature, string action)
         {
             // Kiểm tra feature có tồn tại không
             if (!FeatureMap.TryGetValue(feature, out var featureType))
@@ -39,47 +39,47 @@ namespace bookstore_Management.Core.Utils
                 BindingFlags.Public | BindingFlags.Static);
 
             // Nếu field không tồn tại hoặc không phải Role[], return false
-            var permissions = field?.GetValue(null) as Role[];
+            var permissions = field?.GetValue(null) as UserRole[];
             if (permissions == null)
                 return false;
 
-            return permissions.Contains(role);
+            return permissions.Contains(userRole);
         }
 
         /// <summary>
         /// Kiểm tra quyền xem của user với feature
         /// </summary>
-        public static bool CanView(Role role, string feature)
-            => HasPermission(role, feature, nameof(PermissionAction.View));
+        public static bool CanView(UserRole userRole, string feature)
+            => HasPermission(userRole, feature, nameof(PermissionAction.View));
 
         /// <summary>
         /// Kiểm tra quyền tạo mới của user với feature
         /// </summary>
-        public static bool CanCreate(Role role, string feature)
-            => HasPermission(role, feature, nameof(PermissionAction.Create));
+        public static bool CanCreate(UserRole userRole, string feature)
+            => HasPermission(userRole, feature, nameof(PermissionAction.Create));
 
         /// <summary>
         /// Kiểm tra quyền chỉnh sửa của user với feature
         /// </summary>
-        public static bool CanEdit(Role role, string feature)
-            => HasPermission(role, feature, nameof(PermissionAction.Edit));
+        public static bool CanEdit(UserRole userRole, string feature)
+            => HasPermission(userRole, feature, nameof(PermissionAction.Edit));
 
         /// <summary>
         /// Kiểm tra quyền xóa của user với feature
         /// </summary>
-        public static bool CanDelete(Role role, string feature)
-            => HasPermission(role, feature, nameof(PermissionAction.Delete));
+        public static bool CanDelete(UserRole userRole, string feature)
+            => HasPermission(userRole, feature, nameof(PermissionAction.Delete));
 
         /// <summary>
         /// Kiểm tra quyền export của user với feature
         /// </summary>
-        public static bool CanExport(Role role, string feature)
-            => HasPermission(role, feature, nameof(PermissionAction.Export));
+        public static bool CanExport(UserRole userRole, string feature)
+            => HasPermission(userRole, feature, nameof(PermissionAction.Export));
 
         /// <summary>
         /// Kiểm tra quyền generic (nếu cần)
         /// </summary>
-        public static bool CanPerform(Role role, string feature, PermissionAction action)
-            => HasPermission(role, feature, action.ToString());
+        public static bool CanPerform(UserRole userRole, string feature, PermissionAction action)
+            => HasPermission(userRole, feature, action.ToString());
     }
 }

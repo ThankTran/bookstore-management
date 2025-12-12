@@ -14,12 +14,18 @@ namespace bookstore_Management.Models
         [Required]
         [StringLength(6)]
         [Column("id")]
-        public string ImportBillId { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [StringLength(6)]
         [Column("supplier_id")]
         public string SupplierId { get; set; }
+        
+        [Required]
+        [StringLength(6)]
+        [Column("warehouse_id")]
+        public string WarehouseId { get; set; }
+
 
         [Required]
         [Column("total_amount")]
@@ -41,8 +47,12 @@ namespace bookstore_Management.Models
         [Column("updated_date")]
         public DateTime? UpdatedDate { get; set; }
 
+        [Column("deleted_date")]
+        public DateTime? DeletedDate { get; set; }
+
         // Navigation properties
         public virtual ICollection<ImportBillDetail> ImportBillDetails { get; set; }
         public virtual Supplier Supplier { get; set; }
+        public virtual Warehouse Warehouse { get; set; }
     }
 }

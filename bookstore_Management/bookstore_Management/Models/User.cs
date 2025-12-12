@@ -28,8 +28,8 @@ namespace bookstore_Management.Models
 
         
         [StringLength(100)] 
-        [Column("email")]
-        public string Email { get; set; }
+        [Column("staff_id")]
+        public string StaffId { get; set; }
 
         [Required] 
         [Column("role")]

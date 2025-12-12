@@ -12,25 +12,25 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class BookManagement
         {
-            public static readonly Role[] View =
+            public static readonly UserRole[] View =
             {
-                Role.Administrator, Role.SalesManager, Role.SalesStaff,
-                Role.InventoryManager, Role.CustomerManager
+                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
+                UserRole.InventoryManager, UserRole.CustomerManager
             };
 
-            public static readonly Role[] Create =
+            public static readonly UserRole[] Create =
             {
-                Role.Administrator, Role.InventoryManager
+                UserRole.Administrator, UserRole.InventoryManager
             };
 
-            public static readonly Role[] Edit =
+            public static readonly UserRole[] Edit =
             {
-                Role.Administrator, Role.InventoryManager
+                UserRole.Administrator, UserRole.InventoryManager
             };
 
-            public static readonly Role[] Delete =
+            public static readonly UserRole[] Delete =
             {
-                Role.Administrator
+                UserRole.Administrator
             };
         }
 
@@ -39,25 +39,25 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class BillingManagement
         {
-            public static readonly Role[] View =
+            public static readonly UserRole[] View =
             {
-                Role.Administrator, Role.SalesManager, Role.SalesStaff,
-                Role.InventoryManager, Role.CustomerManager
+                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
+                UserRole.InventoryManager, UserRole.CustomerManager
             };
 
-            public static readonly Role[] Create =
+            public static readonly UserRole[] Create =
             {
-                Role.Administrator, Role.SalesManager, Role.SalesStaff
+                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff
             };
 
-            public static readonly Role[] Edit =
+            public static readonly UserRole[] Edit =
             {
-                Role.Administrator, Role.SalesManager
+                UserRole.Administrator, UserRole.SalesManager
             };
 
-            public static readonly Role[] Delete =
+            public static readonly UserRole[] Delete =
             {
-                Role.Administrator
+                UserRole.Administrator
             };
         }
 
@@ -66,26 +66,26 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class StockManagement
         {
-            public static readonly Role[] View =
+            public static readonly UserRole[] View =
             {
-                Role.Administrator, Role.SalesManager, Role.SalesStaff,
-                Role.InventoryManager
+                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
+                UserRole.InventoryManager
             };
 
-            public static readonly Role[] Create =
+            public static readonly UserRole[] Create =
             {
-                Role.Administrator, Role.InventoryManager
+                UserRole.Administrator, UserRole.InventoryManager
             };
 
-            public static readonly Role[] Edit =
+            public static readonly UserRole[] Edit =
             {
-                Role.Administrator, Role.InventoryManager
+                UserRole.Administrator, UserRole.InventoryManager
             };
 
             // THÊM: Delete quyền cho Stock
-            public static readonly Role[] Delete =
+            public static readonly UserRole[] Delete =
             {
-                Role.Administrator
+                UserRole.Administrator
             };
         }
 
@@ -94,24 +94,24 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class EmployeeManagement
         {
-            public static readonly Role[] View =
+            public static readonly UserRole[] View =
             {
-                Role.Administrator, Role.SalesManager
+                UserRole.Administrator, UserRole.SalesManager
             };
 
-            public static readonly Role[] Create =
+            public static readonly UserRole[] Create =
             {
-                Role.Administrator
+                UserRole.Administrator
             };
 
-            public static readonly Role[] Edit =
+            public static readonly UserRole[] Edit =
             {
-                Role.Administrator
+                UserRole.Administrator
             };
 
-            public static readonly Role[] Delete =
+            public static readonly UserRole[] Delete =
             {
-                Role.Administrator
+                UserRole.Administrator
             };
         }
 
@@ -120,27 +120,27 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class CustomerManagement
         {
-            public static readonly Role[] View =
+            public static readonly UserRole[] View =
             {
-                Role.Administrator, Role.SalesManager, Role.SalesStaff,
-                Role.CustomerManager, Role.InventoryManager
+                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
+                UserRole.CustomerManager, UserRole.InventoryManager
             };
 
-            public static readonly Role[] Create =
+            public static readonly UserRole[] Create =
             {
-                Role.Administrator, Role.SalesManager, Role.SalesStaff,
-                Role.CustomerManager
+                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
+                UserRole.CustomerManager
             };
 
-            public static readonly Role[] Edit =
+            public static readonly UserRole[] Edit =
             {
-                Role.Administrator, Role.SalesManager, Role.CustomerManager
+                UserRole.Administrator, UserRole.SalesManager, UserRole.CustomerManager
             };
 
             // THÊM: Delete quyền cho Customer
-            public static readonly Role[] Delete =
+            public static readonly UserRole[] Delete =
             {
-                Role.Administrator
+                UserRole.Administrator
             };
         }
 
@@ -149,15 +149,15 @@ namespace bookstore_Management.Core.Constants
         /// </summary>
         public static class ReportManagement
         {
-            public static readonly Role[] View =
+            public static readonly UserRole[] View =
             {
-                Role.Administrator, Role.SalesManager, Role.SalesStaff,
-                Role.InventoryManager, Role.CustomerManager
+                UserRole.Administrator, UserRole.SalesManager, UserRole.SalesStaff,
+                UserRole.InventoryManager, UserRole.CustomerManager
             };
 
-            public static readonly Role[] Export =
+            public static readonly UserRole[] Export =
             {
-                Role.Administrator, Role.SalesManager
+                UserRole.Administrator, UserRole.SalesManager
             };
         }
     }

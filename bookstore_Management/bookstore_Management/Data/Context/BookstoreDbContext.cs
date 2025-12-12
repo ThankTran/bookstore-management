@@ -21,12 +21,17 @@ namespace bookstore_Management.Data.Context
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Staff> Staff { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<StaffDailyRevenue> StaffDailyRevenues { get; set; }
+        
         public DbSet<User> Users { get; set; }
         public DbSet<ImportBill> ImportBills { get; set; }
         public DbSet<ImportBillDetail> ImportBillDetails { get; set; }
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<Warehouse> Warehouses { get; set; }
+        public DbSet<ShiftTemplate> ShiftTemplates { get; set; }
+        public DbSet<StaffShiftRegistration> StaffShiftRegistrations { get; set; }
+        public DbSet<WorkWeek> WorkWeeks { get; set; }
+        public DbSet<WorkSchedule> WorkSchedules { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -40,12 +45,16 @@ namespace bookstore_Management.Data.Context
             modelBuilder.Entity<Customer>().HasKey(c => c.CustomerId);
             modelBuilder.Entity<Staff>().HasKey(s => s.Id);
             modelBuilder.Entity<Supplier>().HasKey(s => s.Id);
-            modelBuilder.Entity<StaffDailyRevenue>().HasKey(s => new { s.EmployeeId, s.Day });
             modelBuilder.Entity<User>().HasKey(u => u.UserId);
-            modelBuilder.Entity<ImportBill>().HasKey(ib => ib.ImportBillId);
+            modelBuilder.Entity<ImportBill>().HasKey(ib => ib.Id);
             modelBuilder.Entity<ImportBillDetail>().HasKey(ibd => new { ibd.BookId, ibd.ImportId });
-            modelBuilder.Entity<Stock>().HasKey(st => st.BookId);
+            modelBuilder.Entity<Stock>().HasKey(st => new { st.WarehouseId, st.BookId });
             modelBuilder.Entity<AuditLog>().HasKey(al => al.Id);
+            modelBuilder.Entity<Warehouse>().HasKey(w => w.WarehouseId);
+            modelBuilder.Entity<ShiftTemplate>().HasKey(st => st.Id);
+            modelBuilder.Entity<StaffShiftRegistration>().HasKey(ssr => ssr.Id);
+            modelBuilder.Entity<WorkWeek>().HasKey(ww => ww.Id);
+            modelBuilder.Entity<WorkSchedule>().HasKey(ws => ws.Id);
 
             // ============================================
             // FOREIGN KEYS & RELATIONSHIPS
@@ -56,7 +65,7 @@ namespace bookstore_Management.Data.Context
                 .HasRequired(o => o.Staff)
                 .WithMany(s => s.Orders)
                 .HasForeignKey(o => o.StaffId)
-                .WillCascadeOnDelete(true);
+                .WillCascadeOnDelete(false);
 
             // Order → Customer (1 Order có 0 hoặc 1 Customer - khách vãng lai)
             modelBuilder.Entity<Order>()
@@ -70,7 +79,7 @@ namespace bookstore_Management.Data.Context
                 .HasRequired(od => od.Order)
                 .WithMany(o => o.OrderDetails)
                 .HasForeignKey(od => od.OrderId)
-                .WillCascadeOnDelete(true);
+                .WillCascadeOnDelete(false);
 
             // OrderDetail → Book (1 OrderDetail có 1 Book)
             modelBuilder.Entity<OrderDetail>()
@@ -78,20 +87,7 @@ namespace bookstore_Management.Data.Context
                 .WithMany(b => b.OrderDetails)
                 .HasForeignKey(od => od.BookId)
                 .WillCascadeOnDelete(false);
-
-            // Book → Supplier (1 Book có 1 Supplier)
-            modelBuilder.Entity<Book>()
-                .HasRequired(b => b.Supplier)
-                .WithMany(s => s.Books)
-                .HasForeignKey(b => b.SupplierId)
-                .WillCascadeOnDelete(false);
-
-            // StaffDailyRevenue → Staff (1 DailyRevenue có 1 Staff)
-            modelBuilder.Entity<StaffDailyRevenue>()
-                .HasRequired(s => s.Staff)
-                .WithMany(s => s.DailyRevenues)
-                .HasForeignKey(s => s.EmployeeId)
-                .WillCascadeOnDelete(true);
+            
 
             // ImportBill → Supplier (1 ImportBill có 1 Supplier)
             modelBuilder.Entity<ImportBill>()
@@ -100,12 +96,26 @@ namespace bookstore_Management.Data.Context
                 .HasForeignKey(ib => ib.SupplierId)
                 .WillCascadeOnDelete(false);
 
+            // Book -> Supplier (optional)
+            modelBuilder.Entity<Book>()
+                .HasOptional(b => b.Supplier)
+                .WithMany()
+                .HasForeignKey(b => b.SupplierId)
+                .WillCascadeOnDelete(false);
+
+            // ImportBill → Warehouse (1 ImportBill có 1 Warehouse)
+            modelBuilder.Entity<ImportBill>()
+                .HasRequired(ib => ib.Warehouse)
+                .WithMany(w => w.ImportBills)
+                .HasForeignKey(ib => ib.WarehouseId)
+                .WillCascadeOnDelete(false);
+
             // ImportBillDetail → ImportBill (1 ImportBillDetail thuộc 1 ImportBill)
             modelBuilder.Entity<ImportBillDetail>()
                 .HasRequired(ibd => ibd.Import)
                 .WithMany(ib => ib.ImportBillDetails)
                 .HasForeignKey(ibd => ibd.ImportId)
-                .WillCascadeOnDelete(true);
+                .WillCascadeOnDelete(false);
 
             // ImportBillDetail → Book (1 ImportBillDetail có 1 Book)
             modelBuilder.Entity<ImportBillDetail>()
@@ -114,106 +124,68 @@ namespace bookstore_Management.Data.Context
                 .HasForeignKey(ibd => ibd.BookId)
                 .WillCascadeOnDelete(false);
 
-            // Stock → Book (1 Stock - 1 Book, quan hệ 1-1)
-            modelBuilder.Entity<Book>()
-                .HasOptional(b => new Stock())
-                .WithRequired(st => st.Book);
+            // Stock → Book/Warehouse (mỗi kho có tồn kho cho từng sách)
+            modelBuilder.Entity<Stock>()
+                .HasRequired(st => st.Book)
+                .WithMany(b => b.Stocks)
+                .HasForeignKey(st => st.BookId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Stock>()
+                .HasRequired(st => st.Warehouse)
+                .WithMany(w => w.Stocks)
+                .HasForeignKey(st => st.WarehouseId)
+                .WillCascadeOnDelete(false);
+
+            // WorkSchedule relations
+            modelBuilder.Entity<WorkSchedule>()
+                .HasRequired(ws => ws.WorkWeek)
+                .WithMany(ww => ww.WorkSchedules)
+                .HasForeignKey(ws => ws.WeekId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<WorkSchedule>()
+                .HasRequired(ws => ws.Staff)
+                .WithMany()
+                .HasForeignKey(ws => ws.StaffId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<WorkSchedule>()
+                .HasRequired(ws => ws.ShiftTemplate)
+                .WithMany(st => st.WorkSchedules)
+                .HasForeignKey(ws => ws.ShiftTemplateId)
+                .WillCascadeOnDelete(false);
+
+            // StaffShiftRegistration relations
+            modelBuilder.Entity<StaffShiftRegistration>()
+                .HasRequired(ssr => ssr.WorkWeek)
+                .WithMany(ww => ww.StaffShiftRegistrations)
+                .HasForeignKey(ssr => ssr.WeekId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StaffShiftRegistration>()
+                .HasRequired(ssr => ssr.Staff)
+                .WithMany()
+                .HasForeignKey(ssr => ssr.StaffId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StaffShiftRegistration>()
+                .HasRequired(ssr => ssr.ShiftTemplate)
+                .WithMany(st => st.StaffShiftRegistrations)
+                .HasForeignKey(ssr => ssr.ShiftTemplateId)
+                .WillCascadeOnDelete(false);
 
             // ============================================
             // DECIMAL PRECISION (12,2 = 10 chữ số + 2 số thập phân)
             // ============================================
 
-            modelBuilder.Entity<Book>()
-                .Property(b => b.ImportPrice)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<Book>()
-                .Property(b => b.SalePrice)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<Order>()
-                .Property(o => o.TotalPrice)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<Order>()
-                .Property(o => o.Discount)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<OrderDetail>()
-                .Property(od => od.SalePrice)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<OrderDetail>()
-                .Property(od => od.Subtotal)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<StaffDailyRevenue>()
-                .Property(s => s.Revenue)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<Staff>()
-                .Property(s => s.BaseSalary)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<Staff>()
-                .Property(s => s.SalaryRate)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<Customer>()
-                .Property(c => c.LoyaltyPoints)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<ImportBill>()
-                .Property(ib => ib.TotalAmount)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<ImportBillDetail>()
-                .Property(ibd => ibd.ImportPrice)
-                .HasPrecision(12, 2);
-
-            modelBuilder.Entity<ImportBillDetail>()
-                .Property(ibd => ibd.TotalPrice)
-                .HasPrecision(12, 2);
+            
 
             // ============================================
             // INDEXES (Tối ưu tìm kiếm)
             // ============================================
 
-            // Book indexes
-            modelBuilder.Entity<Book>()
-                .HasIndex(b => b.SupplierId);
-
-            modelBuilder.Entity<Book>()
-                .HasIndex(b => b.DeletedDate);
-
-            // Order indexes
-            modelBuilder.Entity<Order>()
-                .HasIndex(o => o.StaffId);
-
-            modelBuilder.Entity<Order>()
-                .HasIndex(o => o.CustomerId);
-
-            modelBuilder.Entity<Order>()
-                .HasIndex(o => o.CreatedDate);
-
-            // Stock indexes
-            modelBuilder.Entity<Stock>()
-                .HasIndex(st => st.BookId).IsUnique();
-
-            // AuditLog indexes
-            modelBuilder.Entity<AuditLog>()
-                .HasIndex(al => al.EntityName);
-
-            modelBuilder.Entity<AuditLog>()
-                .HasIndex(al => al.EntityId);
-
-            modelBuilder.Entity<AuditLog>()
-                .HasIndex(al => al.ChangedDate);
-
-            modelBuilder.Entity<AuditLog>()
-                .HasIndex(al => new { al.EntityName, al.EntityId });
-
-            base.OnModelCreating(modelBuilder);
+            
         }
     }
 }

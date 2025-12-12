@@ -8,6 +8,6 @@ namespace bookstore_Management.Data.Repositories.Interfaces
     {
         IEnumerable<Supplier> SearchByName(string name);
         Supplier GetByPhone(string phone);
-        Supplier SearchByEmail(string email);
+        Supplier GetByEmail(string email);
     }
 }

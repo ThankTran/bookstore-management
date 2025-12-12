@@ -4,7 +4,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Interfaces
 {
-    internal interface IOrderDetailRepository : IRepository<OrderDetail,int>
+    internal interface IOrderDetailRepository : IRepository<OrderDetail, (string BookId, string OrderId)>
     {
         IEnumerable<OrderDetail> GetByOrder(string orderId);
         IEnumerable<OrderDetail> GetByBook(string bookId);

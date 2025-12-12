@@ -25,9 +25,10 @@ namespace bookstore_Management.Data.Repositories.Implementations
             return Find(s => s.Phone == phone).FirstOrDefault();
         }
 
-        public Supplier SearchByEmail(string email)
+        public Supplier GetByEmail(string email)
         {
             return Find(s => s.Email == email).FirstOrDefault();
         }
+        
     }
 }

@@ -1,34 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace bookstore_Management.DTOs
 {
-    /// <summary>
-    /// DTO cho thêm/sửa nhà cung cấp
-    /// </summary>
-    public class SupplierDto
+    public class SupplierCreateDto
     {
-        [Required(ErrorMessage = "Tên nhà cung cấp không được để trống")]
-        [StringLength(50)]
         public string Name { get; set; }
-
-        [Required(ErrorMessage = "Số điện thoại không được để trống")]
-        [Phone]
-        [StringLength(20)]
         public string Phone { get; set; }
-
-        [StringLength(200)]
-        public string Address { get; set; }
-
-        [EmailAddress]
-        [StringLength(100)]
         public string Email { get; set; }
     }
 
-    /// <summary>
-    /// DTO cho tìm kiếm NCC
-    /// </summary>
-    public class SupplierSearchDto
+    public class SupplierUpdateDto
     {
-        public string Keyword { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+    }
+
+    public class SupplierResponseDto
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int TotalImportBills { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 }

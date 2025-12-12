@@ -29,9 +29,8 @@ namespace bookstore_Management.Models
         [Column("payment_method")]
         public PaymentType PaymentMethod { get; set; }
 
-        [Required]
         [Column("discount")]
-        public decimal? Discount { get; set; } = 0;
+        public decimal Discount { get; set; } = 0;
 
         [Required]
         [Column("total_price")]

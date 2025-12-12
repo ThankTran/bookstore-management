@@ -26,6 +26,10 @@ namespace bookstore_Management.Models
         [Column("phone")]
         public string Phone { get; set; }
 
+        [StringLength(100)]
+        [Column("email")]
+        public string Email { get; set; }
+
         [Required]
         [Column("created_date")]
         public DateTime CreatedDate { get; set; } = DateTime.Now;

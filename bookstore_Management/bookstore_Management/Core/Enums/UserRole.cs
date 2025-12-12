@@ -9,7 +9,7 @@ namespace bookstore_Management.Core.Enums
     /// Các role được gán số để sử dụng
     /// Sử dụng Display attribute để ra tên tiếng việt
     /// </summary>
-    public enum Role
+    public enum UserRole
     {
         [Display(Name = "Quản trị viên")]
         Administrator = 1,

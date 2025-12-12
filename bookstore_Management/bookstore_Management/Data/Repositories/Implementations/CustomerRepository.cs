@@ -17,11 +17,7 @@ namespace bookstore_Management.Data.Repositories.Implementations
         {
             return Find(c => c.Name.Contains(name));
         }
-
-        public IEnumerable<Customer> SearchByEmail(string email)
-        {
-            return Find(c => c.Email == email);
-        }
+        
 
         public IEnumerable<Customer> GetByMemberLevel(MemberTier tier)
         {

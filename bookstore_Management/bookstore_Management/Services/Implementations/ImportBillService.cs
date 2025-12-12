@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using bookstore_Management.Core.Results;
@@ -20,7 +20,7 @@ namespace bookstore_Management.Services.Implementations
         private readonly ISupplierRepository _supplierRepository;
         private readonly IStockRepository _stockRepository;
 
-        public ImportBillService(
+        internal ImportBillService(
             IImportBillRepository importBillRepository,
             IImportBillDetailRepository importBillDetailRepository,
             IBookRepository bookRepository,
@@ -37,136 +37,122 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
-
-        /// <summary>
-        /// Tạo hóa đơn nhập mới
-        /// </summary>
-        public Result<int> CreateImportBill(ImportBillDto dto)
+        public Result<string> CreateImportBill(ImportBillCreateDto dto)
         {
             try
             {
-                // Validate
-                if (string.IsNullOrWhiteSpace(dto.ImportBillCode))
-                    return Result<int>.Fail("Mã hóa đơn không được để trống");
-
                 if (string.IsNullOrWhiteSpace(dto.SupplierId))
-                    return Result<int>.Fail("Mã nhà cung cấp không được để trống");
+                    return Result<string>.Fail("Nhà cung cấp bắt buộc");
+                if (string.IsNullOrWhiteSpace(dto.WarehouseId))
+                    return Result<string>.Fail("Kho nhập bắt buộc");
 
                 var supplier = _supplierRepository.GetById(dto.SupplierId);
-                if (supplier == null)
-                    return Result<int>.Fail("Nhà cung cấp không tồn tại");
+                if (supplier == null || supplier.DeletedDate != null)
+                    return Result<string>.Fail("Nhà cung cấp không tồn tại");
 
-                if (dto.Items == null || !dto.Items.Any())
-                    return Result<int>.Fail("Hóa đơn phải có ít nhất 1 sách");
+                if (dto.ImportBillDetails == null || !dto.ImportBillDetails.Any())
+                    return Result<string>.Fail("Hóa đơn phải có ít nhất 1 sách");
 
                 decimal totalAmount = 0;
-                var importDetails = new List<ImportBillDetail>();
+                var details = new List<ImportBillDetail>();
 
-                // Validate & tính tổng
-                foreach (var item in dto.Items)
+                foreach (var item in dto.ImportBillDetails)
                 {
                     var book = _bookRepository.GetById(item.BookId);
-                    if (book == null)
-                        return Result<int>.Fail($"Sách {item.BookId} không tồn tại");
+                    if (book == null || book.DeletedDate != null)
+                        return Result<string>.Fail($"Sách {item.BookId} không tồn tại");
 
                     if (item.Quantity <= 0)
-                        return Result<int>.Fail($"Số lượng sách {book.Name} phải > 0");
-
+                        return Result<string>.Fail($"Số lượng sách {book.Name} phải > 0");
                     if (item.ImportPrice <= 0)
-                        return Result<int>.Fail($"Giá nhập sách {book.Name} phải > 0");
+                        return Result<string>.Fail($"Giá nhập sách {book.Name} phải > 0");
 
-                    var itemTotal = item.ImportPrice * item.Quantity;
-                    totalAmount += itemTotal;
+                    var lineTotal = item.ImportPrice * item.Quantity;
+                    totalAmount += lineTotal;
 
-                    importDetails.Add(new ImportBillDetail
+                    // Đồng bộ giá nhập hiện tại cho Book (phục vụ thống kê/lợi nhuận)
+                    book.ImportPrice = item.ImportPrice;
+                    book.UpdatedDate = DateTime.Now;
+                    _bookRepository.Update(book);
+
+                    details.Add(new ImportBillDetail
                     {
+                        ImportId = "", // set sau
                         BookId = item.BookId,
                         Quantity = item.Quantity,
-                        ImportPrice = item.ImportPrice,
-                        TotalPrice = itemTotal
+                        ImportPrice = item.ImportPrice
                     });
                 }
 
-                // Tạo hóa đơn
+                var importId = GenerateImportId();
+                foreach (var d in details)
+                {
+                    d.ImportId = importId;
+                }
+
                 var importBill = new ImportBill
                 {
-                    ImportBillCode = dto.ImportBillCode.Trim(),
-                    ImportDate = dto.ImportDate,
+                    Id = importId,
                     SupplierId = dto.SupplierId,
+                    WarehouseId = dto.WarehouseId,
                     TotalAmount = totalAmount,
                     Notes = string.IsNullOrWhiteSpace(dto.Notes) ? null : dto.Notes.Trim(),
-                    CreatedBy = "SYSTEM", // Sẽ được set từ Controller
-                    CreatedDate = DateTime.Now
+                    CreatedBy = string.IsNullOrWhiteSpace(dto.CreatedBy) ? "SYSTEM" : dto.CreatedBy,
+                    CreatedDate = DateTime.Now,
+                    ImportBillDetails = details
                 };
 
                 _importBillRepository.Add(importBill);
                 _importBillRepository.SaveChanges();
+                _bookRepository.SaveChanges();
 
-                // Thêm chi tiết hóa đơn
-                foreach (var detail in importDetails)
+                // Cập nhật tồn kho theo kho nhập
+                foreach (var item in details)
                 {
-                    detail.ImportId = importBill.ImportBillId;
-                    _importBillDetailRepository.Add(detail);
-                }
-                _importBillDetailRepository.SaveChanges();
-
-                // Cập nhật tồn kho
-                foreach (var item in dto.Items)
-                {
-                    var stock = _stockRepository.GetByBookId(item.BookId);
+                    var stock = _stockRepository.Get(dto.WarehouseId, item.BookId);
                     if (stock != null)
                     {
                         stock.StockQuantity += item.Quantity;
+                        stock.UpdatedDate = DateTime.Now;
                         _stockRepository.Update(stock);
                     }
                     else
                     {
-                        // Tạo stock mới nếu chưa có
                         _stockRepository.Add(new Stock
                         {
+                            WarehouseId = dto.WarehouseId,
                             BookId = item.BookId,
-                            StockQuantity = item.Quantity
+                            StockQuantity = item.Quantity,
+                            UpdatedDate = DateTime.Now
                         });
                     }
                 }
                 _stockRepository.SaveChanges();
 
-                return Result<int>.Success(importBill.ImportBillId, "Tạo hóa đơn nhập thành công");
+                return Result<string>.Success(importId, "Tạo hóa đơn nhập thành công");
             }
             catch (Exception ex)
             {
-                return Result<int>.Fail($"Lỗi: {ex.Message}");
+                return Result<string>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
         // ==================================================================
-        // ----------------------- SỬA DỮ LIỆU ------------------------------
+        // ----------------------- SỬA / XÓA --------------------------------
         // ==================================================================
-
-        /// <summary>
-        /// Cập nhật hóa đơn nhập
-        /// </summary>
-        public Result UpdateImportBill(int importBillId, ImportBillDto dto)
+        public Result UpdateImportBill(string importBillId, ImportBillUpdateDto dto)
         {
             try
             {
-                var importBill = _importBillRepository.GetById(importBillId);
-                if (importBill == null)
+                var bill = _importBillRepository.GetById(importBillId);
+                if (bill == null || bill.DeletedDate != null)
                     return Result.Fail("Hóa đơn nhập không tồn tại");
 
-                var supplier = _supplierRepository.GetById(dto.SupplierId);
-                if (supplier == null)
-                    return Result.Fail("Nhà cung cấp không tồn tại");
+                bill.Notes = string.IsNullOrWhiteSpace(dto.Notes) ? bill.Notes : dto.Notes.Trim();
+                bill.UpdatedDate = DateTime.Now;
 
-                importBill.ImportBillCode = dto.ImportBillCode.Trim();
-                importBill.ImportDate = dto.ImportDate;
-                importBill.SupplierId = dto.SupplierId;
-                importBill.Notes = string.IsNullOrWhiteSpace(dto.Notes) ? null : dto.Notes.Trim();
-                importBill.UpdatedDate = DateTime.Now;
-
-                _importBillRepository.Update(importBill);
+                _importBillRepository.Update(bill);
                 _importBillRepository.SaveChanges();
-
                 return Result.Success("Cập nhật hóa đơn nhập thành công");
             }
             catch (Exception ex)
@@ -175,27 +161,19 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        // ==================================================================
-        // ---------------------- XÓA DỮ LIỆU -------------------------------
-        // ==================================================================
-
-        /// <summary>
-        /// Xóa hóa đơn nhập
-        /// </summary>
-        public Result DeleteImportBill(int importBillId)
+        public Result DeleteImportBill(string importBillId)
         {
             try
             {
-                var importBill = _importBillRepository.GetById(importBillId);
-                if (importBill == null)
+                var bill = _importBillRepository.GetById(importBillId);
+                if (bill == null || bill.DeletedDate != null)
                     return Result.Fail("Hóa đơn nhập không tồn tại");
 
-                // Soft delete
-                importBill.DeletedDate = DateTime.Now;
-                _importBillRepository.Update(importBill);
+                bill.DeletedDate = DateTime.Now;
+                _importBillRepository.Update(bill);
                 _importBillRepository.SaveChanges();
 
-                return Result.Success("Xóa hóa đơn nhập thành công");
+                return Result.Success("Đã xóa hóa đơn nhập");
             }
             catch (Exception ex)
             {
@@ -204,21 +182,17 @@ namespace bookstore_Management.Services.Implementations
         }
 
         // ==================================================================
-        // ----------------------- LẤY DỮ LIỆU ------------------------------
+        // ----------------------- TRUY VẤN ---------------------------------
         // ==================================================================
-
-        /// <summary>
-        /// Lấy hóa đơn nhập theo ID
-        /// </summary>
-        public Result<ImportBill> GetImportBillById(int importBillId)
+        public Result<ImportBill> GetImportBillById(string importBillId)
         {
             try
             {
-                var importBill = _importBillRepository.GetById(importBillId);
-                if (importBill == null)
+                var bill = _importBillRepository.GetById(importBillId);
+                if (bill == null || bill.DeletedDate != null)
                     return Result<ImportBill>.Fail("Hóa đơn nhập không tồn tại");
 
-                return Result<ImportBill>.Success(importBill);
+                return Result<ImportBill>.Success(bill);
             }
             catch (Exception ex)
             {
@@ -226,19 +200,14 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        /// <summary>
-        /// Lấy tất cả hóa đơn nhập
-        /// </summary>
         public Result<IEnumerable<ImportBill>> GetAllImportBills()
         {
             try
             {
-                var importBills = _importBillRepository.GetAll()
-                    .Where(ib => ib.DeletedDate == null)
-                    .OrderByDescending(ib => ib.CreatedDate)
-                    .ToList();
-
-                return Result<IEnumerable<ImportBill>>.Success(importBills);
+                var bills = _importBillRepository.GetAll()
+                    .Where(b => b.DeletedDate == null)
+                    .OrderByDescending(b => b.CreatedDate);
+                return Result<IEnumerable<ImportBill>>.Success(bills);
             }
             catch (Exception ex)
             {
@@ -246,19 +215,14 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        /// <summary>
-        /// Lấy hóa đơn nhập theo nhà cung cấp
-        /// </summary>
         public Result<IEnumerable<ImportBill>> GetBySupplier(string supplierId)
         {
             try
             {
-                var importBills = _importBillRepository.Find(ib => 
-                    ib.SupplierId == supplierId && ib.DeletedDate == null)
-                    .OrderByDescending(ib => ib.CreatedDate)
-                    .ToList();
-
-                return Result<IEnumerable<ImportBill>>.Success(importBills);
+                var bills = _importBillRepository.GetBySupplier(supplierId)
+                    .Where(b => b.DeletedDate == null)
+                    .OrderByDescending(b => b.CreatedDate);
+                return Result<IEnumerable<ImportBill>>.Success(bills);
             }
             catch (Exception ex)
             {
@@ -266,19 +230,14 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        /// <summary>
-        /// Lấy hóa đơn nhập theo khoảng ngày
-        /// </summary>
         public Result<IEnumerable<ImportBill>> GetByDateRange(DateTime fromDate, DateTime toDate)
         {
             try
             {
-                var importBills = _importBillRepository.Find(ib =>
-                    ib.ImportDate >= fromDate && ib.ImportDate <= toDate && ib.DeletedDate == null)
-                    .OrderByDescending(ib => ib.ImportDate)
-                    .ToList();
-
-                return Result<IEnumerable<ImportBill>>.Success(importBills);
+                var bills = _importBillRepository.GetByDateRange(fromDate, toDate)
+                    .Where(b => b.DeletedDate == null)
+                    .OrderByDescending(b => b.CreatedDate);
+                return Result<IEnumerable<ImportBill>>.Success(bills);
             }
             catch (Exception ex)
             {
@@ -287,47 +246,47 @@ namespace bookstore_Management.Services.Implementations
         }
 
         // ==================================================================
-        // ----------------------- QUẢN LÝ CHI TIẾT -------------------------
+        // ----------------------- CHI TIẾT --------------------------------
         // ==================================================================
-
-        /// <summary>
-        /// Thêm sách vào hóa đơn nhập
-        /// </summary>
-        public Result AddImportItem(int importBillId, ImportBillDetailDto item)
+        public Result AddImportItem(string importBillId, ImportBillDetailCreateDto item)
         {
             try
             {
-                var importBill = _importBillRepository.GetById(importBillId);
-                if (importBill == null)
+                var bill = _importBillRepository.GetById(importBillId);
+                if (bill == null || bill.DeletedDate != null)
                     return Result.Fail("Hóa đơn nhập không tồn tại");
 
                 var book = _bookRepository.GetById(item.BookId);
-                if (book == null)
+                if (book == null || book.DeletedDate != null)
                     return Result.Fail("Sách không tồn tại");
 
-                var existingDetail = _importBillDetailRepository
-                    .Find(ibd => ibd.ImportId == importBillId && ibd.BookId == item.BookId)
-                    .FirstOrDefault();
+                if (item.Quantity <= 0 || item.ImportPrice <= 0)
+                    return Result.Fail("Số lượng và giá nhập phải > 0");
 
-                if (existingDetail != null)
-                    return Result.Fail("Sách này đã có trong hóa đơn");
+                var existing = _importBillDetailRepository.GetByImportId(importBillId)
+                    .FirstOrDefault(d => d.BookId == item.BookId);
+                if (existing != null)
+                    return Result.Fail("Sách đã tồn tại trong hóa đơn");
 
                 var detail = new ImportBillDetail
                 {
                     ImportId = importBillId,
                     BookId = item.BookId,
                     Quantity = item.Quantity,
-                    ImportPrice = item.ImportPrice,
-                    TotalPrice = item.ImportPrice * item.Quantity
+                    ImportPrice = item.ImportPrice
                 };
 
                 _importBillDetailRepository.Add(detail);
                 _importBillDetailRepository.SaveChanges();
 
-                // Cập nhật tổng tiền hóa đơn
-                RecalculateBillTotal(importBillId);
+                // Đồng bộ giá nhập hiện tại cho Book
+                book.ImportPrice = item.ImportPrice;
+                book.UpdatedDate = DateTime.Now;
+                _bookRepository.Update(book);
+                _bookRepository.SaveChanges();
 
-                return Result.Success("Thêm sách vào hóa đơn thành công");
+                RecalculateBillTotal(importBillId);
+                return Result.Success("Đã thêm sách vào hóa đơn");
             }
             catch (Exception ex)
             {
@@ -335,26 +294,20 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        /// <summary>
-        /// Xóa sách khỏi hóa đơn nhập
-        /// </summary>
-        public Result RemoveImportItem(int importBillId, string bookId)
+        public Result RemoveImportItem(string importBillId, string bookId)
         {
             try
             {
-                var detail = _importBillDetailRepository
-                    .Find(ibd => ibd.ImportId == importBillId && ibd.BookId == bookId)
-                    .FirstOrDefault();
-
+                var detail = _importBillDetailRepository.GetByImportId(importBillId)
+                    .FirstOrDefault(d => d.BookId == bookId);
                 if (detail == null)
-                    return Result.Fail("Sách không tồn tại trong hóa đơn");
+                    return Result.Fail("Không tìm thấy sách trong hóa đơn");
 
-                _importBillDetailRepository.Delete(detail.BookId); // Assuming Delete by key
+                _importBillDetailRepository.SoftDelete(importBillId, bookId);
                 _importBillDetailRepository.SaveChanges();
 
                 RecalculateBillTotal(importBillId);
-
-                return Result.Success("Xóa sách khỏi hóa đơn thành công");
+                return Result.Success("Đã xóa sách khỏi hóa đơn");
             }
             catch (Exception ex)
             {
@@ -362,32 +315,40 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        /// <summary>
-        /// Cập nhật số lượng sách trong hóa đơn
-        /// </summary>
-        public Result UpdateImportItem(int importBillId, string bookId, int newQuantity)
+        public Result UpdateImportItem(string importBillId, string bookId, int newQuantity, decimal? newPrice)
         {
             try
             {
                 if (newQuantity <= 0)
                     return Result.Fail("Số lượng phải > 0");
 
-                var detail = _importBillDetailRepository
-                    .Find(ibd => ibd.ImportId == importBillId && ibd.BookId == bookId)
-                    .FirstOrDefault();
-
+                var detail = _importBillDetailRepository.GetByImportId(importBillId)
+                    .FirstOrDefault(d => d.BookId == bookId);
                 if (detail == null)
-                    return Result.Fail("Sách không tồn tại trong hóa đơn");
+                    return Result.Fail("Không tìm thấy sách trong hóa đơn");
 
                 detail.Quantity = newQuantity;
-                detail.TotalPrice = detail.ImportPrice * newQuantity;
+                if (newPrice.HasValue && newPrice.Value > 0)
+                    detail.ImportPrice = newPrice.Value;
 
                 _importBillDetailRepository.Update(detail);
                 _importBillDetailRepository.SaveChanges();
 
-                RecalculateBillTotal(importBillId);
+                // Nếu có đổi giá nhập, đồng bộ sang Book.ImportPrice
+                if (newPrice.HasValue && newPrice.Value > 0)
+                {
+                    var book = _bookRepository.GetById(bookId);
+                    if (book != null && book.DeletedDate == null)
+                    {
+                        book.ImportPrice = newPrice.Value;
+                        book.UpdatedDate = DateTime.Now;
+                        _bookRepository.Update(book);
+                        _bookRepository.SaveChanges();
+                    }
+                }
 
-                return Result.Success("Cập nhật số lượng thành công");
+                RecalculateBillTotal(importBillId);
+                return Result.Success("Đã cập nhật chi tiết");
             }
             catch (Exception ex)
             {
@@ -395,14 +356,11 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        /// <summary>
-        /// Lấy chi tiết hóa đơn nhập
-        /// </summary>
-        public Result<IEnumerable<ImportBillDetail>> GetImportDetails(int importBillId)
+        public Result<IEnumerable<ImportBillDetail>> GetImportDetails(string importBillId)
         {
             try
             {
-                var details = _importBillDetailRepository.Find(ibd => ibd.ImportId == importBillId);
+                var details = _importBillDetailRepository.GetByImportId(importBillId);
                 return Result<IEnumerable<ImportBillDetail>>.Success(details);
             }
             catch (Exception ex)
@@ -412,24 +370,16 @@ namespace bookstore_Management.Services.Implementations
         }
 
         // ==================================================================
-        // ----------------------- BÁO CÁO & THỐNG KÊ ----------------------
+        // ----------------------- BÁO CÁO ---------------------------------
         // ==================================================================
-
-        /// <summary>
-        /// Tính tổng giá trị nhập theo nhà cung cấp và khoảng ngày
-        /// </summary>
         public Result<decimal> CalculateTotalImportBySupplier(string supplierId, DateTime fromDate, DateTime toDate)
         {
             try
             {
-                var importBills = _importBillRepository.Find(ib =>
-                    ib.SupplierId == supplierId &&
-                    ib.ImportDate >= fromDate &&
-                    ib.ImportDate <= toDate &&
-                    ib.DeletedDate == null);
-
-                decimal totalValue = importBills.Sum(ib => ib.TotalAmount);
-                return Result<decimal>.Success(totalValue);
+                var bills = _importBillRepository.GetBySupplier(supplierId)
+                    .Where(b => b.CreatedDate >= fromDate && b.CreatedDate <= toDate && b.DeletedDate == null);
+                var total = bills.Sum(b => b.TotalAmount);
+                return Result<decimal>.Success(total);
             }
             catch (Exception ex)
             {
@@ -437,20 +387,14 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        /// <summary>
-        /// Tính tổng giá trị nhập theo khoảng ngày
-        /// </summary>
         public Result<decimal> CalculateTotalImportByDateRange(DateTime fromDate, DateTime toDate)
         {
             try
             {
-                var importBills = _importBillRepository.Find(ib =>
-                    ib.ImportDate >= fromDate &&
-                    ib.ImportDate <= toDate &&
-                    ib.DeletedDate == null);
-
-                decimal totalValue = importBills.Sum(ib => ib.TotalAmount);
-                return Result<decimal>.Success(totalValue);
+                var bills = _importBillRepository.GetByDateRange(fromDate, toDate)
+                    .Where(b => b.DeletedDate == null);
+                var total = bills.Sum(b => b.TotalAmount);
+                return Result<decimal>.Success(total);
             }
             catch (Exception ex)
             {
@@ -459,27 +403,32 @@ namespace bookstore_Management.Services.Implementations
         }
 
         // ==================================================================
-        // ----------------------- HÀM HELPER -------------------------------
+        // ----------------------- HELPER -----------------------------------
         // ==================================================================
-
-        /// <summary>
-        /// Tính lại tổng tiền hóa đơn
-        /// </summary>
-        private void RecalculateBillTotal(int importBillId)
+        private void RecalculateBillTotal(string importBillId)
         {
-            try
-            {
-                var importBill = _importBillRepository.GetById(importBillId);
-                if (importBill == null) return;
+            var bill = _importBillRepository.GetById(importBillId);
+            if (bill == null) return;
 
-                var details = _importBillDetailRepository.Find(ibd => ibd.ImportId == importBillId);
-                importBill.TotalAmount = details.Sum(d => d.TotalPrice);
+            var details = _importBillDetailRepository.GetByImportId(importBillId);
+            bill.TotalAmount = details.Sum(d => d.ImportPrice * d.Quantity);
+            bill.UpdatedDate = DateTime.Now;
 
-                _importBillRepository.Update(importBill);
-                _importBillRepository.SaveChanges();
-            }
-            catch { }
+            _importBillRepository.Update(bill);
+            _importBillRepository.SaveChanges();
+        }
+
+        private string GenerateImportId()
+        {
+            var last = _importBillRepository.GetAll()
+                .OrderByDescending(b => b.Id)
+                .FirstOrDefault();
+
+            if (last == null || !last.Id.StartsWith("PN"))
+                return "PN0001";
+
+            var num = int.Parse(last.Id.Substring(2));
+            return $"PN{(num + 1):D4}";
         }
     }
 }
-*/

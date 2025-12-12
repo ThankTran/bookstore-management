@@ -22,10 +22,17 @@ namespace bookstore_Management.Data.Repositories.Implementations
         {
             return Find(b => b.Name.Contains(keyword));
         }
-
-        public IEnumerable<Book> GetLowPriceBooks(decimal maxPrice)
+        
+        public IEnumerable<Book> GetByAuthor(string author)
         {
-            return Find(b => b.SalePrice <= maxPrice);
+            return Find(b => b.Author.Contains(author));
+        }
+
+        public IEnumerable<Book> GetByPriceRange(decimal? minPrice, decimal? maxPrice)
+        {
+            return Find(b =>
+                (!minPrice.HasValue || (b.SalePrice.HasValue && b.SalePrice.Value >= minPrice.Value)) &&
+                (!maxPrice.HasValue || (b.SalePrice.HasValue && b.SalePrice.Value <= maxPrice.Value)));
         }
     }
 }

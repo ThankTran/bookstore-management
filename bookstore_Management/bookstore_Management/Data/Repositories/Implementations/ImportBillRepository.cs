@@ -6,7 +6,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Implementations
 {
-    internal class ImportBillRepository : Repository<ImportBill,int>, IImportBillRepository
+    internal class ImportBillRepository : Repository<ImportBill,string>, IImportBillRepository
     {
         public ImportBillRepository(BookstoreDbContext context) : base(context) { }
 
@@ -17,7 +17,7 @@ namespace bookstore_Management.Data.Repositories.Implementations
 
         public IEnumerable<ImportBill> GetByDateRange(DateTime start, DateTime end)
         {
-            return Find(ib => ib.ImportDate >= start && ib.ImportDate <= end);
+            return Find(ib => ib.CreatedDate >= start && ib.CreatedDate <= end);
         }
     }
 }
