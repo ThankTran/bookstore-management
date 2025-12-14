@@ -58,4 +58,11 @@
         <Setter Property="Margin" Value="5,-10,-5,-10"/>
     </Style>
 
+    <!-- Return Button Style -->
+    <Style x:Key="ReturnButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
 </ResourceDictionary>
