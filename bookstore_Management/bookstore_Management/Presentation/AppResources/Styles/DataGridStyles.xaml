@@ -114,4 +114,41 @@
         <Setter Property="Margin" Value="0,0,15,0"/>
     </Style>
 
+    <!-- History DataGrid Container Border -->
+    <Style x:Key="HistoryDataGridBorder" TargetType="Border">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderGrayBrush}"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Height" Value="300"/>
+    </Style>
+
+    <!-- History DataGrid Style (simplified version) -->
+    <Style x:Key="HistoryDataGrid" TargetType="DataGrid">
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="RowBackground" Value="{StaticResource WhiteBrush}"/>
+        <Setter Property="AlternatingRowBackground" Value="{StaticResource AlternateRowBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DataGridColumnHeaderStyle}"/>
+    </Style>
+
+    <!-- Text Wrap Cell Style -->
+    <Style x:Key="TextWrapCell" TargetType="TextBlock">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Margin" Value="10,5"/>
+    </Style>
+
+    <!-- Separator Border Style -->
+    <Style x:Key="SeparatorBorder" TargetType="Border">
+        <Setter Property="Height" Value="1"/>
+        <Setter Property="Background" Value="{StaticResource BorderGrayBrush}"/>
+        <Setter Property="Margin" Value="0,10,0,20"/>
+    </Style>
+
 </ResourceDictionary>
