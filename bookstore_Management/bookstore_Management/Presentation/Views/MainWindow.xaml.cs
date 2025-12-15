@@ -3,6 +3,7 @@
 using bookstore_Management.Presentation.Views.Users;
 using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
+using bookstore_Management.Views.Statistics;
 using System;
 using System.Security.Principal;
 using System.Windows;
@@ -152,6 +153,20 @@ namespace bookstore_Management
             }
         }
 
+        // Xử lý click menu Thống kê
+        private void btnStatistics_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SetClickedButtonColor(btnStatistics);
+                MainFrame.Content = new DashboardView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void btnLogout_Click(object sender, RoutedEventArgs e)
         {
             var loginView = new LoginView();
@@ -173,5 +188,6 @@ namespace bookstore_Management
             infoView.Show();            
         }
         #endregion
+
     }
 }

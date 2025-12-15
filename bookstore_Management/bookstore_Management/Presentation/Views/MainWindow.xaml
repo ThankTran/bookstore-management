@@ -416,7 +416,8 @@
 
                                 <!-- Statistics -->
                                 <Button x:Name="btnStatistics"
-                                       Style="{StaticResource RoundedButtonStyle}">
+                                       Style="{StaticResource RoundedButtonStyle}"
+                                        Click="btnStatistics_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/Presentation/AppResources/Images/Icons/TK.png" 
                                               Width="24" 

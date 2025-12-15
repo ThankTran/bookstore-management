@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="bookstore_Management.Views.Books.BookListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-              Background="{StaticResource BackgroundBrush}">
+             Background="{StaticResource BackgroundBrush}">
     <Border Background="{StaticResource BackgroundBrush}"
         CornerRadius="0,0,10,0"
         ClipToBounds="True">
@@ -43,7 +43,8 @@
 
                         <TextBox x:Name="txtSearch"
                          Grid.Column="0"
-                         Style="{StaticResource SearchTextBox}"/>
+                         Style="{StaticResource SearchTextBox}"
+                         TextChanged="txtSearch_TextChanged"/>
 
                         <Button Grid.Column="1"
                         Style="{StaticResource SearchButton}">
@@ -60,7 +61,8 @@
             Style="{StaticResource DataGridContainerBorder}">
                 <DataGrid x:Name="dgBooks"
                   Style="{StaticResource MainDataGrid}"
-                  ItemsSource="{Binding Books}">
+                  ItemsSource="{Binding Books}"
+                  MouseDoubleClick="dgBooks_MouseDoubleClick">
 
                     <!-- Custom ScrollBar Style -->
                     <DataGrid.Resources>
@@ -108,16 +110,17 @@
 
                         <!-- Giá bán -->
                         <DataGridTextColumn Header="Giá bán" 
-                                    Binding="{Binding salePrice}" 
+                                    Binding="{Binding salePrice, StringFormat={}{0:N0}}" 
                                     Width="120"
                                     IsReadOnly="True"
-                                    ElementStyle="{StaticResource CenterAlignedCell}"/>
+                                    ElementStyle="{StaticResource RightAlignedCell}"/>
 
                         <!-- Sửa -->
                         <DataGridTemplateColumn Header="Sửa" Width="60">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource SmallIconButton}">
+                                    <Button Style="{StaticResource SmallIconButton}"
+                                            Click="btnEdit_Click">
                                         <Image Source="/Presentation/AppResources/Images/Icons/edit.png" 
                                        Width="20" 
                                        Height="20"/>
@@ -130,7 +133,8 @@
                         <DataGridTemplateColumn Header="Xóa" Width="60">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource SmallIconButton}">
+                                    <Button Style="{StaticResource SmallIconButton}"
+                                            Click="btnDelete_Click">
                                         <Image Source="/Presentation/AppResources/Images/Icons/recyclebin.png" 
                                        Width="20" 
                                        Height="20"/>
