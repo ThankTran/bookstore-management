@@ -1,12 +1,14 @@
-﻿using bookstore_Management.Views.Books;
+﻿using bookstore_Management.Presentation.Views.Information;
+//namespace bookstore_Management.Presentation.Views.Users;
+using bookstore_Management.Presentation.Views.Users;
+using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
 using bookstore_Management.Views.Statistics;
 using System;
 using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
-//namespace bookstore_Management.Presentation.Views.Users;
-using bookstore_Management.Presentation.Views.Users;
+using System.Windows.Input;
 
 namespace bookstore_Management
 {
@@ -172,8 +174,20 @@ namespace bookstore_Management
             loginView.Show();
             this.Close();
         }
+
+        // Xử lý khi di chuột vào nút thông tin    
+                
+        private void btnI_Click(object sender, RoutedEventArgs e)
+        {
+            InforDialog infoView = new InforDialog
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual,
+                Left = 15,
+                Top = 15
+            }; 
+            infoView.Show();            
+        }
         #endregion
 
-        
     }
 }

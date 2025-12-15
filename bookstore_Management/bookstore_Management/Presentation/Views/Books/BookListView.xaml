@@ -22,10 +22,11 @@
 
                 <!-- Add Button (Icon Only) -->
                 <Button x:Name="btnAdd"
-                Grid.Column="0"
-                Style="{StaticResource IconButton}"
-                HorizontalAlignment="Left"
-                ToolTip="Thêm sách mới">
+                        Grid.Column="0"
+                        Style="{StaticResource IconButton}"
+                        HorizontalAlignment="Left"
+                        Click="btnAdd_Click"
+                        ToolTip="Thêm sách mới">
                     <Image Source="/Presentation/AppResources/Images/Icons/add.png" 
                    Width="30" 
                    Height="30"/>
