@@ -19,6 +19,7 @@ namespace bookstore_Management.Views.Customers
             LoadSampleData();
         }
 
+        #region Event Handlers
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             var owner = Window.GetWindow(this);
@@ -132,6 +133,7 @@ namespace bookstore_Management.Views.Customers
                 }
             }
         }
+        #endregion
 
         private void ReindexCustomers()
         {
