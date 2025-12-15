@@ -1,7 +1,5 @@
-﻿using bookstore_Management.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,59 +11,147 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using bookstore_Management.Presentation.Views.Dialogs.Books;
+using bookstore_Management.Presentation.ViewModels;
 
 namespace bookstore_Management.Views.Books
 {
-    /// <summary>
-    /// Interaction logic for BookListView.xaml
-    /// </summary>
+
     public partial class BookListView : UserControl
     {
-        public ObservableCollection<Book> Books { get; set; }
+        private BookViewModel _viewModel;
 
         public BookListView()
         {
             InitializeComponent();
-            DataContext = this;
+            _viewModel = new BookViewModel();
+            this.DataContext = _viewModel;
         }
-
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        #region Event Handlers
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-            var owner = Window.GetWindow(this);
-            var dialog = new InputBooksDialog();
-
-            dialog.WindowState = WindowState.Normal;
-            dialog.Width = 456;
-            dialog.Height = 300;
-
-            if (owner != null)
+            try
             {
-                dialog.Owner = owner;
-                UpdateLayout();
-                var pos = PointToScreen(new Point(0, 0));
-                double left = pos.X + (ActualWidth - dialog.Width) / 2;
-                double top = pos.Y + (ActualHeight - dialog.Height) / 2;
-                dialog.Left = Math.Round(left);
-                dialog.Top = Math.Round(top);
-            }
-
-            bool? result = dialog.ShowDialog();
-
-            if (result == true)
-            {
-                var newBook = new Book
+                if (sender is Button button && button.DataContext is Book selectedBook)
                 {
-                    BookId = $"B{100 + Books.Count}",
-                    Name = dialog.BookName,
-                    SupplierId = dialog.SupplierId,
-                    Category = dialog.Category,
-                    ImportPrice = dialog.ImportPrice,
-                    SalePrice = dialog.SalePrice,
-                    CreatedDate = DateTime.Now
-                };
-                Books.Add(newBook);
+                    // Execute the EditBookCommand from ViewModel
+                    if (_viewModel.EditBookCommand.CanExecute(selectedBook))
+                    {
+                        _viewModel.EditBookCommand.Execute(selectedBook);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi chỉnh sửa sách: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
+
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (sender is Button button && button.DataContext is Book selectedBook)
+                {
+                    // Execute the RemoveBookCommand from ViewModel
+                    if (_viewModel.RemoveBookCommand.CanExecute(selectedBook))
+                    {
+                        _viewModel.RemoveBookCommand.Execute(selectedBook);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xóa sách: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                string searchText = txtSearch.Text.ToLower().Trim();
+
+                if (string.IsNullOrEmpty(searchText))
+                {
+                    dgBooks.ItemsSource = _viewModel.Books;
+                }
+                else
+                {
+                    var filteredBooks = _viewModel.Books.Where(b =>
+                        (b.bookID?.ToLower().Contains(searchText) ?? false) ||
+                        (b.name?.ToLower().Contains(searchText) ?? false) ||
+                        (b.author?.ToLower().Contains(searchText) ?? false) ||
+                        (b.publisher?.ToLower().Contains(searchText) ?? false)
+                    ).ToList();
+
+                    dgBooks.ItemsSource = filteredBooks;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tìm kiếm: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
+
+        private void dgBooks_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                if (dgBooks.SelectedItem is Book selectedBook)
+                {
+                    var detailMessage = $"Chi tiết sách:\n\n" +
+                        $"Mã sách: {selectedBook.bookID}\n" +
+                        $"Tên sách: {selectedBook.name}\n" +
+                        $"Tác giả: {selectedBook.author}\n" +
+                        $"Nhà xuất bản: {selectedBook.publisher}\n" +
+                        $"Thể loại: {selectedBook.category}\n" +
+                        $"Giá nhập: {selectedBook.importPrice:N0} VNĐ\n" +
+                        $"Giá bán: {selectedBook.salePrice:N0} VNĐ";
+
+                    MessageBox.Show(detailMessage,
+                        "Thông tin sách",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xem chi tiết: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Public Methods
+
+        public void RefreshBookList()
+        {
+            try
+            {
+                dgBooks.Items.Refresh();
+                txtSearch.Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi làm mới danh sách: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+        #endregion
     }
 }
