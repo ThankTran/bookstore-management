@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using bookstore_Management.Presentation.ViewModels;
 
 namespace bookstore_Management.Views.Books
 {
@@ -22,6 +23,7 @@ namespace bookstore_Management.Views.Books
         public BookListView()
         {
             InitializeComponent();
+            this.DataContext = new BookViewModel();
         }
     }
 }
