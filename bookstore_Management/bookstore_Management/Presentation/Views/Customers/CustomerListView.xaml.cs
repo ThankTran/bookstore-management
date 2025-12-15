@@ -26,7 +26,7 @@ namespace bookstore_Management.Views.Customers
 
             dialog.WindowState = WindowState.Normal;
             dialog.Width = 456;
-            dialog.Height = 220;
+            dialog.Height = 300;
 
             if (owner != null)
             {

@@ -1,0 +1,221 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Sidebar Colors -->
+    <SolidColorBrush x:Key="SidebarBrush" Color="#585AB8"/>
+    <SolidColorBrush x:Key="SidebarDarkBrush" Color="#4A4C9E"/>
+    <SolidColorBrush x:Key="SidebarLightBrush" Color="#7577C3"/>
+    <SolidColorBrush x:Key="MenuHoverBrush" Color="#DE7E9E"/>
+    <SolidColorBrush x:Key="MenuHoverTextBrush" Color="#7F81E5"/>
+
+    <!-- Main Window Style -->
+    <Style x:Key="MainWindow" TargetType="Window">
+        <Setter Property="WindowStartupLocation" Value="CenterScreen"/>
+        <Setter Property="WindowStyle" Value="None"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="MinHeight" Value="600"/>
+        <Setter Property="MinWidth" Value="1024"/>
+    </Style>
+
+    <!-- Main Container Border -->
+    <Style x:Key="MainContainerBorder" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+    <!-- Window Control Button Style -->
+    <Style x:Key="WindowControlButton" TargetType="Button">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    </Style>
+
+    <!-- Sidebar Border Style -->
+    <Style x:Key="SidebarBorder" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource SidebarBrush}"/>
+        <Setter Property="CornerRadius" Value="0,0,0,15"/>
+    </Style>
+
+    <!-- Sidebar Menu Button Style -->
+    <Style x:Key="SidebarMenuButton" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="10"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="0"
+                            Padding="12,8">
+                        <ContentPresenter HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{StaticResource SidebarBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextWhiteBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource MenuHoverBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource MenuHoverTextBrush}"/>
+            </Trigger>
+            <Trigger Property="Tag" Value="Selected">
+                <Setter Property="Background" Value="{StaticResource MenuHoverBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Info Button Style (Circular button in sidebar) -->
+    <Style x:Key="InfoButton" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="35"
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource SecondaryLightBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Logout Button Style -->
+    <Style x:Key="LogoutButton" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="5"
+                            Background="{TemplateBinding Background}"
+                            Padding="8,4">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#8a90c8"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- User Info Card Border Style -->
+    <Style x:Key="UserInfoCard" TargetType="Border">
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Background" Value="{StaticResource SidebarLightBrush}"/>
+    </Style>
+
+    <!-- User Profile Image Container -->
+    <Style x:Key="UserProfileImageContainer" TargetType="Border">
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="CornerRadius" Value="25"/>
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+        <Setter Property="Margin" Value="0,0,12,0"/>
+    </Style>
+
+    <!-- Footer Info Border Style -->
+    <Style x:Key="FooterInfoBorder" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource SidebarDarkBrush}"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Margin" Value="15,0,15,15"/>
+    </Style>
+
+    <!-- Main Content Border Style -->
+    <Style x:Key="MainContentBorder" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource BackgroundBrush}"/>
+        <Setter Property="CornerRadius" Value="0,0,15,0"/>
+    </Style>
+
+    <!-- Menu Icon Image Style -->
+    <Style x:Key="MenuIcon" TargetType="Image">
+        <Setter Property="Width" Value="24"/>
+        <Setter Property="Height" Value="24"/>
+        <Setter Property="Margin" Value="0,0,12,0"/>
+    </Style>
+
+    <!-- Logo Image Style -->
+    <Style x:Key="LogoImage" TargetType="Image">
+        <Setter Property="Width" Value="150"/>
+        <Setter Property="Height" Value="150"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+    </Style>
+
+    <!-- Text Styles for User Info -->
+    <Style x:Key="UserRoleText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="{StaticResource TextWhiteBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+        <Setter Property="Opacity" Value="0.85"/>
+        <Setter Property="Margin" Value="0,0,0,2"/>
+    </Style>
+
+    <Style x:Key="UserNameText" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="{StaticResource TextWhiteBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="MaxWidth" Value="140"/>
+    </Style>
+
+    <!-- Footer Text Styles -->
+    <Style x:Key="FooterTitleText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextWhiteBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="FooterSubtitleText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextWhiteBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Opacity" Value="0.9"/>
+        <Setter Property="Margin" Value="0,3,0,0"/>
+    </Style>
+
+    <Style x:Key="FooterCopyrightText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextWhiteBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Opacity" Value="0.8"/>
+        <Setter Property="Margin" Value="0,5,0,0"/>
+    </Style>
+
+</ResourceDictionary>

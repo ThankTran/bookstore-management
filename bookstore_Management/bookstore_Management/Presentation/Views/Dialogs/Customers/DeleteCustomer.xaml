@@ -1,63 +1,58 @@
 ﻿<Window x:Class="bookstore_Management.Presentation.Views.Dialogs.Customers.DeleteCustomer"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Height="120" Width="360"
+        Height="120" 
+        Width="360"
+        Style="{StaticResource DialogWindow}"
         WindowStartupLocation="CenterOwner"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        SizeToContent="Manual">
 
-    <Border CornerRadius="13" Background="White" BorderThickness="2" BorderBrush="#585ab8">
+    <Border Style="{StaticResource DialogBorder}"
+            CornerRadius="13">
         <Grid>
             <StackPanel>
-
+                <!-- Tiêu đề -->
                 <TextBlock Text="Xóa khách hàng"
-                           HorizontalAlignment="Center"
+                           Style="{StaticResource DialogTitle}"
                            Margin="0,10,0,0"
-                           FontWeight="Bold"
-                           Foreground="#585ab8"
-                           FontSize="15"
-                           FontFamily="/Presentation/AppResources/Fonts/#Quicksand"/>
+                           FontSize="15"/>
 
+                <!-- Nội dung xác nhận -->
                 <TextBlock Text="Bạn có chắc chắn muốn xóa khách hàng này khỏi hệ thống?"
                            HorizontalAlignment="Center"
                            Margin="5,13,5,0"
                            FontSize="12"
-                           FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                           FontFamily="{StaticResource PrimaryFont}"
                            FontWeight="Medium"
-                           Foreground="#585ab8"/>
+                           Foreground="{StaticResource PrimaryBrush}"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"/>
 
+                <!-- Nút Xác nhận / Hủy -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             Margin="0,10,0,0">
-
-                    <Border Width="80" Height="28" CornerRadius="5" Background="#585ab8" Margin="0,0,20,0">
+                    <Border Style="{StaticResource PrimaryButtonBorder}"
+                            Width="80" 
+                            Height="28"
+                            Margin="0,0,20,0">
                         <Button x:Name="btnConfirm"
                                 Content="Xác nhận"
-                                Background="Transparent"
-                                BorderBrush="Transparent"
-                                Foreground="White"
-                                FontWeight="SemiBold"
-                                FontSize="13"
+                                Style="{StaticResource PrimaryButton}"
                                 Click="btnConfirm_Click"/>
                     </Border>
 
-                    <Border Width="80" Height="28" CornerRadius="5" Background="#E9E9F5">
+                    <Border Style="{StaticResource SecondaryButtonBorder}"
+                            Width="80" 
+                            Height="28">
                         <Button x:Name="btnCancel"
                                 Content="Hủy"
-                                Background="Transparent"
-                                BorderBrush="Transparent"
-                                Foreground="#585ab8"
-                                FontWeight="SemiBold"
-                                FontSize="13"
+                                Style="{StaticResource SecondaryButton}"
                                 Click="btnCancel_Click"/>
                     </Border>
-
                 </StackPanel>
-
             </StackPanel>
         </Grid>
     </Border>
-
 </Window>
