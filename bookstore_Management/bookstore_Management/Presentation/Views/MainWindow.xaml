@@ -43,7 +43,7 @@
             <!-- Hiệu ứng hover -->
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#F5EBFC"/>
+                    <Setter Property="Background" Value="#DE7E9E"/>
                     <!-- nền tím nhạt -->
                     <Setter Property="Foreground" Value="#7F81E5"/>
                     <!-- chữ tím đậm -->
@@ -211,7 +211,7 @@
                                         Height="20"/>-->
                                 <Border CornerRadius="35" Background="#7577C3">
                                     <Button x:Name="btnI"  
-                                            Style="{StaticResource InforEffect}" >
+                                            Style="{StaticResource InforEffect}" Click="btnI_Click" >
                                         <Image Source="/Presentation/AppResources/Images/Icons/inf.png" 
                                                Width="14" 
                                                Height="14"
