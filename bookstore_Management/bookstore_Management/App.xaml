@@ -17,7 +17,6 @@
                 <ResourceDictionary Source="Presentation/AppResources/Styles/TextBoxStyles.xaml"/>
                 <ResourceDictionary Source="Presentation/AppResources/Styles/DataGridStyles.xaml"/>
                 <ResourceDictionary Source="Presentation/AppResources/Styles/DialogStyles.xaml"/>
-                <ResourceDictionary Source="Presentation/AppResources/Styles/MainWindowStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
