@@ -106,7 +106,7 @@
     </Window.Resources>
 
     <Window.Background>
-        <ImageBrush ImageSource="/Presentation/AppResources/Images/Icons/logInBG.png"/>
+        <ImageBrush ImageSource="/Presentation/AppResources/Images/Icons/Login/logInBG.png"/>
     </Window.Background>
     <Grid>
         <!--name and quotes-->
@@ -146,7 +146,7 @@
                             BorderThickness="2" 
                             BorderBrush="#F9F8FD">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Presentation/AppResources/Images/Icons/user.png" 
+                            <Image Source="/Presentation/AppResources/Images/Icons/Login/user.png" 
                                     Width="15" 
                                     Margin="8,0,0,0"/>
                             <TextBox Background="Transparent" 
@@ -164,7 +164,7 @@
                             BorderThickness="2" 
                             BorderBrush="#F9F8FD">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Presentation/AppResources/Images/Icons/lock.png" 
+                            <Image Source="/Presentation/AppResources/Images/Icons/Login/lock.png" 
                                     Width="15" 
                                     Margin="8,0,0,0"/>
                             <PasswordBox Background="Transparent" 
