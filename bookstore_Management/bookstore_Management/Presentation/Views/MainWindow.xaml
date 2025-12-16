@@ -157,7 +157,7 @@
                        Cursor="Hand"
                        ToolTip="Minimize"
                        Click="btnMinimize_Click">
-                    <Image Source="/Presentation/AppResources/Images/Icons/winctr1.png" 
+                    <Image Source="/Presentation/AppResources/Images/Icons/Windowcontrol/winctr1.png" 
                           Width="18" Height="18" Stretch="Uniform"/>
                 </Button>
                 <Button x:Name="btnMaximize"
@@ -167,7 +167,7 @@
                        Cursor="Hand"
                        ToolTip="Maximize/Restore"
                        Click="btnMaximize_Click">
-                    <Image Source="/Presentation/AppResources/Images/Icons/winctr2.png" 
+                    <Image Source="/Presentation/AppResources/Images/Icons/Windowcontrol/winctr2.png" 
                           Width="15" Height="15" Stretch="Uniform"/>
                 </Button>
                 <Button x:Name="btnClose"
@@ -177,7 +177,7 @@
                        Cursor="Hand"
                        ToolTip="Close"
                        Click="btnClose_Click">
-                    <Image Source="/Presentation/AppResources/Images/Icons/winctr3.png" 
+                    <Image Source="/Presentation/AppResources/Images/Icons/Windowcontrol/winctr3.png" 
                           Width="25" Height="25" Stretch="Uniform"/>
                 </Button>
             </StackPanel>
@@ -213,7 +213,7 @@
                                 <Border CornerRadius="35" Background="#7577C3">
                                     <Button x:Name="btnI"  
                                             Style="{StaticResource InforEffect}" Click="btnI_Click" >
-                                        <Image Source="/Presentation/AppResources/Images/Icons/inf.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/inf.png" 
                                                Width="14" 
                                                Height="14"
                                                HorizontalAlignment="Center"
@@ -223,7 +223,7 @@
                                 <!-- Info icon -->
 
                             </Grid>
-                            <Image Source="/Presentation/AppResources/Images/Icons/THM.png" 
+                            <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/THM.png" 
                                   Width="150" 
                                   Height="150"
                                   Stretch="Uniform"
@@ -241,7 +241,7 @@
                                    Margin="5,0,0,12"
                                    Style="{StaticResource logoutEffect}" Click="btnLogout_Click">
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="/Presentation/AppResources/Images/Icons/DX.png" 
+                                    <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/DX.png" 
                                           Width="16" 
                                           Height="16"
                                           Margin="0,0,8,0"/>
@@ -261,7 +261,7 @@
                                            CornerRadius="25"
                                            Background="White"
                                            Margin="0,0,12,0">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/profile.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/profile.png" 
                                               Width="50" 
                                               Height="50"
                                               Stretch="UniformToFill"/>
@@ -294,7 +294,7 @@
                                        Click="btnHome_Click"
                                        Style="{StaticResource RoundedButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/trangchu.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/trangchu.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -312,7 +312,7 @@
                                 <Button x:Name="btnPayment"
                                        Style="{StaticResource RoundedButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/TT.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/TT.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -331,7 +331,7 @@
                                         Click="btnCustomerManagement_Click" >
 
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLKH.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLKH.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -349,7 +349,7 @@
                                        Style="{StaticResource RoundedButtonStyle}">
 
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLHD.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLHD.png" 
                                             Width="24" 
                                             Height="24"
                                             Margin="0,0,12,0"/>
@@ -367,7 +367,7 @@
                                        Style="{StaticResource RoundedButtonStyle}"
                                        Click="btnBooks_Click">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLS.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLS.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -384,7 +384,7 @@
                                 <Button x:Name="btnEmployees"
                                        Style="{StaticResource RoundedButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLNS.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLNS.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -401,7 +401,7 @@
                                 <Button x:Name="btnStock"
                                        Style="{StaticResource RoundedButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/timeline.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/timeline.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -419,7 +419,7 @@
                                        Style="{StaticResource RoundedButtonStyle}"
                                         Click="btnStatistics_Click">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/TK.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/TK.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -438,7 +438,7 @@
                                        Style="{StaticResource RoundedButtonStyle}"
                                        Click="btnBills_Click">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLHD.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLHD.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -455,7 +455,7 @@
                                 <Button x:Name="btnAccount"
                                        Style="{StaticResource RoundedButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image  Source="/Presentation/AppResources/Images/Icons/QLTK.png" 
+                                        <Image  Source="/Presentation/AppResources/Images/Icons/Sidebar/QLTK.png" 
                                                 Width="24" 
                                                 Height="24"
                                                 Margin="0,0,12,0"/>

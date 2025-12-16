@@ -34,7 +34,7 @@
                 HorizontalAlignment="Left"
                 Click="btnAdd_Click"
                 ToolTip="Thêm khách hàng mới">
-                        <Image Source="/Presentation/AppResources/Images/Icons/add.png" 
+                        <Image Source="/Presentation/AppResources/Images/Icons/Actions/add.png" 
                    Width="30" 
                    Height="30"/>
                     </Button>
@@ -55,7 +55,7 @@
 
                             <Button Grid.Column="1"
                         Style="{StaticResource SearchButton}">
-                                <Image Source="/Presentation/AppResources/Images/Icons/search.png" 
+                                <Image Source="/Presentation/AppResources/Images/Icons/Actions/search.png" 
                            Width="15" 
                            Height="15"/>
                             </Button>
@@ -126,7 +126,7 @@
                                     <DataTemplate>
                                         <Button Style="{StaticResource SmallIconButton}"
                                     Click="btnEdit_Click">
-                                            <Image Source="/Presentation/AppResources/Images/Icons/edit.png" 
+                                            <Image Source="/Presentation/AppResources/Images/Icons/Actions/edit.png" 
                                        Width="20" 
                                        Height="20"/>
                                         </Button>
@@ -140,7 +140,7 @@
                                     <DataTemplate>
                                         <Button Style="{StaticResource SmallIconButton}"
                                     Click="btnDelete_Click">
-                                            <Image Source="/Presentation/AppResources/Images/Icons/recyclebin.png" 
+                                            <Image Source="/Presentation/AppResources/Images/Icons/Actions/recyclebin.png" 
                                        Width="20" 
                                        Height="20"/>
                                         </Button>

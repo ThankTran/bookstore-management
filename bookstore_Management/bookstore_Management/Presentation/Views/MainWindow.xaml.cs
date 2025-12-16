@@ -159,11 +159,12 @@ namespace bookstore_Management
             try
             {
                 SetClickedButtonColor(btnStatistics);
-                MainFrame.Content = new DashboardView();
+                MainFrame.Content = new Views.Statistics.DashboardView();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
