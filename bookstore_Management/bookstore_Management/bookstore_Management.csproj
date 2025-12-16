@@ -14,6 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -68,6 +69,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\AppResources\Styles\DialogStyles.xaml" />
+    <Page Include="Presentation\AppResources\Styles\StatisticStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\AppResources\Styles\TestHover.xaml" />
     <Page Include="Presentation\AppResources\Styles\TextBoxStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -404,30 +409,30 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Presentation\AppResources\Images\Icons\return.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\add.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\search.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\edit.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\recyclebin.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\QLTK.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\winctr1.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\winctr2.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\winctr3.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\DX.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\inf.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\lock.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\logInBG.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\THM.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\profile.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\TT.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\QLHD.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\IN4.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\QLKH.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\QLKHO.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\QLNS.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\QLS.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\TK.png" />
-    <Resource Include="Presentation\AppResources\Images\Icons\trangchu.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\return.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\add.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\search.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\edit.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\recyclebin.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\QLTK.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Windowcontrol\winctr1.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Windowcontrol\winctr2.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Windowcontrol\winctr3.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\DX.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\inf.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Login\lock.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Login\logInBG.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\THM.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\profile.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\TT.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\QLHD.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\IN4.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\QLKH.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\QLKHO.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\QLNS.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\QLS.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\TK.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\trangchu.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EntityFramework">
@@ -436,8 +441,8 @@
     <PackageReference Include="CommunityToolkit.Mvvm">
       <Version>8.2.1</Version>
     </PackageReference>
-    <PackageReference Include="AutoMapper">
-      <Version>12.0.1</Version>
+    <PackageReference Include="LiveCharts.Wpf">
+      <Version>0.9.7</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -446,6 +451,9 @@
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Login\user.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\timeline.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
