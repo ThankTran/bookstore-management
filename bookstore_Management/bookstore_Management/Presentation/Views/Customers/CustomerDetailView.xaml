@@ -15,7 +15,7 @@
                     Style="{StaticResource ReturnButton}"
                     Click="btnReturn_Click"
                     ToolTip="Quay lại danh sách">
-                <Image Source="/Presentation/AppResources/Images/Icons/return.png" 
+                <Image Source="/Presentation/AppResources/Images/Icons/Actions/return.png" 
                        Width="15" 
                        Height="15"/>
             </Button>
