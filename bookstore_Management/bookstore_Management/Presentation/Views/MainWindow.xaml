@@ -310,7 +310,8 @@
 
                                 <!-- Payment -->
                                 <Button x:Name="btnPayment"
-                                       Style="{StaticResource RoundedButtonStyle}">
+                                       Style="{StaticResource RoundedButtonStyle}"
+                                        Click="btnPayment_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/TT.png" 
                                               Width="24" 

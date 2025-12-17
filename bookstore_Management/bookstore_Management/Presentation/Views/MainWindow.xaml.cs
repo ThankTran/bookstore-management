@@ -4,6 +4,7 @@ using bookstore_Management.Presentation.Views.Users;
 using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
 using bookstore_Management.Views.Statistics;
+using bookstore_Management.Views.Orders;
 using System;
 using System.Security.Principal;
 using System.Windows;
@@ -188,7 +189,20 @@ namespace bookstore_Management
             }; 
             infoView.Show();            
         }
-        #endregion
 
+        // Xử lý click menu Thanh toán
+        private void btnPayment_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SetClickedButtonColor(btnPayment);
+                MainFrame.Content = new Views.Orders.PaymentView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
     }
 }
