@@ -134,21 +134,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Orders\CreateOrderView.xaml">
+    <Page Include="Presentation\Views\Payment\CreateOrderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Orders\InvoiceView.xaml">
+    <Page Include="Presentation\Views\Payment\InvoiceView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Orders\OrderDetailView.xaml">
+    <Page Include="Presentation\Views\Payment\OrderDetailView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Orders\OrderListView.xaml">
+    <Page Include="Presentation\Views\Payment\OrderListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Payment\PaymentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\Views\Statistics\ChartView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -265,6 +269,7 @@
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Presentation\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Presentation\Converters\CountToVisibilityConverter.cs" />
     <Compile Include="Presentation\Converters\CurrencyConverter.cs" />
     <Compile Include="Presentation\Converters\DateConverter.cs" />
     <Compile Include="Presentation\Converters\RoleToVisibilityConverter.cs" />
@@ -275,7 +280,7 @@
     <Compile Include="Presentation\ViewModels\InventoryViewModel.cs" />
     <Compile Include="Presentation\ViewModels\LoginViewModel.cs" />
     <Compile Include="Presentation\ViewModels\MainViewModel.cs" />
-    <Compile Include="Presentation\ViewModels\OrderViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\PaymentViewModel.cs" />
     <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
     <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
     <Compile Include="Presentation\Views\Books\BookDetailView.xaml.cs">
@@ -320,17 +325,20 @@
     <Compile Include="Presentation\Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Orders\CreateOrderView.xaml.cs">
+    <Compile Include="Presentation\Views\Payment\CreateOrderView.xaml.cs">
       <DependentUpon>CreateOrderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Orders\InvoiceView.xaml.cs">
+    <Compile Include="Presentation\Views\Payment\InvoiceView.xaml.cs">
       <DependentUpon>InvoiceView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Orders\OrderDetailView.xaml.cs">
+    <Compile Include="Presentation\Views\Payment\OrderDetailView.xaml.cs">
       <DependentUpon>OrderDetailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Orders\OrderListView.xaml.cs">
+    <Compile Include="Presentation\Views\Payment\OrderListView.xaml.cs">
       <DependentUpon>OrderListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Payment\PaymentView.xaml.cs">
+      <DependentUpon>PaymentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Statistics\ChartView.xaml.cs">
       <DependentUpon>ChartView.xaml</DependentUpon>
