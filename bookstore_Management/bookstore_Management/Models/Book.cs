@@ -25,6 +25,10 @@ namespace bookstore_Management.Models
         [StringLength(50)]
         [Column("author")]
         public string Author { get; set; }
+        
+        [StringLength(6)]
+        [Column("supplier_id")]
+        public string SupplierId { get; set; }
 
         [Required]
         [Column("category")]
@@ -36,11 +40,6 @@ namespace bookstore_Management.Models
         // Giá nhập (phục vụ thống kê/lợi nhuận). Nếu không quản lý giá nhập, có thể để null.
         [Column("import_price")]
         public decimal? ImportPrice { get; set; }
-
-
-        [StringLength(6)]
-        [Column("supplier_id")]
-        public string SupplierId { get; set; }
 
         [Required]
         [Column("created_date")]

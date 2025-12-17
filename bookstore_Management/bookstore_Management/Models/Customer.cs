@@ -26,17 +26,18 @@ namespace bookstore_Management.Models
         public string Name { get; set; }
         
         [Required]
+        [Column("phone")]
+        [StringLength(20)]
+        public string Phone { get; set; }
+        
+        [Required]
         [Column("member_level")]
         public MemberTier MemberLevel { get; set; } = MemberTier.Bronze;
+        
         
         [Required]
         [Column("loyalty_points")]
         public decimal LoyaltyPoints { get; set; } = 0;
-
-        [Required]
-        [Column("phone")]
-        [StringLength(20)]
-        public string Phone { get; set; }
 
         [Required]
         [Column("created_date")]
