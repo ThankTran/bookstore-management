@@ -194,7 +194,6 @@
     <Compile Include="Core\Constants\MessageConstants.cs" />
     <Compile Include="Core\Constants\PermissionConstants.cs" />
     <Compile Include="Core\Constants\RoleConstants.cs" />
-    <Compile Include="Core\Enums\AuthorRole.cs" />
     <Compile Include="Core\Enums\BookCategory.cs" />
     <Compile Include="Core\Enums\MemberTier.cs" />
     <Compile Include="Core\Enums\OrderStatus.cs" />
@@ -262,9 +261,9 @@
     <Compile Include="Helpers\ExcelExporter.cs" />
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
-    <Compile Include="Migrations\202512100720599_InitialCreate.cs" />
-    <Compile Include="Migrations\202512100720599_InitialCreate.Designer.cs">
-      <DependentUpon>202512100720599_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202512170942430_InitialCreate.cs" />
+    <Compile Include="Migrations\202512170942430_InitialCreate.Designer.cs">
+      <DependentUpon>202512170942430_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
@@ -415,10 +414,13 @@
     <Compile Include="Services\Interfaces\IWorkWeekService.cs" />
     <Compile Include="Services\Interfaces\IStaffShiftRegistrationService.cs" />
     <Compile Include="Services\Interfaces\IWorkScheduleService.cs" />
+    <Compile Include="Tests\AuthServiceTests.cs" />
+    <Compile Include="Tests\ReportServiceTests.cs" />
+    <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202512100720599_InitialCreate.resx">
-      <DependentUpon>202512100720599_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202512170942430_InitialCreate.resx">
+      <DependentUpon>202512170942430_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -467,6 +469,15 @@
     </PackageReference>
     <PackageReference Include="AutoMapper">
       <Version>10.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk">
+      <Version>17.10.0</Version>
+    </PackageReference>
+    <PackageReference Include="NUnit">
+      <Version>3.13.3</Version>
+    </PackageReference>
+    <PackageReference Include="NUnit3TestAdapter">
+      <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

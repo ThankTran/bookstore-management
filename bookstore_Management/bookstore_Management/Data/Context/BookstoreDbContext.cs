@@ -174,11 +174,6 @@ namespace bookstore_Management.Data.Context
                 .WithMany(st => st.StaffShiftRegistrations)
                 .HasForeignKey(ssr => ssr.ShiftTemplateId)
                 .WillCascadeOnDelete(false);
-
-            // ============================================
-            // DECIMAL PRECISION (12,2 = 10 chữ số + 2 số thập phân)
-            // ============================================
-
             
 
             // ============================================
