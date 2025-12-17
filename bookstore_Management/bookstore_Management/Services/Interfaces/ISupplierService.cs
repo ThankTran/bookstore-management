@@ -8,8 +8,8 @@ namespace bookstore_Management.Services.Interfaces
     public interface ISupplierService
     {
         // CRUD
-        Result<string> AddSupplier(SupplierDto dto);
-        Result UpdateSupplier(string supplierId, SupplierDto dto);
+        Result<string> AddSupplier(SupplierCreateDto dto);
+        Result UpdateSupplier(string supplierId, SupplierUpdateDto dto);
         Result DeleteSupplier(string supplierId);
         Result<Supplier> GetSupplierById(string supplierId);
         Result<IEnumerable<Supplier>> GetAllSuppliers();

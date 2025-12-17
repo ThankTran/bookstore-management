@@ -26,12 +26,8 @@ namespace bookstore_Management.Models
         [Column("phone")]
         public string Phone { get; set; }
 
-        [Column("address")]
-        [StringLength(200)]
-        public string Address { get; set; }
-
-        [Column("email")]
         [StringLength(100)]
+        [Column("email")]
         public string Email { get; set; }
 
         [Required]
@@ -45,7 +41,6 @@ namespace bookstore_Management.Models
         public DateTime? DeletedDate { get; set; }
 
         // Navigation properties
-        public virtual ICollection<Book> Books { get; set; }
         public virtual ICollection<ImportBill> ImportBills { get; set; }
     }
 }

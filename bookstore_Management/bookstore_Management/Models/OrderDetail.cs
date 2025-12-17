@@ -21,7 +21,7 @@ namespace bookstore_Management.Models
         public string BookId { get; set; }
 
         [Required]
-        [Column("sale_price", TypeName = "decimal(18,2)")]
+        [Column("sale_price")]
         public decimal SalePrice { get; set; }
 
         [Required]
@@ -29,7 +29,7 @@ namespace bookstore_Management.Models
         public int Quantity { get; set; }
 
         [Required]
-        [Column("subtotal", TypeName = "decimal(18,2)")]
+        [Column("subtotal")]
         public decimal Subtotal { get; set; }
 
         [Column("note")]

@@ -28,13 +28,13 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         
         /// <summary>
-        /// Lấy tồn kho theo mã sách
+        /// Lấy tồn kho theo kho & sách
         /// </summary>
-        public Result<Stock> GetStockByBookId(string bookId)
+        public Result<Stock> GetStock(string warehouseId, string bookId)
         {
             try
             {
-                var stock = _stockRepository.GetById(bookId);
+                var stock = _stockRepository.Get(warehouseId, bookId);
                 if (stock == null)
                     return Result<Stock>.Fail("Sách không có tồn kho");
 
@@ -47,13 +47,47 @@ namespace bookstore_Management.Services.Implementations
         }
 
         /// <summary>
+        /// Lấy tồn kho theo sách
+        /// </summary>
+        public Result<IEnumerable<Stock>> GetStocksByBook(string bookId)
+        {
+            try
+            {
+                var stocks = _stockRepository.GetByBook(bookId);
+                return Result<IEnumerable<Stock>>.Success(stocks);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<Stock>>.Fail($"Lỗi: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Lấy tồn kho theo kho
+        /// </summary>
+        public Result<IEnumerable<Stock>> GetStocksByWarehouse(string warehouseId)
+        {
+            try
+            {
+                var stocks = _stockRepository.GetByWarehouse(warehouseId);
+                return Result<IEnumerable<Stock>>.Success(stocks);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<Stock>>.Fail($"Lỗi: {ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Lấy tất cả tồn kho
         /// </summary>
         public Result<IEnumerable<Stock>> GetAllStocks()
         {
             try
             {
-                var stocks = _stockRepository.GetAll();
+                var stocks = _stockRepository.GetAll()
+                    .Where(s => s.DeletedDate == null)
+                    .ToList();
                 return Result<IEnumerable<Stock>>.Success(stocks);
             }
             catch (Exception ex)
@@ -69,7 +103,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var outOfStocks = _stockRepository.Find(s => s.StockQuantity == 0);
+                var outOfStocks = _stockRepository.Find(s => s.StockQuantity == 0 && s.DeletedDate == null);
                 return Result<IEnumerable<Stock>>.Success(outOfStocks);
             }
             catch (Exception ex)
@@ -85,7 +119,10 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var lowStocks = _stockRepository.Find(s => s.StockQuantity > 0 && s.StockQuantity <= minStock);
+                var lowStocks = _stockRepository.Find(s =>
+                    s.StockQuantity > 0 &&
+                    s.StockQuantity <= minStock &&
+                    s.DeletedDate == null);
                 return Result<IEnumerable<Stock>>.Success(lowStocks);
             }
             catch (Exception ex)
@@ -101,18 +138,19 @@ namespace bookstore_Management.Services.Implementations
         /// <summary>
         /// Thêm số lượng vào tồn kho (dùng khi nhập hàng)
         /// </summary>
-        public Result AddStockQuantity(string bookId, int quantityToAdd)
+        public Result AddStockQuantity(string warehouseId, string bookId, int quantityToAdd)
         {
             try
             {
                 if (quantityToAdd <= 0)
                     return Result.Fail("Số lượng thêm phải > 0");
 
-                var stock = _stockRepository.GetById(bookId);
+                var stock = _stockRepository.Get(warehouseId, bookId);
                 if (stock == null)
                     return Result.Fail("Sách không tồn tại trong kho");
 
                 stock.StockQuantity += quantityToAdd;
+                stock.UpdatedDate = DateTime.Now;
                 _stockRepository.Update(stock);
                 _stockRepository.SaveChanges();
 
@@ -127,14 +165,14 @@ namespace bookstore_Management.Services.Implementations
         /// <summary>
         /// Trừ số lượng từ tồn kho (dùng khi bán hàng)
         /// </summary>
-        public Result SubtractStockQuantity(string bookId, int quantityToSubtract)
+        public Result SubtractStockQuantity(string warehouseId, string bookId, int quantityToSubtract)
         {
             try
             {
                 if (quantityToSubtract <= 0)
                     return Result.Fail("Số lượng trừ phải > 0");
 
-                var stock = _stockRepository.GetById(bookId);
+                var stock = _stockRepository.Get(warehouseId, bookId);
                 if (stock == null)
                     return Result.Fail("Sách không tồn tại trong kho");
 
@@ -142,6 +180,7 @@ namespace bookstore_Management.Services.Implementations
                     return Result.Fail($"Không đủ hàng. Tồn kho: {stock.StockQuantity}");
 
                 stock.StockQuantity -= quantityToSubtract;
+                stock.UpdatedDate = DateTime.Now;
                 _stockRepository.Update(stock);
                 _stockRepository.SaveChanges();
 
@@ -156,19 +195,20 @@ namespace bookstore_Management.Services.Implementations
         /// <summary>
         /// Set tồn kho bằng giá trị cụ thể
         /// </summary>
-        public Result SetStockQuantity(string bookId, int newQuantity)
+        public Result SetStockQuantity(string warehouseId, string bookId, int newQuantity)
         {
             try
             {
                 if (newQuantity < 0)
                     return Result.Fail("Số lượng không được âm");
 
-                var stock = _stockRepository.GetById(bookId);
+                var stock = _stockRepository.Get(warehouseId, bookId);
                 if (stock == null)
                     return Result.Fail("Sách không tồn tại trong kho");
 
                 int oldQuantity = stock.StockQuantity;
                 stock.StockQuantity = newQuantity;
+                stock.UpdatedDate = DateTime.Now;
                 _stockRepository.Update(stock);
                 _stockRepository.SaveChanges();
 
@@ -191,16 +231,17 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var stock = _stockRepository.GetById(bookId);
-                if (stock == null)
-                    return Result<bool>.Fail("Sách không tồn tại");
+                var total = _stockRepository.GetTotalQuantity(bookId);
+                var stocks = _stockRepository.GetByBook(bookId);
+                if (!stocks.Any())
+                    return Result<bool>.Fail("Sách không tồn tại trong bất kỳ kho nào");
 
-                bool isAvailable = stock.StockQuantity >= requiredQuantity;
+                bool isAvailable = total >= requiredQuantity;
                 
                 if (!isAvailable)
-                    return Result<bool>.Success(false, $"Không đủ hàng. Cần: {requiredQuantity}, Tồn: {stock.StockQuantity}");
+                    return Result<bool>.Success(false, $"Không đủ hàng. Cần: {requiredQuantity}, Tồn: {total}");
 
-                return Result<bool>.Success(true, $"Còn hàng. Tồn: {stock.StockQuantity}");
+                return Result<bool>.Success(true, $"Còn hàng. Tồn: {total}");
             }
             catch (Exception ex)
             {

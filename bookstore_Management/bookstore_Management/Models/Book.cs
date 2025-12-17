@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.Models
@@ -23,8 +20,12 @@ namespace bookstore_Management.Models
         [StringLength(50)]
         [Column("name")]
         public string Name { get; set; }
-
+        
         [Required]
+        [StringLength(50)]
+        [Column("author")]
+        public string Author { get; set; }
+        
         [StringLength(6)]
         [Column("supplier_id")]
         public string SupplierId { get; set; }
@@ -33,12 +34,12 @@ namespace bookstore_Management.Models
         [Column("category")]
         public BookCategory Category { get; set; }
 
-        [Column("sale_price", TypeName = "decimal(18,2)")]
+        [Column("sale_price")]
         public decimal? SalePrice { get; set; }
 
-        [Required]
-        [Column("import_price", TypeName = "decimal(18,2)")]
-        public decimal ImportPrice { get; set; }
+        // Giá nhập (phục vụ thống kê/lợi nhuận). Nếu không quản lý giá nhập, có thể để null.
+        [Column("import_price")]
+        public decimal? ImportPrice { get; set; }
 
         [Required]
         [Column("created_date")]
@@ -52,6 +53,8 @@ namespace bookstore_Management.Models
 
         // Navigation properties
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<Stock> Stocks { get; set; } 
         public virtual Supplier Supplier { get; set; }
+        
     }
 }

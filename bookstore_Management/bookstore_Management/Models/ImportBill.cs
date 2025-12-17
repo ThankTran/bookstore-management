@@ -10,26 +10,25 @@ namespace bookstore_Management.Models
     /// </summary>
     public class ImportBill
     {
+
         [Required]
+        [StringLength(6)]
         [Column("id")]
-        public int ImportBillId { get; set; }
-
-        [Required]
-        [StringLength(20)]
-        [Column("code")]
-        public string ImportBillCode { get; set; }
-
-        [Required]
-        [Column("import_date")]
-        public DateTime ImportDate { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [StringLength(6)]
         [Column("supplier_id")]
         public string SupplierId { get; set; }
+        
+        [Required]
+        [StringLength(6)]
+        [Column("warehouse_id")]
+        public string WarehouseId { get; set; }
+
 
         [Required]
-        [Column("total_amount", TypeName = "decimal(18,2)")]
+        [Column("total_amount")]
         public decimal TotalAmount { get; set; }
 
         [Column("notes")]
@@ -48,8 +47,12 @@ namespace bookstore_Management.Models
         [Column("updated_date")]
         public DateTime? UpdatedDate { get; set; }
 
+        [Column("deleted_date")]
+        public DateTime? DeletedDate { get; set; }
+
         // Navigation properties
         public virtual ICollection<ImportBillDetail> ImportBillDetails { get; set; }
         public virtual Supplier Supplier { get; set; }
+        public virtual Warehouse Warehouse { get; set; }
     }
 }

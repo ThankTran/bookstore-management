@@ -13,28 +13,28 @@ namespace bookstore_Management.Core.Constants
         /// <summary>
         /// MAPPING ENUM -> STRING (tự động generate từ Enum)
         /// </summary>
-        public static readonly Dictionary<Role, string> Name = GenerateRoleNameMapping();
+        public static readonly Dictionary<UserRole, string> Name = GenerateRoleNameMapping();
 
-        private static Dictionary<Role, string> GenerateRoleNameMapping()
+        private static Dictionary<UserRole, string> GenerateRoleNameMapping()
         {
-            return Enum.GetValues(typeof(Role))
-                .Cast<Role>()
+            return Enum.GetValues(typeof(UserRole))
+                .Cast<UserRole>()
                 .ToDictionary(r => r, r => r.ToString());
         }
 
         /// <summary>
         /// Role mặc định khi tạo nhân viên mới
         /// </summary>
-        public const Role DefaultRole = Role.SalesStaff;
+        public const UserRole DefaultRole = UserRole.SalesStaff;
 
         /// <summary>
         /// Lấy tên role (string) từ enum
         /// </summary>
-        public static string GetRoleName(Role role) => role.ToString();
+        public static string GetRoleName(UserRole userRole) => userRole.ToString();
 
         /// <summary>
         /// Lấy tên hiển thị tiếng Việt của role
         /// </summary>
-        public static string GetRoleDisplayName(Role role) => role.GetDisplayName();
+        public static string GetRoleDisplayName(UserRole userRole) => userRole.GetDisplayName();
     }
 }

@@ -12,20 +12,12 @@ namespace bookstore_Management.Data.Repositories.implementations
     internal class StaffRepository : Repository<Staff,string>, IStaffRepository
     {
         public StaffRepository(BookstoreDbContext context) : base(context) { }
+        
 
-        public IEnumerable<Staff> GetByStatus(StaffStatus status)
+        public IEnumerable<Staff> GetByRole(UserRole userRole)
         {
-            return Find(s => s.Status == status);
+            return Find(s => s.UserRole == userRole);
         }
-
-        public IEnumerable<Staff> GetByRole(Role role)
-        {
-            return Find(s => s.Role == role);
-        }
-
-        public Staff GetByPhone(string phone)
-        {
-            return Find(s => s.Phone == phone).FirstOrDefault();
-        }
+        
     }
 }

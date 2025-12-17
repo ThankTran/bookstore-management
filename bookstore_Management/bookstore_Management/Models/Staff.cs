@@ -22,30 +22,8 @@ namespace bookstore_Management.Models
         public string Name { get; set; }
 
         [Required]
-        [Column("base_salary", TypeName = "decimal(18,2)")]
-        public decimal BaseSalary { get; set; }
-
-        [Required]
-        [StringLength(12)]
-        [Column("citizen_id_card")]
-        public string CitizenIdCard { get; set; }
-
-        [Required]
-        [StringLength(20)]
-        [Column("phone")]
-        public string Phone { get; set; }
-
-        [Required]
-        [Column("status")]
-        public StaffStatus Status { get; set; }
-
-        [Required]
         [Column("role")]
-        public Role Role { get; set; } = Role.SalesStaff;
-
-        [Required]
-        [Column("salary_rate", TypeName = "decimal(18,2)")]
-        public decimal SalaryRate { get; set; } = 0;
+        public UserRole UserRole { get; set; } = UserRole.SalesStaff;
 
         [Required]
         [Column("created_date")]
@@ -58,7 +36,6 @@ namespace bookstore_Management.Models
         public DateTime? DeletedDate { get; set; }
 
         // Navigation properties
-        public virtual ICollection<StaffDailyRevenue> DailyRevenues { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

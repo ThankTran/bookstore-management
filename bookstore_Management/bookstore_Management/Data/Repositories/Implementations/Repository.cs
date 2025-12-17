@@ -17,8 +17,8 @@ namespace bookstore_Management.Data.Repositories.Implementations
     public class Repository<T, TKey> : IRepository<T, TKey> where T : class
     {
         // bảng dữ liệu và DB context
-        private readonly DbContext _dbContext;
-        private readonly DbSet<T> _dbSet;
+        protected readonly DbContext _dbContext;
+        protected readonly DbSet<T> _dbSet;
 
         // gán các thông tin cơ bản bằng constructor
         protected Repository(DbContext context)
@@ -35,6 +35,14 @@ namespace bookstore_Management.Data.Repositories.Implementations
 
         public T GetById(TKey id)
         {
+            // Hỗ trợ composite key cho EF6 (Find cần đúng số lượng key values).
+            // Quy ước: TKey có thể là ValueTuple<string,string> cho các entity có 2 khóa chính.
+            if (id == null)
+                return null;
+
+            if (id is ValueTuple<string, string> key2)
+                return _dbSet.Find(key2.Item1, key2.Item2);
+
             return _dbSet.Find(id);
         }
 

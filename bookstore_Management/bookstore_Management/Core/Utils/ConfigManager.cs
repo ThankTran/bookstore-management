@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using System.Configuration;
 
 namespace bookstore_Management.Core.Utils
@@ -27,9 +26,8 @@ namespace bookstore_Management.Core.Utils
                         : connectionStringSettings.ConnectionString;
                 
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show($"Lỗi đọc connection string: {ex.Message}", "Configuration Error");
                 return null;
             }
         }

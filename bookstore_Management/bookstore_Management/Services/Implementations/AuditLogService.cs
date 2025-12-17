@@ -1,98 +1,61 @@
-﻿/*using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using bookstore_Management.Core.Results;
+using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
+using bookstore_Management.Services.Interfaces;
 
 namespace bookstore_Management.Services.Implementations
 {
-    /// <summary>
-    /// Service để ghi audit log
-    /// </summary>
-    public class AuditLogService
+    public class AuditLogService : IAuditLogService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IAuditLogRepository _auditLogRepository;
 
-        public AuditLogService(ApplicationDbContext context)
+        internal AuditLogService(IAuditLogRepository auditLogRepository)
         {
-            _context = context;
+            _auditLogRepository = auditLogRepository;
         }
 
-        /// <summary>
-        /// Ghi audit log khi tạo mới entity
-        /// </summary>
-        public async System.Threading.Tasks.Task LogCreateAsync(
-            string entityName, 
-            string entityId, 
-            object newValues, 
-            string changedBy,
-            string description = null)
+        public Result<int> Log(AuditLog log)
         {
-            var auditLog = new AuditLog
+            try
             {
-                EntityName = entityName,
-                EntityId = entityId,
-                Action = "Create",
-                OldValues = null,
-                NewValues = JsonConvert.SerializeObject(newValues),
-                ChangedBy = changedBy,
-                ChangedDate = DateTime.Now,
-                Description = description ?? $"Tạo mới {entityName}"
-            };
-
-            _context.AuditLogs.Add(auditLog);
-            await _context.SaveChangesAsync();
+                log.ChangedDate = DateTime.Now;
+                _auditLogRepository.Add(log);
+                _auditLogRepository.SaveChanges();
+                return Result<int>.Success(log.Id, "Đã ghi log");
+            }
+            catch (Exception ex)
+            {
+                return Result<int>.Fail($"Lỗi: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Ghi audit log khi cập nhật entity
-        /// </summary>
-        public async System.Threading.Tasks.Task LogUpdateAsync(
-            string entityName, 
-            string entityId, 
-            object oldValues, 
-            object newValues, 
-            string changedBy,
-            string description = null)
+        public Result<IEnumerable<AuditLog>> GetRecent(int take = 100)
         {
-            var auditLog = new AuditLog
+            try
             {
-                EntityName = entityName,
-                EntityId = entityId,
-                Action = "Update",
-                OldValues = JsonConvert.SerializeObject(oldValues),
-                NewValues = JsonConvert.SerializeObject(newValues),
-                ChangedBy = changedBy,
-                ChangedDate = DateTime.Now,
-                Description = description ?? $"Cập nhật {entityName}"
-            };
-
-            _context.AuditLogs.Add(auditLog);
-            await _context.SaveChangesAsync();
+                var items = _auditLogRepository.GetRecent(take).ToList();
+                return Result<IEnumerable<AuditLog>>.Success(items);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<AuditLog>>.Fail($"Lỗi: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Ghi audit log khi xóa entity
-        /// </summary>
-        public async System.Threading.Tasks.Task LogDeleteAsync(
-            string entityName, 
-            string entityId, 
-            object deletedValues, 
-            string changedBy,
-            string description = null)
+        public Result<IEnumerable<AuditLog>> GetByEntity(string entityName, string entityId)
         {
-            var auditLog = new AuditLog
+            try
             {
-                EntityName = entityName,
-                EntityId = entityId,
-                Action = "Delete",
-                OldValues = JsonConvert.SerializeObject(deletedValues),
-                NewValues = null,
-                ChangedBy = changedBy,
-                ChangedDate = DateTime.Now,
-                Description = description ?? $"Xóa {entityName}"
-            };
-
-            _context.AuditLogs.Add(auditLog);
-            await _context.SaveChangesAsync();
+                var items = _auditLogRepository.GetByEntity(entityName, entityId).ToList();
+                return Result<IEnumerable<AuditLog>>.Success(items);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<AuditLog>>.Fail($"Lỗi: {ex.Message}");
+            }
         }
     }
 }
-?*/

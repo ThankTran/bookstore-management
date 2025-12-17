@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace bookstore_Management.Exceptions
 {
-    internal class DataNotFoundException
+    internal class DataNotFoundException : BookstoreException
     {
+        public DataNotFoundException(string message) : base(message) { }
     }
 }

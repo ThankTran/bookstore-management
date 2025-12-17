@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.DTOs
 {
@@ -30,8 +31,6 @@ namespace bookstore_Management.DTOs
         
         public string Username { get; set; }
         public string Password { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; } = "Staff";
+        public string StaffId { get; set; }
     }
 }

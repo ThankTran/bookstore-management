@@ -9,19 +9,19 @@ namespace bookstore_Management.Services.Interfaces
     public interface IBookService
     {
         // CRUD
-        Result<string> AddBook(BookDto dto);
-        Result UpdateBook(string bookId, BookDto dto);
+        Result<string> CreateBook(BookCreateDto dto);
+        Result UpdateBook(string bookId, BookUpdateDto dto);
         Result DeleteBook(string bookId);
         Result<Book> GetBookById(string bookId);
         Result<IEnumerable<Book>> GetAllBooks();
         // Tìm kiếm & Lọc
         Result<IEnumerable<Book>> SearchByName(string keyword);
         Result<IEnumerable<Book>> GetByCategory(BookCategory category);
-        Result<IEnumerable<Book>> GetBySupplier(string supplierId);
+        Result<IEnumerable<Book>> GetByAuthor(string author);
+        Result<IEnumerable<Book>> GetByPriceRange(decimal? minPrice, decimal? maxPrice);
 
         // Quản lý giá
         Result UpdateSalePrice(string bookId, decimal newSalePrice);
-        Result<decimal> CalculateProfit(string bookId);
     
         // Quản lý tồn kho (gọi đến StockService)
         Result<IEnumerable<Book>> GetLowStockBooks(int minStock = 5);

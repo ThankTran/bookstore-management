@@ -5,70 +5,53 @@ using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.DTOs
 {
-    /// <summary>
-    /// DTO cho tạo đơn hàng mới
-    /// </summary>
-    public class OrderDto
-    {
-        [Required(ErrorMessage = "Mã nhân viên không được để trống")]
-        [StringLength(6)]
-        public string StaffId { get; set; }
-
-        [StringLength(6)]
-        public string CustomerId { get; set; }  // Null nếu khách vãng lai
-
-        [Required(ErrorMessage = "Phương thức thanh toán không được để trống")]
-        public PaymentType PaymentMethod { get; set; }
-
-        [Range(0, double.MaxValue)]
-        public decimal Discount { get; set; } = 0;
-
-        [StringLength(500)]
-        public string Notes { get; set; }
-
-        [Required(ErrorMessage = "Danh sách sản phẩm không được để trống")]
-        public List<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
-    }
-
-    /// <summary>
-    /// DTO cho từng item trong đơn hàng
-    /// </summary>
-    public class OrderItemDto
-    {
-        [Required(ErrorMessage = "Mã sách không được để trống")]
-        [StringLength(6)]
-        public string BookId { get; set; }
-
-        [Required(ErrorMessage = "Số lượng không được để trống")]
-        [Range(1, int.MaxValue, ErrorMessage = "Số lượng phải >= 1")]
-        public int Quantity { get; set; }
-    }
-
-    /// <summary>
-    /// DTO cho cập nhật đơn hàng
-    /// </summary>
-    public class UpdateOrderDto
-    {
-        [StringLength(500)]
-        public string Notes { get; set; }
-
-        public PaymentType? PaymentMethod { get; set; }
-
-        [Range(0, double.MaxValue)]
-        public decimal? Discount { get; set; }
-    }
-
-    /// <summary>
-    /// DTO cho tìm kiếm đơn hàng
-    /// </summary>
-    public class OrderSearchDto
+    public class OrderCreateDto
     {
         public string StaffId { get; set; }
         public string CustomerId { get; set; }
+        public PaymentType PaymentMethod { get; set; }
+        public decimal Discount { get; set; }
+        public string Notes { get; set; }
+        public List<OrderDetailCreateDto> OrderDetails { get; set; } = new List<OrderDetailCreateDto>();
+    }
+
+    public class OrderUpdateDto
+    {
         public PaymentType? PaymentMethod { get; set; }
-        public DateTime? FromDate { get; set; }
-        public DateTime? ToDate { get; set; }
-        public decimal? MinTotal { get; set; }
-        public decimal? MaxTotal { get; set; }
+        public decimal? Discount { get; set; }
+        public string Notes { get; set; }
+    }
+
+    public class OrderResponseDto
+    {
+        public string OrderId { get; set; }
+        public string StaffId { get; set; }
+        public string StaffName { get; set; }
+        public string CustomerId { get; set; }
+        public string CustomerName { get; set; }
+        public PaymentType PaymentMethod { get; set; }
+        public decimal Discount { get; set; }
+        public decimal TotalPrice { get; set; }
+        public string Notes { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public List<OrderDetailResponseDto> OrderDetails { get; set; } = new List<OrderDetailResponseDto>();
+    }
+
+    public class OrderDetailCreateDto
+    {
+        public string BookId { get; set; }
+        public int Quantity { get; set; }
+        public string Notes { get; set; }
+    }
+
+    public class OrderDetailResponseDto
+    {
+        public string BookId { get; set; }
+        public string BookName { get; set; }
+        public string Author { get; set; }
+        public decimal SalePrice { get; set; }
+        public int Quantity { get; set; }
+        public decimal Subtotal { get; set; }
+        public string Notes { get; set; }
     }
 }

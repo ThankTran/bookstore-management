@@ -28,12 +28,12 @@ namespace bookstore_Management.Models
 
         
         [StringLength(100)] 
-        [Column("email")]
-        public string Email { get; set; }
+        [Column("staff_id")]
+        public string StaffId { get; set; }
 
         [Required] 
         [Column("role")]
-        public Role Role { get; set; } // enum: Admin, Staff, Customer
+        public UserRole UserRole { get; set; } // enum: Admin, Staff, Customer
 
         [Required]
         [Column("created_date")]

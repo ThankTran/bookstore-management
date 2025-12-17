@@ -1,32 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace bookstore_Management.DTOs
 {
-    /// <summary>
-    /// DTO cho cập nhật tồn kho
-    /// </summary>
-    public class StockDto
+    public class StockCreateDto
     {
-        [Required(ErrorMessage = "Mã sách không được để trống")]
-        [StringLength(6)]
+        public string WarehouseId { get; set; }
         public string BookId { get; set; }
-
-        [Required(ErrorMessage = "Số lượng không được để trống")]
-        [Range(0, int.MaxValue)]
         public int StockQuantity { get; set; }
     }
 
-    /// <summary>
-    /// DTO cho thêm/trừ tồn kho
-    /// </summary>
-    public class AdjustStockDto
+    public class StockUpdateDto
     {
-        [Required(ErrorMessage = "Mã sách không được để trống")]
-        [StringLength(6)]
-        public string BookId { get; set; }
+        public int StockQuantity { get; set; }
+    }
 
-        [Required(ErrorMessage = "Số lượng không được để trống")]
-        [Range(1, int.MaxValue, ErrorMessage = "Số lượng phải >= 1")]
-        public int Quantity { get; set; }
+    public class StockResponseDto
+    {
+        public string WarehouseId { get; set; }
+        public string WarehouseName { get; set; }
+        public string BookId { get; set; }
+        public string BookName { get; set; }
+        public int StockQuantity { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 }
