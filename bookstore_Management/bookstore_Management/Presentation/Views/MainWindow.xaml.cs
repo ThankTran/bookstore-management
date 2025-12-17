@@ -1,7 +1,14 @@
-﻿using bookstore_Management.Views.Books;
+﻿using bookstore_Management.Presentation.Views.Information;
+//namespace bookstore_Management.Presentation.Views.Users;
+using bookstore_Management.Presentation.Views.Users;
+using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
+using bookstore_Management.Views.Statistics;
 using System;
+using System.Security.Principal;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace bookstore_Management
 {
@@ -79,11 +86,35 @@ namespace bookstore_Management
 
         #endregion
 
+        #region menu click events
+        public void ResetAllButtons()
+        {
+            btnHome.Tag = null;
+            btnPayment.Tag = null;
+            btnCustomer.Tag = null;
+            btnSupplier.Tag = null;
+            btnBills.Tag = null;
+            btnBooks.Tag = null;
+            btnEmployees.Tag = null;
+            btnStatistics.Tag = null;
+            btnStock.Tag = null;
+            btnAccount.Tag = null;
+        }
+
+        public void SetClickedButtonColor(Button btn)
+        {
+            ResetAllButtons();
+            btn.Tag = "Selected";
+        }
+        #endregion
+
         #region Sidebar menu events
 
         // Xử lý click menu Trang chủ
+
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
+            SetClickedButtonColor(btnHome);
             LoadHomePage();
         }
 
@@ -92,6 +123,7 @@ namespace bookstore_Management
         {
             try
             {
+                SetClickedButtonColor(btnCustomer);
                 LoadCustomerListPage();
             }
             catch (Exception ex)
@@ -103,6 +135,7 @@ namespace bookstore_Management
         // Xử lý click menu Hóa đơn (chưa cài đặt nội dung)
         private void btnBills_Click(object sender, RoutedEventArgs e)
         {
+            SetClickedButtonColor(btnBills);
             // TODO: Mở màn hình quản lý hóa đơn khi bạn xây dựng view tương ứng
         }
 
@@ -111,6 +144,7 @@ namespace bookstore_Management
         {
             try
             {
+                SetClickedButtonColor(btnBooks);
                 MainFrame.Content = new BookListView();
             }
             catch (Exception ex)
@@ -119,6 +153,42 @@ namespace bookstore_Management
             }
         }
 
+        // Xử lý click menu Thống kê
+        private void btnStatistics_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SetClickedButtonColor(btnStatistics);
+                MainFrame.Content = new Views.Statistics.DashboardView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            var loginView = new LoginView();
+            Application.Current.MainWindow = loginView;
+            loginView.Show();
+            this.Close();
+        }
+
+        // Xử lý khi di chuột vào nút thông tin    
+                
+        private void btnI_Click(object sender, RoutedEventArgs e)
+        {
+            InforDialog infoView = new InforDialog
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual,
+                Left = 15,
+                Top = 15
+            }; 
+            infoView.Show();            
+        }
         #endregion
+
     }
 }

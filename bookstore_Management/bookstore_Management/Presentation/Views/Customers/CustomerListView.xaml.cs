@@ -19,10 +19,15 @@ namespace bookstore_Management.Views.Customers
             LoadSampleData();
         }
 
+        #region Event Handlers
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             var owner = Window.GetWindow(this);
             var dialog = new AddCustomer();
+
+            dialog.WindowState = WindowState.Normal;
+            dialog.Width = 456;
+            dialog.Height = 300;
 
             if (owner != null)
             {
@@ -128,6 +133,7 @@ namespace bookstore_Management.Views.Customers
                 }
             }
         }
+        #endregion
 
         private void ReindexCustomers()
         {

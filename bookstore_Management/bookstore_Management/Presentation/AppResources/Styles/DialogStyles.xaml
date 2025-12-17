@@ -67,5 +67,33 @@
     <Style x:Key="FormReadOnlyInputBorder" TargetType="Border" BasedOn="{StaticResource FormInputBorder}">
         <Setter Property="Background" Value="{StaticResource LightGrayBrush}"/>
     </Style>
-
+    
+    <!--Form textblock style-->
+    <Style x:Key="dialogTextBlock" TargetType="TextBlock" >
+        <Setter Property="Margin" Value="50,0,0,0"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="#585ab8"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+    </Style>
+    
+    <!--Form Confirm Button Style-->
+    <Style x:Key="confirmButton" TargetType="Button">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+    </Style>
+    
+    <!--Form Cancel Button Style-->
+    <Style x:Key="calcelButton" TargetType="Button">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#585ab8"/>
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
+    </Style>
 </ResourceDictionary>
