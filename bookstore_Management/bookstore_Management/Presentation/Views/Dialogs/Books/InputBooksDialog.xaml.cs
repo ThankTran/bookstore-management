@@ -21,7 +21,50 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
     {
         public InputBooksDialog()
         {
-            //InitializeComponent();
+            InitializeComponent();
+        }
+
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+            this.Close();
+        }
+
+        //lấy data từ textbox
+        public string BookID
+        {
+            get { return tbBookID.Text; }
+            set { tbBookID.Text = value; }
+        }
+        public string BookName
+        {
+            get { return tbBookName.Text; }
+            set { tbBookName.Text = value; }
+        }
+        public string Author
+        {
+            get { return tbAuthor.Text; }
+            set { tbAuthor.Text = value; }
+        }
+        //public string Category
+        //{
+        //    get { return tbCategory.Text; }
+        //    set { tbCategory.Text = value; }
+        //}
+        public string Publisher
+        {
+            get { return tbPublisher.Text; }
+            set { tbPublisher.Text = value; }
+        }
+        public decimal SalePrice => decimal.TryParse(tbSalePrice.Text, out var val) ? val : 0;
+        public decimal ImportPrice => decimal.TryParse(tbImportPrice.Text, out var val) ? val : 0;
+
+        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        {
+            // You can add validation logic here before closing the dialog
+            this.DialogResult = true;
+            this.Close();
         }
     }
 }

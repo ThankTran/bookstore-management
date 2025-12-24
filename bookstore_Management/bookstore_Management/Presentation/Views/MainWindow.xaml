@@ -8,6 +8,128 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent">
+
+    <Window.Resources>
+
+        <!-- Style cho nút bo góc + hiệu ứng hover -->
+        <Style x:Key="RoundedButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0"
+                                Padding="12,3">
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Center"
+                                              
+                                              RecognizesAccessKey="True"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <!-- Màu mặc định -->
+            <Setter Property="Background" Value="#5858b5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="12,3"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+
+            <!-- Hiệu ứng hover -->
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#DE7E9E"/>
+                    <!-- nền tím nhạt -->
+                    <Setter Property="Foreground" Value="#7F81E5"/>
+                    <!-- chữ tím đậm -->
+                </Trigger>
+                <Trigger Property="Tag" Value="Selected">
+                    <Setter Property="Background" Value="#DE7E9E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--Infor button effect-->
+        <Style x:Key="InforEffect" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="35"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E9E9F5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--Logout button effect-->
+        <Style x:Key="logoutEffect" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="2"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        RecognizesAccessKey="True"
+                                        TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#8a90c8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style for user infor card  -->
+        <Style x:Key="UserInforCardEffect" TargetType="Border">
+
+            <Setter Property="CornerRadius" Value=" 12"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Background" Value="#7577c3"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+
+                </Trigger>
+
+
+
+            </Style.Triggers>
+        </Style>
+
+
+    </Window.Resources>
     <Border Background="#FFFFFF" CornerRadius="20" Padding="0">
         <Grid>
             <Grid.RowDefinitions>
@@ -17,16 +139,17 @@
                 <RowDefinition Height="305*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="34*"/>
-                <ColumnDefinition Width="161*"/>
-                <ColumnDefinition Width="440*"/>
+                <ColumnDefinition Width="69*"/>
+                <ColumnDefinition Width="325*"/>
+                <ColumnDefinition Width="368*"/>
+                <ColumnDefinition Width="519*"/>
             </Grid.ColumnDefinitions>
             <!-- Window Controls -->
             <StackPanel Orientation="Horizontal" 
                        HorizontalAlignment="Right" 
                        VerticalAlignment="Top"
                        Margin="0,0,15,0"
-                       Panel.ZIndex="100" Grid.Column="2">
+                       Panel.ZIndex="100" Grid.Column="3">
                 <Button x:Name="btnMinimize" 
                        Width="40" Height="30" 
                        Background="Transparent" 
@@ -34,7 +157,7 @@
                        Cursor="Hand"
                        ToolTip="Minimize"
                        Click="btnMinimize_Click">
-                    <Image Source="/Presentation/AppResources/Images/Icons/winctr1.png" 
+                    <Image Source="/Presentation/AppResources/Images/Icons/Windowcontrol/winctr1.png" 
                           Width="18" Height="18" Stretch="Uniform"/>
                 </Button>
                 <Button x:Name="btnMaximize"
@@ -44,7 +167,7 @@
                        Cursor="Hand"
                        ToolTip="Maximize/Restore"
                        Click="btnMaximize_Click">
-                    <Image Source="/Presentation/AppResources/Images/Icons/winctr2.png" 
+                    <Image Source="/Presentation/AppResources/Images/Icons/Windowcontrol/winctr2.png" 
                           Width="15" Height="15" Stretch="Uniform"/>
                 </Button>
                 <Button x:Name="btnClose"
@@ -54,12 +177,12 @@
                        Cursor="Hand"
                        ToolTip="Close"
                        Click="btnClose_Click">
-                    <Image Source="/Presentation/AppResources/Images/Icons/winctr3.png" 
+                    <Image Source="/Presentation/AppResources/Images/Icons/Windowcontrol/winctr3.png" 
                           Width="25" Height="25" Stretch="Uniform"/>
                 </Button>
             </StackPanel>
 
-            <Grid Grid.ColumnSpan="3" Grid.RowSpan="4">
+            <Grid Grid.ColumnSpan="4" Grid.RowSpan="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="260"/>
                     <ColumnDefinition Width="*"/>
@@ -84,17 +207,23 @@
                                   HorizontalAlignment="Left" 
                                   Margin="5,0,0,0">
                                 <!-- Circular background -->
-                                <Ellipse Fill="#7577C3" 
+                                <!--<Ellipse Fill="#7577C3" 
                                         Width="20" 
-                                        Height="20"/>
+                                        Height="20"/>-->
+                                <Border CornerRadius="35" Background="#7577C3">
+                                    <Button x:Name="btnI"  
+                                            Style="{StaticResource InforEffect}" Click="btnI_Click" >
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/inf.png" 
+                                               Width="14" 
+                                               Height="14"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                    </Button>
+                                </Border>
                                 <!-- Info icon -->
-                                <Image Source="/Presentation/AppResources/Images/Icons/inf.png" 
-                                      Width="14" 
-                                      Height="14"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"/>
+
                             </Grid>
-                            <Image Source="/Presentation/AppResources/Images/Icons/THM.png" 
+                            <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/THM.png" 
                                   Width="150" 
                                   Height="150"
                                   Stretch="Uniform"
@@ -105,14 +234,14 @@
                         <StackPanel Grid.Row="1" Margin="15,10,15,20">
                             <!-- Logout Button -->
                             <Button x:Name="btnLogout"
-                                   Background="Transparent" 
                                    BorderThickness="0"
                                    HorizontalAlignment="Left"
                                    Cursor="Hand"
                                    Padding="0"
-                                   Margin="5,0,0,12">
+                                   Margin="5,0,0,12"
+                                   Style="{StaticResource logoutEffect}" Click="btnLogout_Click">
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="/Presentation/AppResources/Images/Icons/DX.png" 
+                                    <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/DX.png" 
                                           Width="16" 
                                           Height="16"
                                           Margin="0,0,8,0"/>
@@ -125,15 +254,14 @@
                             </Button>
 
                             <!-- User Info Card -->
-                            <Border Background="#7577C3" 
-                                   CornerRadius="12" 
-                                   Padding="5">
+                            <Border 
+                                   Style="{StaticResource UserInforCardEffect}">
                                 <StackPanel Orientation="Horizontal">
                                     <Border Width="50" Height="50" 
                                            CornerRadius="25"
                                            Background="White"
                                            Margin="0,0,12,0">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/profile.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/profile.png" 
                                               Width="50" 
                                               Height="50"
                                               Stretch="UniformToFill"/>
@@ -160,41 +288,31 @@
                         <!-- Menu Items -->
                         <StackPanel Grid.Row="1" Margin="10,103,10,10" Grid.RowSpan="2">
                             <StackPanel Margin="10,0,10,0">
+
                                 <!-- Home -->
-                                <Button x:Name="btnHome"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0"
-                                        Click="btnHome_Click">
+                                <Button x:Name="btnHome"                                      
+                                       Click="btnHome_Click"
+                                       Style="{StaticResource RoundedButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/trangchu.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/trangchu.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
                                         <TextBlock Text="Trang chủ" 
-                                                  Foreground="#FFFFFF" 
+                                                   Foreground="#FFFFFF"
                                                   FontWeight="SemiBold" 
                                                   FontSize="14"
                                                   FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
                                                   VerticalAlignment="Center"/>
+
                                     </StackPanel>
                                 </Button>
 
                                 <!-- Payment -->
                                 <Button x:Name="btnPayment"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
+                                       Style="{StaticResource RoundedButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/TT.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/TT.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -209,18 +327,11 @@
 
                                 <!-- Customer -->
                                 <Button x:Name="btnCustomer"
-                                        Background="Transparent" 
-                                        BorderThickness="0"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Left"
-                                        Padding="12,3"
-                                        Cursor="Hand"
-                                        Margin="0,0,0,0"
-                                        Click="btnCustomerManagement_Click"
-  
->
+                                       Style="{StaticResource RoundedButtonStyle}"
+                                        Click="btnCustomerManagement_Click" >
+
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLKH.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLKH.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -232,15 +343,13 @@
                                                   VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
-                                <Button x:Name="btnBills_Copy"
-                                    Background="Transparent" 
-                                    BorderThickness="0"
-                                    HorizontalContentAlignment="Left"
-                                    Padding="12,3"
-                                    Cursor="Hand"
-                                       >
+
+                                <!--Supplier-->
+                                <Button x:Name="btnSupplier"
+                                       Style="{StaticResource RoundedButtonStyle}">
+
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLHD.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLHD.png" 
                                             Width="24" 
                                             Height="24"
                                             Margin="0,0,12,0"/>
@@ -253,20 +362,12 @@
                                     </StackPanel>
                                 </Button>
 
-
-
                                 <!-- Books -->
                                 <Button x:Name="btnBooks"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0"
+                                       Style="{StaticResource RoundedButtonStyle}"
                                        Click="btnBooks_Click">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLS.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLS.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -281,15 +382,9 @@
 
                                 <!-- Employees -->
                                 <Button x:Name="btnEmployees"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
+                                       Style="{StaticResource RoundedButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLNS.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLNS.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -302,17 +397,29 @@
                                     </StackPanel>
                                 </Button>
 
+                                <!-- Timeline -->
+                                <Button x:Name="btnStock"
+                                       Style="{StaticResource RoundedButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/timeline.png" 
+                                              Width="24" 
+                                              Height="24"
+                                              Margin="0,0,12,0"/>
+                                        <TextBlock Text="Phân ca" 
+                                                  Foreground="#FFFFFF" 
+                                                  FontWeight="SemiBold" 
+                                                  FontSize="14"
+                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
                                 <!-- Statistics -->
                                 <Button x:Name="btnStatistics"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
+                                       Style="{StaticResource RoundedButtonStyle}"
+                                        Click="btnStatistics_Click">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/TK.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/TK.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -325,41 +432,13 @@
                                     </StackPanel>
                                 </Button>
 
-                                <!-- Stock -->
-                                <Button x:Name="btnStock"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLKHO.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Kho hàng" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
 
                                 <!-- Bills -->
                                 <Button x:Name="btnBills"
-                                       Background="Transparent" 
-                                       BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       HorizontalContentAlignment="Left"
-                                       Padding="12,3"
-                                       Cursor="Hand"
-                                       Margin="0,0,0,0"
+                                       Style="{StaticResource RoundedButtonStyle}"
                                        Click="btnBills_Click">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/QLHD.png" 
+                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLHD.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
@@ -373,15 +452,10 @@
                                 </Button>
 
                                 <!-- Account -->
-                                <Button x:Name="btnBills_Copy1"
-                                        Background="Transparent" 
-                                        BorderThickness="0"
-                                        HorizontalContentAlignment="Left"
-                                        Padding="12,3"
-                                        Cursor="Hand"
-       >
+                                <Button x:Name="btnAccount"
+                                       Style="{StaticResource RoundedButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image  Source="/Presentation/AppResources/Images/Icons/QLTK.png" 
+                                        <Image  Source="/Presentation/AppResources/Images/Icons/Sidebar/QLTK.png" 
                                                 Width="24" 
                                                 Height="24"
                                                 Margin="0,0,12,0"/>

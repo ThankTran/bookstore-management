@@ -21,7 +21,20 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
     {
         public ConfirmBooksDialog()
         {
-            //InitializeComponent();
+            InitializeComponent();
         }
+
+        private void BtnConfirm_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;   // confirm
+            this.Close();
+        }
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;  // cancel
+            this.Close();
+        }
+
     }
 }

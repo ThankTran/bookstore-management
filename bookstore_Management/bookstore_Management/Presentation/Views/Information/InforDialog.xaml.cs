@@ -12,26 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Presentation.Views.Users
+namespace bookstore_Management.Presentation.Views.Information
 {
     /// <summary>
-    /// Interaction logic for LoginView.xaml
+    /// Interaction logic for Information.xaml
     /// </summary>
-    public partial class LoginView : Window
+    public partial class InforDialog : Window
     {
-        public LoginView()
+        public InforDialog()
         {
             InitializeComponent();
         }
 
-        private void btnLogin_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = new MainWindow();
-            this.Close();
-            mainWindow.ShowDialog();
-        }
-
-        private void btnCancelLogin_Click(object sender, RoutedEventArgs e)
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
