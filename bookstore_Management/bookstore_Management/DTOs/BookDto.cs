@@ -30,12 +30,18 @@ namespace bookstore_Management.DTOs
         public string Author { get; set; }
         public BookCategory Category { get; set; }
         public decimal? SalePrice { get; set; }
-        public string SupplierId { get; set; }
         public string SupplierName { get; set; }
-        public List<StockInfoDto> Stocks { get; set; } = new List<StockInfoDto>();
-        public int TotalStock { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+
+        public BookResponseDto(string bookId, string name, string author, BookCategory category, decimal? salePrice, string supplierName)
+        {
+            BookId = bookId;
+            Name = name;
+            Author = author;
+            Category = category;
+            SalePrice = salePrice;
+            SupplierName =  supplierName;
+        }
+        public BookResponseDto() { }
     }
 
     public class StockInfoDto
