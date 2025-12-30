@@ -10,14 +10,21 @@ namespace bookstore_Management.Data.Repositories.Implementations
     {
         public UserRepository(BookstoreDbContext context) : base(context) { }
 
+        /// <summary>
+        /// Gets user by username, excluding soft-deleted users
+        /// Returns only active users for authentication
+        /// </summary>
         public User GetByUsername(string username)
         {
-            return Find(u => u.Username == username).FirstOrDefault();
+            return Find(u => u.Username == username && u.DeletedDate == null).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Checks if username exists, excluding soft-deleted users
+        /// </summary>
         public bool UsernameExists(string username)
         {
-            return Exists(u => u.Username == username);
+            return Exists(u => u.Username == username && u.DeletedDate == null);
         }
     }
 }

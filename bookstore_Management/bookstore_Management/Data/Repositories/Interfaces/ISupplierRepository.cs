@@ -7,6 +7,7 @@ namespace bookstore_Management.Data.Repositories.Interfaces
     internal interface ISupplierRepository : IRepository<Supplier,string>
     {
         IEnumerable<Supplier> SearchByName(string name);
+        string GetNameBySupplierId(string supplierId);
         Supplier GetByPhone(string phone);
         Supplier GetByEmail(string email);
     }

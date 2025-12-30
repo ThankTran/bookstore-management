@@ -17,17 +17,24 @@ namespace bookstore_Management.Data.Repositories.Implementations
 
         public IEnumerable<Supplier> SearchByName(string name)
         {
-            return Find(s => s.Name.Contains(name));
+            return Find(s => s.Name.Contains(name) && s.DeletedDate == null);
+        }
+
+        public string GetNameBySupplierId(string supplierId)
+        {
+            return Find(s => s.Id == supplierId && s.DeletedDate == null)
+                .Select(s => s.Name)
+                .FirstOrDefault();
         }
 
         public Supplier GetByPhone(string phone)
         {
-            return Find(s => s.Phone == phone).FirstOrDefault();
+            return Find(s => s.Phone == phone && s.DeletedDate == null).FirstOrDefault();
         }
 
         public Supplier GetByEmail(string email)
         {
-            return Find(s => s.Email == email).FirstOrDefault();
+            return Find(s => s.Email == email && s.DeletedDate == null).FirstOrDefault();
         }
         
     }
