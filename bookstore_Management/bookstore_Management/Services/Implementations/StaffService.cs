@@ -4,7 +4,8 @@ using System.Linq;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
-using bookstore_Management.DTOs;
+using bookstore_Management.DTOs.Staff.Requests;
+using bookstore_Management.DTOs.Staff.Responses;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
 
@@ -26,7 +27,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<string> AddStaff(StaffCreateDto dto)
+        public Result<string> AddStaff(CreateStaffRequestDto dto)
         {
             try
             {
@@ -63,7 +64,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- SỬA DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result UpdateStaff(string staffId, StaffUpdateDto dto)
+        public Result UpdateStaff(string staffId, UpdateStaffRequestDto dto)
         {
             try
             {
@@ -124,23 +125,24 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- LẤY DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<Staff> GetStaffById(string staffId)
+        public Result<StaffResponseDto> GetStaffById(string staffId)
         {
             try
             {
                 var staff = _staffRepository.GetById(staffId);
                 if (staff == null || staff.DeletedDate != null)
-                    return Result<Staff>.Fail("Nhân viên không tồn tại");
+                    return Result<StaffResponseDto>.Fail("Nhân viên không tồn tại");
                     
-                return Result<Staff>.Success(staff);
+                var dto = MapToStaffResponseDto(staff);
+                return Result<StaffResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<Staff>.Fail($"Lỗi: {ex.Message}");
+                return Result<StaffResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Staff>> GetAllStaff()
+        public Result<IEnumerable<StaffResponseDto>> GetAllStaff()
         {
             try
             {
@@ -148,16 +150,17 @@ namespace bookstore_Management.Services.Implementations
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
                     .ToList();
-                return Result<IEnumerable<Staff>>.Success(staff);
+                var dtos = staff.Select(MapToStaffResponseDto).ToList();
+                return Result<IEnumerable<StaffResponseDto>>.Success(dtos);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Staff>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<StaffResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
         
 
-        public Result<IEnumerable<Staff>> GetByRole(UserRole userRole)
+        public Result<IEnumerable<StaffResponseDto>> GetByRole(UserRole userRole)
         {
             try
             {
@@ -165,11 +168,12 @@ namespace bookstore_Management.Services.Implementations
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
                     .ToList();
-                return Result<IEnumerable<Staff>>.Success(staff);
+                var dtos = staff.Select(MapToStaffResponseDto).ToList();
+                return Result<IEnumerable<StaffResponseDto>>.Success(dtos);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Staff>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<StaffResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
         
@@ -202,6 +206,24 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- HÀM HELPER --------------------------------
         // ==================================================================
+        /// <summary>
+        /// Maps Staff entity to StaffResponseDto
+        /// </summary>
+        private StaffResponseDto MapToStaffResponseDto(Staff staff)
+        {
+            var totalOrders = _orderRepository.GetByStaff(staff.Id)
+                .Count(o => o.DeletedDate == null);
+
+            return new StaffResponseDto
+            {
+                Id = staff.Id,
+                Name = staff.Name,
+                UserRole = staff.UserRole,
+                CreatedDate = staff.CreatedDate,
+                TotalOrders = totalOrders
+            };
+        }
+
         private string GenerateStaffId()
         {
             var lastStaff = _staffRepository.GetAll()

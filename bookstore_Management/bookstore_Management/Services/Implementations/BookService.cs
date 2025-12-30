@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
-using bookstore_Management.DTOs;
+using bookstore_Management.DTOs.Book.Requests;
+using bookstore_Management.DTOs.Book.Responses;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
 
@@ -15,21 +17,24 @@ namespace bookstore_Management.Services.Implementations
         private readonly IBookRepository _bookRepository;
         private readonly IStockRepository _stockRepository;
         private readonly ISupplierRepository _supplierRepository;
+        private readonly IImportBillDetailRepository _importBillDetailRepository;
 
         internal BookService(
             IBookRepository bookRepository,
             IStockRepository stockRepository,
-            ISupplierRepository supplierRepository)
+            ISupplierRepository supplierRepository,
+            IImportBillDetailRepository importBillDetailRepository)
         {
             _bookRepository = bookRepository;
             _stockRepository = stockRepository;
             _supplierRepository = supplierRepository;
+            _importBillDetailRepository = importBillDetailRepository;
         }
 
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<string> CreateBook(BookCreateDto dto)
+        public Result<string> CreateBook(CreateBookRequestDto dto)
         {
             try
             {
@@ -52,7 +57,7 @@ namespace bookstore_Management.Services.Implementations
                     return Result<string>.Fail("Mã sách đã tồn tại");
 
                 // Auto set SalePrice nếu không có
-                decimal? salePrice = dto.SalePrice;
+                var salePrice = dto.SalePrice;
                 
                 // Create book
                 var book = new Book
@@ -80,7 +85,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- SỬA DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result UpdateBook(string bookId, BookUpdateDto dto)
+        public Result UpdateBook(string bookId, UpdateBookRequestDto dto)
         {
             try
             {
@@ -143,130 +148,247 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- LẤY DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<Book> GetBookById(string bookId)
+
+
+        public Result<BookDetailResponseDto> GetBookById(string bookId)
         {
+            if (string.IsNullOrWhiteSpace(bookId))
+                return Result<BookDetailResponseDto>.Fail("Mã sách không hợp lệ");
+        
             try
             {
                 var book = _bookRepository.GetById(bookId);
+            
                 if (book == null || book.DeletedDate != null)
-                    return Result<Book>.Fail("Sách không tồn tại");
-                    
-                return Result<Book>.Success(book);
+                    return Result<BookDetailResponseDto>.Fail("Sách không tồn tại");
+            
+                var dto = new BookDetailResponseDto(
+                    book.BookId,
+                    book.Name,
+                    book.Author,
+                    book.Category,
+                    book.SalePrice,
+                    book.Supplier?.Name
+                );
+            
+                return Result<BookDetailResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<Book>.Fail($"Lỗi: {ex.Message}");
+                return Result<BookDetailResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Book>> GetAllBooks()
+        public Result<decimal> GetImportPrice(string bookId)
+        {
+            try
+            {
+                var importPrice = _importBillDetailRepository.GetImportPriceByBookId(bookId);
+                return Result<decimal>.Success(importPrice);
+            }
+            catch (Exception ex)
+            {
+                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
+            }
+        }
+
+        public Result<IEnumerable<BookDetailResponseDto>> GetAllBooks()
         {
             try
             {
                 var books = _bookRepository.GetAll()
                     .Where(b => b.DeletedDate == null)
-                    .ToList();
-                return Result<IEnumerable<Book>>.Success(books);
+                    .Select(book => new BookDetailResponseDto(
+                        book.BookId,
+                        book.Name,
+                        book.Author,
+                        book.Category,
+                        book.SalePrice,
+                        book.Supplier?.Name
+                    ));
+                
+                return Result<IEnumerable<BookDetailResponseDto>>.Success(books);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Book>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<BookDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Book>> SearchByName(string keyword)
+        public Result<IEnumerable<BookDetailResponseDto>> SearchByName(string keyword)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(keyword))
-                    return Result<IEnumerable<Book>>.Success(new List<Book>());
+                    return Result<IEnumerable<BookDetailResponseDto>>.Success(new List<BookDetailResponseDto>());
 
                 var books = _bookRepository.SearchByName(keyword)
                     .Where(b => b.DeletedDate == null)
-                    .ToList();
-                return Result<IEnumerable<Book>>.Success(books);
+                    .Select(book => new BookDetailResponseDto(
+                        book.BookId,
+                        book.Name,
+                        book.Author,
+                        book.Category,
+                        book.SalePrice,
+                        book.Supplier?.Name
+                    ));
+                
+                return Result<IEnumerable<BookDetailResponseDto>>.Success(books);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Book>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<BookDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Book>> GetByCategory(BookCategory category)
+        public Result<IEnumerable<BookDetailResponseDto>> GetByCategory(BookCategory category)
         {
             try
             {
                 var books = _bookRepository.GetByCategory(category)
                     .Where(b => b.DeletedDate == null)
-                    .ToList();
-                return Result<IEnumerable<Book>>.Success(books);
+                    .Select(book => new BookDetailResponseDto(
+                        book.BookId,
+                        book.Name,
+                        book.Author,
+                        book.Category,
+                        book.SalePrice,
+                        book.Supplier?.Name
+                    ));
+                
+                return Result<IEnumerable<BookDetailResponseDto>>.Success(books);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Book>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<BookDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Book>> GetByAuthor(string author)
+        public Result<IEnumerable<BookDetailResponseDto>> GetByAuthor(string author)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(author))
-                    return Result<IEnumerable<Book>>.Success(new List<Book>());
+                    return Result<IEnumerable<BookDetailResponseDto>>.Success(new List<BookDetailResponseDto>());
 
                 var books = _bookRepository.GetByAuthor(author)
                     .Where(b => b.DeletedDate == null)
-                    .ToList();
-                return Result<IEnumerable<Book>>.Success(books);
+                    .Select(book => new BookDetailResponseDto(
+                        book.BookId,
+                        book.Name,
+                        book.Author,
+                        book.Category,
+                        book.SalePrice,
+                        book.Supplier?.Name
+                    ));
+                
+                return Result<IEnumerable<BookDetailResponseDto>>.Success(books);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Book>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<BookDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Book>> GetByPriceRange(decimal? minPrice, decimal? maxPrice)
+        public Result<IEnumerable<BookDetailResponseDto>> GetByPriceRange(decimal? minPrice, decimal? maxPrice)
         {
             try
             {
                 var books = _bookRepository.GetByPriceRange(minPrice, maxPrice)
                     .Where(b => b.DeletedDate == null)
                     .ToList();
-                return Result<IEnumerable<Book>>.Success(books);
+                
+                var dtos = books.Select(book => new BookDetailResponseDto(
+                    book.BookId,
+                    book.Name,
+                    book.Author,
+                    book.Category,
+                    book.SalePrice,
+                    book.Supplier?.Name
+                )).ToList();
+                
+                return Result<IEnumerable<BookDetailResponseDto>>.Success(dtos);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Book>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<BookDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Book>> GetLowStockBooks(int minStock = 5)
+        public Result<IEnumerable<BookDetailResponseDto>> GetBySupplierName(string supplierName)
+        {
+            try
+            {
+                var books = _bookRepository.Find(b => b.Supplier.Name == supplierName).ToList();
+
+                var dtos = books.Select(book => new BookDetailResponseDto(
+                    book.BookId,
+                    book.Name,
+                    book.Author,
+                    book.Category,
+                    book.SalePrice,
+                    book.Supplier?.Name
+                )).ToList();
+                
+                return Result<IEnumerable<BookDetailResponseDto>>.Success(dtos);
+            }
+            catch (Exception e)
+            {
+                return Result<IEnumerable<BookDetailResponseDto>>.Fail(e.Message);
+            }
+        }
+
+        public Result<IEnumerable<BookDetailResponseDto>> GetLowStockBooks(int minStock = 5)
         {
             try
             {
                 var stocks = _stockRepository.GetLowStock(minStock);
                 var bookIds = stocks.Select(s => s.BookId).Distinct().ToList();
-                var books = _bookRepository.Find(b => bookIds.Contains(b.BookId) && b.DeletedDate == null).ToList();
-                return Result<IEnumerable<Book>>.Success(books);
+                
+                var books = _bookRepository.Find(b => bookIds.Contains(b.BookId) && b.DeletedDate == null)
+                    .ToList();
+                
+                var dtos = books.Select(book => new BookDetailResponseDto(
+                    book.BookId,
+                    book.Name,
+                    book.Author,
+                    book.Category,
+                    book.SalePrice,
+                    book.Supplier?.Name
+                )).ToList();
+                
+                return Result<IEnumerable<BookDetailResponseDto>>.Success(dtos);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Book>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<BookDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Book>> GetOutOfStockBooks()
+        public Result<IEnumerable<BookDetailResponseDto>> GetOutOfStockBooks()
         {
             try
             {
                 var outOfStocks = _stockRepository.Find(s => s.StockQuantity == 0);
                 var bookIds = outOfStocks.Select(s => s.BookId).Distinct().ToList();
-                var books = _bookRepository.Find(b => bookIds.Contains(b.BookId) && b.DeletedDate == null).ToList();
-                return Result<IEnumerable<Book>>.Success(books);
+                
+                var books = _bookRepository.Find(b => bookIds.Contains(b.BookId) && b.DeletedDate == null)
+                    .ToList();
+                
+                var dtos = books.Select(book => new BookDetailResponseDto(
+                    book.BookId,
+                    book.Name,
+                    book.Author,
+                    book.Category,
+                    book.SalePrice,
+                    book.Supplier?.Name
+                )).ToList();
+                
+                return Result<IEnumerable<BookDetailResponseDto>>.Success(dtos);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Book>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<BookDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
@@ -297,7 +419,7 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result<decimal> CalculateProfit(string bookId)
+        /*public Result<decimal> CalculateProfit(string bookId)
         {
             try
             {
@@ -314,6 +436,43 @@ namespace bookstore_Management.Services.Implementations
                 return Result<decimal>.Fail($"Lỗi: {ex.Message}");
             }
             
+        }*/
+
+        // ==================================================================
+        // ----------------------- LIST VIEW METHODS -------------------------
+        // ==================================================================
+        public Result<IEnumerable<BookListResponseDto>> GetBookList()
+        {
+            try
+            {
+                // Get all active books (already filtered by DeletedDate in repository)
+                var books = _bookRepository.GetAllForListView().ToList();
+                
+                if (!books.Any())
+                    return Result<IEnumerable<BookListResponseDto>>.Success(new List<BookListResponseDto>());
+
+                // Get import prices for all books in one batch query
+                var bookIds = books.Select(b => b.BookId).ToList();
+                var importPrices = _importBillDetailRepository.GetLatestImportPricesByBookIds(bookIds);
+
+                // Map to DTOs with Index (STT) generation
+                var result = books.Select((book, index) => new BookListResponseDto
+                {
+                    Index = index + 1, // STT starts from 1
+                    BookId = book.BookId,
+                    Name = book.Name,
+                    SupplierId = book.SupplierId,
+                    Category = book.Category,
+                    SalePrice = book.SalePrice,
+                    ImportPrice = importPrices.ContainsKey(book.BookId) ? importPrices[book.BookId] : null
+                }).ToList();
+
+                return Result<IEnumerable<BookListResponseDto>>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<BookListResponseDto>>.Fail($"Lỗi: {ex.Message}");
+            }
         }
 
         // ==================================================================

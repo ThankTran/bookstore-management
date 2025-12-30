@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
-using bookstore_Management.DTOs;
+using bookstore_Management.DTOs.ImportBill.Requests;
+using bookstore_Management.DTOs.ImportBill.Responses;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
 
@@ -37,7 +38,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<string> CreateImportBill(ImportBillCreateDto dto)
+        public Result<string> CreateImportBill(CreateImportBillRequestDto dto)
         {
             try
             {
@@ -69,9 +70,7 @@ namespace bookstore_Management.Services.Implementations
 
                     var lineTotal = item.ImportPrice * item.Quantity;
                     totalAmount += lineTotal;
-
-                    // Đồng bộ giá nhập hiện tại cho Book (phục vụ thống kê/lợi nhuận)
-                    book.ImportPrice = item.ImportPrice;
+                    
                     book.UpdatedDate = DateTime.Now;
                     _bookRepository.Update(book);
 
@@ -140,7 +139,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- SỬA / XÓA --------------------------------
         // ==================================================================
-        public Result UpdateImportBill(string importBillId, ImportBillUpdateDto dto)
+        public Result UpdateImportBill(string importBillId, UpdateImportBillRequestDto dto)
         {
             try
             {
@@ -184,71 +183,78 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- TRUY VẤN ---------------------------------
         // ==================================================================
-        public Result<ImportBill> GetImportBillById(string importBillId)
+        public Result<ImportBillResponseDto> GetImportBillById(string importBillId)
         {
             try
             {
                 var bill = _importBillRepository.GetById(importBillId);
                 if (bill == null || bill.DeletedDate != null)
-                    return Result<ImportBill>.Fail("Hóa đơn nhập không tồn tại");
+                    return Result<ImportBillResponseDto>.Fail("Hóa đơn nhập không tồn tại");
 
-                return Result<ImportBill>.Success(bill);
+                var dto = MapToImportBillResponseDto(bill);
+                return Result<ImportBillResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<ImportBill>.Fail($"Lỗi: {ex.Message}");
+                return Result<ImportBillResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<ImportBill>> GetAllImportBills()
+        public Result<IEnumerable<ImportBillResponseDto>> GetAllImportBills()
         {
             try
             {
                 var bills = _importBillRepository.GetAll()
                     .Where(b => b.DeletedDate == null)
-                    .OrderByDescending(b => b.CreatedDate);
-                return Result<IEnumerable<ImportBill>>.Success(bills);
+                    .OrderByDescending(b => b.CreatedDate)
+                    .ToList();
+                var dtos = bills.Select(MapToImportBillResponseDto).ToList();
+                return Result<IEnumerable<ImportBillResponseDto>>.Success(dtos);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<ImportBill>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<ImportBillResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<ImportBill>> GetBySupplier(string supplierId)
+        public Result<IEnumerable<ImportBillResponseDto>> GetBySupplier(string supplierId)
         {
             try
             {
                 var bills = _importBillRepository.GetBySupplier(supplierId)
                     .Where(b => b.DeletedDate == null)
-                    .OrderByDescending(b => b.CreatedDate);
-                return Result<IEnumerable<ImportBill>>.Success(bills);
+                    .OrderByDescending(b => b.CreatedDate)
+                    .ToList();
+                var dtos = bills.Select(MapToImportBillResponseDto).ToList();
+                return Result<IEnumerable<ImportBillResponseDto>>.Success(dtos);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<ImportBill>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<ImportBillResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<ImportBill>> GetByDateRange(DateTime fromDate, DateTime toDate)
+        public Result<IEnumerable<ImportBillResponseDto>> GetByDateRange(DateTime fromDate, DateTime toDate)
         {
             try
             {
                 var bills = _importBillRepository.GetByDateRange(fromDate, toDate)
                     .Where(b => b.DeletedDate == null)
-                    .OrderByDescending(b => b.CreatedDate);
-                return Result<IEnumerable<ImportBill>>.Success(bills);
+                    .OrderByDescending(b => b.CreatedDate)
+                    .ToList();
+                var dtos = bills.Select(MapToImportBillResponseDto).ToList();
+                return Result<IEnumerable<ImportBillResponseDto>>.Success(dtos);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<ImportBill>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<ImportBillResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
         // ==================================================================
         // ----------------------- CHI TIẾT --------------------------------
         // ==================================================================
-        public Result AddImportItem(string importBillId, ImportBillDetailCreateDto item)
+        public Result AddImportItem(string importBillId, ImportBillDetailCreateRequestDto item)
         {
             try
             {
@@ -278,9 +284,7 @@ namespace bookstore_Management.Services.Implementations
 
                 _importBillDetailRepository.Add(detail);
                 _importBillDetailRepository.SaveChanges();
-
-                // Đồng bộ giá nhập hiện tại cho Book
-                book.ImportPrice = item.ImportPrice;
+                
                 book.UpdatedDate = DateTime.Now;
                 _bookRepository.Update(book);
                 _bookRepository.SaveChanges();
@@ -340,7 +344,6 @@ namespace bookstore_Management.Services.Implementations
                     var book = _bookRepository.GetById(bookId);
                     if (book != null && book.DeletedDate == null)
                     {
-                        book.ImportPrice = newPrice.Value;
                         book.UpdatedDate = DateTime.Now;
                         _bookRepository.Update(book);
                         _bookRepository.SaveChanges();
@@ -356,16 +359,27 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result<IEnumerable<ImportBillDetail>> GetImportDetails(string importBillId)
+        public Result<IEnumerable<ImportBillDetailResponseDto>> GetImportDetails(string importBillId)
         {
             try
             {
-                var details = _importBillDetailRepository.GetByImportId(importBillId);
-                return Result<IEnumerable<ImportBillDetail>>.Success(details);
+                var details = _importBillDetailRepository.GetByImportId(importBillId)
+                    .Where(d => d.DeletedDate == null)
+                    .ToList();
+                var dtos = details.Select(d => new ImportBillDetailResponseDto
+                {
+                    BookId = d.BookId,
+                    BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
+                    Author = _bookRepository.GetById(d.BookId)?.Author ?? "Unknown",
+                    Quantity = d.Quantity,
+                    ImportPrice = d.ImportPrice,
+                    Subtotal = d.Subtotal
+                }).ToList();
+                return Result<IEnumerable<ImportBillDetailResponseDto>>.Success(dtos);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<ImportBillDetail>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<ImportBillDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
@@ -416,6 +430,37 @@ namespace bookstore_Management.Services.Implementations
 
             _importBillRepository.Update(bill);
             _importBillRepository.SaveChanges();
+        }
+
+        /// <summary>
+        /// Maps ImportBill entity to ImportBillResponseDto
+        /// </summary>
+        private ImportBillResponseDto MapToImportBillResponseDto(ImportBill bill)
+        {
+            return new ImportBillResponseDto
+            {
+                Id = bill.Id,
+                SupplierId = bill.SupplierId,
+                SupplierName = bill.Supplier?.Name,
+                WarehouseId = bill.WarehouseId,
+                WarehouseName = bill.Warehouse?.Name,
+                TotalAmount = bill.TotalAmount,
+                Notes = bill.Notes,
+                CreatedBy = bill.CreatedBy,
+                CreatedByName = bill.CreatedByStaff?.Name,
+                CreatedDate = bill.CreatedDate,
+                ImportBillDetails = bill.ImportBillDetails?
+                    .Where(d => d.DeletedDate == null)
+                    .Select(d => new ImportBillDetailResponseDto
+                    {
+                        BookId = d.BookId,
+                        BookName = d.Book?.Name ?? "Unknown",
+                        Author = d.Book?.Author ?? "Unknown",
+                        Quantity = d.Quantity,
+                        ImportPrice = d.ImportPrice,
+                        Subtotal = d.Subtotal
+                    }).ToList() ?? new List<ImportBillDetailResponseDto>()
+            };
         }
 
         private string GenerateImportId()

@@ -4,7 +4,7 @@ using System.Linq;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
-using bookstore_Management.DTOs;
+using bookstore_Management.DTOs.User.Requests;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
 using bookstore_Management.Core.Utils;
@@ -23,7 +23,7 @@ namespace bookstore_Management.Services.Implementations
             _staffRepository = staffRepository;
         }
 
-        public Result<string> CreateUser(CreateUserDto dto)
+        public Result<string> CreateUser(CreateUserRequestDto dto)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result ChangePassword(string userId, ChangePasswordDto dto)
+        public Result ChangePassword(string userId, ChangePasswordRequestDto dto)
         {
             try
             {
