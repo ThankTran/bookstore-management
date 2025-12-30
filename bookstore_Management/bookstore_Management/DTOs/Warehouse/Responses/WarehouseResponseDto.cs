@@ -1,19 +1,10 @@
-﻿using System;
+using System;
 
-namespace bookstore_Management.DTOs
+namespace bookstore_Management.DTOs.Warehouse.Responses
 {
-    public class WarehouseCreateDto
-    {
-        public string Name { get; set; }
-        public string Address { get; set; }
-    }
-
-    public class WarehouseUpdateDto
-    {
-        public string Name { get; set; }
-        public string Address { get; set; }
-    }
-
+    /// <summary>
+    /// DTO for warehouse response
+    /// </summary>
     public class WarehouseResponseDto
     {
         public string WarehouseId { get; set; }
@@ -24,3 +15,4 @@ namespace bookstore_Management.DTOs
         public int TotalQuantity { get; set; }
     }
 }
+
