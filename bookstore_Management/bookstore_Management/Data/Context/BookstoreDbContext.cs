@@ -28,10 +28,6 @@ namespace bookstore_Management.Data.Context
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
-        public DbSet<ShiftTemplate> ShiftTemplates { get; set; }
-        public DbSet<StaffShiftRegistration> StaffShiftRegistrations { get; set; }
-        public DbSet<WorkWeek> WorkWeeks { get; set; }
-        public DbSet<WorkSchedule> WorkSchedules { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -51,11 +47,6 @@ namespace bookstore_Management.Data.Context
             modelBuilder.Entity<Stock>().HasKey(st => new { st.WarehouseId, st.BookId });
             modelBuilder.Entity<AuditLog>().HasKey(al => al.Id);
             modelBuilder.Entity<Warehouse>().HasKey(w => w.WarehouseId);
-            modelBuilder.Entity<ShiftTemplate>().HasKey(st => st.Id);
-            modelBuilder.Entity<StaffShiftRegistration>().HasKey(ssr => ssr.Id);
-            modelBuilder.Entity<WorkWeek>().HasKey(ww => ww.Id);
-            modelBuilder.Entity<WorkSchedule>().HasKey(ws => ws.Id);
-
             // ============================================
             // FOREIGN KEYS & RELATIONSHIPS
             // ============================================
@@ -136,44 +127,7 @@ namespace bookstore_Management.Data.Context
                 .WithMany(w => w.Stocks)
                 .HasForeignKey(st => st.WarehouseId)
                 .WillCascadeOnDelete(false);
-
-            // WorkSchedule relations
-            modelBuilder.Entity<WorkSchedule>()
-                .HasRequired(ws => ws.WorkWeek)
-                .WithMany(ww => ww.WorkSchedules)
-                .HasForeignKey(ws => ws.WeekId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<WorkSchedule>()
-                .HasRequired(ws => ws.Staff)
-                .WithMany()
-                .HasForeignKey(ws => ws.StaffId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<WorkSchedule>()
-                .HasRequired(ws => ws.ShiftTemplate)
-                .WithMany(st => st.WorkSchedules)
-                .HasForeignKey(ws => ws.ShiftTemplateId)
-                .WillCascadeOnDelete(false);
-
-            // StaffShiftRegistration relations
-            modelBuilder.Entity<StaffShiftRegistration>()
-                .HasRequired(ssr => ssr.WorkWeek)
-                .WithMany(ww => ww.StaffShiftRegistrations)
-                .HasForeignKey(ssr => ssr.WeekId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffShiftRegistration>()
-                .HasRequired(ssr => ssr.Staff)
-                .WithMany()
-                .HasForeignKey(ssr => ssr.StaffId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffShiftRegistration>()
-                .HasRequired(ssr => ssr.ShiftTemplate)
-                .WithMany(st => st.StaffShiftRegistrations)
-                .HasForeignKey(ssr => ssr.ShiftTemplateId)
-                .WillCascadeOnDelete(false);
+            
             
 
             // ============================================

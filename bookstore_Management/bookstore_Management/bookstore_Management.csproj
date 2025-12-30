@@ -216,6 +216,7 @@
     <Compile Include="Core\Interfaces\IAuditable.cs" />
     <Compile Include="Core\Interfaces\IExportable.cs" />
     <Compile Include="Core\Results\Result.cs" />
+    <Compile Include="Core\Utils\AuthorizationHelper.cs" />
     <Compile Include="Core\Utils\BackupManager.cs" />
     <Compile Include="Core\Utils\ConfigManager.cs" />
     <Compile Include="Core\Utils\Encryptor.cs" />
@@ -235,10 +236,6 @@
     <Compile Include="Data\Repositories\Implementations\SupplierRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\UserRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\AuditLogRepository.cs" />
-    <Compile Include="Data\Repositories\Implementations\ShiftTemplateRepository.cs" />
-    <Compile Include="Data\Repositories\Implementations\WorkWeekRepository.cs" />
-    <Compile Include="Data\Repositories\Implementations\WorkScheduleRepository.cs" />
-    <Compile Include="Data\Repositories\Implementations\StaffShiftRegistrationRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\UnitOfWork.cs" />
     <Compile Include="Data\Repositories\Interfaces\IBookRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\ICustomerRepository.cs" />
@@ -252,21 +249,49 @@
     <Compile Include="Data\Repositories\Interfaces\ISupplierRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IAuditLogRepository.cs" />
-    <Compile Include="Data\Repositories\Interfaces\IShiftTemplateRepository.cs" />
-    <Compile Include="Data\Repositories\Interfaces\IWorkWeekRepository.cs" />
-    <Compile Include="Data\Repositories\Interfaces\IWorkScheduleRepository.cs" />
-    <Compile Include="Data\Repositories\Interfaces\IStaffShiftRegistrationRepository.cs" />
-    <Compile Include="DTOs\BookDto.cs" />
-    <Compile Include="DTOs\CustomerDto.cs" />
-    <Compile Include="DTOs\ImportBillDto.cs" />
-    <Compile Include="DTOs\OrderDto.cs" />
-    <Compile Include="DTOs\ReportDto.cs" />
-    <Compile Include="DTOs\StaffDto.cs" />
-    <Compile Include="DTOs\StockDto.cs" />
-    <Compile Include="DTOs\SupplierDto.cs" />
-    <Compile Include="DTOs\UserDto.cs" />
-    <Compile Include="DTOs\WareHouseDto.cs" />
-    <Compile Include="DTOs\WorkScheduleDto.cs" />
+    <Compile Include="DTOs\Book\Requests\CreateBookRequestDto.cs" />
+    <Compile Include="DTOs\Book\Requests\UpdateBookRequestDto.cs" />
+    <Compile Include="DTOs\Book\Responses\BookDetailResponseDto.cs" />
+    <Compile Include="DTOs\Book\Responses\BookListResponseDto.cs" />
+    <Compile Include="DTOs\Book\Shared\StockInfoDto.cs" />
+    <Compile Include="DTOs\Common\Reports\BookSalesReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\CustomerSpendingReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\InventoryReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\InventorySummaryReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\SalesReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\StaffPerformanceReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\SupplierImportReportResponseDto.cs" />
+    <Compile Include="DTOs\Customer\Requests\CreateCustomerRequestDto.cs" />
+    <Compile Include="DTOs\Customer\Requests\UpdateCustomerRequestDto.cs" />
+    <Compile Include="DTOs\Customer\Responses\CustomerDetailResponseDto.cs" />
+    <Compile Include="DTOs\Customer\Responses\CustomerListResponseDto.cs" />
+    <Compile Include="DTOs\ImportBill\Requests\CreateImportBillRequestDto.cs" />
+    <Compile Include="DTOs\ImportBill\Requests\ImportBillDetailCreateRequestDto.cs" />
+    <Compile Include="DTOs\ImportBill\Requests\UpdateImportBillRequestDto.cs" />
+    <Compile Include="DTOs\ImportBill\Responses\ImportBillDetailResponseDto.cs" />
+    <Compile Include="DTOs\ImportBill\Responses\ImportBillResponseDto.cs" />
+    <Compile Include="DTOs\Order\Requests\CreateOrderRequestDto.cs" />
+    <Compile Include="DTOs\Order\Requests\OrderDetailCreateRequestDto.cs" />
+    <Compile Include="DTOs\Order\Requests\UpdateOrderRequestDto.cs" />
+    <Compile Include="DTOs\Order\Responses\OrderDetailResponseDto.cs" />
+    <Compile Include="DTOs\Order\Responses\OrderResponseDto.cs" />
+    <Compile Include="DTOs\Staff\Requests\CreateStaffRequestDto.cs" />
+    <Compile Include="DTOs\Staff\Requests\UpdateStaffRequestDto.cs" />
+    <Compile Include="DTOs\Staff\Responses\StaffResponseDto.cs" />
+    <Compile Include="DTOs\Stock\Requests\CreateStockRequestDto.cs" />
+    <Compile Include="DTOs\Stock\Requests\UpdateStockRequestDto.cs" />
+    <Compile Include="DTOs\Stock\Responses\StockResponseDto.cs" />
+    <Compile Include="DTOs\Supplier\Requests\CreateSupplierRequestDto.cs" />
+    <Compile Include="DTOs\Supplier\Requests\UpdateSupplierRequestDto.cs" />
+    <Compile Include="DTOs\Supplier\Responses\SupplierResponseDto.cs" />
+    <Compile Include="DTOs\Auth\LoginRequestDto.cs" />
+    <Compile Include="DTOs\Auth\LoginResponseDto.cs" />
+    <Compile Include="DTOs\Auth\UserAuthInfoDto.cs" />
+    <Compile Include="DTOs\User\Requests\ChangePasswordRequestDto.cs" />
+    <Compile Include="DTOs\User\Requests\CreateUserRequestDto.cs" />
+    <Compile Include="DTOs\Warehouse\Requests\CreateWarehouseRequestDto.cs" />
+    <Compile Include="DTOs\Warehouse\Requests\UpdateWarehouseRequestDto.cs" />
+    <Compile Include="DTOs\Warehouse\Responses\WarehouseResponseDto.cs" />
     <Compile Include="Helpers\ExcelExporter.cs" />
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
@@ -280,17 +305,13 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\ImportBill.cs" />
     <Compile Include="Models\ImportBillDetail.cs" />
-    <Compile Include="Models\ShiftTemplate.cs" />
     <Compile Include="Models\Staff.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />
-    <Compile Include="Models\StaffShiftRegistration.cs" />
     <Compile Include="Models\Stock.cs" />
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\WareHouse.cs" />
-    <Compile Include="Models\WorkSchedule.cs" />
-    <Compile Include="Models\WorkWeek.cs" />
     <Compile Include="Presentation\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Presentation\Converters\CurrencyConverter.cs" />
     <Compile Include="Presentation\Converters\DateConverter.cs" />
@@ -407,10 +428,6 @@
     <Compile Include="Services\Implementations\StockService.cs" />
     <Compile Include="Services\Implementations\SupplierService.cs" />
     <Compile Include="Services\Implementations\UserService.cs" />
-    <Compile Include="Services\Implementations\ShiftTemplateService.cs" />
-    <Compile Include="Services\Implementations\WorkWeekService.cs" />
-    <Compile Include="Services\Implementations\StaffShiftRegistrationService.cs" />
-    <Compile Include="Services\Implementations\WorkScheduleService.cs" />
     <Compile Include="Services\Interfaces\IAuthService.cs" />
     <Compile Include="Services\Interfaces\IBookService.cs" />
     <Compile Include="Services\Interfaces\ICustomerService.cs" />
@@ -422,10 +439,6 @@
     <Compile Include="Services\Interfaces\ISupplierService.cs" />
     <Compile Include="Services\Interfaces\IAuditLogService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
-    <Compile Include="Services\Interfaces\IShiftTemplateService.cs" />
-    <Compile Include="Services\Interfaces\IWorkWeekService.cs" />
-    <Compile Include="Services\Interfaces\IStaffShiftRegistrationService.cs" />
-    <Compile Include="Services\Interfaces\IWorkScheduleService.cs" />
     <Compile Include="Tests\AuthServiceTests.cs" />
     <Compile Include="Tests\ReportServiceTests.cs" />
     <Compile Include="Tests\UserServiceTests.cs" />
@@ -490,6 +503,7 @@
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter">
       <Version>4.5.0</Version>
+    </PackageReference>
     <PackageReference Include="LiveCharts.Wpf">
       <Version>0.9.7</Version>
     </PackageReference>
@@ -501,6 +515,7 @@
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
   </ItemGroup>
+    <ItemGroup>
     <Resource Include="Presentation\AppResources\Images\Icons\Login\user.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\timeline.png" />
   </ItemGroup>

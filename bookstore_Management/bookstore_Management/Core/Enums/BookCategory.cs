@@ -27,5 +27,6 @@ namespace bookstore_Management.Core.Enums
         
         [Display(Name = "Tiểu thuyết")]
         Novel = 8
+
     }
 }
