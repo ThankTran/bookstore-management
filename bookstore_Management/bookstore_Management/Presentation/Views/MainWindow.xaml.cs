@@ -5,6 +5,8 @@ using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
 using bookstore_Management.Views.Statistics;
 using bookstore_Management.Views.Orders;
+using bookstore_Management.Presentation.Views.Publishers;
+using bookstore_Management.Presentation.Views.Users;
 using System;
 using System.Security.Principal;
 using System.Windows;
@@ -93,12 +95,11 @@ namespace bookstore_Management
             btnHome.Tag = null;
             btnPayment.Tag = null;
             btnCustomer.Tag = null;
-            btnSupplier.Tag = null;
+            btnPublisher.Tag = null;
             btnBills.Tag = null;
             btnBooks.Tag = null;
             btnEmployees.Tag = null;
             btnStatistics.Tag = null;
-            btnStock.Tag = null;
             btnAccount.Tag = null;
         }
 
@@ -133,12 +134,6 @@ namespace bookstore_Management
             }
         }
 
-        // Xử lý click menu Hóa đơn (chưa cài đặt nội dung)
-        private void btnBills_Click(object sender, RoutedEventArgs e)
-        {
-            SetClickedButtonColor(btnBills);
-            // TODO: Mở màn hình quản lý hóa đơn khi bạn xây dựng view tương ứng
-        }
 
         // Xử lý click menu Quản lý sách
         private void btnBooks_Click(object sender, RoutedEventArgs e)
@@ -203,6 +198,48 @@ namespace bookstore_Management
                 MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        // Xử lý click menu Quản lý nhà xuất bản
+        private void btnPublisher_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SetClickedButtonColor(btnPublisher);
+                MainFrame.Content = new PublisherListView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Xử lý click menu Quản lý nhân viên
+        private void btnEmployees_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        // Xử lý click menu Hóa đơn 
+        private void btnBills_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        // Xử lý click menu Tài khoản
+        private void btnAccount_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SetClickedButtonColor(btnAccount);
+                MainFrame.Content = new AccountListView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         #endregion
+
+        
     }
 }
