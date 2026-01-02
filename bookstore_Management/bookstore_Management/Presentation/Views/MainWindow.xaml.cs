@@ -1,5 +1,4 @@
 ﻿using bookstore_Management.Presentation.Views.Information;
-//namespace bookstore_Management.Presentation.Views.Users;
 using bookstore_Management.Presentation.Views.Users;
 using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
@@ -98,7 +97,7 @@ namespace bookstore_Management
             btnPublisher.Tag = null;
             btnBills.Tag = null;
             btnBooks.Tag = null;
-            btnEmployees.Tag = null;
+            btnStaffs.Tag = null;
             btnStatistics.Tag = null;
             btnAccount.Tag = null;
         }
@@ -214,9 +213,17 @@ namespace bookstore_Management
         }
 
         // Xử lý click menu Quản lý nhân viên
-        private void btnEmployees_Click(object sender, RoutedEventArgs e)
+        private void btnStaffs_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                SetClickedButtonColor(btnStaffs);
+                MainFrame.Content = new StaffListView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // Xử lý click menu Hóa đơn 
@@ -238,6 +245,7 @@ namespace bookstore_Management
                 MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         #endregion
 
         

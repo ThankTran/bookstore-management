@@ -382,10 +382,10 @@
                                     </StackPanel>
                                 </Button>
 
-                                <!-- Employees -->
-                                <Button x:Name="btnEmployees"
+                                <!-- Staffs -->
+                                <Button x:Name="btnStaffs"
                                        Style="{StaticResource RoundedButtonStyle}"
-                                        Click="btnEmployees_Click">
+                                        Click="btnStaffs_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLNS.png" 
                                               Width="24" 
