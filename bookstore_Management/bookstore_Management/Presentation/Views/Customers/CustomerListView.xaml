@@ -7,151 +7,457 @@
             CornerRadius="0,0,10,0"
             ClipToBounds="True">
 
-        <Grid Margin="0">
+        <Grid Margin="20">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid Margin="20">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+            <!-- Header Section -->
+            <TextBlock Grid.Row="0"
+                       Text="QUẢN LÝ KHÁCH HÀNG"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="{StaticResource PrimaryBrush}"
+                       Margin="0,0,0,20"/>
 
-                <!-- Top Bar with Add Button and Search -->
-                <Grid Grid.Row="0" Margin="0,0,0,15">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+            <!-- Action Bar -->
+            <Grid Grid.Row="1" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                    <!-- Add Button (Icon Only) -->
-                    <Button x:Name="btnAdd"
-                Grid.Column="0"
-                Style="{StaticResource IconButton}"
-                HorizontalAlignment="Left"
-                Click="btnAdd_Click"
-                ToolTip="Thêm khách hàng mới">
-                        <Image Source="/Presentation/AppResources/Images/Icons/Actions/add.png" 
-                   Width="30" 
-                   Height="30"/>
-                    </Button>
+                <!-- Left Actions Group -->
+                <StackPanel Grid.Column="0" 
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Left">
 
-                    <!-- Search Bar -->
-                    <Border Grid.Column="2" 
-                Style="{StaticResource SearchBorderContainer}"
-                HorizontalAlignment="Right">
+                    <!-- Add Button -->
+                    <Border Background="{StaticResource PrimaryBrush}"
+                            CornerRadius="8"
+                            Margin="0,0,10,0"
+                            Cursor="Hand">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#585AB8" 
+                                            BlurRadius="8" 
+                                            ShadowDepth="2" 
+                                            Opacity="0.3"/>
+                        </Border.Effect>
+                        <Button x:Name="btnAdd"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="15,8"
+                                Click="btnAdd_Click"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Presentation/AppResources/Images/Icons/Actions/add.png" 
+                                       Width="20" 
+                                       Height="20"
+                                       Margin="0,0,8,0"/>
+                                <TextBlock Text="Thêm mới" 
+                                           Foreground="White"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+
+                    <!-- Divider -->
+                    <Border Width="1" 
+                            Background="#E0E0E0"
+                            Margin="5,5,15,5"/>
+
+                    <!-- Print Button -->
+                    <Border Background="White"
+                            CornerRadius="8"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="1"
+                            Margin="0,0,10,0"
+                            Cursor="Hand">
+                        <Button x:Name="btnPrint"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="12,8"
+                                ToolTip="In danh sách"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Presentation/AppResources/Images/Icons/Functions/print.png" 
+                                       Width="20" 
+                                       Height="20"
+                                       Margin="0,0,8,0"/>
+                                <TextBlock Text="In" 
+                                           Foreground="{StaticResource PrimaryBrush}"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+
+                    <!-- Export Button -->
+                    <Border Background="White"
+                            CornerRadius="8"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="1"
+                            Cursor="Hand">
+                        <Button x:Name="btnExport"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="12,8"
+                                ToolTip="Xuất Excel"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Presentation/AppResources/Images/Icons/Functions/export.png" 
+                                       Width="20" 
+                                       Height="20"
+                                       Margin="0,0,8,0"/>
+                                <TextBlock Text="Xuất Excel" 
+                                           Foreground="{StaticResource PrimaryBrush}"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                </StackPanel>
+
+                <!-- Search Bar - Right Aligned -->
+                <Border Grid.Column="2"
+                        Background="White"
+                        CornerRadius="10"
+                        BorderBrush="#E0E0E0"
+                        BorderThickness="1"
+                        Padding="15,8"
+                        Width="320"
+                        HorizontalAlignment="Right">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Search Icon -->
+                        <Image Grid.Column="0"
+                               Source="/Presentation/AppResources/Images/Icons/Actions/search.png"
+                               Width="18" 
+                               Height="18"
+                               Margin="0,0,10,0"
+                               Opacity="0.5"/>
+
+                        <!-- Search TextBox -->
+                        <TextBox x:Name="txtSearch"
+                                 Grid.Column="1"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="13"
+                                 Foreground="#666666"
+                                 FontFamily="{StaticResource PrimaryFont}">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <VisualBrush Stretch="None" AlignmentX="Left">
+                                                        <VisualBrush.Visual>
+                                                            <TextBlock Text="Tìm kiếm theo tên, mã, số điện thoại..." 
+                                                                       Foreground="#999999" 
+                                                                       FontSize="13"/>
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+
+                        <!-- Clear Button -->
+                        <Button Grid.Column="2"
+                                Width="20"
+                                Height="20"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Visibility="{Binding ElementName=txtSearch, Path=Text.Length, Converter={StaticResource CountToVisibilityConverter}}">
+                            <TextBlock Text="✕" 
+                                       Foreground="#999999"
+                                       FontSize="12"
+                                       FontWeight="Bold"/>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Data Grid Section -->
+            <Border Grid.Row="2"
+                    Background="White"
+                    CornerRadius="15"
+                    BorderBrush="#E0E0E0"
+                    BorderThickness="1"
+                    Padding="0">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" 
+                                    BlurRadius="15" 
+                                    ShadowDepth="3" 
+                                    Opacity="0.1"/>
+                </Border.Effect>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Table Header Info -->
+                    <Border Grid.Row="0"
+                            Background="{StaticResource SecondaryLightBrush}"
+                            CornerRadius="15,15,0,0"
+                            Padding="20,12">
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Danh sách khách hàng"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       VerticalAlignment="Center"/>
 
-                            <TextBox x:Name="txtSearch"
-                         Grid.Column="0"
-                         Style="{StaticResource SearchTextBox}"/>
-
-                            <Button Grid.Column="1"
-                        Style="{StaticResource SearchButton}">
-                                <Image Source="/Presentation/AppResources/Images/Icons/Actions/search.png" 
-                           Width="15" 
-                           Height="15"/>
-                            </Button>
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Right">
+                                <TextBlock Text="Tổng số: "
+                                           FontSize="13"
+                                           Foreground="#666666"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Customers.Count}"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Foreground="{StaticResource PrimaryBrush}"
+                                           VerticalAlignment="Center"
+                                           Margin="3,0,0,0"/>
+                                <TextBlock Text=" khách hàng"
+                                           FontSize="13"
+                                           Foreground="#666666"
+                                           VerticalAlignment="Center"
+                                           Margin="3,0,0,0"/>
+                            </StackPanel>
                         </Grid>
                     </Border>
-                </Grid>
 
-                <!-- Data Grid -->
-                <Border Grid.Row="1" 
-            Style="{StaticResource DataGridContainerBorder}">
-                    <DataGrid x:Name="dgCustomers"
-                  Style="{StaticResource MainDataGrid}"
-                  MouseDoubleClick="dgCustomers_MouseDoubleClick">
+                    <!-- DataGrid -->
+                    <DataGrid Grid.Row="1"
+                              x:Name="dgCustomers"
+                              Style="{StaticResource MainDataGrid}"
+                              MouseDoubleClick="dgCustomers_MouseDoubleClick"
+                              Margin="0">
 
-                        <!-- Custom ScrollBar Style -->
                         <DataGrid.Resources>
                             <Style TargetType="ScrollBar" BasedOn="{StaticResource DataGridScrollBar}"/>
                         </DataGrid.Resources>
 
-                        <!-- Columns -->
                         <DataGrid.Columns>
                             <!-- STT -->
                             <DataGridTextColumn Header="STT" 
-                                    Binding="{Binding STT}" 
-                                    Width="60"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource CenterAlignedCell}"/>
+                                                Binding="{Binding STT}" 
+                                                Width="70"
+                                                IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource CenterAlignedCell}">
+                                        <Setter Property="FontWeight" Value="Medium"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
 
                             <!-- Mã khách hàng -->
-                            <DataGridTextColumn Header="Mã khách hàng" 
-                                    Binding="{Binding MaKH}" 
-                                    Width="140"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource PrimaryColorCell}"/>
+                            <DataGridTextColumn Header="Mã KH" 
+                                                Binding="{Binding MaKH}" 
+                                                Width="120"
+                                                IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource PrimaryColorCell}">
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
 
                             <!-- Tên khách hàng -->
                             <DataGridTextColumn Header="Tên khách hàng" 
-                                    Binding="{Binding TenKH}" 
-                                    Width="*"
-                                    MinWidth="180"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource CenterAlignedCell}"/>
+                                                Binding="{Binding TenKH}" 
+                                                Width="*"
+                                                MinWidth="200"
+                                                IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Left"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Padding" Value="10,0"/>
+                                        <Setter Property="FontWeight" Value="Medium"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
 
-                            <!-- Hạng thành viên -->
-                            <DataGridTextColumn Header="Hạng thành viên" 
-                                    Binding="{Binding HangThanhVien}" 
-                                    Width="140"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource CenterAlignedCell}"/>
-
-                            <!-- SDT -->
-                            <DataGridTextColumn Header="SDT" 
-                                    Binding="{Binding SDT}" 
-                                    Width="120"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource CenterAlignedCell}"/>
-
-                            <!-- Doanh thu -->
-                            <DataGridTextColumn Header="Doanh thu" 
-                                    Binding="{Binding DoanhThu, StringFormat={}{0:N0}}" 
-                                    Width="140"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource RightAlignedCell}"/>
-
-                            <!-- Sửa -->
-                            <DataGridTemplateColumn Header="Sửa" Width="60">
+                            <!-- Hạng thành viên với Badge -->
+                            <DataGridTemplateColumn Header="Hạng thành viên" Width="140">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Style="{StaticResource SmallIconButton}"
-                                    Click="btnEdit_Click">
-                                            <Image Source="/Presentation/AppResources/Images/Icons/Actions/edit.png" 
-                                       Width="20" 
-                                       Height="20"/>
-                                        </Button>
+                                        <Border CornerRadius="12" 
+                                                Padding="12,6"
+                                                HorizontalAlignment="Center"
+                                                Margin="5,0">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding HangThanhVien}" Value="Kim Cương">
+                                                            <Setter Property="Background" Value="#E3F2FD"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding HangThanhVien}" Value="Bạch Kim">
+                                                            <Setter Property="Background" Value="#F3E5F5"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding HangThanhVien}" Value="Vàng">
+                                                            <Setter Property="Background" Value="#FFF9C4"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding HangThanhVien}" Value="Bạc">
+                                                            <Setter Property="Background" Value="#ECEFF1"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding HangThanhVien}" Value="Đồng">
+                                                            <Setter Property="Background" Value="#FFCCBC"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock Text="{Binding HangThanhVien}"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       HorizontalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding HangThanhVien}" Value="Kim Cương">
+                                                                <Setter Property="Foreground" Value="#1976D2"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding HangThanhVien}" Value="Bạch Kim">
+                                                                <Setter Property="Foreground" Value="#7B1FA2"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding HangThanhVien}" Value="Vàng">
+                                                                <Setter Property="Foreground" Value="#F57F17"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding HangThanhVien}" Value="Bạc">
+                                                                <Setter Property="Foreground" Value="#546E7A"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding HangThanhVien}" Value="Đồng">
+                                                                <Setter Property="Foreground" Value="#BF360C"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Border>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <!-- Xóa -->
-                            <DataGridTemplateColumn Header="Xóa" Width="60">
+                            <!-- Số điện thoại -->
+                            <DataGridTextColumn Header="Số điện thoại" 
+                                                Binding="{Binding SDT}" 
+                                                Width="130"
+                                                IsReadOnly="True"
+                                                ElementStyle="{StaticResource CenterAlignedCell}"/>
+
+                            <!-- Doanh thu -->
+                            <DataGridTextColumn Header="Doanh thu" 
+                                                Binding="{Binding DoanhThu, StringFormat={}{0:N0} ₫}" 
+                                                Width="150"
+                                                IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource RightAlignedCell}">
+                                        <Setter Property="Foreground" Value="#FF6B6B"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Actions -->
+                            <DataGridTemplateColumn Header="Thao tác" Width="130">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Style="{StaticResource SmallIconButton}"
-                                    Click="btnDelete_Click">
-                                            <Image Source="/Presentation/AppResources/Images/Icons/Actions/recyclebin.png" 
-                                       Width="20" 
-                                       Height="20"/>
-                                        </Button>
+                                        <StackPanel Orientation="Horizontal" 
+                                                    HorizontalAlignment="Center">
+                                            <!-- Edit Button -->
+                                            <Border Background="#E8F5E9"
+                                                    CornerRadius="6"
+                                                    Margin="0,0,5,0"
+                                                    Cursor="Hand"
+                                                    ToolTip="Chỉnh sửa">
+                                                <Button Style="{StaticResource SmallIconButton}"
+                                                        Click="btnEdit_Click"
+                                                        Background="Transparent"
+                                                        Width="32"
+                                                        Height="32">
+                                                    <Image Source="/Presentation/AppResources/Images/Icons/Actions/edit.png" 
+                                                           Width="16" 
+                                                           Height="16"/>
+                                                </Button>
+                                            </Border>
+
+                                            <!-- Delete Button -->
+                                            <Border Background="#FFEBEE"
+                                                    CornerRadius="6"
+                                                    Cursor="Hand"
+                                                    ToolTip="Xóa">
+                                                <Button Style="{StaticResource SmallIconButton}"
+                                                        Click="btnDelete_Click"
+                                                        Background="Transparent"
+                                                        Width="32"
+                                                        Height="32">
+                                                    <Image Source="/Presentation/AppResources/Images/Icons/Actions/recyclebin.png" 
+                                                           Width="16" 
+                                                           Height="16"/>
+                                                </Button>
+                                            </Border>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                </Border>
-            </Grid>
-        </Grid>
 
+                    <!-- Footer/Pagination Area -->
+                    <Border Grid.Row="2"
+                            Background="#FAFAFA"
+                            CornerRadius="0,0,15,15"
+                            Padding="20,10"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="0,1,0,0">
+                        <Grid>
+                            <TextBlock HorizontalAlignment="Left"
+                                       VerticalAlignment="Center">
+                                <Run Text="Nhấp đúp vào dòng để xem chi tiết"
+                                     FontSize="12"
+                                     Foreground="#999999"
+                                     FontStyle="Italic"/>
+                            </TextBlock>
+
+                            <TextBlock HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       FontSize="12"
+                                       Foreground="#666666">
+                                <Run Text="Hiển thị"/>
+                                <!--Text="{Binding Customers.Count}-->
+                                <Run 
+                                     FontWeight="SemiBold"
+                                     Foreground="{StaticResource PrimaryBrush}"/>
+                                <Run Text="khách hàng"/>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
     </Border>
 </UserControl>
