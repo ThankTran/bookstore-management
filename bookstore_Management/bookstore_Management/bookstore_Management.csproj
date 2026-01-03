@@ -151,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Presentation\Views\Payment\ImportDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <!-- Views - Payment -->
     <Page Include="Presentation\Views\Payment\InvoiceView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -348,6 +352,9 @@
     </Compile>
     <Compile Include="Presentation\Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Payment\ImportDetailView.xaml.cs">
+      <DependentUpon>ImportDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Payment\InvoiceView.xaml.cs">
       <DependentUpon>InvoiceView.xaml</DependentUpon>
