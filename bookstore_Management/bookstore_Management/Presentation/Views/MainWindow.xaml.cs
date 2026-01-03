@@ -11,6 +11,7 @@ using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using bookstore_Management.Presentation.Views.Orders;
 
 namespace bookstore_Management
 {
@@ -229,7 +230,15 @@ namespace bookstore_Management
         // Xử lý click menu Hóa đơn 
         private void btnBills_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                SetClickedButtonColor(btnBills);
+                MainFrame.Content = new InvoiceView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // Xử lý click menu Tài khoản

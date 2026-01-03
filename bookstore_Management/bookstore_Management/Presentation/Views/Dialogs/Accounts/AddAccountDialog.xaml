@@ -157,16 +157,14 @@
                             Margin="0,0,20,0">
                         <Button x:Name="btnCreate"
                                 Content="Tạo tài khoản"
-                                Style="{StaticResource PrimaryButton}"
-                                Click="btnCreate_Click"/>
+                                Style="{StaticResource PrimaryButton}"/>
                     </Border>
 
                     <Border Style="{StaticResource SecondaryButtonBorder}"
                             Width="100">
                         <Button x:Name="btnCancel"
                                 Content="Hủy"
-                                Style="{StaticResource SecondaryButton}"
-                                Click="btnCancel_Click"/>
+                                Style="{StaticResource SecondaryButton}"/>
                     </Border>
                 </StackPanel>
 

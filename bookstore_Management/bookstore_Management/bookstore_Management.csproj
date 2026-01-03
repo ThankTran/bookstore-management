@@ -375,6 +375,9 @@
     <Compile Include="Presentation\Views\Payment\OrderListView.xaml.cs">
       <DependentUpon>OrderListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Publishers\PublisherListView.xaml.cs">
+      <DependentUpon>PublisherListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Payment\PaymentView.xaml.cs">
       <DependentUpon>PaymentView.xaml</DependentUpon>
     </Compile>
@@ -387,6 +390,9 @@
     </Compile>
     <Compile Include="Presentation\Views\Users\RoleManagementView.xaml.cs">
       <DependentUpon>RoleManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Users\AccountListView.xaml.cs">
+      <DependentUpon>AccountListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Users\StaffListView.xaml.cs">
       <DependentUpon>StaffListView.xaml</DependentUpon>

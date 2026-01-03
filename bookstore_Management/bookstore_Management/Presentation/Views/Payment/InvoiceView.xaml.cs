@@ -17,7 +17,7 @@ namespace bookstore_Management.Presentation.Views.Orders
     /// <summary>
     /// Interaction logic for InvoiceView.xaml
     /// </summary>
-    public partial class InvoiceView : Window
+    public partial class InvoiceView : UserControl
     {
         public InvoiceView()
         {
