@@ -2,148 +2,472 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Background="{StaticResource BackgroundBrush}">
+
     <Border Background="{StaticResource BackgroundBrush}"
-        CornerRadius="0,0,10,0"
-        ClipToBounds="True">
+            CornerRadius="0,0,10,0"
+            ClipToBounds="True">
+
         <Grid Margin="20">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Top Bar with Add Button and Search -->
-            <Grid Grid.Row="0" Margin="0,-5,0,15">
+            <!-- Header Section -->
+            <TextBlock Grid.Row="0"
+                       Text="QUẢN LÝ SÁCH"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="{StaticResource PrimaryBrush}"
+                       Margin="0,0,0,20"/>
+
+            <!-- Action Bar -->
+            <Grid Grid.Row="1" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Add Button (Icon Only) -->
-                <Button x:Name="btnAdd"
-                Grid.Column="0"
-                Style="{StaticResource IconButton}"
-                HorizontalAlignment="Left"
-                ToolTip="Thêm sách mới"
-                Command="{Binding AddBookCommand}">
-                    <Image Source="/Presentation/AppResources/Images/Icons/Actions/add.png" 
-                   Width="30" 
-                   Height="30"/>
-                </Button>
+                <!-- Left Actions Group -->
+                <StackPanel Grid.Column="0" 
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Left">
 
-                <!-- Search Bar -->
-                <Border Grid.Column="2" 
-                Style="{StaticResource SearchBorderContainer}"
-                HorizontalAlignment="Right">
+                    <!-- Add Button -->
+                    <Border Background="{StaticResource PrimaryBrush}"
+                            CornerRadius="8"
+                            Margin="0,0,10,0"
+                            Cursor="Hand">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#585AB8" 
+                                            BlurRadius="8" 
+                                            ShadowDepth="2" 
+                                            Opacity="0.3"/>
+                        </Border.Effect>
+                        <Button x:Name="btnAdd"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="15,8"
+                                Command="{Binding AddBookCommand}"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Presentation/AppResources/Images/Icons/Actions/add.png" 
+                                       Width="20" 
+                                       Height="20"
+                                       Margin="0,0,8,0"/>
+                                <TextBlock Text="Thêm sách mới" 
+                                           Foreground="White"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+
+                    <!-- Divider -->
+                    <Border Width="1" 
+                            Background="#E0E0E0"
+                            Margin="5,5,15,5"/>
+
+                    <!-- Print Button -->
+                    <Border Background="White"
+                            CornerRadius="8"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="1"
+                            Margin="0,0,10,0"
+                            Cursor="Hand">
+                        <Button x:Name="btnPrint"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="12,8"
+                                ToolTip="In danh sách"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Presentation/AppResources/Images/Icons/Functions/print.png" 
+                                       Width="20" 
+                                       Height="20"
+                                       Margin="0,0,8,0"/>
+                                <TextBlock Text="In" 
+                                           Foreground="{StaticResource PrimaryBrush}"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+
+                    <!-- Export Button -->
+                    <Border Background="White"
+                            CornerRadius="8"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="1"
+                            Cursor="Hand">
+                        <Button x:Name="btnExport"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="12,8"
+                                ToolTip="Xuất Excel"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Presentation/AppResources/Images/Icons/Functions/export.png" 
+                                       Width="20" 
+                                       Height="20"
+                                       Margin="0,0,8,0"/>
+                                <TextBlock Text="Xuất Excel" 
+                                           Foreground="{StaticResource PrimaryBrush}"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                </StackPanel>
+
+                <!-- Search Bar - Right Aligned -->
+                <Border Grid.Column="2"
+                        Background="White"
+                        CornerRadius="10"
+                        BorderBrush="#E0E0E0"
+                        BorderThickness="1"
+                        Padding="15,8"
+                        Width="320"
+                        HorizontalAlignment="Right">
                     <Grid>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBox x:Name="txtSearch"
-                         Grid.Column="0"
-                         Style="{StaticResource SearchTextBox}"
-                         TextChanged="txtSearch_TextChanged"/>
+                        <!-- Search Icon -->
+                        <Image Grid.Column="0"
+                               Source="/Presentation/AppResources/Images/Icons/Actions/search.png"
+                               Width="18" 
+                               Height="18"
+                               Margin="0,0,10,0"
+                               Opacity="0.5"/>
 
-                        <Button Grid.Column="1"
-                        Style="{StaticResource SearchButton}">
-                            <Image Source="/Presentation/AppResources/Images/Icons/Actions/search.png" 
-                           Width="15" 
-                           Height="15"/>
+                        <!-- Search TextBox -->
+                        <TextBox x:Name="txtSearch"
+                                 Grid.Column="1"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="13"
+                                 Foreground="#666666"
+                                 FontFamily="{StaticResource PrimaryFont}"
+                                 TextChanged="txtSearch_TextChanged">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <VisualBrush Stretch="None" AlignmentX="Left">
+                                                        <VisualBrush.Visual>
+                                                            <TextBlock Text="Tìm kiếm theo tên sách, tác giả, mã sách..." 
+                                                                       Foreground="#999999" 
+                                                                       FontSize="13"/>
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+
+                        <!-- Clear Button -->
+                        <Button Grid.Column="2"
+                                Width="20"
+                                Height="20"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Visibility="{Binding ElementName=txtSearch, Path=Text.Length, Converter={StaticResource CountToVisibilityConverter}}">
+                            <TextBlock Text="✕" 
+                                       Foreground="#999999"
+                                       FontSize="12"
+                                       FontWeight="Bold"/>
                         </Button>
                     </Grid>
                 </Border>
             </Grid>
 
-            <!-- Data Grid -->
-            <Border Grid.Row="1" 
-            Style="{StaticResource DataGridContainerBorder}">
-                <DataGrid x:Name="dgBooks"
-                  Style="{StaticResource MainDataGrid}"
-                  ItemsSource="{Binding Books}"
-                  MouseDoubleClick="dgBooks_MouseDoubleClick">
+            <!-- Data Grid Section -->
+            <Border Grid.Row="2"
+                    Background="White"
+                    CornerRadius="15"
+                    BorderBrush="#E0E0E0"
+                    BorderThickness="1"
+                    Padding="0">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" 
+                                    BlurRadius="15" 
+                                    ShadowDepth="3" 
+                                    Opacity="0.1"/>
+                </Border.Effect>
 
-                    <!-- Custom ScrollBar Style -->
-                    <DataGrid.Resources>
-                        <Style TargetType="ScrollBar" BasedOn="{StaticResource DataGridScrollBar}"/>
-                    </DataGrid.Resources>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                    <!-- Columns -->
-                    <DataGrid.Columns>
-                        <!-- STT -->
-                        <DataGridTextColumn Header="STT" 
-                                    Binding="{Binding bookSTT}" 
-                                    Width="60"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource CenterAlignedCell}"/>
+                    <!-- Table Header Info -->
+                    <Border Grid.Row="0"
+                            Background="{StaticResource SecondaryLightBrush}"
+                            CornerRadius="15,15,0,0"
+                            Padding="20,12">
+                        <Grid>
+                            <TextBlock Text="Danh sách sách"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       VerticalAlignment="Center"/>
 
-                        <!-- Mã sách -->
-                        <DataGridTextColumn Header="Mã sách" 
-                                    Binding="{Binding bookID}" 
-                                    Width="120"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource PrimaryColorCell}"/>
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Right">
+                                <TextBlock Text="Tổng số: "
+                                           FontSize="13"
+                                           Foreground="#666666"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Books.Count}"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Foreground="{StaticResource PrimaryBrush}"
+                                           VerticalAlignment="Center"
+                                           Margin="3,0,0,0"/>
+                                <TextBlock Text=" đầu sách"
+                                           FontSize="13"
+                                           Foreground="#666666"
+                                           VerticalAlignment="Center"
+                                           Margin="3,0,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
 
-                        <!-- Tên tác giả -->
-                        <DataGridTextColumn Header="Tên tác giả" 
-                                    Binding="{Binding author}" 
-                                    Width="*"
-                                    MinWidth="180"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource CenterAlignedCell}"/>
+                    <!-- DataGrid -->
+                    <DataGrid Grid.Row="1"
+                              x:Name="dgBooks"
+                              Style="{StaticResource MainDataGrid}"
+                              ItemsSource="{Binding Books}"
+                              MouseDoubleClick="dgBooks_MouseDoubleClick"
+                              Margin="0">
 
-                        <!-- Tên sách -->
-                        <DataGridTextColumn Header="Tên sách" 
-                                    Binding="{Binding name}" 
-                                    Width="*"
-                                    MinWidth="180"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource CenterAlignedCell}"/>
+                        <DataGrid.Resources>
+                            <Style TargetType="ScrollBar" BasedOn="{StaticResource DataGridScrollBar}"/>
+                        </DataGrid.Resources>
 
-                        <!-- Nhà xuất bản -->
-                        <DataGridTextColumn Header="Nhà xuất bản" 
-                                    Binding="{Binding publisher}" 
-                                    Width="140"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource CenterAlignedCell}"/>
+                        <DataGrid.Columns>
+                            <!-- STT -->
+                            <DataGridTextColumn Header="STT" 
+                                                Binding="{Binding bookSTT}" 
+                                                Width="70"
+                                                IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource CenterAlignedCell}">
+                                        <Setter Property="FontWeight" Value="Medium"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
 
-                        <!-- Giá bán -->
-                        <DataGridTextColumn Header="Giá bán" 
-                                    Binding="{Binding salePrice, StringFormat={}{0:N0}}" 
-                                    Width="120"
-                                    IsReadOnly="True"
-                                    ElementStyle="{StaticResource RightAlignedCell}"/>
+                            <!-- Mã sách -->
+                            <DataGridTextColumn Header="Mã sách" 
+                                                Binding="{Binding bookID}" 
+                                                Width="110"
+                                                IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource PrimaryColorCell}">
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
 
-                        <!-- Sửa -->
-                        <DataGridTemplateColumn Header="Sửa" Width="60">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Style="{StaticResource SmallIconButton}"
-                                            Click="btnEdit_Click">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/Actions/edit.png" 
-                                       Width="20" 
-                                       Height="20"/>
-                                    </Button>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                            <!-- Tên sách -->
+                            <DataGridTextColumn Header="Tên sách" 
+                                                Binding="{Binding name}" 
+                                                Width="*"
+                                                MinWidth="200"
+                                                IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Left"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Padding" Value="10,0"/>
+                                        <Setter Property="FontWeight" Value="Medium"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
 
-                        <!-- Xóa -->
-                        <DataGridTemplateColumn Header="Xóa" Width="60">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Style="{StaticResource SmallIconButton}"
-                                            Click="btnDelete_Click">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/Actions/recyclebin.png" 
-                                       Width="20" 
-                                       Height="20"/>
-                                    </Button>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                            <!-- Tác giả -->
+                            <DataGridTextColumn Header="Tác giả" 
+                                                Binding="{Binding author}" 
+                                                Width="160"
+                                                IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource CenterAlignedCell}">
+                                        <Setter Property="FontStyle" Value="Italic"/>
+                                        <Setter Property="Foreground" Value="#546E7A"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Nhà xuất bản -->
+                            <DataGridTextColumn Header="Nhà xuất bản" 
+                                                Binding="{Binding publisher}" 
+                                                Width="150"
+                                                IsReadOnly="True"
+                                                ElementStyle="{StaticResource CenterAlignedCell}"/>
+
+                            <!-- Thể loại -->
+                            <DataGridTemplateColumn Header="Thể loại" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="12" 
+                                                Padding="10,5"
+                                                HorizontalAlignment="Center"
+                                                Margin="5,0">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="#E3F2FD"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding category}" Value="Văn học">
+                                                            <Setter Property="Background" Value="#E8F5E9"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding category}" Value="Khoa học">
+                                                            <Setter Property="Background" Value="#FFF3E0"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding category}" Value="Kinh tế">
+                                                            <Setter Property="Background" Value="#F3E5F5"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding category}" Value="Thiếu nhi">
+                                                            <Setter Property="Background" Value="#FCE4EC"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock Text="{Binding category}"
+                                                       FontSize="11"
+                                                       FontWeight="SemiBold"
+                                                       HorizontalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="#1976D2"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding category}" Value="Văn học">
+                                                                <Setter Property="Foreground" Value="#2E7D32"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding category}" Value="Khoa học">
+                                                                <Setter Property="Foreground" Value="#F57C00"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding category}" Value="Kinh tế">
+                                                                <Setter Property="Foreground" Value="#7B1FA2"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding category}" Value="Thiếu nhi">
+                                                                <Setter Property="Foreground" Value="#C2185B"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Giá bán -->
+                            <DataGridTextColumn Header="Giá bán" 
+                                                Binding="{Binding salePrice, StringFormat={}{0:N0} ₫}" 
+                                                Width="130"
+                                                IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource RightAlignedCell}">
+                                        <Setter Property="Foreground" Value="#FF6B6B"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Actions -->
+                            <DataGridTemplateColumn Header="Thao tác" Width="130">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" 
+                                                    HorizontalAlignment="Center">
+                                            <!-- Edit Button -->
+                                            <Border Background="#E8F5E9"
+                                                    CornerRadius="6"
+                                                    Margin="0,0,5,0"
+                                                    Cursor="Hand"
+                                                    ToolTip="Chỉnh sửa">
+                                                <Button Style="{StaticResource SmallIconButton}"
+                                                        Click="btnEdit_Click"
+                                                        Background="Transparent"
+                                                        Width="32"
+                                                        Height="32">
+                                                    <Image Source="/Presentation/AppResources/Images/Icons/Actions/edit.png" 
+                                                           Width="16" 
+                                                           Height="16"/>
+                                                </Button>
+                                            </Border>
+
+                                            <!-- Delete Button -->
+                                            <Border Background="#FFEBEE"
+                                                    CornerRadius="6"
+                                                    Cursor="Hand"
+                                                    ToolTip="Xóa">
+                                                <Button Style="{StaticResource SmallIconButton}"
+                                                        Click="btnDelete_Click"
+                                                        Background="Transparent"
+                                                        Width="32"
+                                                        Height="32">
+                                                    <Image Source="/Presentation/AppResources/Images/Icons/Actions/recyclebin.png" 
+                                                           Width="16" 
+                                                           Height="16"/>
+                                                </Button>
+                                            </Border>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Footer/Pagination Area -->
+                    <Border Grid.Row="2"
+                            Background="#FAFAFA"
+                            CornerRadius="0,0,15,15"
+                            Padding="20,10"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="0,1,0,0">
+                        <Grid>
+                            <TextBlock HorizontalAlignment="Left"
+                                       VerticalAlignment="Center">
+                                <Run Text="Nhấp đúp vào dòng để xem chi tiết sách"
+                                     FontSize="12"
+                                     Foreground="#999999"
+                                     FontStyle="Italic"/>
+                            </TextBlock>
+
+                            <TextBlock HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       FontSize="12"
+                                       Foreground="#666666">
+                                <Run Text="Hiển thị"/>
+                                <!--Text="{Binding Books.Count}" -->
+                                <Run 
+                                     FontWeight="SemiBold"
+                                     Foreground="{StaticResource PrimaryBrush}"/>
+                                <Run Text="đầu sách"/>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                </Grid>
             </Border>
         </Grid>
     </Border>
