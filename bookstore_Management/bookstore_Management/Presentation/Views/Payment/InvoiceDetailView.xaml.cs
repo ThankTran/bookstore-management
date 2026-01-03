@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Views.Orders
+namespace bookstore_Management.Presentation.Views.Payment
 {
     /// <summary>
-    /// Interaction logic for OrderDetailView.xaml
+    /// Interaction logic for InvoiceDetailView.xaml
     /// </summary>
-    public partial class OrderDetailView : UserControl
+    public partial class InvoiceDetailView : UserControl
     {
-        public OrderDetailView()
+        public InvoiceDetailView()
         {
             InitializeComponent();
         }

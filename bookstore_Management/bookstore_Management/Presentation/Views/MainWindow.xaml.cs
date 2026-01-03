@@ -1,4 +1,5 @@
 ﻿using bookstore_Management.Presentation.Views.Information;
+using bookstore_Management.Presentation.Views;
 using bookstore_Management.Presentation.Views.Users;
 using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
@@ -116,8 +117,17 @@ namespace bookstore_Management
 
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
-            SetClickedButtonColor(btnHome);
-            LoadHomePage();
+            //SetClickedButtonColor(btnHome);
+            //LoadHomePage();
+            try
+            {
+                SetClickedButtonColor(btnHome);
+                MainFrame.Content = new HomeView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // Xử lý click menu Quản lý khách hàng

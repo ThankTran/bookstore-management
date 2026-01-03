@@ -188,8 +188,7 @@
                                 BorderThickness="0"
                                 Cursor="Hand"
                                 Visibility="{Binding ElementName=txtSearch, Path=Text.Length, Converter={StaticResource CountToVisibilityConverter}}">
-                            <TextBlock Text="✕" 
-                                       Foreground="#999999"
+                            <TextBlock Foreground="#999999"
                                        FontSize="12"
                                        FontWeight="Bold"/>
                         </Button>
