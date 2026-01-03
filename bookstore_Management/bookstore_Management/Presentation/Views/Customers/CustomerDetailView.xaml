@@ -3,156 +3,436 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Background="{StaticResource BackgroundBrush}">
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <Border Background="{StaticResource BackgroundBrush}"
+            CornerRadius="0,0,10,0"
+            ClipToBounds="True">
 
-        <!-- Top Bar with Return Button -->
-        <Grid Grid.Row="0" Margin="0,-16,0,15">
-            <Button x:Name="btnReturn"
-                    Style="{StaticResource ReturnButton}"
-                    Click="btnReturn_Click"
-                    ToolTip="Quay lại danh sách">
-                <Image Source="/Presentation/AppResources/Images/Icons/Actions/return.png" 
-                       Width="15" 
-                       Height="15"/>
-            </Button>
-        </Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Padding="0,0,10,0">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <!-- Main Content -->
-        <Border Grid.RowSpan="2"
-                Background="{StaticResource WhiteBrush}"
-                CornerRadius="15"
-                Padding="30"
-                Margin="0,24,0,0">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <StackPanel>
+                <!-- Header with Return Button -->
+                <Grid Grid.Row="0" Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                    <!-- Tiêu đề -->
-                    <TextBlock Text="Chi tiết khách hàng"
-                               Style="{StaticResource DetailPageTitle}"/>
-
-                    <!-- Thông tin khách hàng -->
-                    <Grid Margin="0,0,0,20">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <!-- Cột trái -->
-                        <StackPanel Grid.Column="0">
-                            <!-- Mã khách hàng -->
-                            <TextBlock Text="Mã khách hàng" 
-                                       Style="{StaticResource DetailFieldLabel}"/>
-                            <TextBlock x:Name="txtMaKH"
-                                       Text="KH001"
-                                       Style="{StaticResource DetailCustomerCode}"/>
-
-                            <!-- Tên khách hàng -->
-                            <TextBlock Text="Tên khách hàng" 
-                                       Style="{StaticResource DetailFieldLabel}"/>
-                            <TextBlock x:Name="txtTenKH"
-                                       Text="Nguyễn Văn A"
-                                       Style="{StaticResource DetailFieldValue}"/>
-
-                            <!-- Số điện thoại -->
-                            <TextBlock Text="Số điện thoại" 
-                                       Style="{StaticResource DetailFieldLabel}"/>
-                            <TextBlock x:Name="txtSDT"
-                                       Text="0123456789"
-                                       Style="{StaticResource DetailFieldValue}"/>
-
-                            <!-- Email -->
-                            <TextBlock Text="Email"
-                                       Style="{StaticResource DetailFieldLabel}"/>
-                            <TextBlock x:Name="txtEmail"
-                                       Text="email@example.com"
-                                       Style="{StaticResource DetailFieldValue}"/>
-                        </StackPanel>
-
-                        <!-- Cột phải -->
-                        <StackPanel Grid.Column="2">
-                            <!-- Địa chỉ -->
-                            <TextBlock Text="Địa chỉ" 
-                                       Style="{StaticResource DetailFieldLabel}"/>
-                            <TextBlock x:Name="txtDiaChi"
-                                       Text="123 Nguyễn Văn Linh, Q7, TP.HCM"
-                                       Style="{StaticResource DetailFieldValue}"
-                                       TextWrapping="Wrap"/>
-
-                            <!-- Tổng doanh thu -->
-                            <TextBlock Text="Tổng doanh thu" 
-                                       Style="{StaticResource DetailFieldLabel}"/>
-                            <TextBlock x:Name="txtDoanhThu"
-                                       Text="1,000,000 VNĐ"
-                                       Style="{StaticResource DetailRevenue}"/>
-
-                            <!-- Hạng thành viên -->
-                            <TextBlock Text="Hạng thành viên" 
-                                       Style="{StaticResource DetailFieldLabel}"/>
-                            <TextBlock x:Name="txtHangThanhVien"
-                                       Text="Vàng"
-                                       Style="{StaticResource DetailFieldValue}"/>
-
-                            <!-- Điểm tích lũy -->
-                            <TextBlock Text="Điểm tích lũy"
-                                       Style="{StaticResource DetailFieldLabel}"/>
-                            <TextBlock x:Name="txtDiemTichLuy"
-                                       Text="1500 điểm"
-                                       Style="{StaticResource DetailFieldValue}"/>
-                        </StackPanel>
-                    </Grid>
-
-                    <!-- Separator -->
-                    <Border Style="{StaticResource SeparatorBorder}"/>
-
-                    <!-- Lịch sử mua hàng -->
-                    <TextBlock Text="Lịch sử mua hàng" 
-                               Style="{StaticResource DetailSectionTitle}"/>
-
-                    <Border Style="{StaticResource HistoryDataGridBorder}">
-                        <DataGrid x:Name="dgHistories"
-                                  Style="{StaticResource HistoryDataGrid}">
-
-                            <DataGrid.Columns>
-                                <!-- STT -->
-                                <DataGridTextColumn Header="STT" 
-                                                   Binding="{Binding STT}" 
-                                                   Width="60"
-                                                   ElementStyle="{StaticResource CenterAlignedCell}"/>
-
-                                <!-- Mã hóa đơn -->
-                                <DataGridTextColumn Header="Mã hóa đơn" 
-                                                   Binding="{Binding MaHD}" 
-                                                   Width="120"
-                                                   ElementStyle="{StaticResource PrimaryColorCell}"/>
-
-                                <!-- Tổng tiền -->
-                                <DataGridTextColumn Header="Tổng tiền" 
-                                                   Binding="{Binding TongTien}" 
-                                                   Width="150"
-                                                   ElementStyle="{StaticResource RightAlignedCell}"/>
-
-                                <!-- Ngày mua hàng -->
-                                <DataGridTextColumn Header="Ngày mua hàng" 
-                                                   Binding="{Binding NgayMuaHang}" 
-                                                   Width="150"
-                                                   ElementStyle="{StaticResource CenterAlignedCell}"/>
-
-                                <!-- Ghi chú -->
-                                <DataGridTextColumn Header="Ghi chú" 
-                                                   Binding="{Binding GhiChu}" 
-                                                   Width="*" 
-                                                   MinWidth="150"
-                                                   ElementStyle="{StaticResource TextWrapCell}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                    <!-- Return Button -->
+                    <Border Grid.Column="0"
+                        Background="{StaticResource PrimaryBrush}"
+                        CornerRadius="8"
+                        Cursor="Hand"
+                        Margin="0,0,15,0">
+                        <Button x:Name="btnReturn"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Padding="12,8"
+                            Click="btnReturn_Click"
+                            Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Presentation/AppResources/Images/Icons/Actions/return.png" 
+                                   Width="18" 
+                                   Height="18"
+                                   Margin="0,0,8,0"/>
+                                <TextBlock Text="Quay lại" 
+                                       Foreground="White"
+                                       FontWeight="SemiBold"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                     </Border>
-                </StackPanel>
-            </ScrollViewer>
-        </Border>
-    </Grid>
+
+                    <!-- Page Title -->
+                    <TextBlock Grid.Column="1"
+                           Text="CHI TIẾT KHÁCH HÀNG"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource PrimaryBrush}"
+                           VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- Customer Info Card -->
+                <Border Grid.Row="1"
+                    Background="White"
+                    CornerRadius="15"
+                    BorderBrush="#E0E0E0"
+                    BorderThickness="1"
+                    Padding="30"
+                    Margin="0,0,0,20">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#000000" 
+                                    BlurRadius="15" 
+                                    ShadowDepth="3" 
+                                    Opacity="0.1"/>
+                    </Border.Effect>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Section Header -->
+                        <Grid Grid.Row="0" Margin="0,0,0,25">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Background="{StaticResource SecondaryLightBrush}"
+                                    CornerRadius="8"
+                                    Padding="10,5"
+                                    Margin="0,0,12,0">
+                                    <TextBlock Text="👤" FontSize="18"/>
+                                </Border>
+                                <TextBlock Text="Thông tin cá nhân"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Info Grid -->
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Left Column -->
+                            <StackPanel Grid.Column="0">
+                                <!-- Mã khách hàng -->
+                                <Border Background="{StaticResource SecondaryLightBrush}"
+                                    CornerRadius="10"
+                                    Padding="20,15"
+                                    Margin="0,0,0,20">
+                                    <StackPanel>
+                                        <TextBlock Text="Mã khách hàng" 
+                                               FontSize="12"
+                                               Foreground="#666666"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,8"/>
+                                        <TextBlock x:Name="txtMaKH"
+                                               Text="KH001"
+                                               FontSize="20"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Tên khách hàng -->
+                                <StackPanel Margin="0,0,0,20">
+                                    <TextBlock Text="Tên khách hàng" 
+                                           FontSize="13"
+                                           Foreground="#666666"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,8"/>
+                                    <Border Background="White"
+                                        BorderBrush="#E0E0E0"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="15,12">
+                                        <TextBlock x:Name="txtTenKH"
+                                               Text="Nguyễn Văn A"
+                                               FontSize="15"
+                                               FontWeight="Medium"/>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- Số điện thoại -->
+                                <StackPanel Margin="0,0,0,20">
+                                    <TextBlock Text="Số điện thoại" 
+                                           FontSize="13"
+                                           Foreground="#666666"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,8"/>
+                                    <Border Background="#E8F5E9"
+                                        BorderBrush="#4CAF50"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="15,12">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="📞" 
+                                                   FontSize="16"
+                                                   Margin="0,0,10,0"/>
+                                            <TextBlock x:Name="txtSDT"
+                                                   Text="0123456789"
+                                                   FontSize="15"
+                                                   Foreground="#2E7D32"
+                                                   FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- Email -->
+                                <StackPanel>
+                                    <TextBlock Text="Email" 
+                                           FontSize="13"
+                                           Foreground="#666666"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,8"/>
+                                    <Border Background="#E3F2FD"
+                                        BorderBrush="#2196F3"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="15,12">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="📧" 
+                                                   FontSize="16"
+                                                   Margin="0,0,10,0"/>
+                                            <TextBlock x:Name="txtEmail"
+                                                   Text="email@example.com"
+                                                   FontSize="15"
+                                                   Foreground="#1976D2"
+                                                   FontWeight="Medium"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Right Column -->
+                            <StackPanel Grid.Column="2">
+                                <!-- Địa chỉ -->
+                                <StackPanel Margin="0,0,0,20">
+                                    <TextBlock Text="Địa chỉ" 
+                                           FontSize="13"
+                                           Foreground="#666666"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,8"/>
+                                    <Border Background="White"
+                                        BorderBrush="#E0E0E0"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="15,12"
+                                        Height="80">
+                                        <TextBlock x:Name="txtDiaChi"
+                                               Text="123 Nguyễn Văn Linh, Q7, TP.HCM"
+                                               FontSize="15"
+                                               TextWrapping="Wrap"/>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- Hạng thành viên -->
+                                <StackPanel Margin="0,0,0,20">
+                                    <TextBlock Text="Hạng thành viên" 
+                                           FontSize="13"
+                                           Foreground="#666666"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,8"/>
+                                    <Border x:Name="borderHangTV"
+                                        Background="#FFF9C4"
+                                        CornerRadius="8"
+                                        Padding="15,12">
+                                        <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center">
+                                            <TextBlock Text="⭐" 
+                                                   FontSize="20"
+                                                   Margin="0,0,10,0"/>
+                                            <TextBlock x:Name="txtHangThanhVien"
+                                                   Text="Vàng"
+                                                   FontSize="18"
+                                                   Foreground="#F57F17"
+                                                   FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- Stats Grid -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Doanh thu -->
+                                    <Border Grid.Column="0"
+                                        Background="#FFEBEE"
+                                        CornerRadius="8"
+                                        Padding="15,12">
+                                        <StackPanel>
+                                            <TextBlock Text="Tổng doanh thu" 
+                                                   FontSize="11"
+                                                   Foreground="#666666"
+                                                   FontWeight="SemiBold"
+                                                   HorizontalAlignment="Center"
+                                                   Margin="0,0,0,8"/>
+                                            <TextBlock x:Name="txtDoanhThu"
+                                                   Text="1,000,000 ₫"
+                                                   FontSize="16"
+                                                   FontWeight="Bold"
+                                                   Foreground="#FF6B6B"
+                                                   HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Điểm tích lũy -->
+                                    <Border Grid.Column="2"
+                                        Background="#F3E5F5"
+                                        CornerRadius="8"
+                                        Padding="15,12">
+                                        <StackPanel>
+                                            <TextBlock Text="Điểm tích lũy" 
+                                                   FontSize="11"
+                                                   Foreground="#666666"
+                                                   FontWeight="SemiBold"
+                                                   HorizontalAlignment="Center"
+                                                   Margin="0,0,0,8"/>
+                                            <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center">
+                                                <TextBlock Text="🎁" 
+                                                       FontSize="16"
+                                                       Margin="0,0,5,0"/>
+                                                <TextBlock x:Name="txtDiemTichLuy"
+                                                       Text="1,500"
+                                                       FontSize="16"
+                                                       FontWeight="Bold"
+                                                       Foreground="#7B1FA2"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- Purchase History Card -->
+                <Border Grid.Row="2"
+                    Background="White"
+                    CornerRadius="15"
+                    BorderBrush="#E0E0E0"
+                    BorderThickness="1"
+                    Padding="0"
+                    MinHeight="500">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#000000" 
+                                    BlurRadius="15" 
+                                    ShadowDepth="3" 
+                                    Opacity="0.1"/>
+                    </Border.Effect>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- History Header -->
+                        <Border Grid.Row="0"
+                            Background="{StaticResource SecondaryLightBrush}"
+                            CornerRadius="15,15,0,0"
+                            Padding="25,15">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Background="White"
+                                    CornerRadius="8"
+                                    Padding="8,5"
+                                    Margin="0,0,12,0">
+                                    <TextBlock Text="📜" FontSize="16"/>
+                                </Border>
+                                <TextBlock Text="Lịch sử mua hàng"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- DataGrid with ScrollViewer -->
+                        <Border Grid.Row="1"
+                            Padding="0">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      MaxHeight="600">
+                                <!-- DataGrid -->
+                                <DataGrid x:Name="dgHistories"
+                                      Style="{StaticResource HistoryDataGrid}"
+                                      Margin="0"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      MinHeight="400">
+
+                                    <DataGrid.Columns>
+                                        <!-- STT -->
+                                        <DataGridTextColumn Header="STT" 
+                                               Binding="{Binding STT}" 
+                                               Width="70">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock" BasedOn="{StaticResource CenterAlignedCell}">
+                                                    <Setter Property="FontWeight" Value="Medium"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <!-- Mã hóa đơn -->
+                                        <DataGridTextColumn Header="Mã hóa đơn" 
+                                               Binding="{Binding MaHD}" 
+                                               Width="130">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock" BasedOn="{StaticResource PrimaryColorCell}">
+                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <!-- Ngày mua -->
+                                        <DataGridTemplateColumn Header="Ngày mua hàng" Width="140">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#FFF3E0"
+                                                CornerRadius="6"
+                                                Padding="10,5"
+                                                HorizontalAlignment="Center"
+                                                Margin="5,3">
+                                                        <TextBlock Text="{Binding NgayMuaHang}"
+                                                       FontSize="12"
+                                                       Foreground="#F57C00"
+                                                       FontWeight="Medium"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <!-- Tổng tiền -->
+                                        <DataGridTextColumn Header="Tổng tiền" 
+                                               Binding="{Binding TongTien}" 
+                                               Width="150">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock" BasedOn="{StaticResource RightAlignedCell}">
+                                                    <Setter Property="Foreground" Value="#FF6B6B"/>
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                    <Setter Property="FontSize" Value="14"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <!-- Ghi chú -->
+                                        <DataGridTextColumn Header="Ghi chú" 
+                                               Binding="{Binding GhiChu}" 
+                                               Width="*" 
+                                               MinWidth="200">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                                    <Setter Property="Margin" Value="15,8"/>
+                                                    <Setter Property="FontSize" Value="13"/>
+                                                    <Setter Property="Foreground" Value="#666666"/>
+                                                    <Setter Property="FontStyle" Value="Italic"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </ScrollViewer>
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+    </Border>
 </UserControl>
