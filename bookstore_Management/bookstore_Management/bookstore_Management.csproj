@@ -52,14 +52,6 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="EntityFramework">
-      <HintPath>$(NuGetPackageRoot)entityframework\6.4.4\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>$(NuGetPackageRoot)entityframework\6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -496,8 +488,9 @@
     <PackageReference Include="NUnit">
       <Version>3.13.3</Version>
     </PackageReference>
-    <PackageReference Include="NUnit3TestAdapter">
-      <Version>4.5.0</Version>
+	  <PackageReference Include="NUnit3TestAdapter">
+		  <Version>4.5.0</Version>
+	  </PackageReference>
     <PackageReference Include="LiveCharts.Wpf">
       <Version>0.9.7</Version>
     </PackageReference>
@@ -509,6 +502,7 @@
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
   </ItemGroup>
+	<ItemGroup>
     <Resource Include="Presentation\AppResources\Images\Icons\Login\user.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\timeline.png" />
   </ItemGroup>
