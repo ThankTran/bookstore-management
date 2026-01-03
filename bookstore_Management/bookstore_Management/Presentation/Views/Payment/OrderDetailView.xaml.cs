@@ -17,7 +17,7 @@ namespace bookstore_Management.Views.Orders
     /// <summary>
     /// Interaction logic for OrderDetailView.xaml
     /// </summary>
-    public partial class OrderDetailView : UserControl
+    public partial class OrderDetailView : Window
     {
         public OrderDetailView()
         {
