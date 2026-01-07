@@ -199,11 +199,11 @@
     <Compile Include="AppResources.cs" />
     <Compile Include="Core\Constants\AppConstants.cs" />
     <Compile Include="Core\Constants\CustomerConstants.cs" />
-    <Compile Include="Core\Constants\FeatureConstant.cs" />
     <Compile Include="Core\Constants\MessageConstants.cs" />
     <Compile Include="Core\Constants\PermissionConstants.cs" />
     <Compile Include="Core\Constants\RoleConstants.cs" />
     <Compile Include="Core\Enums\BookCategory.cs" />
+    <Compile Include="Core\Enums\FeatureConstant.cs" />
     <Compile Include="Core\Enums\MemberTier.cs" />
     <Compile Include="Core\Enums\OrderStatus.cs" />
     <Compile Include="Core\Enums\PaymentType.cs" />
