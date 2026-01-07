@@ -70,6 +70,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\AppResources\Styles\DialogStyles.xaml" />
+    <Page Include="Presentation\AppResources\Styles\HomeViewStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\AppResources\Styles\StatisticStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
