@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Presentation.Views.Users
+namespace bookstore_Management.Presentation.Views.Publishers
 {
     /// <summary>
-    /// Interaction logic for UserListView.xaml
+    /// Interaction logic for PublisherListView.xaml
     /// </summary>
-    public partial class UserListView : Window
+    public partial class PublisherListView : UserControl
     {
-        public UserListView()
+        public PublisherListView()
         {
             InitializeComponent();
         }

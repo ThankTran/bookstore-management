@@ -66,6 +66,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <!-- Resource Dictionaries -->
     <Page Include="Presentation\AppResources\Colors\Colors.xaml" />
     <Page Include="Presentation\AppResources\Fonts\Fonts.xaml" />
     <Page Include="Presentation\AppResources\Styles\ButtonStyles.xaml">
@@ -86,14 +87,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Books\BookDetailView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <!-- Views - Books -->
     <Page Include="Presentation\Views\Books\BookListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <!-- Views - Customers -->
     <Page Include="Presentation\Views\Customers\CustomerDetailView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -102,6 +101,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <!-- Views - Dialogs - Accounts -->
+    <Page Include="Presentation\Views\Dialogs\Accounts\AddAccountDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <!-- Views - Dialogs - Books -->
     <Page Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -114,6 +119,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <!-- Views - Dialogs - Customers -->
     <Page Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -126,10 +132,16 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <!-- Views - Information -->
+    <Page Include="Presentation\Views\Information\Information.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Presentation\Views\Information\InforDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <!-- Views - Inventory -->
     <Page Include="Presentation\Views\Inventory\ImportBooksView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -138,45 +150,41 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <!-- Views - MainWindow -->
     <Page Include="Presentation\Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Orders\CreateOrderView.xaml">
+    <Page Include="Presentation\Views\Payment\ImportDetailView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <!-- Views - Payment -->
+    <Page Include="Presentation\Views\Payment\InvoiceView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Orders\InvoiceView.xaml">
+    <Page Include="Presentation\Views\Payment\OrderDetailView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Orders\OrderDetailView.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Presentation\Views\Payment\PaymentView.xaml">
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Presentation\Views\Orders\OrderListView.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Statistics\ChartView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <!-- Views - Statistics -->
     <Page Include="Presentation\Views\Statistics\DashboardView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Statistics\ReportView.xaml">
+    <!-- Views - Publishers -->
+    <Page Include="Presentation\Views\Publishers\PublisherListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Suppliers\SupplierDetailView.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <!-- Views - Users -->
+    <Page Include="Presentation\Views\Users\AccountListView.xaml">
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Presentation\Views\Suppliers\SupplierListView.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\Views\Users\LoginView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -186,7 +194,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\Views\Users\UserListView.xaml">
+    <Page Include="Presentation\Views\Users\StaffListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -323,12 +331,9 @@
     <Compile Include="Presentation\ViewModels\InventoryViewModel.cs" />
     <Compile Include="Presentation\ViewModels\LoginViewModel.cs" />
     <Compile Include="Presentation\ViewModels\MainViewModel.cs" />
-    <Compile Include="Presentation\ViewModels\OrderViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\PaymentViewModel.cs" />
     <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
     <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
-    <Compile Include="Presentation\Views\Books\BookDetailView.xaml.cs">
-      <DependentUpon>BookDetailView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Presentation\Views\Books\BookListView.xaml.cs">
       <DependentUpon>BookListView.xaml</DependentUpon>
     </Compile>
@@ -368,32 +373,23 @@
     <Compile Include="Presentation\Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Orders\CreateOrderView.xaml.cs">
-      <DependentUpon>CreateOrderView.xaml</DependentUpon>
+    <Compile Include="Presentation\Views\Payment\ImportDetailView.xaml.cs">
+      <DependentUpon>ImportDetailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Orders\InvoiceView.xaml.cs">
+    <Compile Include="Presentation\Views\Payment\InvoiceView.xaml.cs">
       <DependentUpon>InvoiceView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Orders\OrderDetailView.xaml.cs">
+    <Compile Include="Presentation\Views\Payment\OrderDetailView.xaml.cs">
       <DependentUpon>OrderDetailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Orders\OrderListView.xaml.cs">
-      <DependentUpon>OrderListView.xaml</DependentUpon>
+    <Compile Include="Presentation\Views\Publishers\PublisherListView.xaml.cs">
+      <DependentUpon>PublisherListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Statistics\ChartView.xaml.cs">
-      <DependentUpon>ChartView.xaml</DependentUpon>
+    <Compile Include="Presentation\Views\Payment\PaymentView.xaml.cs">
+      <DependentUpon>PaymentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Statistics\DashboardView.xaml.cs">
       <DependentUpon>DashboardView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\Statistics\ReportView.xaml.cs">
-      <DependentUpon>ReportView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\Suppliers\SupplierDetailView.xaml.cs">
-      <DependentUpon>SupplierDetailView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\Suppliers\SupplierListView.xaml.cs">
-      <DependentUpon>SupplierListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Users\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -401,8 +397,11 @@
     <Compile Include="Presentation\Views\Users\RoleManagementView.xaml.cs">
       <DependentUpon>RoleManagementView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Users\UserListView.xaml.cs">
-      <DependentUpon>UserListView.xaml</DependentUpon>
+    <Compile Include="Presentation\Views\Users\AccountListView.xaml.cs">
+      <DependentUpon>AccountListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Users\StaffListView.xaml.cs">
+      <DependentUpon>StaffListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -514,6 +513,8 @@
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Functions\export.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Functions\print.png" />
   </ItemGroup>
     <ItemGroup>
     <Resource Include="Presentation\AppResources\Images\Icons\Login\user.png" />

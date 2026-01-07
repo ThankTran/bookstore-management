@@ -310,7 +310,8 @@
 
                                 <!-- Payment -->
                                 <Button x:Name="btnPayment"
-                                       Style="{StaticResource RoundedButtonStyle}">
+                                       Style="{StaticResource RoundedButtonStyle}"
+                                        Click="btnPayment_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/TT.png" 
                                               Width="24" 
@@ -344,9 +345,10 @@
                                     </StackPanel>
                                 </Button>
 
-                                <!--Supplier-->
-                                <Button x:Name="btnSupplier"
-                                       Style="{StaticResource RoundedButtonStyle}">
+                                <!--Publishers-->
+                                <Button x:Name="btnPublisher"
+                                       Style="{StaticResource RoundedButtonStyle}"
+                                        Click="btnPublisher_Click">
 
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLHD.png" 
@@ -380,32 +382,16 @@
                                     </StackPanel>
                                 </Button>
 
-                                <!-- Employees -->
-                                <Button x:Name="btnEmployees"
-                                       Style="{StaticResource RoundedButtonStyle}">
+                                <!-- Staffs -->
+                                <Button x:Name="btnStaffs"
+                                       Style="{StaticResource RoundedButtonStyle}"
+                                        Click="btnStaffs_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLNS.png" 
                                               Width="24" 
                                               Height="24"
                                               Margin="0,0,12,0"/>
                                         <TextBlock Text="Quản lý nhân sự" 
-                                                  Foreground="#FFFFFF" 
-                                                  FontWeight="SemiBold" 
-                                                  FontSize="14"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-
-                                <!-- Timeline -->
-                                <Button x:Name="btnStock"
-                                       Style="{StaticResource RoundedButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/timeline.png" 
-                                              Width="24" 
-                                              Height="24"
-                                              Margin="0,0,12,0"/>
-                                        <TextBlock Text="Phân ca" 
                                                   Foreground="#FFFFFF" 
                                                   FontWeight="SemiBold" 
                                                   FontSize="14"
@@ -435,8 +421,8 @@
 
                                 <!-- Bills -->
                                 <Button x:Name="btnBills"
-                                       Style="{StaticResource RoundedButtonStyle}"
-                                       Click="btnBills_Click">
+                                        Style="{StaticResource RoundedButtonStyle}"
+                                        Click="btnBills_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/Presentation/AppResources/Images/Icons/Sidebar/QLHD.png" 
                                               Width="24" 
@@ -453,7 +439,8 @@
 
                                 <!-- Account -->
                                 <Button x:Name="btnAccount"
-                                       Style="{StaticResource RoundedButtonStyle}">
+                                       Style="{StaticResource RoundedButtonStyle}"
+                                        Click="btnAccount_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image  Source="/Presentation/AppResources/Images/Icons/Sidebar/QLTK.png" 
                                                 Width="24" 

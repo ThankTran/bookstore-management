@@ -10,28 +10,27 @@ using System.Windows.Data;
 namespace bookstore_Management.Presentation.Converters
 {
     /// <summary>
-    /// Converter chuyển đổi Boolean thành Visibility
+    /// Converter chuyển đổi số lượng items thành Visibility
+    /// Count = 0 -> Visible (hiển thị empty message)
+    /// Count > 0 -> Collapsed (ẩn empty message)
     /// </summary>
-    public class BoolToVisibilityConverter : IValueConverter
+    public class CountToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool boolValue)
+            if (value is int count)
             {
-                return boolValue ? Visibility.Visible : Visibility.Collapsed;
+                // Nếu count = 0, hiển thị message "giỏ hàng trống"
+                // Nếu count > 0, ẩn message
+                return count == 0 ? Visibility.Visible : Visibility.Collapsed;
             }
 
-            return Visibility.Collapsed;
+            return Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is Visibility visibility)
-            {
-                return visibility == Visibility.Visible;
-            }
-
-            return false;
+            throw new NotImplementedException();
         }
     }
 }

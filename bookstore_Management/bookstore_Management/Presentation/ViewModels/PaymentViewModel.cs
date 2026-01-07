@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class OrderViewModel
+    internal class PaymentViewModel
     {
     }
 }

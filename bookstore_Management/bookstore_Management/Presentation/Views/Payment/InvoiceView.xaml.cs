@@ -12,14 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Views.Orders
+namespace bookstore_Management.Presentation.Views.Orders
 {
     /// <summary>
-    /// Interaction logic for CreateOrderView.xaml
+    /// Interaction logic for InvoiceView.xaml
     /// </summary>
-    public partial class CreateOrderView : Window
+    public partial class InvoiceView : UserControl
     {
-        public CreateOrderView()
+        public InvoiceView()
         {
             InitializeComponent();
         }

@@ -2,22 +2,23 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:bookstore_Management"
-            StartupUri="Presentation/Views/Users/LoginView.xaml">
+             xmlns:converters="clr-namespace:bookstore_Management.Presentation.Converters"
+             StartupUri="Presentation/Views/Users/LoginView.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- Colors -->
                 <ResourceDictionary Source="Presentation/AppResources/Colors/Colors.xaml"/>
-
-                <!-- Fonts -->
                 <ResourceDictionary Source="Presentation/AppResources/Fonts/Fonts.xaml"/>
-
-                <!-- Control Styles -->
                 <ResourceDictionary Source="Presentation/AppResources/Styles/ButtonStyles.xaml"/>
                 <ResourceDictionary Source="Presentation/AppResources/Styles/TextBoxStyles.xaml"/>
                 <ResourceDictionary Source="Presentation/AppResources/Styles/DataGridStyles.xaml"/>
                 <ResourceDictionary Source="Presentation/AppResources/Styles/DialogStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+            <converters:InverseCountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
+            <converters:InverseCountToVisibilityConverter x:Key="InverseCountToVisibilityConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

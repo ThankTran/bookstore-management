@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Views.Orders
+namespace bookstore_Management.Presentation.Views.Users
 {
     /// <summary>
-    /// Interaction logic for OrderListView.xaml
+    /// Interaction logic for AccountListView.xaml
     /// </summary>
-    public partial class OrderListView : Window
+    public partial class AccountListView : UserControl
     {
-        public OrderListView()
+        public AccountListView()
         {
             InitializeComponent();
         }
