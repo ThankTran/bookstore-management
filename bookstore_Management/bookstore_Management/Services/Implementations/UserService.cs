@@ -4,7 +4,7 @@ using System.Linq;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
-using bookstore_Management.DTOs;
+using bookstore_Management.DTOs.User.Requests;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
 using bookstore_Management.Core.Utils;
@@ -23,7 +23,7 @@ namespace bookstore_Management.Services.Implementations
             _staffRepository = staffRepository;
         }
 
-        public Result<string> CreateUser(CreateUserDto dto)
+        public Result<string> CreateUser(CreateUserRequestDto dto)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result ChangePassword(string userId, ChangePasswordDto dto)
+        public Result ChangePassword(string userId, ChangePasswordRequestDto dto)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace bookstore_Management.Services.Implementations
             {
                 return Result.Fail($"Lỗi: {ex.Message}");
             }
-        }
+        } 
 
         public Result Deactivate(string userId)
         {
@@ -144,6 +144,36 @@ namespace bookstore_Management.Services.Implementations
             catch (Exception ex)
             {
                 return Result<IEnumerable<User>>.Fail($"Lỗi: {ex.Message}");
+            }
+        }
+
+        public Result<bool> Login(string username, string password)
+        {
+            try
+            {
+                var  user = _userRepository.GetByUsername(username);
+                if (user == null || user.DeletedDate != null)
+                    return Result<bool>.Fail("User không tồn tại");
+                return  (!Encryptor.Verify(password, user.PasswordHash)) ? 
+                    Result<bool>.Success(true) : 
+                    Result<bool>.Success(false);
+            }
+            catch (Exception ex)
+            {
+                return Result<bool>.Fail($"Lỗi: {ex.Message}");
+            }
+        }
+
+        public Result<UserRole> GetUserRole(string userId)
+        {
+            try
+            {
+                var role = _userRepository.GetById(userId).UserRole;
+                return Result<UserRole>.Success(role);
+            }
+            catch (Exception ex)
+            {
+                return Result<UserRole>.Fail($"Lỗi: {ex.Message}");
             }
         }
     }

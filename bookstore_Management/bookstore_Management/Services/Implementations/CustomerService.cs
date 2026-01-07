@@ -4,7 +4,8 @@ using System.Linq;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
-using bookstore_Management.DTOs;
+using bookstore_Management.DTOs.Customer.Requests;
+using bookstore_Management.DTOs.Customer.Responses;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
 
@@ -24,7 +25,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<string> AddCustomer(CustomerCreateDto dto)
+        public Result<string> AddCustomer(CreateCustomerRequestDto dto)
         {
             try
             {
@@ -70,7 +71,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- SỬA DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result UpdateCustomer(string customerId, CustomerUpdateDto dto)
+        public Result UpdateCustomer(string customerId, UpdateCustomerRequestDto dto)
         {
             try
             {
@@ -145,90 +146,166 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- LẤY DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<Customer> GetCustomerById(string customerId)
+        public Result<CustomerDetailResponseDto> GetCustomerById(string customerId)
         {
             try
             {
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result<Customer>.Fail("Khách hàng không tồn tại");
-                    
-                return Result<Customer>.Success(customer);
+                var c = _customerRepository.GetById(customerId);
+                if (c == null || c.DeletedDate != null)
+                    return Result<CustomerDetailResponseDto>.Fail("Khách hàng không tồn tại");
+
+                var orders = c.Orders?.Where(o => o.DeletedDate == null) ?? Enumerable.Empty<Order>();
+
+                var dto = new CustomerDetailResponseDto
+                {
+                    CustomerId = c.CustomerId,
+                    Name = c.Name,
+                    Phone = c.Phone,
+                    MemberLevel = c.MemberLevel,
+                    LoyaltyPoints = c.LoyaltyPoints,
+                    CreatedDate = c.CreatedDate,
+                    TotalOrders = orders.Count(),
+                    TotalSpent = orders.Sum(o => o.TotalPrice)
+                };
+
+                return Result<CustomerDetailResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<Customer>.Fail($"Lỗi: {ex.Message}");
+                return Result<CustomerDetailResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Customer>> GetAllCustomers()
+        public Result<IEnumerable<CustomerDetailResponseDto>> GetAllCustomers()
         {
             try
             {
                 var customers = _customerRepository.GetAll()
                     .Where(c => c.DeletedDate == null)
                     .OrderBy(c => c.Name)
+                    .Select(c =>
+                    {
+                        var orders = c.Orders.Where(o => o.DeletedDate == null);
+                        return new CustomerDetailResponseDto
+                        {
+                            CustomerId = c.CustomerId,
+                            Name = c.Name,
+                            Phone = c.Phone,
+                            MemberLevel = c.MemberLevel,
+                            LoyaltyPoints = c.LoyaltyPoints,
+                            CreatedDate = c.CreatedDate,
+                            TotalOrders = orders.Count(),
+                            TotalSpent = orders.Sum(o => o.TotalPrice)
+                        };
+                    })
                     .ToList();
-                return Result<IEnumerable<Customer>>.Success(customers);
+
+                return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Customer>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<CustomerDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<Customer> GetCustomerByPhone(string phone)
+        public Result<CustomerDetailResponseDto> GetCustomerByPhone(string phone)
         {
             try
             {
-                var customer = _customerRepository.SearchByPhone(phone);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result<Customer>.Fail("Không tìm thấy khách hàng");
-                    
-                return Result<Customer>.Success(customer);
+                var c = _customerRepository.SearchByPhone(phone);
+                if (c == null || c.DeletedDate != null)
+                    return Result<CustomerDetailResponseDto>.Fail("Không tìm thấy khách hàng");
+
+                var orders = c.Orders?.Where(o => o.DeletedDate == null) ?? Enumerable.Empty<Order>();
+
+                var dto = new CustomerDetailResponseDto
+                {
+                    CustomerId = c.CustomerId,
+                    Name = c.Name,
+                    Phone = c.Phone,
+                    MemberLevel = c.MemberLevel,
+                    LoyaltyPoints = c.LoyaltyPoints,
+                    CreatedDate = c.CreatedDate,
+                    TotalOrders = orders.Count(),
+                    TotalSpent = orders.Sum(o => o.TotalPrice)
+                };
+
+                return Result<CustomerDetailResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<Customer>.Fail($"Lỗi: {ex.Message}");
+                return Result<CustomerDetailResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Customer>> SearchByName(string name)
+        public Result<IEnumerable<CustomerDetailResponseDto>> SearchByName(string name)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(name))
-                    return Result<IEnumerable<Customer>>.Success(new List<Customer>());
+                    return Result<IEnumerable<CustomerDetailResponseDto>>.Success(new List<CustomerDetailResponseDto>());
 
                 var customers = _customerRepository.SearchByName(name)
                     .Where(c => c.DeletedDate == null)
                     .OrderBy(c => c.Name)
+                    .Select(c =>
+                    {
+                        var orders = c.Orders.Where(o => o.DeletedDate == null);
+                        return new CustomerDetailResponseDto
+                        {
+                            CustomerId = c.CustomerId,
+                            Name = c.Name,
+                            Phone = c.Phone,
+                            MemberLevel = c.MemberLevel,
+                            LoyaltyPoints = c.LoyaltyPoints,
+                            CreatedDate = c.CreatedDate,
+                            TotalOrders = orders.Count(),
+                            TotalSpent = orders.Sum(o => o.TotalPrice)
+                        };
+                    })
                     .ToList();
-                return Result<IEnumerable<Customer>>.Success(customers);
+
+                return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Customer>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<CustomerDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Customer>> GetByMemberLevel(MemberTier level)
+        public Result<IEnumerable<CustomerDetailResponseDto>> GetByMemberLevel(MemberTier level)
         {
             try
             {
-                var customers = _customerRepository.GetByMemberLevel(level)
-                    .Where(c => c.DeletedDate == null)
+                var customers = _customerRepository.GetAll()
+                    .Where(c => c.DeletedDate == null && c.MemberLevel == level)
                     .OrderBy(c => c.Name)
+                    .Select(c =>
+                    {
+                        var orders = c.Orders.Where(o => o.DeletedDate == null);
+                        return new CustomerDetailResponseDto
+                        {
+                            CustomerId = c.CustomerId,
+                            Name = c.Name,
+                            Phone = c.Phone,
+                            MemberLevel = c.MemberLevel,
+                            LoyaltyPoints = c.LoyaltyPoints,
+                            CreatedDate = c.CreatedDate,
+                            TotalOrders = orders.Count(),
+                            TotalSpent = orders.Sum(o => o.TotalPrice)
+                        };
+                    })
                     .ToList();
-                return Result<IEnumerable<Customer>>.Success(customers);
+
+                return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Customer>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<CustomerDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
         
-        public Result<IEnumerable<Customer>> SearchByTotalSpent(decimal minimum, decimal maximum, DateTime startDate, DateTime endDate)
+        public Result<IEnumerable<CustomerDetailResponseDto>> SearchByTotalSpent(decimal minimum, decimal maximum, DateTime startDate, DateTime endDate)
         {
             try
             {
@@ -243,13 +320,27 @@ namespace bookstore_Management.Services.Implementations
                         return totalSpent >= minimum && totalSpent <= maximum;
                     })
                     .OrderBy(c => c.Name)
-                    .ToList();
+                    .Select(s =>
+                    {
+                        var orders = s.Orders.Where(o => o.DeletedDate == null);
+                        return new CustomerDetailResponseDto
+                        {
+                            CustomerId = s.CustomerId,
+                            Name = s.Name,
+                            Phone = s.Phone,
+                            MemberLevel = s.MemberLevel,
+                            LoyaltyPoints = s.LoyaltyPoints,
+                            CreatedDate = s.CreatedDate,
+                            TotalOrders = orders.Count(),
+                            TotalSpent = orders.Sum(o => o.TotalPrice)
+                        };
+                    });
 
-                return Result<IEnumerable<Customer>>.Success(customers);
+                return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Customer>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<CustomerDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
@@ -543,6 +634,34 @@ namespace bookstore_Management.Services.Implementations
             
             var lastNumber = int.Parse(lastCustomer.CustomerId.Substring(2));
             return $"KH{(lastNumber + 1):D4}";
+        }
+
+        // ==================================================================
+        // ----------------------- LIST VIEW METHODS -------------------------
+        // ==================================================================
+        public Result<IEnumerable<CustomerListResponseDto>> GetCustomerList()
+        {
+            try
+            {
+                // Get all active customers (already filtered by DeletedDate in repository)
+                var customers = _customerRepository.GetAllForListView().ToList();
+
+                // Map to DTOs (only required ListView fields)
+                var result = customers.Select(customer => new CustomerListResponseDto
+                {
+                    CustomerId = customer.CustomerId,
+                    Name = customer.Name,
+                    Phone = customer.Phone,
+                    MemberLevel = customer.MemberLevel,
+                    LoyaltyPoints = customer.LoyaltyPoints
+                }).ToList();
+
+                return Result<IEnumerable<CustomerListResponseDto>>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<CustomerListResponseDto>>.Fail($"Lỗi: {ex.Message}");
+            }
         }
     }
 }

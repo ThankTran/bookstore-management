@@ -46,11 +46,11 @@ namespace bookstore_Management.Migrations
             // ============================================
             var books = new List<Book>
             {
-                new Book { BookId = "S00001", Name = "Đắc Nhân Tâm", Author = "Dale Carnegie", SupplierId = "NXB001", Category = BookCategory.Psychology, SalePrice = 80000, ImportPrice = 70000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00002", Name = "Nhà Giả Kim", Author = "Paulo Coelho", SupplierId = "NXB001", Category = BookCategory.Novel, SalePrice = 75000, ImportPrice = 65000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00003", Name = "Tuổi Trẻ Đáng Giá Bao Nhiêu", Author = "Rosie Nguyễn", SupplierId = "NXB002", Category = BookCategory.Literature, SalePrice = 50000, ImportPrice = 40000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00004", Name = "Tôi Tài Giỏi Bạn Cũng Thế", Author = "Adam Khoo", SupplierId = "NXB002", Category = BookCategory.Economics, SalePrice = 65000, ImportPrice = 55000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00005", Name = "Bố Già", Author = "Mario Puzo", SupplierId = "NXB003", Category = BookCategory.Literature, SalePrice = 95000, ImportPrice = 85000, CreatedDate = DateTime.Now }
+                new Book { BookId = "S00001", Name = "Đắc Nhân Tâm", Author = "Dale Carnegie", SupplierId = "NXB001", Category = BookCategory.Psychology, SalePrice = 80000, CreatedDate = DateTime.Now },
+                new Book { BookId = "S00002", Name = "Nhà Giả Kim", Author = "Paulo Coelho", SupplierId = "NXB001", Category = BookCategory.Novel, SalePrice = 75000, CreatedDate = DateTime.Now },
+                new Book { BookId = "S00003", Name = "Tuổi Trẻ Đáng Giá Bao Nhiêu", Author = "Rosie Nguyễn", SupplierId = "NXB002", Category = BookCategory.Literature, SalePrice = 50000, CreatedDate = DateTime.Now },
+                new Book { BookId = "S00004", Name = "Tôi Tài Giỏi Bạn Cũng Thế", Author = "Adam Khoo", SupplierId = "NXB002", Category = BookCategory.Economics, SalePrice = 65000, CreatedDate = DateTime.Now },
+                new Book { BookId = "S00005", Name = "Bố Già", Author = "Mario Puzo", SupplierId = "NXB003", Category = BookCategory.Literature, SalePrice = 95000, CreatedDate = DateTime.Now }
             };
             context.Books.AddOrUpdate(b => b.BookId, books.ToArray());
             context.SaveChanges();
@@ -157,19 +157,9 @@ namespace bookstore_Management.Migrations
             };
             context.Users.AddOrUpdate(u => u.UserId, users.ToArray());
             context.SaveChanges();
+            
 
-            // ============================================
-            // WorkWeeks (mẫu)
-            // ============================================
-            var weeks = new List<WorkWeek>
-            {
-                new WorkWeek { Id = "WW0001", StartDate = DateTime.Today.AddDays(-7), EndDate = DateTime.Today.AddDays(-1), IsActive = false, CreatedDate = DateTime.Now.AddDays(-7) },
-                new WorkWeek { Id = "WW0002", StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(6), IsActive = true, CreatedDate = DateTime.Now }
-            };
-            context.WorkWeeks.AddOrUpdate(w => w.Id, weeks.ToArray());
-            context.SaveChanges();
-
-            // AuditLogs mẫu (trống nếu không cần)
+            // AuditLogs mẫu 
             // context.AuditLogs.AddOrUpdate(al => al.Id, new AuditLog { ... });
             // context.SaveChanges();
 

@@ -117,17 +117,8 @@ namespace bookstore_Management
 
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
-            //SetClickedButtonColor(btnHome);
-            //LoadHomePage();
-            try
-            {
-                SetClickedButtonColor(btnHome);
-                MainFrame.Content = new HomeView();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            SetClickedButtonColor(btnHome);
+            LoadHomePage();
         }
 
         // Xử lý click menu Quản lý khách hàng

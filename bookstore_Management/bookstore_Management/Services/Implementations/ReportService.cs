@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
-using bookstore_Management.DTOs;
+using bookstore_Management.DTOs.Common.Reports;
+using bookstore_Management.DTOs.Book.Shared;
 using bookstore_Management.Services.Interfaces;
 
 namespace bookstore_Management.Services.Implementations
@@ -17,6 +18,7 @@ namespace bookstore_Management.Services.Implementations
         private readonly ICustomerRepository _customerRepository;
         private readonly IStaffRepository _staffRepository;
         private readonly IImportBillRepository _importBillRepository;
+        private readonly IImportBillDetailRepository _importBillDetailRepository;
 
         internal ReportService(
             IOrderRepository orderRepository,
@@ -25,7 +27,8 @@ namespace bookstore_Management.Services.Implementations
             IBookRepository bookRepository,
             ICustomerRepository customerRepository,
             IStaffRepository staffRepository,
-            IImportBillRepository importBillRepository)
+            IImportBillRepository importBillRepository,
+            IImportBillDetailRepository importBillDetailRepository)
         {
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailRepository;
@@ -34,6 +37,7 @@ namespace bookstore_Management.Services.Implementations
             _customerRepository = customerRepository;
             _staffRepository = staffRepository;
             _importBillRepository = importBillRepository;
+            _importBillDetailRepository = importBillDetailRepository;
         }
 
         public Result<decimal> GetTotalRevenue(DateTime fromDate, DateTime toDate)
@@ -66,9 +70,10 @@ namespace bookstore_Management.Services.Implementations
                 decimal totalProfit = 0;
                 foreach (var d in details)
                 {
-                    var book = _bookRepository.GetById(d.BookId);
-                    if (book?.ImportPrice == null) continue;
-                    totalProfit += (d.SalePrice - book.ImportPrice.Value) * d.Quantity;
+                    // Get import price from ImportBillDetail, not from Book model
+                    var importPrice = _importBillDetailRepository.GetImportPriceByBookId(d.BookId);
+                    if (importPrice <= 0) continue; // Skip if no import price found
+                    totalProfit += (d.SalePrice - importPrice) * d.Quantity;
                 }
 
                 return Result<decimal>.Success(totalProfit);
@@ -129,7 +134,7 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result<IEnumerable<BookSalesReport>> GetTopSellingBooks(DateTime fromDate, DateTime toDate, int topCount = 10)
+        public Result<IEnumerable<BookSalesReportResponseDto>> GetTopSellingBooks(DateTime fromDate, DateTime toDate, int topCount = 10)
         {
             try
             {
@@ -140,7 +145,7 @@ namespace bookstore_Management.Services.Implementations
 
                 var result = details
                     .GroupBy(od => od.BookId)
-                    .Select(g => new BookSalesReport
+                    .Select(g => new BookSalesReportResponseDto
                     {
                         BookId = g.Key,
                         BookName = _bookRepository.GetById(g.Key)?.Name ?? "Unknown",
@@ -152,15 +157,15 @@ namespace bookstore_Management.Services.Implementations
                     .Take(topCount)
                     .ToList();
 
-                return Result<IEnumerable<BookSalesReport>>.Success(result);
+                return Result<IEnumerable<BookSalesReportResponseDto>>.Success(result);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<BookSalesReport>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<BookSalesReportResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<BookSalesReport>> GetLowestSellingBooks(DateTime fromDate, DateTime toDate, int bottomCount = 5)
+        public Result<IEnumerable<BookSalesReportResponseDto>> GetLowestSellingBooks(DateTime fromDate, DateTime toDate, int bottomCount = 5)
         {
             try
             {
@@ -180,7 +185,7 @@ namespace bookstore_Management.Services.Implementations
                             book,
                             det = det.ToList()
                         })
-                    .Select(x => new BookSalesReport
+                    .Select(x => new BookSalesReportResponseDto
                     {
                         BookId = x.book.BookId,
                         BookName = x.book.Name,
@@ -192,15 +197,15 @@ namespace bookstore_Management.Services.Implementations
                     .Take(bottomCount)
                     .ToList();
 
-                return Result<IEnumerable<BookSalesReport>>.Success(report);
+                return Result<IEnumerable<BookSalesReportResponseDto>>.Success(report);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<BookSalesReport>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<BookSalesReportResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<StaffPerformanceReport>> GetStaffPerformance(DateTime fromDate, DateTime toDate)
+        public Result<IEnumerable<StaffPerformanceReportResponseDto>> GetStaffPerformance(DateTime fromDate, DateTime toDate)
         {
             try
             {
@@ -216,7 +221,7 @@ namespace bookstore_Management.Services.Implementations
                         var own = orders.Where(o => o.StaffId == s.Id);
                         var totalOrders = own.Count();
                         var revenue = own.Sum(o => o.TotalPrice);
-                        return new StaffPerformanceReport
+                        return new StaffPerformanceReportResponseDto
                         {
                             StaffId = s.Id,
                             StaffName = s.Name,
@@ -229,24 +234,24 @@ namespace bookstore_Management.Services.Implementations
                     .OrderByDescending(r => r.TotalRevenue)
                     .ToList();
 
-                return Result<IEnumerable<StaffPerformanceReport>>.Success(report);
+                return Result<IEnumerable<StaffPerformanceReportResponseDto>>.Success(report);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<StaffPerformanceReport>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<StaffPerformanceReportResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<StaffPerformanceReport> GetStaffPerformanceDetail(string staffId, DateTime fromDate, DateTime toDate)
+        public Result<StaffPerformanceReportResponseDto> GetStaffPerformanceDetail(string staffId, DateTime fromDate, DateTime toDate)
         {
             var all = GetStaffPerformance(fromDate, toDate);
-            if (!all.IsSuccess) return Result<StaffPerformanceReport>.Fail(all.ErrorMessage);
+            if (!all.IsSuccess) return Result<StaffPerformanceReportResponseDto>.Fail(all.ErrorMessage);
             var item = all.Data.FirstOrDefault(r => r.StaffId == staffId);
-            if (item == null) return Result<StaffPerformanceReport>.Fail("Nhân viên không tồn tại hoặc không có dữ liệu");
-            return Result<StaffPerformanceReport>.Success(item);
+            if (item == null) return Result<StaffPerformanceReportResponseDto>.Fail("Nhân viên không tồn tại hoặc không có dữ liệu");
+            return Result<StaffPerformanceReportResponseDto>.Success(item);
         }
 
-        public Result<InventorySummaryReport> GetInventorySummary()
+        public Result<InventorySummaryReportResponseDto> GetInventorySummary()
         {
             try
             {
@@ -257,13 +262,18 @@ namespace bookstore_Management.Services.Implementations
                 int totalQuantity = stocks.Sum(s => s.StockQuantity);
 
                 // Giá trị tồn kho nên tính theo giá vốn (ImportPrice), không phải giá bán (SalePrice).
+                // Get import prices for all books in batch
+                var bookIds = books.Select(b => b.BookId).ToList();
+                var importPrices = _importBillDetailRepository.GetLatestImportPricesByBookIds(bookIds);
+                
                 decimal totalValue = books.Sum(b =>
-                    (b.ImportPrice ?? 0) * stocks.Where(s => s.BookId == b.BookId).Sum(s => s.StockQuantity));
+                    (importPrices.ContainsKey(b.BookId) ? importPrices[b.BookId] ?? 0 : 0) * 
+                    stocks.Where(s => s.BookId == b.BookId).Sum(s => s.StockQuantity));
 
                 int lowStockCount = stocks.Count(s => s.StockQuantity > 0 && s.StockQuantity <= 5);
                 int outOfStockCount = stocks.Count(s => s.StockQuantity == 0);
 
-                var report = new InventorySummaryReport
+                var report = new InventorySummaryReportResponseDto
                 {
                     TotalBooks = totalBooks,
                     TotalQuantity = totalQuantity,
@@ -271,11 +281,11 @@ namespace bookstore_Management.Services.Implementations
                     LowStockCount = lowStockCount,
                     OutOfStockCount = outOfStockCount
                 };
-                return Result<InventorySummaryReport>.Success(report);
+                return Result<InventorySummaryReportResponseDto>.Success(report);
             }
             catch (Exception ex)
             {
-                return Result<InventorySummaryReport>.Fail($"Lỗi: {ex.Message}");
+                return Result<InventorySummaryReportResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
@@ -286,7 +296,7 @@ namespace bookstore_Management.Services.Implementations
             return Result<decimal>.Success(summary.Data.TotalValue);
         }
 
-        public Result<IEnumerable<CustomerSpendingReport>> GetTopSpendingCustomers(int topCount = 10)
+        public Result<IEnumerable<CustomerSpendingReportResponseDto>> GetTopSpendingCustomers(int topCount = 10)
         {
             try
             {
@@ -298,7 +308,7 @@ namespace bookstore_Management.Services.Implementations
                     {
                         var cos = orders.Where(o => o.CustomerId == c.CustomerId);
                         var totalSpent = cos.Sum(o => o.TotalPrice);
-                        return new CustomerSpendingReport
+                        return new CustomerSpendingReportResponseDto
                         {
                             CustomerId = c.CustomerId,
                             CustomerName = c.Name,
@@ -311,11 +321,11 @@ namespace bookstore_Management.Services.Implementations
                     .Take(topCount)
                     .ToList();
 
-                return Result<IEnumerable<CustomerSpendingReport>>.Success(report);
+                return Result<IEnumerable<CustomerSpendingReportResponseDto>>.Success(report);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<CustomerSpendingReport>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<CustomerSpendingReportResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
@@ -335,7 +345,7 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result<IEnumerable<SupplierImportReport>> GetSupplierImportReport(DateTime fromDate, DateTime toDate)
+        public Result<IEnumerable<SupplierImportReportResponseDto>> GetSupplierImportReport(DateTime fromDate, DateTime toDate)
         {
             try
             {
@@ -351,7 +361,7 @@ namespace bookstore_Management.Services.Implementations
                         var supplier = g.FirstOrDefault()?.Supplier;
                         var totalQty = g.SelectMany(x => x.ImportBillDetails).Sum(d => d.Quantity);
                         var totalValue = g.Sum(x => x.TotalAmount);
-                        return new SupplierImportReport
+                        return new SupplierImportReportResponseDto
                         {
                             SupplierId = g.Key,
                             SupplierName = supplier?.Name ?? "Unknown",
@@ -362,11 +372,11 @@ namespace bookstore_Management.Services.Implementations
                     .OrderByDescending(r => r.TotalImportValue)
                     .ToList();
 
-                return Result<IEnumerable<SupplierImportReport>>.Success(report);
+                return Result<IEnumerable<SupplierImportReportResponseDto>>.Success(report);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<SupplierImportReport>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<SupplierImportReportResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
     }

@@ -15,6 +15,13 @@ namespace bookstore_Management.Data.Repositories.Implementations
         {
             return Find(ibd => ibd.ImportId == importId && ibd.DeletedDate == null);
         }
+
+        public decimal GetImportPriceByBookId(string bookId)
+        {
+            return Find(ibd => ibd.BookId == bookId && ibd.DeletedDate == null)
+                .Select(ib => ib.ImportPrice)
+                .FirstOrDefault();
+        }
         
         public void SoftDelete(string importId, string bookId)
         {
@@ -23,6 +30,43 @@ namespace bookstore_Management.Data.Repositories.Implementations
             {
                 entity.DeletedDate = DateTime.Now;
             }
+        }
+
+        public Dictionary<string, decimal?> GetLatestImportPricesByBookIds(IEnumerable<string> bookIds)
+        {
+            var bookIdList = bookIds.ToList();
+            if (!bookIdList.Any())
+                return new Dictionary<string, decimal?>();
+
+            // Get latest import price for each book
+            // Join with ImportBill to get CreatedDate for ordering
+            var result = _dbSet
+                .Where(ibd => ibd.DeletedDate == null && bookIdList.Contains(ibd.BookId))
+                .Join(_dbContext.Set<ImportBill>(),
+                    ibd => ibd.ImportId,
+                    ib => ib.Id,
+                    (ibd, ib) => new { ibd.BookId, ibd.ImportPrice, ib.CreatedDate, ib.DeletedDate })
+                .Where(x => x.DeletedDate == null)
+                .GroupBy(x => x.BookId)
+                .Select(g => new
+                {
+                    BookId = g.Key,
+                    LatestPrice = g.OrderByDescending(x => x.CreatedDate)
+                        .ThenByDescending(x => x.ImportPrice)
+                        .Select(x => (decimal?)x.ImportPrice)
+                        .FirstOrDefault()
+                })
+                .ToList()
+                .ToDictionary(x => x.BookId, x => x.LatestPrice);
+
+            // Ensure all bookIds are in the dictionary (with null if no import found)
+            foreach (var bookId in bookIdList)
+            {
+                if (!result.ContainsKey(bookId))
+                    result[bookId] = null;
+            }
+
+            return result;
         }
     }
 }

@@ -13,5 +13,11 @@ namespace bookstore_Management.Data.Repositories.Interfaces
         IEnumerable<Book> SearchByName(string keyword); // tìm kiếm theo tên
         IEnumerable<Book> GetByAuthor(string author);
         IEnumerable<Book> GetByPriceRange(decimal? minPrice, decimal? maxPrice);
+        
+        /// <summary>
+        /// Gets all active (non-deleted) books for list view
+        /// Filters by DeletedDate == null
+        /// </summary>
+        IEnumerable<Book> GetAllForListView();
     }
 }
