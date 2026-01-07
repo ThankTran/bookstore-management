@@ -15,6 +15,8 @@ namespace bookstore_Management.Services.Interfaces
         Result DeleteCustomer(string customerId);
         Result<CustomerDetailResponseDto> GetCustomerById(string customerId);
         Result<IEnumerable<CustomerDetailResponseDto>> GetAllCustomers();
+        
+        
         // Tìm kiếm
         Result<CustomerDetailResponseDto> GetCustomerByPhone(string phone);
         Result<IEnumerable<CustomerDetailResponseDto>> SearchByName(string name);
@@ -38,10 +40,7 @@ namespace bookstore_Management.Services.Interfaces
         Result<decimal> CustomerTotalSpentPerMonth(string customerId, int month, int year);
         Result<decimal> CustomerTotalSpentPerYear(string customerId, int year);
         
-        /// <summary>
-        /// Gets customer list for ListView display
-        /// Returns CustomerListResponseDto with only required ListView fields
-        /// </summary>
+        // Listviewitem
         Result<IEnumerable<CustomerListResponseDto>> GetCustomerList();
     }
 }

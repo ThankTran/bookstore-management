@@ -26,19 +26,13 @@ namespace bookstore_Management.Services.Interfaces
         Result<IEnumerable<BookDetailResponseDto>> GetBySupplierName(string supplierName);
         Result<IEnumerable<BookDetailResponseDto>> GetByPriceRange(decimal? minPrice, decimal? maxPrice);
         
-
-        // Quản lý giá
-        Result UpdateSalePrice(string bookId, decimal newSalePrice);
         
         
         // Quản lý tồn kho (gọi đến StockService)
         Result<IEnumerable<BookDetailResponseDto>> GetLowStockBooks(int minStock = 5);
         Result<IEnumerable<BookDetailResponseDto>> GetOutOfStockBooks();
-        
-        /// <summary>
-        /// Gets book list for ListView display
-        /// Returns BookListResponseDto with Index (STT) generated at Service level
-        /// </summary>
+
+        // ListviewItem (optional)
         Result<IEnumerable<BookListResponseDto>> GetBookList();
     }
 }

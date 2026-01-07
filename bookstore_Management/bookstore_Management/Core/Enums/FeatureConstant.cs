@@ -1,4 +1,4 @@
-﻿namespace bookstore_Management.Core.Constants
+﻿namespace bookstore_Management.Core.Enums
 {
     /// <summary>
     /// Các tên feature trong hệ thống
@@ -12,4 +12,4 @@
         public const string Customer = "Customer";
         public const string Report = "Report";
     }
-}
+}   

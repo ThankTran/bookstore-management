@@ -16,6 +16,7 @@ namespace bookstore_Management.Services.Interfaces
         Result CancelOrder(string orderId, string reason);
         Result<OrderResponseDto> GetOrderById(string orderId);
         Result<IEnumerable<OrderResponseDto>> GetAllOrders();
+        
         // Tìm kiếm đơn hàng
         Result<IEnumerable<OrderResponseDto>> GetOrdersByCustomer(string customerId);
         Result<IEnumerable<OrderResponseDto>> GetOrdersByStaff(string staffId);

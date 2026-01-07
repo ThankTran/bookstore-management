@@ -14,6 +14,7 @@ namespace bookstore_Management.Services.Interfaces
         Result DeleteSupplier(string supplierId);
         Result<SupplierResponseDto> GetSupplierById(string supplierId);
         Result<IEnumerable<SupplierResponseDto>> GetAllSuppliers();
+        
         // Tìm kiếm
         Result<SupplierResponseDto> GetSupplierByPhone(string phone);
         Result<SupplierResponseDto> GetSupplierByEmail(string email);
