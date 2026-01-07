@@ -5,8 +5,10 @@ namespace bookstore_Management.DTOs.Order.Responses
     /// </summary>
     public class OrderDetailResponseDto
     {
+        public string OrderId { get; set; }
         public string BookId { get; set; }
         public string BookName { get; set; }
+        
         public string Author { get; set; }
         public decimal SalePrice { get; set; }
         public int Quantity { get; set; }
