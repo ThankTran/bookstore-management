@@ -365,17 +365,16 @@ namespace bookstore_Management.Services.Implementations
             {
                 var details = _importBillDetailRepository.GetByImportId(importBillId)
                     .Where(d => d.DeletedDate == null)
-                    .ToList();
-                var dtos = details.Select(d => new ImportBillDetailResponseDto
-                {
-                    BookId = d.BookId,
-                    BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
-                    Author = _bookRepository.GetById(d.BookId)?.Author ?? "Unknown",
-                    Quantity = d.Quantity,
-                    ImportPrice = d.ImportPrice,
-                    Subtotal = d.Subtotal
-                }).ToList();
-                return Result<IEnumerable<ImportBillDetailResponseDto>>.Success(dtos);
+                    .Select(d => new ImportBillDetailResponseDto
+                    {
+                        BookId = d.BookId,
+                        BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
+                        Author = _bookRepository.GetById(d.BookId)?.Author ?? "Unknown",
+                        Quantity = d.Quantity,
+                        ImportPrice = d.ImportPrice,
+                        Subtotal = d.Quantity * d.ImportPrice
+                    });
+                return Result<IEnumerable<ImportBillDetailResponseDto>>.Success(details);
             }
             catch (Exception ex)
             {
@@ -447,7 +446,6 @@ namespace bookstore_Management.Services.Implementations
                 TotalAmount = bill.TotalAmount,
                 Notes = bill.Notes,
                 CreatedBy = bill.CreatedBy,
-                CreatedByName = bill.CreatedByStaff?.Name,
                 CreatedDate = bill.CreatedDate,
                 ImportBillDetails = bill.ImportBillDetails?
                     .Where(d => d.DeletedDate == null)
@@ -458,7 +456,7 @@ namespace bookstore_Management.Services.Implementations
                         Author = d.Book?.Author ?? "Unknown",
                         Quantity = d.Quantity,
                         ImportPrice = d.ImportPrice,
-                        Subtotal = d.Subtotal
+                        Subtotal = d.Quantity * d.ImportPrice
                     }).ToList() ?? new List<ImportBillDetailResponseDto>()
             };
         }

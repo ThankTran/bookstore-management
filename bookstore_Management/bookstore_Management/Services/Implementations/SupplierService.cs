@@ -184,9 +184,8 @@ namespace bookstore_Management.Services.Implementations
                 var suppliers = _supplierRepository.GetAll()
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
-                    .ToList();
-                var dtos = suppliers.Select(MapToSupplierResponseDto).ToList();
-                return Result<IEnumerable<SupplierResponseDto>>.Success(dtos);
+                    .Select(MapToSupplierResponseDto);
+                return Result<IEnumerable<SupplierResponseDto>>.Success(suppliers);
             }
             catch (Exception ex)
             {
@@ -290,7 +289,7 @@ namespace bookstore_Management.Services.Implementations
                 var importBills = _importBillRepository.Find(ib =>
                     ib.SupplierId == supplierId);
 
-                decimal totalValue = importBills.Sum(ib => ib.TotalAmount);
+                var totalValue = importBills.Sum(ib => ib.TotalAmount);
                 
                 return Result<decimal>.Success(totalValue, $"Tổng giá trị nhập: {totalValue:N0} VND");
             }

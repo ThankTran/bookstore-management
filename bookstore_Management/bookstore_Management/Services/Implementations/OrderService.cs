@@ -265,9 +265,8 @@ namespace bookstore_Management.Services.Implementations
                 var orders = _orderRepository.GetAll()
                     .Where(o => o.DeletedDate == null)
                     .OrderByDescending(o => o.CreatedDate)
-                    .ToList();
-                var dtos = orders.Select(MapToOrderResponseDto).ToList();
-                return Result<IEnumerable<OrderResponseDto>>.Success(dtos);
+                    .Select(MapToOrderResponseDto);
+                return Result<IEnumerable<OrderResponseDto>>.Success(orders);
             }
             catch (Exception ex)
             {
@@ -282,9 +281,8 @@ namespace bookstore_Management.Services.Implementations
                 var orders = _orderRepository.GetByCustomer(customerId)
                     .Where(o => o.DeletedDate == null)
                     .OrderByDescending(o => o.CreatedDate)
-                    .ToList();
-                var dtos = orders.Select(MapToOrderResponseDto).ToList();
-                return Result<IEnumerable<OrderResponseDto>>.Success(dtos);
+                    .Select(MapToOrderResponseDto);
+                return Result<IEnumerable<OrderResponseDto>>.Success(orders);
             }
             catch (Exception ex)
             {
@@ -299,9 +297,8 @@ namespace bookstore_Management.Services.Implementations
                 var orders = _orderRepository.GetByStaff(staffId)
                     .Where(o => o.DeletedDate == null)
                     .OrderByDescending(o => o.CreatedDate)
-                    .ToList();
-                var dtos = orders.Select(MapToOrderResponseDto).ToList();
-                return Result<IEnumerable<OrderResponseDto>>.Success(dtos);
+                    .Select(MapToOrderResponseDto);
+                return Result<IEnumerable<OrderResponseDto>>.Success(orders);
             }
             catch (Exception ex)
             {
@@ -316,9 +313,8 @@ namespace bookstore_Management.Services.Implementations
                 var orders = _orderRepository.GetByDateRange(fromDate, toDate)
                     .Where(o => o.DeletedDate == null)
                     .OrderByDescending(o => o.CreatedDate)
-                    .ToList();
-                var dtos = orders.Select(MapToOrderResponseDto).ToList();
-                return Result<IEnumerable<OrderResponseDto>>.Success(dtos);
+                    .Select(MapToOrderResponseDto);
+                return Result<IEnumerable<OrderResponseDto>>.Success(orders);
             }
             catch (Exception ex)
             {
@@ -331,18 +327,17 @@ namespace bookstore_Management.Services.Implementations
             try
             {
                 var details = _orderDetailRepository.GetByOrder(orderId)
-                    .ToList();
-                var dtos = details.Select(d => new OrderDetailResponseDto
-                {
-                    OrderId = d.OrderId,
-                    BookId = d.BookId,
-                    BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
-                    SalePrice = d.SalePrice,
-                    Quantity = d.Quantity,
-                    Subtotal = d.Subtotal,
-                    Notes = d.Notes
-                }).ToList();
-                return Result<IEnumerable<OrderDetailResponseDto>>.Success(dtos);
+                    .Select(d => new OrderDetailResponseDto
+                    {
+                        OrderId = d.OrderId,
+                        BookId = d.BookId,
+                        BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
+                        SalePrice = d.SalePrice,
+                        Quantity = d.Quantity,
+                        Subtotal = d.Subtotal,
+                        Notes = d.Notes
+                    });
+                return Result<IEnumerable<OrderDetailResponseDto>>.Success(details);
             }
             catch (Exception ex)
             {
@@ -372,7 +367,7 @@ namespace bookstore_Management.Services.Implementations
                 .OrderByDescending(s => s.StockQuantity)
                 .ToList();
 
-            int remaining = quantity;
+            var remaining = quantity;
             foreach (var stock in stocks)
             {
                 if (remaining <= 0) break;

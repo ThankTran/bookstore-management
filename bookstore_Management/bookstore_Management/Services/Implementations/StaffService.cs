@@ -103,12 +103,7 @@ namespace bookstore_Management.Services.Implementations
                 var staff = _staffRepository.GetById(staffId);
                 if (staff == null || staff.DeletedDate != null)
                     return Result.Fail("Nhân viên không tồn tại");
-                
-                // Check if staff has orders
-                var staffOrders = _orderRepository.Find(o => o.StaffId == staffId && o.DeletedDate == null);
-                if (staffOrders.Any())
-                    return Result.Fail("Không thể xóa nhân viên đã có đơn hàng");
-                
+ 
                 // Soft delete
                 staff.DeletedDate = DateTime.Now;
                 _staffRepository.Update(staff);
@@ -149,9 +144,8 @@ namespace bookstore_Management.Services.Implementations
                 var staff = _staffRepository.GetAll()
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
-                    .ToList();
-                var dtos = staff.Select(MapToStaffResponseDto).ToList();
-                return Result<IEnumerable<StaffResponseDto>>.Success(dtos);
+                    .Select(MapToStaffResponseDto);
+                return Result<IEnumerable<StaffResponseDto>>.Success(staff);
             }
             catch (Exception ex)
             {
@@ -167,9 +161,8 @@ namespace bookstore_Management.Services.Implementations
                 var staff = _staffRepository.GetByRole(userRole)
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
-                    .ToList();
-                var dtos = staff.Select(MapToStaffResponseDto).ToList();
-                return Result<IEnumerable<StaffResponseDto>>.Success(dtos);
+                    .Select(MapToStaffResponseDto);
+                return Result<IEnumerable<StaffResponseDto>>.Success(staff);
             }
             catch (Exception ex)
             {
