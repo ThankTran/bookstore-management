@@ -13,7 +13,7 @@ namespace bookstore_Management.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202512170942430_InitialCreate"; }
+            get { return "202601110937402_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

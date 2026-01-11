@@ -303,9 +303,9 @@
     <Compile Include="Helpers\ExcelExporter.cs" />
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
-    <Compile Include="Migrations\202512170942430_InitialCreate.cs" />
-    <Compile Include="Migrations\202512170942430_InitialCreate.Designer.cs">
-      <DependentUpon>202512170942430_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202601110937402_InitialCreate.cs" />
+    <Compile Include="Migrations\202601110937402_InitialCreate.Designer.cs">
+      <DependentUpon>202601110937402_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
@@ -443,8 +443,8 @@
     <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202512170942430_InitialCreate.resx">
-      <DependentUpon>202512170942430_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202601110937402_InitialCreate.resx">
+      <DependentUpon>202601110937402_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -516,7 +516,7 @@
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\export.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\print.png" />
   </ItemGroup>
-    <ItemGroup>
+  <ItemGroup>
     <Resource Include="Presentation\AppResources\Images\Icons\Login\user.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\timeline.png" />
   </ItemGroup>
