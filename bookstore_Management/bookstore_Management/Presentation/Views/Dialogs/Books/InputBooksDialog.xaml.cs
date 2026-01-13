@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.Presentation.Views.Dialogs.Books
 {
@@ -22,8 +23,8 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
         public InputBooksDialog()
         {
             InitializeComponent();
+            cbCategory.ItemsSource = Enum.GetValues(typeof(BookCategory));//lấy item từ enum BookCategory
         }
-
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
@@ -47,11 +48,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             get { return tbAuthor.Text; }
             set { tbAuthor.Text = value; }
         }
-        //public string Category
-        //{
-        //    get { return tbCategory.Text; }
-        //    set { tbCategory.Text = value; }
-        //}
+        public BookCategory Category
+        {
+            get { return (BookCategory)cbCategory.SelectedItem; }
+            set { cbCategory.SelectedItem = value; }
+        }
         public string Publisher
         {
             get { return tbPublisher.Text; }
@@ -63,6 +64,8 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             // You can add validation logic here before closing the dialog
+            if (string.IsNullOrEmpty(tbBookID.Text) || string.IsNullOrEmpty(tbBookName.Text) || string.IsNullOrEmpty(tbAuthor.Text) || string.IsNullOrEmpty(tbPublisher.Text)) { return; }
+
             this.DialogResult = true;
             this.Close();
         }

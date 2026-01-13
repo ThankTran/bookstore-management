@@ -32,7 +32,6 @@
                         supplier_id = c.String(maxLength: 6),
                         category = c.Int(nullable: false),
                         sale_price = c.Decimal(precision: 18, scale: 2),
-                        import_price = c.Decimal(precision: 18, scale: 2),
                         created_date = c.DateTime(nullable: false),
                         updated_date = c.DateTime(),
                         deleted_date = c.DateTime(),
@@ -187,80 +186,6 @@
                 .PrimaryKey(t => t.id);
             
             CreateTable(
-                "dbo.ShiftTemplates",
-                c => new
-                    {
-                        id = c.String(nullable: false, maxLength: 6),
-                        name = c.String(nullable: false, maxLength: 50),
-                        start_time = c.Time(nullable: false, precision: 7),
-                        end_time = c.Time(nullable: false, precision: 7),
-                        working_days = c.String(nullable: false, maxLength: 50),
-                        description = c.String(maxLength: 200),
-                        created_date = c.DateTime(nullable: false),
-                        updated_date = c.DateTime(),
-                        deleted_date = c.DateTime(),
-                    })
-                .PrimaryKey(t => t.id);
-            
-            CreateTable(
-                "dbo.StaffShiftRegistrations",
-                c => new
-                    {
-                        id = c.String(nullable: false, maxLength: 6),
-                        week_id = c.String(nullable: false, maxLength: 6),
-                        staff_id = c.String(nullable: false, maxLength: 6),
-                        shift_template_id = c.String(nullable: false, maxLength: 6),
-                        notes = c.String(maxLength: 200),
-                        created_date = c.DateTime(nullable: false),
-                        updated_date = c.DateTime(),
-                        deleted_date = c.DateTime(),
-                    })
-                .PrimaryKey(t => t.id)
-                .ForeignKey("dbo.ShiftTemplates", t => t.shift_template_id)
-                .ForeignKey("dbo.Staffs", t => t.staff_id)
-                .ForeignKey("dbo.WorkWeeks", t => t.week_id)
-                .Index(t => t.week_id)
-                .Index(t => t.staff_id)
-                .Index(t => t.shift_template_id);
-            
-            CreateTable(
-                "dbo.WorkWeeks",
-                c => new
-                    {
-                        id = c.String(nullable: false, maxLength: 6),
-                        start_date = c.DateTime(nullable: false),
-                        end_date = c.DateTime(nullable: false),
-                        is_active = c.Boolean(nullable: false),
-                        created_date = c.DateTime(nullable: false),
-                        updated_date = c.DateTime(),
-                        deleted_date = c.DateTime(),
-                    })
-                .PrimaryKey(t => t.id);
-            
-            CreateTable(
-                "dbo.WorkSchedules",
-                c => new
-                    {
-                        id = c.String(nullable: false, maxLength: 6),
-                        week_id = c.String(nullable: false, maxLength: 6),
-                        staff_id = c.String(nullable: false, maxLength: 6),
-                        shift_template_id = c.String(nullable: false, maxLength: 6),
-                        work_date = c.DateTime(nullable: false),
-                        notes = c.String(maxLength: 200),
-                        assigned_by = c.String(nullable: false, maxLength: 6),
-                        created_date = c.DateTime(nullable: false),
-                        updated_date = c.DateTime(),
-                        deleted_date = c.DateTime(),
-                    })
-                .PrimaryKey(t => t.id)
-                .ForeignKey("dbo.ShiftTemplates", t => t.shift_template_id)
-                .ForeignKey("dbo.Staffs", t => t.staff_id)
-                .ForeignKey("dbo.WorkWeeks", t => t.week_id)
-                .Index(t => t.week_id)
-                .Index(t => t.staff_id)
-                .Index(t => t.shift_template_id);
-            
-            CreateTable(
                 "dbo.Users",
                 c => new
                     {
@@ -279,12 +204,6 @@
         
         public override void Down()
         {
-            DropForeignKey("dbo.StaffShiftRegistrations", "week_id", "dbo.WorkWeeks");
-            DropForeignKey("dbo.WorkSchedules", "week_id", "dbo.WorkWeeks");
-            DropForeignKey("dbo.WorkSchedules", "staff_id", "dbo.Staffs");
-            DropForeignKey("dbo.WorkSchedules", "shift_template_id", "dbo.ShiftTemplates");
-            DropForeignKey("dbo.StaffShiftRegistrations", "staff_id", "dbo.Staffs");
-            DropForeignKey("dbo.StaffShiftRegistrations", "shift_template_id", "dbo.ShiftTemplates");
             DropForeignKey("dbo.Books", "supplier_id", "dbo.Suppliers");
             DropForeignKey("dbo.Stocks", "warehouse_id", "dbo.Warehouses");
             DropForeignKey("dbo.ImportBills", "warehouse_id", "dbo.Warehouses");
@@ -296,12 +215,6 @@
             DropForeignKey("dbo.Orders", "staff_id", "dbo.Staffs");
             DropForeignKey("dbo.Orders", "customer_id", "dbo.Customers");
             DropForeignKey("dbo.OrderDetails", "book_id", "dbo.Books");
-            DropIndex("dbo.WorkSchedules", new[] { "shift_template_id" });
-            DropIndex("dbo.WorkSchedules", new[] { "staff_id" });
-            DropIndex("dbo.WorkSchedules", new[] { "week_id" });
-            DropIndex("dbo.StaffShiftRegistrations", new[] { "shift_template_id" });
-            DropIndex("dbo.StaffShiftRegistrations", new[] { "staff_id" });
-            DropIndex("dbo.StaffShiftRegistrations", new[] { "week_id" });
             DropIndex("dbo.ImportBillDetails", new[] { "import_id" });
             DropIndex("dbo.ImportBillDetails", new[] { "book_id" });
             DropIndex("dbo.ImportBills", new[] { "warehouse_id" });
@@ -314,10 +227,6 @@
             DropIndex("dbo.OrderDetails", new[] { "book_id" });
             DropIndex("dbo.Books", new[] { "supplier_id" });
             DropTable("dbo.Users");
-            DropTable("dbo.WorkSchedules");
-            DropTable("dbo.WorkWeeks");
-            DropTable("dbo.StaffShiftRegistrations");
-            DropTable("dbo.ShiftTemplates");
             DropTable("dbo.Suppliers");
             DropTable("dbo.ImportBillDetails");
             DropTable("dbo.ImportBills");

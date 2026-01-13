@@ -10,7 +10,6 @@
         Background="Transparent">
 
     <Window.Resources>
-
         <!-- Style cho nút bo góc + hiệu ứng hover -->
         <Style x:Key="RoundedButtonStyle" TargetType="Button">
             <Setter Property="Template">
@@ -122,13 +121,8 @@
                 <Trigger Property="IsMouseOver" Value="True">
 
                 </Trigger>
-
-
-
             </Style.Triggers>
         </Style>
-
-
     </Window.Resources>
     <Border Background="#FFFFFF" CornerRadius="20" Padding="0">
         <Grid>
