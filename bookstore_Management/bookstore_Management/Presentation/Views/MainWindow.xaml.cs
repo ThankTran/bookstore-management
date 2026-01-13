@@ -1,4 +1,5 @@
-﻿using bookstore_Management.Presentation.Views.Information;
+﻿
+using bookstore_Management.Presentation.Views.Information;
 using bookstore_Management.Presentation.Views;
 using bookstore_Management.Presentation.Views.Users;
 using bookstore_Management.Views.Books;
@@ -111,7 +112,7 @@ namespace bookstore_Management
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
             SetClickedButtonColor(btnHome);
-            LoadHomePage();
+            //LoadHomePage();
         }
 
         // Xử lý click menu Quản lý khách hàng
@@ -167,7 +168,7 @@ namespace bookstore_Management
         }
 
         // Xử lý khi di chuột vào nút thông tin    
-                
+
         private void btnI_Click(object sender, RoutedEventArgs e)
         {
             InforDialog infoView = new InforDialog
@@ -175,8 +176,8 @@ namespace bookstore_Management
                 WindowStartupLocation = WindowStartupLocation.Manual,
                 Left = 15,
                 Top = 15
-            }; 
-            infoView.Show();            
+            };
+            infoView.Show();
         }
 
         // Xử lý click menu Thanh toán
@@ -251,6 +252,6 @@ namespace bookstore_Management
 
         #endregion
 
-        
+
     }
 }
