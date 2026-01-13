@@ -1,4 +1,5 @@
-﻿using bookstore_Management.Presentation.Views.Information;
+﻿
+using bookstore_Management.Presentation.Views.Information;
 using bookstore_Management.Presentation.Views;
 using bookstore_Management.Presentation.Views.Users;
 using bookstore_Management.Views.Books;
@@ -6,7 +7,6 @@ using bookstore_Management.Views.Customers;
 using bookstore_Management.Views.Statistics;
 using bookstore_Management.Views.Orders;
 using bookstore_Management.Presentation.Views.Publishers;
-using bookstore_Management.Presentation.Views.Users;
 using System;
 using System.Security.Principal;
 using System.Windows;
@@ -25,16 +25,10 @@ namespace bookstore_Management
         public MainWindow()
         {
             InitializeComponent();
-            LoadHomePage();
+            MainFrame.Content = new HomeView();
         }
 
         #region Navigation helpers
-
-        // Hiển thị trang chủ mặc định
-        private void LoadHomePage()
-        {
-            MainFrame.Content = null;
-        }
 
         // Hiển thị danh sách khách hàng
         private void LoadCustomerListPage()
@@ -118,7 +112,7 @@ namespace bookstore_Management
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
             SetClickedButtonColor(btnHome);
-            LoadHomePage();
+            //LoadHomePage();
         }
 
         // Xử lý click menu Quản lý khách hàng
@@ -174,7 +168,7 @@ namespace bookstore_Management
         }
 
         // Xử lý khi di chuột vào nút thông tin    
-                
+
         private void btnI_Click(object sender, RoutedEventArgs e)
         {
             InforDialog infoView = new InforDialog
@@ -182,8 +176,8 @@ namespace bookstore_Management
                 WindowStartupLocation = WindowStartupLocation.Manual,
                 Left = 15,
                 Top = 15
-            }; 
-            infoView.Show();            
+            };
+            infoView.Show();
         }
 
         // Xử lý click menu Thanh toán
@@ -258,6 +252,6 @@ namespace bookstore_Management
 
         #endregion
 
-        
+
     }
 }

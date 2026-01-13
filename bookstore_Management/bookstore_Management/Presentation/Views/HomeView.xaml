@@ -1,0 +1,766 @@
+﻿<UserControl x:Class="bookstore_Management.Presentation.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BackgroundBrush}">
+
+    <UserControl.Resources>
+        <!-- Merge External Resources -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Presentation/AppResources/Styles/HomeViewStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Page Load Animations -->
+        <Grid.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <!-- Welcome Banner Animation -->
+                        <DoubleAnimation Storyboard.TargetName="WelcomeBanner"
+                                         Storyboard.TargetProperty="Opacity"
+                                         From="0" To="1" Duration="0:0:0.8"
+                                         BeginTime="0:0:0"/>
+                        <DoubleAnimation Storyboard.TargetName="WelcomeBanner"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                         From="-30" To="0" Duration="0:0:0.8"
+                                         BeginTime="0:0:0">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+
+                        <!-- Stats Grid Animation -->
+                        <DoubleAnimation Storyboard.TargetName="StatsGrid"
+                                         Storyboard.TargetProperty="Opacity"
+                                         From="0" To="1" Duration="0:0:0.8"
+                                         BeginTime="0:0:0.2"/>
+                        <DoubleAnimation Storyboard.TargetName="StatsGrid"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                         From="30" To="0" Duration="0:0:0.8"
+                                         BeginTime="0:0:0.2">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+
+                        <!-- Content Area Animation -->
+                        <DoubleAnimation Storyboard.TargetName="ContentArea"
+                                         Storyboard.TargetProperty="Opacity"
+                                         From="0" To="1" Duration="0:0:0.8"
+                                         BeginTime="0:0:0.4"/>
+                        <DoubleAnimation Storyboard.TargetName="ContentArea"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                         From="30" To="0" Duration="0:0:0.8"
+                                         BeginTime="0:0:0.4">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+
+                        <!-- Action Buttons Animation -->
+                        <DoubleAnimation Storyboard.TargetName="ActionButtons"
+                                         Storyboard.TargetProperty="Opacity"
+                                         From="0" To="1" Duration="0:0:0.8"
+                                         BeginTime="0:0:0.6"/>
+                        <DoubleAnimation Storyboard.TargetName="ActionButtons"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                         From="30" To="0" Duration="0:0:0.8"
+                                         BeginTime="0:0:0.6">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Grid.Triggers>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                      HorizontalScrollBarVisibility="Disabled"
+                      Padding="0,0,10,0">
+            <Grid Margin="30,20,30,30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Welcome Header Banner -->
+                <Border x:Name="WelcomeBanner"
+                        Grid.Row="0" 
+                        Background="{StaticResource PrimaryGradient}"
+                        CornerRadius="25"
+                        Padding="40,35"
+                        Margin="0,0,0,30"
+                        Opacity="0">
+                    <Border.RenderTransform>
+                        <TranslateTransform Y="-30"/>
+                    </Border.RenderTransform>
+                    <Border.Effect>
+                        <DropShadowEffect Color="#585AB8" BlurRadius="30" 
+                                          ShadowDepth="8" Opacity="0.3"/>
+                    </Border.Effect>
+
+                    <Grid>
+                        <!-- Welcome Text Content -->
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Chào mừng trở lại!  👋"
+                                       FontSize="32"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Margin="0,0,0,10">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="#000000" BlurRadius="8" 
+                                                      ShadowDepth="2" Opacity="0.3"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                            <TextBlock Text="Hệ thống quản lý nhà sách THM"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       Opacity="0.9"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock FontSize="14"
+                                       Foreground="White"
+                                       Opacity="0.8"
+                                       Margin="0,5,0,0">
+                                <Run Text="📅"/>
+                                <Run Text="04/01/2026 - 14:30"/>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <!-- Animated Decorative Circles -->
+                        <Canvas>
+                            <Ellipse Width="200" Height="200"
+                                     Canvas.Right="-80"
+                                     Canvas.Top="-30"
+                                     Opacity="0.1">
+                                <Ellipse.Fill>
+                                    <RadialGradientBrush>
+                                        <GradientStop Color="White" Offset="0"/>
+                                        <GradientStop Color="Transparent" Offset="1"/>
+                                    </RadialGradientBrush>
+                                </Ellipse.Fill>
+                                <Ellipse.RenderTransform>
+                                    <TranslateTransform x:Name="Circle1Transform"/>
+                                </Ellipse.RenderTransform>
+                                <Ellipse.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation Storyboard.TargetName="Circle1Transform"
+                                                                 Storyboard.TargetProperty="Y"
+                                                                 From="0" To="-20" Duration="0:0:3"
+                                                                 AutoReverse="True">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <SineEase EasingMode="EaseInOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Ellipse.Triggers>
+                            </Ellipse>
+
+                            <Ellipse Width="120" Height="120"
+                                     Canvas.Right="150"
+                                     Canvas.Bottom="-40"
+                                     Opacity="0.08">
+                                <Ellipse.Fill>
+                                    <RadialGradientBrush>
+                                        <GradientStop Color="White" Offset="0"/>
+                                        <GradientStop Color="Transparent" Offset="1"/>
+                                    </RadialGradientBrush>
+                                </Ellipse.Fill>
+                                <Ellipse.RenderTransform>
+                                    <TranslateTransform x:Name="Circle2Transform"/>
+                                </Ellipse.RenderTransform>
+                                <Ellipse.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation Storyboard.TargetName="Circle2Transform"
+                                                                 Storyboard.TargetProperty="Y"
+                                                                 From="0" To="15" Duration="0:0:4"
+                                                                 AutoReverse="True">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <SineEase EasingMode="EaseInOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Ellipse.Triggers>
+                            </Ellipse>
+                        </Canvas>
+                    </Grid>
+                </Border>
+
+                <!-- Statistics Cards -->
+                <Grid x:Name="StatsGrid" 
+                      Grid.Row="1" 
+                      Margin="0,0,0,30"
+                      Opacity="0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform Y="30"/>
+                    </Grid.RenderTransform>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Total Revenue Card -->
+                    <Border Grid.Column="0" Style="{StaticResource StatCard}">
+                        <StackPanel>
+                            <Border Style="{StaticResource IconContainer}"
+                                    Background="{StaticResource SuccessGradient}">
+                                <TextBlock Text="💰" 
+                                           FontSize="30"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Doanh thu hôm nay"
+                                       FontSize="13"
+                                       Foreground="#666666"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,15,0,8"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="12,500,000 ₫"
+                                       FontSize="22"
+                                       FontWeight="Bold"
+                                       Foreground="#4CAF50"
+                                       HorizontalAlignment="Center"/>
+                            <Border Style="{StaticResource StatBadge}"
+                                    Background="#E8F5E9">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="▲" 
+                                               FontSize="10"
+                                               Foreground="#4CAF50"
+                                               Margin="0,0,3,0"/>
+                                    <TextBlock Text="15.5%"
+                                               FontSize="11"
+                                               Foreground="#4CAF50"
+                                               FontWeight="Bold"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Total Orders Card -->
+                    <Border Grid.Column="2" Style="{StaticResource StatCard}">
+                        <StackPanel>
+                            <Border Style="{StaticResource IconContainer}"
+                                    Background="{StaticResource InfoGradient}">
+                                <TextBlock Text="📦" 
+                                           FontSize="30"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Đơn hàng hôm nay"
+                                       FontSize="13"
+                                       Foreground="#666666"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,15,0,8"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="156"
+                                       FontSize="22"
+                                       FontWeight="Bold"
+                                       Foreground="#2196F3"
+                                       HorizontalAlignment="Center"/>
+                            <Border Style="{StaticResource StatBadge}"
+                                    Background="#E3F2FD">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="▲" 
+                                               FontSize="10"
+                                               Foreground="#2196F3"
+                                               Margin="0,0,3,0"/>
+                                    <TextBlock Text="8.2%"
+                                               FontSize="11"
+                                               Foreground="#2196F3"
+                                               FontWeight="Bold"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Total Customers Card -->
+                    <Border Grid.Column="4" Style="{StaticResource StatCard}">
+                        <StackPanel>
+                            <Border Style="{StaticResource IconContainer}"
+                                    Background="{StaticResource WarningGradient}">
+                                <TextBlock Text="👥" 
+                                           FontSize="30"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Khách hàng mới"
+                                       FontSize="13"
+                                       Foreground="#666666"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,15,0,8"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="24"
+                                       FontSize="22"
+                                       FontWeight="Bold"
+                                       Foreground="#FF9800"
+                                       HorizontalAlignment="Center"/>
+                            <Border Style="{StaticResource StatBadge}"
+                                    Background="#FFF3E0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="▲" 
+                                               FontSize="10"
+                                               Foreground="#FF9800"
+                                               Margin="0,0,3,0"/>
+                                    <TextBlock Text="12.3%"
+                                               FontSize="11"
+                                               Foreground="#FF9800"
+                                               FontWeight="Bold"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Low Stock Alert Card -->
+                    <Border Grid.Column="6" Style="{StaticResource StatCard}">
+                        <StackPanel>
+                            <Border Style="{StaticResource IconContainer}"
+                                    Background="{StaticResource DangerGradient}">
+                                <TextBlock Text="⚠️" 
+                                           FontSize="30"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Sách sắp hết"
+                                       FontSize="13"
+                                       Foreground="#666666"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,15,0,8"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="18"
+                                       FontSize="22"
+                                       FontWeight="Bold"
+                                       Foreground="#F44336"
+                                       HorizontalAlignment="Center"/>
+                            <Border Style="{StaticResource StatBadge}"
+                                    Background="#FFEBEE">
+                                <TextBlock Text="Cần nhập hàng"
+                                           FontSize="10"
+                                           Foreground="#F44336"
+                                           FontWeight="Bold"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Recent Orders and Best Sellers Section -->
+                <Grid x:Name="ContentArea"
+                      Grid.Row="2" 
+                      Margin="0,0,0,30"
+                      Opacity="0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform Y="30"/>
+                    </Grid.RenderTransform>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Recent Orders -->
+                    <Border Grid.Column="0" Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <!-- Section Header -->
+                            <Grid Margin="0,0,0,20">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Style="{StaticResource IconBadge}"
+                                            Background="#E3F2FD">
+                                        <TextBlock Text="📋" FontSize="20"/>
+                                    </Border>
+                                    <TextBlock Text="Đơn hàng gần đây"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource PrimaryBrush}"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="Xem tất cả →"
+                                           Style="{StaticResource ViewAllLink}"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                            </Grid>
+
+                            <!-- Order Items -->
+                            <StackPanel>
+                                <!-- Order 1 -->
+                                <Border Style="{StaticResource ListItem}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Background="{StaticResource InfoGradient}"
+                                                CornerRadius="8"
+                                                Width="40" Height="40"
+                                                Margin="0,0,12,0">
+                                            <TextBlock Text="📦" 
+                                                       FontSize="18"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="HD2025001"
+                                                       FontWeight="Bold"
+                                                       FontSize="14"
+                                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Text="Nguyễn Văn A • 10:30 AM"
+                                                       FontSize="11"
+                                                       Foreground="#999999"
+                                                       Margin="0,2,0,0"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="2"
+                                                   Text="2,450,000 ₫"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Foreground="#4CAF50"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Order 2 -->
+                                <Border Style="{StaticResource ListItem}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Background="{StaticResource SuccessGradient}"
+                                                CornerRadius="8"
+                                                Width="40" Height="40"
+                                                Margin="0,0,12,0">
+                                            <TextBlock Text="📦" 
+                                                       FontSize="18"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="HD2025002"
+                                                       FontWeight="Bold"
+                                                       FontSize="14"
+                                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Text="Trần Thị B • 09:15 AM"
+                                                       FontSize="11"
+                                                       Foreground="#999999"
+                                                       Margin="0,2,0,0"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="2"
+                                                   Text="1,200,000 ₫"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Foreground="#4CAF50"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Order 3 -->
+                                <Border Style="{StaticResource ListItem}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Background="{StaticResource WarningGradient}"
+                                                CornerRadius="8"
+                                                Width="40" Height="40"
+                                                Margin="0,0,12,0">
+                                            <TextBlock Text="📦" 
+                                                       FontSize="18"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="HD2025003"
+                                                       FontWeight="Bold"
+                                                       FontSize="14"
+                                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Text="Lê Văn C • 08:45 AM"
+                                                       FontSize="11"
+                                                       Foreground="#999999"
+                                                       Margin="0,2,0,0"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="2"
+                                                   Text="850,000 ₫"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Foreground="#4CAF50"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Best Sellers -->
+                    <Border Grid.Column="2" Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <!-- Section Header -->
+                            <Grid Margin="0,0,0,20">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Style="{StaticResource IconBadge}"
+                                            Background="#FFF3E0">
+                                        <TextBlock Text="🏆" FontSize="20"/>
+                                    </Border>
+                                    <TextBlock Text="Sách bán chạy"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource PrimaryBrush}"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Best Seller Items -->
+                            <StackPanel>
+                                <!-- Book 1 -->
+                                <Border Style="{StaticResource ListItem}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Background="{StaticResource WarningGradient}"
+                                                CornerRadius="8"
+                                                Width="40" Height="40"
+                                                Margin="0,0,12,0">
+                                            <TextBlock Text="1" 
+                                                       FontSize="18"
+                                                       FontWeight="Bold"
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="Đắc Nhân Tâm"
+                                                       FontWeight="Bold"
+                                                       FontSize="14"
+                                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Text="245 cuốn"
+                                                       FontSize="11"
+                                                       Foreground="#999999"
+                                                       Margin="0,2,0,0"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="2"
+                                                   Text="🔥"
+                                                   FontSize="20"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Book 2 -->
+                                <Border Style="{StaticResource ListItem}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Background="{StaticResource InfoGradient}"
+                                                CornerRadius="8"
+                                                Width="40" Height="40"
+                                                Margin="0,0,12,0">
+                                            <TextBlock Text="2" 
+                                                       FontSize="18"
+                                                       FontWeight="Bold"
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="Sapiens"
+                                                       FontWeight="Bold"
+                                                       FontSize="14"
+                                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Text="198 cuốn"
+                                                       FontSize="11"
+                                                       Foreground="#999999"
+                                                       Margin="0,2,0,0"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="2"
+                                                   Text="⭐"
+                                                   FontSize="20"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Book 3 -->
+                                <Border Style="{StaticResource ListItem}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Background="{StaticResource SuccessGradient}"
+                                                CornerRadius="8"
+                                                Width="40" Height="40"
+                                                Margin="0,0,12,0">
+                                            <TextBlock Text="3" 
+                                                       FontSize="18"
+                                                       FontWeight="Bold"
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="Nhà Giả Kim"
+                                                       FontWeight="Bold"
+                                                       FontSize="14"
+                                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Text="156 cuốn"
+                                                       FontSize="11"
+                                                       Foreground="#999999"
+                                                       Margin="0,2,0,0"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="2"
+                                                   Text="✨"
+                                                   FontSize="20"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Quick Action Buttons -->
+                <Grid x:Name="ActionButtons"
+                      Grid.Row="3"
+                      Opacity="0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform Y="30"/>
+                    </Grid.RenderTransform>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Quick Action: New Order -->
+                    <Border Grid.Column="0"
+                            Background="{StaticResource SuccessGradient}"
+                            Style="{StaticResource ActionButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="White"
+                                    CornerRadius="12"
+                                    Width="50" Height="50"
+                                    Margin="0,0,15,0"
+                                    Opacity="0.95">
+                                <TextBlock Text="🛒" 
+                                           FontSize="24"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Tạo đơn hàng mới"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Foreground="White"/>
+                                <TextBlock Text="Xử lý đơn nhanh chóng"
+                                           FontSize="12"
+                                           Foreground="White"
+                                           Opacity="0.9"
+                                           Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Quick Action: Manage Inventory -->
+                    <Border Grid.Column="2"
+                            Background="{StaticResource InfoGradient}"
+                            Style="{StaticResource ActionButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="White"
+                                    CornerRadius="12"
+                                    Width="50" Height="50"
+                                    Margin="0,0,15,0"
+                                    Opacity="0.95">
+                                <TextBlock Text="📦" 
+                                           FontSize="24"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Quản lý kho hàng"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Foreground="White"/>
+                                <TextBlock Text="Kiểm tra tồn kho"
+                                           FontSize="12"
+                                           Foreground="White"
+                                           Opacity="0.9"
+                                           Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Quick Action: View Reports -->
+                    <Border Grid.Column="4"
+                            Background="{StaticResource WarningGradient}"
+                            Style="{StaticResource ActionButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="White"
+                                    CornerRadius="12"
+                                    Width="50" Height="50"
+                                    Margin="0,0,15,0"
+                                    Opacity="0.95">
+                                <TextBlock Text="📊" 
+                                           FontSize="24"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Xem báo cáo"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Foreground="White"/>
+                                <TextBlock Text="Thống kê chi tiết"
+                                           FontSize="12"
+                                           Foreground="White"
+                                           Opacity="0.9"
+                                           Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

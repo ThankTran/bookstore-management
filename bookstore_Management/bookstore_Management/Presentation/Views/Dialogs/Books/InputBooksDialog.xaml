@@ -4,86 +4,114 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bookstore_Management.Presentation.Views.Dialogs.Books"
+        xmlns:core="clr-namespace:bookstore_Management.Core.Enums"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+
         mc:Ignorable="d"
         Height="265" Width="400"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent">
-    <Border CornerRadius="15" Background="White" BorderThickness="2" BorderBrush="#585ab8">
-        <Grid Margin="0,0,0,-2">
-            <StackPanel Margin="0,0,0,1">
-                <!--content "thêm sách"-->
-                <StackPanel>
-                    <TextBlock Text="Thêm sách" Style="{StaticResource DialogTitle}"/>
-                </StackPanel>
-                <!--textbox to input books-->
-                <StackPanel Margin="0,20,0,0">
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Mã sách" Style="{StaticResource dialogTextBlock}"/>
-                        <Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="47,0,20,0" Width="200">
-                            <TextBox BorderBrush="Transparent" Margin="15,0,15,0"
+	<Window.Resources>
+		<ObjectDataProvider
+		x:Key="BookCategoryValues"
+		MethodName="GetValues"
+		ObjectType="{x:Type sys:Enum}">
+			<ObjectDataProvider.MethodParameters>
+				<x:Type TypeName="core:BookCategory"/>
+			</ObjectDataProvider.MethodParameters>
+		</ObjectDataProvider>
+	</Window.Resources>
+	<Border CornerRadius="15" Background="White" BorderThickness="2" BorderBrush="#585ab8">
+		<Grid Margin="0,0,0,-2">
+			<StackPanel Margin="0,0,0,1">
+				<!--content "thêm sách"-->
+				<StackPanel>
+					<TextBlock Text="Thêm sách" Style="{StaticResource DialogTitle}"/>
+				</StackPanel>
+				<!--textbox to input books-->
+				<StackPanel Margin="0,20,0,0">
+
+					<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+						<TextBlock Text="Mã sách" Style="{StaticResource dialogTextBlock}"/>
+						<Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="50,0,20,0" Width="200">
+							<TextBox BorderBrush="Transparent" Margin="15,0,15,0"
                                      x:Name="tbBookID"
                                      IsEnabled="False"
                                      Text="{Binding ScannedBookID, Mode=TwoWay}"/>
-                        </Border>
-                    </StackPanel>
-                    
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Tên sách" Style="{StaticResource dialogTextBlock}"/>
-                        <Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="47,0,20,0" Width="200">
-                            <TextBox BorderBrush="Transparent" Margin="15,0,15,0"
+						</Border>
+					</StackPanel>
+
+					<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+						<TextBlock Text="Tên sách" Style="{StaticResource dialogTextBlock}"/>
+						<Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="47,0,20,0" Width="200">
+							<TextBox BorderBrush="Transparent" Margin="15,0,15,0"
                                      x:Name="tbBookName"/>
-                        </Border>
-                    </StackPanel>
+						</Border>
+					</StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Tác giả" Style="{StaticResource dialogTextBlock}"/>
-                        <Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="57,0,20,0" Width="200">
-                            <TextBox BorderBrush="Transparent" Margin="15,0,15,0"
+					<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+						<TextBlock Text="Tác giả" Style="{StaticResource dialogTextBlock}"/>
+						<Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="57,0,20,0" Width="200">
+							<TextBox BorderBrush="Transparent" Margin="15,0,15,0"
                                      x:Name="tbAuthor"/>
-                        </Border>
-                    </StackPanel>
+						</Border>
+					</StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Nhà xuất bản" Style="{StaticResource dialogTextBlock}"/>
-                        <Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="18,0,20,0" Width="200">
-                            <TextBox BorderBrush="Transparent" Margin="15,0,15,0"
+					<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+						<TextBlock Text="Nhà xuất bản" Style="{StaticResource dialogTextBlock}"/>
+						<Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="18,0,20,0" Width="200">
+							<TextBox BorderBrush="Transparent" Margin="15,0,15,0"
                                      x:Name="tbPublisher"/>
-                        </Border>
-                    </StackPanel>
+						</Border>
+					</StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Giá nhập" Style="{StaticResource dialogTextBlock}"/>
-                        <Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="46,0,20,0" Width="200">
-                            <TextBox BorderBrush="Transparent" Margin="15,0,15,0"
+					<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+						<TextBlock Text="Thể loại" Style="{StaticResource dialogTextBlock}"/>
+						<Border ClipToBounds="True" CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="51,0,20,0" Width="200" Height="19">
+							<ComboBox Margin="1,0,1,0" BorderThickness="0" Foreground="DarkBlue" BorderBrush="Transparent"
+                                      x:Name="cbCategory"
+                                      ItemsSource="{Binding Source={StaticResource BookCategoryValues}}"
+                                      SelectedItem="{Binding Category}">
+								<ComboBox.OpacityMask>
+									<VisualBrush Visual="{Binding ElementName=Mask}"/>
+								</ComboBox.OpacityMask>
+							</ComboBox>
+						</Border>
+					</StackPanel>
+
+					<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+						<TextBlock Text="Giá nhập" Style="{StaticResource dialogTextBlock}"/>
+						<Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="46,0,20,0" Width="200">
+							<TextBox BorderBrush="Transparent" Margin="15,0,15,0"
                                      x:Name="tbImportPrice"/>
-                        </Border>
-                    </StackPanel>
+						</Border>
+					</StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Giá bán" Style="{StaticResource dialogTextBlock}"/>
-                        <Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="53.5,0,20,0" Width="200">
-                            <TextBox BorderBrush="Transparent" Margin="15,0,15,0"
+					<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+						<TextBlock Text="Giá bán" Style="{StaticResource dialogTextBlock}"/>
+						<Border CornerRadius="5" BorderBrush="#585ab8" BorderThickness="1" Margin="53.5,0,20,0" Width="200">
+							<TextBox BorderBrush="Transparent" Margin="15,0,15,0"
                                      x:Name="tbSalePrice"/>
-                        </Border>
-                    </StackPanel>
+						</Border>
+					</StackPanel>
 
-                </StackPanel>
-                <!--update and cancel-->
+				</StackPanel>
+				<!--update and cancel-->
 
-                <StackPanel Margin="120,10,0,0" Orientation="Horizontal" Height="45" Width="276">
-                    <Border Width="76" CornerRadius="5" Background="#585ab8" Height="25" Margin="55,0,0,0">
-                        <Button Content="Cập nhật" Click="BtnSave_Click" Style="{StaticResource confirmButton}"/>
-                    </Border>
+				<StackPanel Margin="120,10,0,0" Orientation="Horizontal" Height="45" Width="276">
+					<Border Width="76" CornerRadius="5" Background="#585ab8" Height="25" Margin="55,0,0,0">
+						<Button Content="Cập nhật" Click="BtnSave_Click" Style="{StaticResource confirmButton}"/>
+					</Border>
 
-                    <Border Width="76" CornerRadius="5" Background="#E9E9F5" Height="25" Margin="25,0,0,0">
-                        <Button Content="Hủy" Click="BtnCancel_Click" Style="{StaticResource calcelButton}"/>
-                    </Border>
-                </StackPanel>
+					<Border Width="76" CornerRadius="5" Background="#E9E9F5" Height="25" Margin="25,0,0,0">
+						<Button Content="Hủy" Click="BtnCancel_Click" Style="{StaticResource calcelButton}"/>
+					</Border>
+				</StackPanel>
 
-            </StackPanel>
-        </Grid>
-    </Border>
+			</StackPanel>
+		</Grid>
+	</Border>
 </Window>

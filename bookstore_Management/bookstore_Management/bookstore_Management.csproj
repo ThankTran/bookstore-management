@@ -78,6 +78,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\AppResources\Styles\DialogStyles.xaml" />
+    <Page Include="Presentation\AppResources\Styles\HomeViewStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\AppResources\Styles\StatisticStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -131,6 +135,10 @@
     <Page Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\HomeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <!-- Views - Information -->
     <Page Include="Presentation\Views\Information\Information.xaml">
@@ -360,6 +368,9 @@
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml.cs">
       <DependentUpon>EditCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\HomeView.xaml.cs">
+      <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Information\InforDialog.xaml.cs">
       <DependentUpon>InforDialog.xaml</DependentUpon>
