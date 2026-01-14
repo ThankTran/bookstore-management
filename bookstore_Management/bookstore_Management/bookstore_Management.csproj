@@ -110,16 +110,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <!-- Views - Dialogs - Books -->
-    <Page Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml">
+	  <!-- Views - Dialogs - Books -->
+    <Page Include="Presentation\Views\Dialogs\Books\AddBookDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -175,6 +167,10 @@
       <SubType>Designer</SubType>
     </Page>
     <!-- Views - MainWindow -->
+	  <Page Include="Presentation\Views\HomeView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		  <SubType>Designer</SubType>
+	  </Page>
     <Page Include="Presentation\Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -367,14 +363,8 @@
     <Compile Include="Presentation\Views\Customers\CustomerListView.xaml.cs">
       <DependentUpon>CustomerListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml.cs">
-      <DependentUpon>ConfirmBooksDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml.cs">
-      <DependentUpon>InputBooksDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Books\UpdateBooksDialog.xaml.cs">
-      <DependentUpon>UpdateBooksDialog.xaml</DependentUpon>
+    <Compile Include="Presentation\Views\Dialogs\Books\AddBookDialog.xaml.cs">
+      <DependentUpon>AddBookDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml.cs">
       <DependentUpon>AddCustomer.xaml</DependentUpon>

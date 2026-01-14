@@ -15,26 +15,13 @@ using System.Windows.Shapes;
 namespace bookstore_Management.Presentation.Views.Dialogs.Books
 {
     /// <summary>
-    /// Interaction logic for ConfirmBooksDialog.xaml
+    /// Interaction logic for AddBookDialog.xaml
     /// </summary>
-    public partial class ConfirmBooksDialog : Window
+    public partial class AddBookDialog : Window
     {
-        public ConfirmBooksDialog()
+        public AddBookDialog()
         {
             InitializeComponent();
         }
-
-        private void BtnConfirm_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = true;   // confirm
-            this.Close();
-        }
-
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;  // cancel
-            this.Close();
-        }
-
     }
 }
