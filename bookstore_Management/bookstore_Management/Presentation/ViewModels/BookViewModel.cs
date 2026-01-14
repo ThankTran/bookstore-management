@@ -53,7 +53,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
             AddBookCommand = new RelayCommand<object>((p) =>
             {
-                var dialog = new Views.Dialogs.Books.InputBooksDialog();
+                var dialog = new Views.Dialogs.Books.AddBookDialog();
                 if(dialog.ShowDialog() == true)
                 {
                     // Logic to add a new book
