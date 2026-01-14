@@ -110,11 +110,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <!-- Views - Dialogs - Books -->
     <Page Include="Presentation\Views\Dialogs\Books\ConfirmBooksDialog.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
+    <!-- Views - Dialogs - Books -->
     <Page Include="Presentation\Views\Dialogs\Books\InputBooksDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,10 +129,26 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml">
+    <Page Include="Presentation\Views\Dialogs\Share\Delete.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Share\NDelete.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Share\NUpdate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Share\Warning.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -368,6 +384,18 @@
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml.cs">
       <DependentUpon>EditCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\Delete.xaml.cs">
+      <DependentUpon>Delete.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\NDelete.xaml.cs">
+      <DependentUpon>NDelete.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\NUpdate.xaml.cs">
+      <DependentUpon>NUpdate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\Warning.xaml.cs">
+      <DependentUpon>Warning.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
