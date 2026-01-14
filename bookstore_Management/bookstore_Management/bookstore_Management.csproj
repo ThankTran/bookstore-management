@@ -110,7 +110,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-	  <!-- Views - Dialogs - Books -->
+    <!-- Views - Dialogs - Books -->
     <Page Include="Presentation\Views\Dialogs\Books\AddBookDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -167,10 +167,6 @@
       <SubType>Designer</SubType>
     </Page>
     <!-- Views - MainWindow -->
-	  <Page Include="Presentation\Views\HomeView.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		  <SubType>Designer</SubType>
-	  </Page>
     <Page Include="Presentation\Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
