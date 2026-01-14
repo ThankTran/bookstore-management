@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
-using bookstore_Management.DTOs;
+using bookstore_Management.DTOs.Order.Requests;
+using bookstore_Management.DTOs.Order.Responses;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
 
@@ -37,7 +38,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ---------------------- TẠO ĐƠN HÀNG ------------------------------
         // ==================================================================
-        public Result<string> CreateOrder(OrderCreateDto dto)
+        public Result<string> CreateOrder(CreateOrderRequestDto dto)
         {
             try
             {
@@ -140,7 +141,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- CẬP NHẬT / HỦY ---------------------------
         // ==================================================================
-        public Result UpdateOrder(string orderId, OrderUpdateDto dto)
+        public Result UpdateOrder(string orderId, UpdateOrderRequestDto dto)
         {
             try
             {
@@ -240,93 +241,107 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- TRUY VẤN ---------------------------------
         // ==================================================================
-        public Result<Order> GetOrderById(string orderId)
+        public Result<OrderResponseDto> GetOrderById(string orderId)
         {
             try
             {
                 var order = _orderRepository.GetById(orderId);
                 if (order == null || order.DeletedDate != null)
-                    return Result<Order>.Fail("Đơn hàng không tồn tại");
+                    return Result<OrderResponseDto>.Fail("Đơn hàng không tồn tại");
 
-                return Result<Order>.Success(order);
+                var dto = MapToOrderResponseDto(order);
+                return Result<OrderResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<Order>.Fail($"Lỗi: {ex.Message}");
+                return Result<OrderResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Order>> GetAllOrders()
+        public Result<IEnumerable<OrderResponseDto>> GetAllOrders()
         {
             try
             {
                 var orders = _orderRepository.GetAll()
                     .Where(o => o.DeletedDate == null)
                     .OrderByDescending(o => o.CreatedDate)
-                    .ToList();
-                return Result<IEnumerable<Order>>.Success(orders);
+                    .Select(MapToOrderResponseDto);
+                return Result<IEnumerable<OrderResponseDto>>.Success(orders);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Order>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<OrderResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Order>> GetOrdersByCustomer(string customerId)
+        public Result<IEnumerable<OrderResponseDto>> GetOrdersByCustomer(string customerId)
         {
             try
             {
                 var orders = _orderRepository.GetByCustomer(customerId)
                     .Where(o => o.DeletedDate == null)
-                    .OrderByDescending(o => o.CreatedDate);
-                return Result<IEnumerable<Order>>.Success(orders);
+                    .OrderByDescending(o => o.CreatedDate)
+                    .Select(MapToOrderResponseDto);
+                return Result<IEnumerable<OrderResponseDto>>.Success(orders);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Order>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<OrderResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Order>> GetOrdersByStaff(string staffId)
+        public Result<IEnumerable<OrderResponseDto>> GetOrdersByStaff(string staffId)
         {
             try
             {
                 var orders = _orderRepository.GetByStaff(staffId)
                     .Where(o => o.DeletedDate == null)
-                    .OrderByDescending(o => o.CreatedDate);
-                return Result<IEnumerable<Order>>.Success(orders);
+                    .OrderByDescending(o => o.CreatedDate)
+                    .Select(MapToOrderResponseDto);
+                return Result<IEnumerable<OrderResponseDto>>.Success(orders);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Order>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<OrderResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Order>> GetOrdersByDate(DateTime fromDate, DateTime toDate)
+        public Result<IEnumerable<OrderResponseDto>> GetOrdersByDate(DateTime fromDate, DateTime toDate)
         {
             try
             {
                 var orders = _orderRepository.GetByDateRange(fromDate, toDate)
                     .Where(o => o.DeletedDate == null)
-                    .OrderByDescending(o => o.CreatedDate);
-                return Result<IEnumerable<Order>>.Success(orders);
+                    .OrderByDescending(o => o.CreatedDate)
+                    .Select(MapToOrderResponseDto);
+                return Result<IEnumerable<OrderResponseDto>>.Success(orders);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Order>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<OrderResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<OrderDetail>> GetOrderDetails(string orderId)
+        public Result<IEnumerable<OrderDetailResponseDto>> GetOrderDetails(string orderId)
         {
             try
             {
-                var details = _orderDetailRepository.GetByOrder(orderId);
-                return Result<IEnumerable<OrderDetail>>.Success(details);
+                var details = _orderDetailRepository.GetByOrder(orderId)
+                    .Select(d => new OrderDetailResponseDto
+                    {
+                        OrderId = d.OrderId,
+                        BookId = d.BookId,
+                        BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
+                        SalePrice = d.SalePrice,
+                        Quantity = d.Quantity,
+                        Subtotal = d.Subtotal,
+                        Notes = d.Notes
+                    });
+                return Result<IEnumerable<OrderDetailResponseDto>>.Success(details);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<OrderDetail>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<OrderDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
@@ -352,7 +367,7 @@ namespace bookstore_Management.Services.Implementations
                 .OrderByDescending(s => s.StockQuantity)
                 .ToList();
 
-            int remaining = quantity;
+            var remaining = quantity;
             foreach (var stock in stocks)
             {
                 if (remaining <= 0) break;
@@ -361,6 +376,26 @@ namespace bookstore_Management.Services.Implementations
                 remaining -= take;
                 _stockRepository.Update(stock);
             }
+        }
+
+        /// <summary>
+        /// Maps Order entity to OrderResponseDto
+        /// </summary>
+        private OrderResponseDto MapToOrderResponseDto(Order order)
+        {
+            return new OrderResponseDto
+            {
+                OrderId = order.OrderId,
+                CustomerId = order.CustomerId,
+                CustomerName = order.Customer?.Name,
+                StaffId = order.StaffId,
+                StaffName = order.Staff?.Name,
+                CreatedDate = order.CreatedDate,
+                TotalPrice = order.TotalPrice,
+                Discount = order.Discount,
+                PaymentMethod = order.PaymentMethod,
+                Notes = order.Notes
+            };
         }
     }
 }

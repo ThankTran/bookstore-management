@@ -11,36 +11,40 @@ namespace bookstore_Management.Models
     /// </summary>
     public class Book
     {
+        // mã sách
         [Required]
         [StringLength(6)]
         [Column("id")]
         public string BookId { get; set; }
 
+        // tên sách
         [Required]
         [StringLength(50)]
         [Column("name")]
         public string Name { get; set; }
         
+        // tác giả
         [Required]
         [StringLength(50)]
         [Column("author")]
         public string Author { get; set; }
         
+        // dùng để truy vấn nhà xuất bản
         [StringLength(6)]
         [Column("supplier_id")]
         public string SupplierId { get; set; }
 
+        // thể loại
         [Required]
         [Column("category")]
         public BookCategory Category { get; set; }
 
+        // giá bán
         [Column("sale_price")]
         public decimal? SalePrice { get; set; }
+        
 
-        // Giá nhập (phục vụ thống kê/lợi nhuận). Nếu không quản lý giá nhập, có thể để null.
-        [Column("import_price")]
-        public decimal? ImportPrice { get; set; }
-
+        // các thông tin để kiểm tra
         [Required]
         [Column("created_date")]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
@@ -55,6 +59,7 @@ namespace bookstore_Management.Models
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Stock> Stocks { get; set; } 
         public virtual Supplier Supplier { get; set; }
+        
         
     }
 }

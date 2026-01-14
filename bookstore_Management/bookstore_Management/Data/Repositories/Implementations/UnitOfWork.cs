@@ -18,10 +18,6 @@ namespace bookstore_Management.Data.Repositories.Implementations
         internal IStockRepository Stocks { get; }
         internal IImportBillRepository ImportBills { get; }
         internal IImportBillDetailRepository ImportBillDetails { get; }
-        internal IShiftTemplateRepository ShiftTemplates { get; }
-        internal IWorkWeekRepository WorkWeeks { get; }
-        internal IStaffShiftRegistrationRepository StaffShiftRegistrations { get; }
-        internal IWorkScheduleRepository WorkSchedules { get; }
         internal IUserRepository Users { get; }
         internal IAuditLogRepository AuditLogs { get; }
 
@@ -38,10 +34,6 @@ namespace bookstore_Management.Data.Repositories.Implementations
             Stocks = new StockRepository(_context);
             ImportBills = new ImportBillRepository(_context);
             ImportBillDetails = new ImportBillDetailRepository(_context);
-            ShiftTemplates = new ShiftTemplateRepository(_context);
-            WorkWeeks = new WorkWeekRepository(_context);
-            StaffShiftRegistrations = new StaffShiftRegistrationRepository(_context);
-            WorkSchedules = new WorkScheduleRepository(_context);
             Users = new UserRepository(_context);
             AuditLogs = new AuditLogRepository(_context);
         }

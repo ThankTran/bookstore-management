@@ -24,7 +24,8 @@ namespace bookstore_Management.Tests
                 new BookRepository(_context),
                 new CustomerRepository(_context),
                 new StaffRepository(_context),
-                new ImportBillRepository(_context)
+                new ImportBillRepository(_context),
+                new ImportBillDetailRepository(_context)
             );
         }
 

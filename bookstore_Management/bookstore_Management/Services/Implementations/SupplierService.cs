@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
-using bookstore_Management.DTOs;
+using bookstore_Management.DTOs.Supplier.Requests;
+using bookstore_Management.DTOs.Supplier.Responses;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
 
@@ -28,7 +29,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<string> AddSupplier(SupplierCreateDto dto)
+        public Result<string> AddSupplier(CreateSupplierRequestDto dto)
         {
             try
             {
@@ -86,7 +87,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- SỬA DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result UpdateSupplier(string supplierId, SupplierUpdateDto dto)
+        public Result UpdateSupplier(string supplierId, UpdateSupplierRequestDto dto)
         {
             try
             {
@@ -159,74 +160,76 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- LẤY DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<Supplier> GetSupplierById(string supplierId)
+        public Result<SupplierResponseDto> GetSupplierById(string supplierId)
         {
             try
             {
                 var supplier = _supplierRepository.GetById(supplierId);
                 if (supplier == null || supplier.DeletedDate != null)
-                    return Result<Supplier>.Fail("Nhà cung cấp không tồn tại");
+                    return Result<SupplierResponseDto>.Fail("Nhà cung cấp không tồn tại");
 
-                return Result<Supplier>.Success(supplier);
+                var dto = MapToSupplierResponseDto(supplier);
+                return Result<SupplierResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<Supplier>.Fail($"Lỗi: {ex.Message}");
+                return Result<SupplierResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<Supplier>> GetAllSuppliers()
+        public Result<IEnumerable<SupplierResponseDto>> GetAllSuppliers()
         {
             try
             {
                 var suppliers = _supplierRepository.GetAll()
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
-                    .ToList();
-                    
-                return Result<IEnumerable<Supplier>>.Success(suppliers);
+                    .Select(MapToSupplierResponseDto);
+                return Result<IEnumerable<SupplierResponseDto>>.Success(suppliers);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Supplier>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<SupplierResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<Supplier> GetSupplierByPhone(string phone)
+        public Result<SupplierResponseDto> GetSupplierByPhone(string phone)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(phone))
-                    return Result<Supplier>.Fail("Số điện thoại không được để trống");
+                    return Result<SupplierResponseDto>.Fail("Số điện thoại không được để trống");
                     
                 var supplier = _supplierRepository.GetByPhone(phone.Trim());
                 if (supplier == null || supplier.DeletedDate != null)
-                    return Result<Supplier>.Fail("Không tìm thấy nhà cung cấp");
+                    return Result<SupplierResponseDto>.Fail("Không tìm thấy nhà cung cấp");
 
-                return Result<Supplier>.Success(supplier);
+                var dto = MapToSupplierResponseDto(supplier);
+                return Result<SupplierResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<Supplier>.Fail($"Lỗi: {ex.Message}");
+                return Result<SupplierResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<Supplier> GetSupplierByEmail(string email)
+        public Result<SupplierResponseDto> GetSupplierByEmail(string email)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(email))
-                    return Result<Supplier>.Fail("Email không được để trống");
+                    return Result<SupplierResponseDto>.Fail("Email không được để trống");
 
                 var supplier = _supplierRepository.GetByEmail(email.Trim());
                 if (supplier == null || supplier.DeletedDate != null)
-                    return Result<Supplier>.Fail("Không tìm thấy nhà cung cấp");
+                    return Result<SupplierResponseDto>.Fail("Không tìm thấy nhà cung cấp");
 
-                return Result<Supplier>.Success(supplier);
+                var dto = MapToSupplierResponseDto(supplier);
+                return Result<SupplierResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<Supplier>.Fail($"Lỗi: {ex.Message}");
+                return Result<SupplierResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
@@ -286,7 +289,7 @@ namespace bookstore_Management.Services.Implementations
                 var importBills = _importBillRepository.Find(ib =>
                     ib.SupplierId == supplierId);
 
-                decimal totalValue = importBills.Sum(ib => ib.TotalAmount);
+                var totalValue = importBills.Sum(ib => ib.TotalAmount);
                 
                 return Result<decimal>.Success(totalValue, $"Tổng giá trị nhập: {totalValue:N0} VND");
             }
@@ -347,6 +350,21 @@ namespace bookstore_Management.Services.Implementations
             {
                 return $"NCC{DateTime.Now:yyyyMMddHHmmss}";
             }
+        }
+
+        /// <summary>
+        /// Maps Supplier entity to SupplierResponseDto
+        /// </summary>
+        private SupplierResponseDto MapToSupplierResponseDto(Supplier supplier)
+        {
+            return new SupplierResponseDto
+            {
+                Id = supplier.Id,
+                Name = supplier.Name,
+                Phone = supplier.Phone,
+                Email = supplier.Email,
+                CreatedDate = supplier.CreatedDate
+            };
         }
 
         private static bool IsValidEmail(string email)
