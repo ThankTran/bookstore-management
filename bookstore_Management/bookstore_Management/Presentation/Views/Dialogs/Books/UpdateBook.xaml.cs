@@ -1,35 +1,32 @@
 ﻿using bookstore_Management.Core.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace bookstore_Management.Presentation.Views.Dialogs.Books
 {
-    /// <summary>
-    /// Interaction logic for AddBookDialog.xaml
-    /// </summary>
-    public partial class AddBookDialog : Window
+    public partial class UpdateBook : Window
     {
-        public AddBookDialog()
+        private bool _hasChanges = false;
+
+
+        public UpdateBook()
         {
             InitializeComponent();
 
-            // Set default values
-            cbCategory.SelectedIndex = 0;
+            // Set default dates
+            txtCreatedDate.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            txtLastModified.Text = "Chưa có";
 
-            // Generate temporary book ID
-            tbBookID.Text = "Tự động tạo khi lưu";
+            // Track changes
+            tbBookName.TextChanged += (s, e) => _hasChanges = true;
+            tbAuthor.TextChanged += (s, e) => _hasChanges = true;
+            tbPublisher.TextChanged += (s, e) => _hasChanges = true;
+            tbImportPrice.TextChanged += (s, e) => _hasChanges = true;
+            tbSalePrice.TextChanged += (s, e) => _hasChanges = true;
+            cbCategory.SelectionChanged += (s, e) => _hasChanges = true;
         }
 
         #region Properties for Data Binding
@@ -54,7 +51,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
 
         public BookCategory Category
         {
-            get { return (BookCategory)cbCategory.SelectedItem; }
+            get { return cbCategory.SelectedItem != null ? (BookCategory)cbCategory.SelectedItem : BookCategory.Novel; }
             set { cbCategory.SelectedItem = value; }
         }
 
@@ -64,16 +61,89 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             set { tbPublisher.Text = value; }
         }
 
-        public decimal SalePrice => decimal.TryParse(tbSalePrice.Text, out var val) ? val : 0;
+        public decimal SalePrice
+        {
+            get { return decimal.TryParse(tbSalePrice.Text, out var val) ? val : 0; }
+            set { tbSalePrice.Text = value.ToString("N0"); }
+        }
 
-        public decimal ImportPrice => decimal.TryParse(tbImportPrice.Text, out var val) ? val : 0;
+        public decimal ImportPrice
+        {
+            get { return decimal.TryParse(tbImportPrice.Text, out var val) ? val : 0; }
+            set { tbImportPrice.Text = value.ToString("N0"); }
+        }
+
+        public DateTime CreatedDate
+        {
+            get { return DateTime.TryParse(txtCreatedDate.Text, out var date) ? date : DateTime.Now; }
+            set { txtCreatedDate.Text = value.ToString("dd/MM/yyyy HH:mm"); }
+        }
+
+        public DateTime? LastModifiedDate
+        {
+            get
+            {
+                if (txtLastModified.Text == "Chưa có") return null;
+                return DateTime.TryParse(txtLastModified.Text, out var date) ? date : (DateTime?)null;
+            }
+            set
+            {
+                txtLastModified.Text = value.HasValue ? value.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa có";
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Load book data into the dialog
+        /// </summary>
+        public void LoadBookData(string bookId, string name, string author, string publisher,
+                                 BookCategory category, decimal importPrice, decimal salePrice,
+                                 DateTime? createdDate = null, DateTime? lastModified = null)
+        {
+            BookID = bookId;
+            BookName = name;
+            Author = author;
+            Publisher = publisher;
+            Category = category;
+            ImportPrice = importPrice;
+            SalePrice = salePrice;
+
+            if (createdDate.HasValue)
+                CreatedDate = createdDate.Value;
+
+            if (lastModified.HasValue)
+                LastModifiedDate = lastModified.Value;
+
+            // Reset change tracking after loading
+            _hasChanges = false;
+        }
 
         #endregion
 
         #region Event Handlers
 
-        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        private void BtnUpdate_Click(object sender, RoutedEventArgs e)
         {
+            // Check if any changes were made
+            if (!_hasChanges)
+            {
+                var noChangeResult = MessageBox.Show(
+                    "Bạn chưa thực hiện thay đổi nào. Bạn có muốn đóng cửa sổ?",
+                    "Không có thay đổi",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Information);
+
+                if (noChangeResult == MessageBoxResult.Yes)
+                {
+                    this.DialogResult = false;
+                    this.Close();
+                }
+                return;
+            }
+
             // Validate all required fields
             if (!ValidateForm())
             {
@@ -88,21 +158,42 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
                 return;
             }
 
+            // Confirm update
+            var confirmResult = MessageBox.Show(
+                $"Bạn có chắc muốn cập nhật thông tin sách \"{BookName}\"?",
+                "Xác nhận cập nhật",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirmResult == MessageBoxResult.No)
+            {
+                return;
+            }
+
+            // Update last modified time
+            LastModifiedDate = DateTime.Now;
+
             // Success - close dialog
+            MessageBox.Show(
+                "Cập nhật thông tin sách thành công!",
+                "Thành công",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
             this.DialogResult = true;
             this.Close();
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
-            // Confirm if user has entered data
-            if (HasUserEnteredData())
+            // Confirm if user has made changes
+            if (_hasChanges)
             {
                 var result = MessageBox.Show(
-                    "Bạn có chắc muốn hủy? Dữ liệu đã nhập sẽ bị mất.",
+                    "Bạn có thay đổi chưa được lưu. Bạn có chắc muốn hủy?",
                     "Xác nhận hủy",
                     MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+                    MessageBoxImage.Warning);
 
                 if (result == MessageBoxResult.No)
                 {
@@ -116,13 +207,12 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            BtnCancel_Click(sender, e);
         }
 
-        // Numeric input validation
+        // Numeric input validation - only allow numbers
         private void NumericOnly_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Only allow numbers
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
@@ -208,7 +298,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
                 return false;
             }
 
-            if (ImportPrice > 1000000000)
+            if (ImportPrice > 1000000000) 
             {
                 ShowValidationError("Giá nhập không hợp lệ (quá lớn)!");
                 tbImportPrice.Focus();
@@ -230,12 +320,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
                 return false;
             }
 
-            if (SalePrice > 1000000000)
+            if (SalePrice > 1000000000) 
             {
                 ShowValidationError("Giá bán không hợp lệ (quá lớn)!");
                 tbSalePrice.Focus();
                 return false;
             }
+
             return true;
         }
 
@@ -248,17 +339,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
                 MessageBoxImage.Warning);
         }
 
-        private bool HasUserEnteredData()
-        {
-            return !string.IsNullOrWhiteSpace(tbBookName.Text) ||
-                   !string.IsNullOrWhiteSpace(tbAuthor.Text) ||
-                   !string.IsNullOrWhiteSpace(tbPublisher.Text) ||
-                   !string.IsNullOrWhiteSpace(tbImportPrice.Text) ||
-                   !string.IsNullOrWhiteSpace(tbSalePrice.Text);
-        }
-
         #endregion
-
-
     }
 }

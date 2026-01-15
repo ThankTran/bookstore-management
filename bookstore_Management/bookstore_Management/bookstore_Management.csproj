@@ -115,16 +115,16 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Books\UpdateBook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <!-- Views - Dialogs - Customers -->
     <Page Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml">
+    <Page Include="Presentation\Views\Dialogs\Customers\UpdateCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -362,14 +362,14 @@
     <Compile Include="Presentation\Views\Dialogs\Books\AddBookDialog.xaml.cs">
       <DependentUpon>AddBookDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\UpdateBook.xaml.cs">
+      <DependentUpon>UpdateBook.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml.cs">
       <DependentUpon>AddCustomer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Customers\DeleteCustomer.xaml.cs">
-      <DependentUpon>DeleteCustomer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Customers\EditCustomer.xaml.cs">
-      <DependentUpon>EditCustomer.xaml</DependentUpon>
+    <Compile Include="Presentation\Views\Dialogs\Customers\UpdateCustomer.xaml.cs">
+      <DependentUpon>UpdateCustomer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\Delete.xaml.cs">
       <DependentUpon>Delete.xaml</DependentUpon>
