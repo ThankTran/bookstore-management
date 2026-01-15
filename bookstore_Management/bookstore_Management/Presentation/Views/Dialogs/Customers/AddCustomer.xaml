@@ -16,15 +16,6 @@
         Style="{StaticResource DialogWindow}">
 
     <Window.Resources>
-        <ObjectDataProvider
-            x:Key="BookCategoryValues"
-            MethodName="GetValues"
-            ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="core:BookCategory"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-
         <!-- Input Border Style -->
         <Style x:Key="InputBorderStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="8"/>

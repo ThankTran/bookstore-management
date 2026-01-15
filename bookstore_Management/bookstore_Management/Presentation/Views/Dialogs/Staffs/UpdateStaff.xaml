@@ -1,13 +1,13 @@
-﻿<Window x:Class="bookstore_Management.Presentation.Views.Dialogs.Customers.UpdateCustomer"
+﻿<Window x:Class="bookstore_Management.Presentation.Views.Dialogs.Staffs.UpdateStaff"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:bookstore_Management.Presentation.Views.Dialogs.Customers"
+        xmlns:local="clr-namespace:bookstore_Management.Presentation.Views.Dialogs.Staffs"
         xmlns:core="clr-namespace:bookstore_Management.Core.Enums"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Height="600" Width="550"
+        Height="580" Width="550"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -15,6 +15,15 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
+        <ObjectDataProvider
+            x:Key="UserRoleValues"
+            MethodName="GetValues"
+            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="core:UserRole"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
         <!-- Input Border Style -->
         <Style x:Key="InputBorderStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="8"/>
@@ -68,10 +77,10 @@
 
             <!-- Header -->
             <Border Grid.Row="0" 
-                    Background="#FF9800"
-                    CornerRadius="20,20,0,0"
-                    Padding="30,20"
-                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                        Background="#FF9800"
+                        CornerRadius="20,20,0,0"
+                        Padding="30,20"
+                        MouseLeftButtonDown="Header_MouseLeftButtonDown">
                 <Grid>
                     <StackPanel Orientation="Horizontal">
                         <Border Background="White"
@@ -84,7 +93,7 @@
                                        VerticalAlignment="Center"/>
                         </Border>
                         <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="Chỉnh sửa thông tin khách hàng" 
+                            <TextBlock Text="Chỉnh sửa thông tin nhân viên" 
                                        FontSize="20"
                                        FontWeight="Bold"
                                        Foreground="White"/>
@@ -104,9 +113,10 @@
                             Cursor="Hand"
                             ToolTip="Đóng">
                         <Button Background="Transparent"
-                                BorderThickness="0"
-                                Click="BtnClose_Click"
-                                Cursor="Hand">
+                                    BorderThickness="0"
+                                    Cursor="Hand"
+                                    Click="BtnClose_Click" 
+                                    RenderTransformOrigin="586.736,12.879">
                             <TextBlock Text="✕" 
                                        FontSize="16"
                                        FontWeight="Bold"
@@ -124,92 +134,94 @@
                           Padding="30,25">
                 <StackPanel>
 
-                    <!-- Mã khách hàng -->
+                    <!-- Mã nhân viên (Readonly) & Thể loại -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0" Height="75">
-                        <TextBlock Text="Mã khách hàng" Style="{StaticResource LabelStyle}">
-                            <TextBlock.ToolTip>
-                                <ToolTip Content="Mã khách hàng không thể thay đổi"/>
-                            </TextBlock.ToolTip>
-                        </TextBlock>
-                        <Border Style="{StaticResource InputBorderStyle}"
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Mã nhân viên" Style="{StaticResource LabelStyle}">
+                                <TextBlock.ToolTip>
+                                    <ToolTip Content="Mã nhân viên không thể thay đổi"/>
+                                </TextBlock.ToolTip>
+                            </TextBlock>
+                            <Border Style="{StaticResource InputBorderStyle}"
                                     Background="#F5F5F5">
-                            <Grid>
-                                <TextBox x:Name="tbCustomerID"
+                                <Grid>
+                                    <TextBox x:Name="tbStaffID"
                                              Style="{StaticResource InputTextBoxStyle}"
                                              IsReadOnly="True"
                                              Foreground="#666666"
                                              FontWeight="SemiBold"/>
-                                <TextBlock Text="🔒"
+                                    <TextBlock Text="🔒"
                                                FontSize="14"
                                                Foreground="#999999"
                                                HorizontalAlignment="Right"
                                                VerticalAlignment="Center"
                                                Margin="0,0,5,0"
                                                IsHitTestVisible="False"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
 
-                    <!-- Tên khách hàng -->
+                        <!-- Chức vụ -->
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Chức vụ *" Style="{StaticResource LabelStyle}"/>
+                            <Border Style="{StaticResource InputBorderStyle}">
+                                <ComboBox x:Name="cbUserRole"
+                                          BorderThickness="0"
+                                          Background="Transparent"
+                                          FontSize="13"
+                                          ItemsSource="{Binding Source={StaticResource UserRoleValues}}"
+                                          SelectedItem="{Binding Role}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" 
+                                                       FontFamily="{StaticResource PrimaryFont}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Tên nhân viên -->
                     <StackPanel Margin="0,0,0,20">
-                        <TextBlock Text="Tên khách hàng *" Style="{StaticResource LabelStyle}"/>
+                        <TextBlock Text="Tên nhân viên *" Style="{StaticResource LabelStyle}"/>
                         <Border Style="{StaticResource InputBorderStyle}">
-                            <TextBox x:Name="tbCustomerName"
+                            <TextBox x:Name="tbStaffName"
                                      Style="{StaticResource InputTextBoxStyle}"/>
                         </Border>
                     </StackPanel>
 
-                    <!-- SĐT & Email -->
+                    <!-- SĐT & CCCD -->
                     <Grid Margin="0,0,0,20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="180*"/>
-                            <ColumnDefinition Width="65"/>
-                            <ColumnDefinition Width="229*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Số điện thoại *" Style="{StaticResource LabelStyle}"/>
                             <Border Style="{StaticResource InputBorderStyle}">
                                 <TextBox x:Name="tbPhone"
-                                         Style="{StaticResource InputTextBoxStyle}"
-                                         PreviewTextInput="NumericOnly_PreviewTextInput"/>
+                                         Style="{StaticResource InputTextBoxStyle}"/>
                             </Border>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Margin="23,0,0,0">
-                            <TextBlock Text="Email *" Style="{StaticResource LabelStyle}"/>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Căn cước công dân *" Style="{StaticResource LabelStyle}"/>
                             <Border Style="{StaticResource InputBorderStyle}">
-                                <TextBox x:Name="tbEmail"
+                                <TextBox x:Name="tbCIC"
                                          Style="{StaticResource InputTextBoxStyle}"/>
                             </Border>
                         </StackPanel>
                     </Grid>
-
-                    <!-- Địa chỉ -->
-
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Địa chỉ *" Style="{StaticResource LabelStyle}"/>
-                        <Border Style="{StaticResource InputBorderStyle}">
-                            <Grid>
-                                <TextBox x:Name="tbAddress"
-                                             Style="{StaticResource InputTextBoxStyle}"
-                                             />
-                                <!-- PreviewTextInput="NumericOnly_PreviewTextInput" -->
-
-                                <TextBlock Text="₫"
-                                               FontSize="13"
-                                               Foreground="#999999"
-                                               HorizontalAlignment="Right"
-                                               VerticalAlignment="Center"
-                                               Margin="0,0,5,0"
-                                               IsHitTestVisible="False"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-
-
-
+                    
                     <!-- Status Info Card -->
                     <Border Background="#FFF3E0"
                             CornerRadius="12"
@@ -246,7 +258,7 @@
                                            Margin="0,0,5,5"/>
                                 <TextBlock Grid.Row="0" Grid.Column="1"
                                            x:Name="txtCreatedDate"
-                                           Text="01/01/2024"
+                                           Text="01/01/2026"
                                            FontSize="11"
                                            FontWeight="SemiBold"
                                            Foreground="#F57C00"
@@ -302,9 +314,9 @@
                                 Margin="0,0,10,0"
                                 Cursor="Hand">
                             <Button Background="Transparent"
-                                    BorderThickness="0"
-                                    Click="BtnCancel_Click"
-                                    Cursor="Hand">
+                                        BorderThickness="0"
+                                        Cursor="Hand"
+                                        Click="BtnCancel_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="✕" 
                                                FontSize="14"
@@ -331,9 +343,9 @@
                                                 Opacity="0.3"/>
                             </Border.Effect>
                             <Button Background="Transparent"
-                                    BorderThickness="0"
-                                    Click="BtnUpdate_Click"
-                                    Cursor="Hand">
+                                        BorderThickness="0"
+                                        Cursor="Hand"
+                                        Click="BtnUpdate_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="💾" 
                                                FontSize="16"
