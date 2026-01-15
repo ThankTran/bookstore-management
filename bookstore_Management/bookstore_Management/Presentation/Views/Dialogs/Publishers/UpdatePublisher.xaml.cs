@@ -5,14 +5,14 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 
-namespace bookstore_Management.Presentation.Views.Dialogs.Customers
+namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
 {
-    public partial class UpdateCustomer : Window
+    public partial class UpdatePublisher : Window
     {
         private bool _hasChanges = false;
 
 
-        public UpdateCustomer()
+        public UpdatePublisher()
         {
             InitializeComponent();
 
@@ -21,24 +21,23 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             txtLastModified.Text = "Chưa có";
 
             // Track changes
-            tbCustomerName.TextChanged += (s, e) => _hasChanges = true;
+            tbPublisherName.TextChanged += (s, e) => _hasChanges = true;
             tbPhone.TextChanged += (s, e) => _hasChanges = true;
             tbEmail.TextChanged += (s, e) => _hasChanges = true;
-            tbAddress.TextChanged += (s, e) => _hasChanges = true;
         }
 
         #region Properties for Data Binding
 
-        public string CustomerID
+        public string PublisherID
         {
-            get { return tbCustomerID.Text; }
-            set { tbCustomerID.Text = value; }
+            get { return tbPublisherID.Text; }
+            set { tbPublisherID.Text = value; }
         }
 
-        public string CustomerName
+        public string PublisherName
         {
-            get { return tbCustomerName.Text; }
-            set { tbCustomerName.Text = value; }
+            get { return tbPublisherName.Text; }
+            set { tbPublisherName.Text = value; }
         }
 
         public string Phone
@@ -51,12 +50,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
         {
             get { return tbEmail.Text; }
             set { tbEmail.Text = value; }
-        }
-
-        public string Address
-        {
-            get { return tbAddress.Text; }
-            set { tbAddress.Text = value; }
         }
 
         public DateTime CreatedDate
@@ -85,14 +78,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
         /// <summary>
         /// Load book data into the dialog
         /// </summary>
-        public void LoadCustomerData(string customerId, string name, string phone, string email, string address,
+        public void LoadPublisherData(string publisherId, string name, string phone, string email,
                                  DateTime? createdDate = null, DateTime? lastModified = null)
         {
-            CustomerID = customerId;
-            CustomerName = name;
+            PublisherID = customerId;
+            PublisherName = name;
             Phone = phone;
             Email = email;
-            Address = address;
 
             if (createdDate.HasValue)
                 CreatedDate = createdDate.Value;
@@ -135,7 +127,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
 
             // Confirm update
             var confirmResult = MessageBox.Show(
-                $"Bạn có chắc muốn cập nhật thông tin khách hàng \"{CustomerName}\"?",
+                $"Bạn có chắc muốn cập nhật thông tin NXB \"{PublisherName}\"?",
                 "Xác nhận cập nhật",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
@@ -150,7 +142,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
 
             // Success - close dialog
             MessageBox.Show(
-                "Cập nhật thông tin khách hàng thành công!",
+                "Cập nhật thông tin NXB thành công!",
                 "Thành công",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
@@ -201,31 +193,31 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
         }
 
 
-    #endregion
+        #endregion
 
-    #region Validation Methods
+        #region Validation Methods
 
-    private bool ValidateForm()
+        private bool ValidateForm()
         {
             // Check Customer Name
-            if (string.IsNullOrWhiteSpace(tbCustomerName.Text))
+            if (string.IsNullOrWhiteSpace(tbPublisherName.Text))
             {
                 ShowValidationError("Vui lòng nhập tên khách hàng!");
-                tbCustomerName.Focus();
+                tbPublisherName.Focus();
                 return false;
             }
 
-            if (tbCustomerName.Text.Length < 2)
+            if (tbPublisherName.Text.Length < 2)
             {
                 ShowValidationError("Tên khách hàng phải có ít nhất 2 ký tự!");
-                tbCustomerName.Focus();
+                tbPublisherName.Focus();
                 return false;
             }
 
-            if (!Regex.IsMatch(tbCustomerName.Text, @"^[a-zA-Z\s]+$"))
+            if (!Regex.IsMatch(tbPublisherName.Text, @"^[a-zA-Z\s]+$"))
             {
                 ShowValidationError("Tên khách hàng chỉ được chứa chữ cái và khoảng trắng!");
-                tbCustomerName.Focus();
+                tbPublisherName.Focus();
                 return false;
             }
 
@@ -257,15 +249,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 }
             }
 
-            // Check Address
-            if (string.IsNullOrWhiteSpace(tbAddress.Text))
-            {
-                ShowValidationError("Vui lòng nhập địa chỉ khách hàng!");
-                tbAddress.Focus();
-                return false;
-            }
 
-            
             return true;
         }
 

@@ -63,75 +63,75 @@ namespace bookstore_Management.Views.Customers
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.DataContext is Customer customer)
-            {
-                var owner = Window.GetWindow(this);
-                var editDialog = new EditCustomer(customer);
+            //if (sender is Button button && button.DataContext is Customer customer)
+            //{
+            //    var owner = Window.GetWindow(this);
+            //    var editDialog = new EditCustomer(customer);
 
-                // Ép trạng thái & kích thước đúng như design
-                editDialog.WindowState = WindowState.Normal;
-                editDialog.Width = 456;
-                editDialog.Height = 316;
+            //    // Ép trạng thái & kích thước đúng như design
+            //    editDialog.WindowState = WindowState.Normal;
+            //    editDialog.Width = 456;
+            //    editDialog.Height = 316;
 
-                if (owner != null)
-                {
-                    editDialog.Owner = owner;
-                    UpdateLayout();
+            //    if (owner != null)
+            //    {
+            //        editDialog.Owner = owner;
+            //        UpdateLayout();
 
-                    var pos = PointToScreen(new Point(0, 0));
+            //        var pos = PointToScreen(new Point(0, 0));
 
-                    double left = pos.X + (ActualWidth - editDialog.Width) / 2;
-                    double top = pos.Y + (ActualHeight - editDialog.Height) / 2;
+            //        double left = pos.X + (ActualWidth - editDialog.Width) / 2;
+            //        double top = pos.Y + (ActualHeight - editDialog.Height) / 2;
 
-                    editDialog.Left = Math.Round(left);
-                    editDialog.Top = Math.Round(top);
-                }
+            //        editDialog.Left = Math.Round(left);
+            //        editDialog.Top = Math.Round(top);
+            //    }
 
-                bool? result = editDialog.ShowDialog();
+            //    bool? result = editDialog.ShowDialog();
 
-                if (result == true)
-                {
-                    dgCustomers.Items.Refresh();
+            //    if (result == true)
+            //    {
+            //        dgCustomers.Items.Refresh();
 
-                    MessageBox.Show("Đã cập nhật thông tin khách hàng!",
-                        "Thành công",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-                }
-            }
+            //        MessageBox.Show("Đã cập nhật thông tin khách hàng!",
+            //            "Thành công",
+            //            MessageBoxButton.OK,
+            //            MessageBoxImage.Information);
+            //    }
+            //}
         }
 
 
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.DataContext is Customer selectedCustomer)
-            {
-                var owner = Window.GetWindow(this);
-                var dialog = new DeleteCustomer();
+            //if (sender is Button btn && btn.DataContext is Customer selectedCustomer)
+            //{
+            //    var owner = Window.GetWindow(this);
+            //    var dialog = new DeleteCustomer();
 
-                if (owner != null)
-                {
-                    dialog.Owner = owner;
-                    UpdateLayout();
+            //    if (owner != null)
+            //    {
+            //        dialog.Owner = owner;
+            //        UpdateLayout();
 
-                    var pos = PointToScreen(new Point(0, 0));
+            //        var pos = PointToScreen(new Point(0, 0));
 
-                    double left = pos.X + (ActualWidth - dialog.Width) / 2;
-                    double top = pos.Y + (ActualHeight - dialog.Height) / 2;
+            //        double left = pos.X + (ActualWidth - dialog.Width) / 2;
+            //        double top = pos.Y + (ActualHeight - dialog.Height) / 2;
 
-                    dialog.Left = Math.Round(left);
-                    dialog.Top = Math.Round(top);
-                }
+            //        dialog.Left = Math.Round(left);
+            //        dialog.Top = Math.Round(top);
+            //    }
 
-                bool? result = dialog.ShowDialog();
+            //    bool? result = dialog.ShowDialog();
 
-                if (result == true && dialog.IsConfirmed)
-                {
-                    Customers.Remove(selectedCustomer);
-                    ReindexCustomers();
-                }
-            }
+            //    if (result == true && dialog.IsConfirmed)
+            //    {
+            //        Customers.Remove(selectedCustomer);
+            //        ReindexCustomers();
+            //    }
+            //}
         }
         #endregion
 

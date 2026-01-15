@@ -135,7 +135,7 @@
 
                     <!-- Mã khách hàng -->
 
-                    <StackPanel Grid.Column="0">
+                    <StackPanel Grid.Column="0" Height="75">
                         <TextBlock Text="Mã khách hàng" Style="{StaticResource LabelStyle}">
                             <TextBlock.ToolTip>
                                 <ToolTip Content="Mã khách hàng không thể thay đổi"/>
