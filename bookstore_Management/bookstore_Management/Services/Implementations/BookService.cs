@@ -33,17 +33,6 @@ namespace bookstore_Management.Services.Implementations
             _importBillDetailRepository = importBillDetailRepository;
         }
 
-        internal BookService()
-        {
-            var context = new BookstoreDbContext();
-            _bookRepository = new BookRepository(context);
-        }
-        // Hãy đảm bảo bạn đã gán giá trị cho repository
-        internal BookService(IBookRepository bookRepo)
-        {
-            _bookRepository = bookRepo;
-        }
-
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
@@ -405,20 +394,20 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                // Get all active books (already filtered by DeletedDate in repository)
+                
                 var books = _bookRepository.GetAllForListView().ToList();
 
                 if (!books.Any())
                     return Result<IEnumerable<BookListResponseDto>>.Success(new List<BookListResponseDto>());
 
-                // Get import prices for all books in one batch query
+                
                 var bookIds = books.Select(b => b.BookId).ToList();
                 var importPrices = _importBillDetailRepository.GetLatestImportPricesByBookIds(bookIds);
 
-                // Map to DTOs with Index (STT) generation
+               
                 var result = books.Select((book, index) => new BookListResponseDto
                 {
-                    Index = index + 1, // STT starts from 1
+                    Index = index + 1,
                     BookId = book.BookId,
                     Name = book.Name,
                     SupplierId = book.SupplierId,
