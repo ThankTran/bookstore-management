@@ -29,6 +29,32 @@ namespace bookstore_Management.Data.Repositories.Implementations
             return Find(c => c.Phone == phone && c.DeletedDate == null).FirstOrDefault();
         }
 
+        public bool UsePoint(string customerId, decimal points)
+        {
+            var customers = GetById(customerId);
+            if (customers is null || customers.DeletedDate != null)
+                return false;
+            else
+            {
+                if (customers.LoyaltyPoints < points) return false;
+                customers.LoyaltyPoints -= points;
+            }
+            return true;
+        }
+
+        public bool AddPoint(string customerId, decimal points)
+        {
+            var customers = GetById(customerId);
+            if (customers is null || customers.DeletedDate != null)
+                return false;
+            else
+            {
+                if (points < 0) return false;
+                customers.LoyaltyPoints += points;
+            }
+            return true;
+        }
+
         /// <summary>
         /// Gets all active (non-deleted) customers for list view
         /// Filters by DeletedDate == null
