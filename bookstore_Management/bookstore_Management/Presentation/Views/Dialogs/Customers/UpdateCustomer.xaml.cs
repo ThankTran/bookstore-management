@@ -192,11 +192,20 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        #endregion
+        private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
+        }
 
-        #region Validation Methods
 
-        private bool ValidateForm()
+    #endregion
+
+    #region Validation Methods
+
+    private bool ValidateForm()
         {
             // Check Customer Name
             if (string.IsNullOrWhiteSpace(tbCustomerName.Text))

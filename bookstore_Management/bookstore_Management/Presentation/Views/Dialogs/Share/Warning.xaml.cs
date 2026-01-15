@@ -22,6 +22,12 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Share
         public Warning()
         {
             InitializeComponent();
+            MessageText.Text = message;
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
         }
     }
 }

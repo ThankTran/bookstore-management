@@ -48,7 +48,8 @@
                             Foreground="White"
                             FontWeight="Bold"
                             BorderThickness="0"
-                            Cursor="Hand">
+                            Cursor="Hand"
+                            Click="Close_Click">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border CornerRadius="18"

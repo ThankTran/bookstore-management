@@ -545,6 +545,11 @@
     <Resource Include="Presentation\AppResources\Images\Icons\Login\user.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\timeline.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Presentation\Views\Dialogs\Invoices\" />
+    <Folder Include="Presentation\Views\Dialogs\Payment\" />
+    <Folder Include="Presentation\Views\Dialogs\Publishers\" />
+    <Folder Include="Presentation\Views\Dialogs\Staffs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -210,8 +210,17 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             BtnCancel_Click(sender, e);
         }
 
-        // Numeric input validation - only allow numbers
-        private void NumericOnly_PreviewTextInput(object sender, TextCompositionEventArgs e)
+
+        private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
+        }
+
+    // Numeric input validation - only allow numbers
+    private void NumericOnly_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
