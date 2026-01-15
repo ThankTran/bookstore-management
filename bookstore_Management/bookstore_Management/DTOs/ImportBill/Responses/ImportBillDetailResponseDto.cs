@@ -1,8 +1,6 @@
 namespace bookstore_Management.DTOs.ImportBill.Responses
 {
-    /// <summary>
-    /// DTO for import bill detail response
-    /// </summary>
+    
     public class ImportBillDetailResponseDto
     {
         public string BookId { get; set; }

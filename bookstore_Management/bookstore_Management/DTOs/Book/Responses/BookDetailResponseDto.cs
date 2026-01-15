@@ -2,10 +2,6 @@ using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.DTOs.Book.Responses
 {
-    /// <summary>
-    /// DTO for Book detail view
-    /// Contains comprehensive book information
-    /// </summary>
     public class BookDetailResponseDto
     {
         public string BookId { get; set; }
@@ -24,8 +20,7 @@ namespace bookstore_Management.DTOs.Book.Responses
             SalePrice = salePrice;
             SupplierName = supplierName;
         }
-
-        public BookDetailResponseDto() { }
+        
     }
 }
 

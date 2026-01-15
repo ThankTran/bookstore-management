@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 namespace bookstore_Management.DTOs.ImportBill.Responses
 {
-    /// <summary>
-    /// DTO for import bill response
-    /// </summary>
+ 
     public class ImportBillResponseDto
     {
         public string Id { get; set; }

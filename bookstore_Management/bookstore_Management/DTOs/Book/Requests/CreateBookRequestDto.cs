@@ -2,9 +2,7 @@ using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.DTOs.Book.Requests
 {
-    /// <summary>
-    /// DTO for creating a new book
-    /// </summary>
+    
     public class CreateBookRequestDto
     {
         public string Id { get; set; }

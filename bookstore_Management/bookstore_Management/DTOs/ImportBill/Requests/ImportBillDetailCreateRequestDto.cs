@@ -1,8 +1,6 @@
 namespace bookstore_Management.DTOs.ImportBill.Requests
 {
-    /// <summary>
-    /// DTO for creating import bill detail item
-    /// </summary>
+    
     public class ImportBillDetailCreateRequestDto
     {
         public string BookId { get; set; }

@@ -2,9 +2,6 @@ using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.DTOs.Book.Requests
 {
-    /// <summary>
-    /// DTO for updating an existing book
-    /// </summary>
     public class UpdateBookRequestDto
     {
         public string Name { get; set; }

@@ -3,9 +3,7 @@ using bookstore_Management.Core.Enums;
 
 namespace bookstore_Management.DTOs.Order.Requests
 {
-    /// <summary>
-    /// DTO for creating a new order
-    /// </summary>
+    
     public class CreateOrderRequestDto
     {
         public string StaffId { get; set; }
