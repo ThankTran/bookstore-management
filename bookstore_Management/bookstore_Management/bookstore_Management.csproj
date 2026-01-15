@@ -128,6 +128,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Publishers\AddPublisher.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Publishers\UpdatePublisher.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Share\Delete.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -371,6 +379,12 @@
     <Compile Include="Presentation\Views\Dialogs\Customers\UpdateCustomer.xaml.cs">
       <DependentUpon>UpdateCustomer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Publishers\AddPublisher.xaml.cs">
+      <DependentUpon>AddPublisher.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Publishers\UpdatePublisher.xaml.cs">
+      <DependentUpon>UpdatePublisher.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\Delete.xaml.cs">
       <DependentUpon>Delete.xaml</DependentUpon>
     </Compile>
@@ -548,7 +562,6 @@
   <ItemGroup>
     <Folder Include="Presentation\Views\Dialogs\Invoices\" />
     <Folder Include="Presentation\Views\Dialogs\Payment\" />
-    <Folder Include="Presentation\Views\Dialogs\Publishers\" />
     <Folder Include="Presentation\Views\Dialogs\Staffs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
