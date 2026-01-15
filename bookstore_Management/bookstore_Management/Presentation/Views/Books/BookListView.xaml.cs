@@ -140,21 +140,21 @@ namespace bookstore_Management.Views.Books
 
         #region Public Methods
 
-        public void RefreshBookList()
-        {
-            try
-            {
-                dgBooks.Items.Refresh();
-                txtSearch.Clear();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi làm mới danh sách: {ex.Message}",
-                    "Lỗi",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
-        }
+        //public void RefreshBookList()
+        //{
+        //    try
+        //    {
+        //        dgBooks.Items.Refresh();
+        //        txtSearch.Clear();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Lỗi khi làm mới danh sách: {ex.Message}",
+        //            "Lỗi",
+        //            MessageBoxButton.OK,
+        //            MessageBoxImage.Error);
+        //    }
+        //}
         #endregion
     }
 }

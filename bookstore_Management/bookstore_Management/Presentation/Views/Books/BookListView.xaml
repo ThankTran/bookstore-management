@@ -142,23 +142,27 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Search Icon -->
-                        <Image Grid.Column="0"
-                               Source="/Presentation/AppResources/Images/Icons/Actions/search.png"
-                               Width="18" 
-                               Height="18"
-                               Margin="0,0,10,0"
-                               Opacity="0.5"/>
+                        <Button BorderThickness="0" 
+                                Background="Transparent"
+                                Command="{Binding SearchBookCommand}">
+                            <Image Grid.Column="0"
+                                   Source="/Presentation/AppResources/Images/Icons/Actions/search.png"
+                                   Width="18" 
+                                   Height="18"
+                                   Margin="0,0,10,0"
+                                   Opacity="0.5"/>
+                        </Button>
 
                         <!-- Search TextBox -->
-                        <TextBox x:Name="txtSearch"
-                                 Grid.Column="1"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 VerticalContentAlignment="Center"
-                                 FontSize="13"
-                                 Foreground="#666666"
-                                 FontFamily="{StaticResource PrimaryFont}"
-                                 TextChanged="txtSearch_TextChanged">
+                        <TextBox
+                        Grid.Column="1"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        VerticalContentAlignment="Center"
+                        FontSize="13"
+                        Foreground="#666666"
+                        FontFamily="{StaticResource PrimaryFont}"
+                        Text="{Binding SearchKeywork, UpdateSourceTrigger=PropertyChanged}">        
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
                                     <Style.Triggers>
@@ -255,6 +259,7 @@
                               x:Name="dgBooks"
                               Style="{StaticResource MainDataGrid}"
                               ItemsSource="{Binding Books}"
+                              SelectedItem="{Binding SelectedBook}"
                               MouseDoubleClick="dgBooks_MouseDoubleClick"
                               Margin="0">
 
@@ -265,7 +270,7 @@
                         <DataGrid.Columns>
                             <!-- STT -->
                             <DataGridTextColumn Header="STT" 
-                                                Binding="{Binding bookSTT}" 
+                                                Binding="{Binding BookId}" 
                                                 Width="70"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
@@ -277,7 +282,7 @@
 
                             <!-- Mã sách -->
                             <DataGridTextColumn Header="Mã sách" 
-                                                Binding="{Binding bookID}" 
+                                                Binding="{Binding BookId}" 
                                                 Width="110"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
@@ -289,7 +294,7 @@
 
                             <!-- Tên sách -->
                             <DataGridTextColumn Header="Tên sách" 
-                                                Binding="{Binding name}" 
+                                                Binding="{Binding Name}" 
                                                 Width="*"
                                                 MinWidth="200"
                                                 IsReadOnly="True">
@@ -305,7 +310,7 @@
 
                             <!-- Tác giả -->
                             <DataGridTextColumn Header="Tác giả" 
-                                                Binding="{Binding author}" 
+                                                Binding="{Binding Author}" 
                                                 Width="160"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
@@ -318,7 +323,7 @@
 
                             <!-- Nhà xuất bản -->
                             <DataGridTextColumn Header="Nhà xuất bản" 
-                                                Binding="{Binding publisher}" 
+                                                Binding="{Binding SupplierId}" 
                                                 Width="150"
                                                 IsReadOnly="True"
                                                 ElementStyle="{StaticResource CenterAlignedCell}"/>
@@ -335,22 +340,22 @@
                                                 <Style TargetType="Border">
                                                     <Setter Property="Background" Value="#E3F2FD"/>
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding category}" Value="Văn học">
+                                                        <DataTrigger Binding="{Binding Category}" Value="Văn học">
                                                             <Setter Property="Background" Value="#E8F5E9"/>
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding category}" Value="Khoa học">
+                                                        <DataTrigger Binding="{Binding Category}" Value="Khoa học">
                                                             <Setter Property="Background" Value="#FFF3E0"/>
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding category}" Value="Kinh tế">
+                                                        <DataTrigger Binding="{Binding Category}" Value="Kinh tế">
                                                             <Setter Property="Background" Value="#F3E5F5"/>
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding category}" Value="Thiếu nhi">
+                                                        <DataTrigger Binding="{Binding Category}" Value="Thiếu nhi">
                                                             <Setter Property="Background" Value="#FCE4EC"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </Border.Style>
-                                            <TextBlock Text="{Binding category}"
+                                            <TextBlock Text="{Binding Category}"
                                                        FontSize="11"
                                                        FontWeight="SemiBold"
                                                        HorizontalAlignment="Center">
@@ -358,16 +363,16 @@
                                                     <Style TargetType="TextBlock">
                                                         <Setter Property="Foreground" Value="#1976D2"/>
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding category}" Value="Văn học">
+                                                            <DataTrigger Binding="{Binding Category}" Value="Văn học">
                                                                 <Setter Property="Foreground" Value="#2E7D32"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding category}" Value="Khoa học">
+                                                            <DataTrigger Binding="{Binding Category}" Value="Khoa học">
                                                                 <Setter Property="Foreground" Value="#F57C00"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding category}" Value="Kinh tế">
+                                                            <DataTrigger Binding="{Binding Category}" Value="Kinh tế">
                                                                 <Setter Property="Foreground" Value="#7B1FA2"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding category}" Value="Thiếu nhi">
+                                                            <DataTrigger Binding="{Binding Category}" Value="Thiếu nhi">
                                                                 <Setter Property="Foreground" Value="#C2185B"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
@@ -381,7 +386,7 @@
 
                             <!-- Giá bán -->
                             <DataGridTextColumn Header="Giá bán" 
-                                                Binding="{Binding salePrice, StringFormat={}{0:N0} ₫}" 
+                                                Binding="{Binding SalePrice, StringFormat={}{0:N0} ₫}" 
                                                 Width="130"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
@@ -408,7 +413,10 @@
                                                         Click="btnEdit_Click"
                                                         Background="Transparent"
                                                         Width="32"
-                                                        Height="32">
+                                                        Height="32"
+                                                        Command="{Binding DataContext.EditBookCommand,
+                                                        RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                        CommandParameter="{Binding}">
                                                     <Image Source="/Presentation/AppResources/Images/Icons/Actions/edit.png" 
                                                            Width="16" 
                                                            Height="16"/>
@@ -424,7 +432,10 @@
                                                         Click="btnDelete_Click"
                                                         Background="Transparent"
                                                         Width="32"
-                                                        Height="32">
+                                                        Height="32"
+                                                        Command="{Binding DataContext.RemoveBookCommand,
+                                                        RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                        CommandParameter="{Binding}">
                                                     <Image Source="/Presentation/AppResources/Images/Icons/Actions/recyclebin.png" 
                                                            Width="16" 
                                                            Height="16"/>

@@ -14,22 +14,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Presentation.Views.Dialogs.Customers
+namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
 {
     /// <summary>
-    /// Interaction logic for AddCustomer.xaml
+    /// Interaction logic for AddPublisher.xaml
     /// </summary>
-    public partial class AddCustomer : Window
+    public partial class AddPublisher : Window
     {
-        public AddCustomer()
+        public AddPublisher()
         {
             InitializeComponent();
         }
         #region Properties for Data Binding
-        public string CustomerName
+        public string PublisherName
         {
-            get { return tbCustomerName.Text.Trim(); }
-            set { tbCustomerName.Text = value; }
+            get { return tbPublisherName.Text.Trim(); }
+            set { tbPublisherName.Text = value; }
         }
 
         public string Phone
@@ -42,19 +42,15 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             get { return tbEmail.Text.Trim(); }
             set { tbEmail.Text = value; }
         }
-        public string Address
-        {
-            get { return tbAddress.Text.Trim(); }
-            set { tbAddress.Text = value; }
-        }
-        #endregion
         
+        #endregion
+
         #region Event Handlers
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(CustomerName))
+            if (string.IsNullOrWhiteSpace(PublisherName))
             {
-                MessageBox.Show("Vui lòng nhập tên khách hàng.",
+                MessageBox.Show("Vui lòng nhập tên nhà xuất bản.",
                                 "Thông báo",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Warning);
@@ -113,24 +109,24 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
         private bool ValidateForm()
         {
             // Check Customer Name
-            if (string.IsNullOrWhiteSpace(tbCustomerName.Text))
+            if (string.IsNullOrWhiteSpace(tbPublisherName.Text))
             {
                 ShowValidationError("Vui lòng nhập tên khách hàng!");
-                tbCustomerName.Focus();
+                tbPublisherName.Focus();
                 return false;
             }
 
-            if (tbCustomerName.Text.Length < 2)
+            if (tbPublisherName.Text.Length < 2)
             {
                 ShowValidationError("Tên khách hàng phải có ít nhất 2 ký tự!");
-                tbCustomerName.Focus();
+                tbPublisherName.Focus();
                 return false;
             }
 
-            if (!Regex.IsMatch(tbCustomerName.Text, @"^[a-zA-Z\s]+$"))
+            if (!Regex.IsMatch(tbPublisherName.Text, @"^[a-zA-Z\s]+$"))
             {
                 ShowValidationError("Tên khách hàng chỉ được chứa chữ cái và khoảng trắng!");
-                tbCustomerName.Focus();
+                tbPublisherName.Focus();
                 return false;
             }
 
@@ -162,14 +158,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 return false;
             }
 
-            // Check Address
-            if (string.IsNullOrWhiteSpace(tbAddress.Text))
-            {
-                ShowValidationError("Vui lòng nhập địa chỉ!");
-                tbAddress.Focus();
-                return false;
-            }
-
             return true;
         }
 
@@ -184,10 +172,9 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
 
         private bool HasUserEnteredData()
         {
-            return !string.IsNullOrWhiteSpace(tbCustomerName.Text) ||
+            return !string.IsNullOrWhiteSpace(tbPublisherName.Text) ||
                    !string.IsNullOrWhiteSpace(tbPhoneNumber.Text) ||
-                   !string.IsNullOrWhiteSpace(tbEmail.Text) ||
-                   !string.IsNullOrWhiteSpace(tbAddress.Text);
+                   !string.IsNullOrWhiteSpace(tbEmail.Text);
         }
 
         #endregion

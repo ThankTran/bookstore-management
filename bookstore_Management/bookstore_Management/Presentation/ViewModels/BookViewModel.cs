@@ -1,7 +1,8 @@
 ﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.Core.Results;
 using bookstore_Management.Models;
-using bookstore_Management.Services.Interfaces;
 using bookstore_Management.Services.Implementations;
+using bookstore_Management.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,7 @@ namespace bookstore_Management.Presentation.ViewModels
 {
     internal class BookViewModel : BaseViewModel
     {
+        #region các khai báo
         //lấy service
         private readonly IBookService _bookService = new BookService();
 
@@ -43,39 +45,51 @@ namespace bookstore_Management.Presentation.ViewModels
             }
         }
 
+        //sách đã chọn để xóa/sửa
+        private Book _selectedBook;
+        public Book SelectedBook
+        {
+            get => _selectedBook;
+            set
+            {
+                _selectedBook = value;
+                OnPropertyChanged();
+            }
+        }
+
+        //keyword để tìm kiếm
+        private string _searchKeywork;
+        public string SearchKeywork
+        {
+            get => _searchKeywork;
+            set
+            {
+                _searchKeywork= value;
+                OnPropertyChanged();
+                SearchBookCommand.Execute(null);
+            }
+        }
+        #endregion
+
+        #region Khai báo command
         //khai báo command cho thao tác thêm, xóa, sửa sách
         public ICommand AddBookCommand { get; set; }
         public ICommand RemoveBookCommand { get; set; }
-        public ICommand EditBookCommand { get; set; }
+        public ICommand EditBookCommand { get; set; }  
 
-        #region code lấy data mẫu cũ khi k dùng db
-        //data mẫu cho 15 sách
-        //public void LoadSampleData()
-        //{
-        //    Books = new ObservableCollection<Book>
-        //    {
-        //        new Book { bookSTT = 2, bookID = "VN002", author = "Nguyễn Nhật Ánh", name = "Mắt Biếc", category = "Tiểu thuyết", salePrice = 85000, importPrice = 60000, publisher = "NXB Trẻ" },
-        //        new Book { bookSTT = 2, bookID = "VN002", author = "Nguyễn Nhật Ánh", name = "Cho tôi xin một vé đi tuổi thơ", category = "Tiểu thuyết", salePrice = 90000, importPrice = 65000, publisher = "NXB Trẻ" },
-        //        new Book { bookSTT = 3, bookID = "VN003", author = "Nguyễn Minh Châu", name = "Chiếc thuyền ngoài xa", category = "Truyện ngắn", salePrice = 78000, importPrice = 55000, publisher = "NXB Văn học" },
-        //        new Book { bookSTT = 4, bookID = "VN004", author = "Nam Cao", name = "Chí Phèo", category = "Truyện ngắn", salePrice = 70000, importPrice = 50000, publisher = "NXB Văn học" },
-        //        new Book { bookSTT = 5, bookID = "VN005", author = "Ngô Tất Tố", name = "Tắt đèn", category = "Tiểu thuyết", salePrice = 75000, importPrice = 52000, publisher = "NXB Văn học" },
-        //        new Book { bookSTT = 6, bookID = "VN006", author = "Nguyễn Huy Thiệp", name = "Tướng về hưu", category = "Truyện ngắn", salePrice = 80000, importPrice = 58000, publisher = "NXB Văn học" },
-        //        new Book { bookSTT = 7, bookID = "VN007", author = "Xuân Quỳnh", name = "Thơ Xuân Quỳnh", category = "Thơ", salePrice = 65000, importPrice = 45000, publisher = "NXB Phụ nữ" },
-        //        new Book { bookSTT = 8, bookID = "VN008", author = "Hồ Xuân Hương", name = "Thơ Hồ Xuân Hương", category = "Thơ", salePrice = 70000, importPrice = 48000, publisher = "NXB Văn học" },
-        //        new Book { bookSTT = 9, bookID = "VN009", author = "Nguyễn Du", name = "Truyện Kiều", category = "Thơ", salePrice = 95000, importPrice = 70000, publisher = "NXB Văn học" },
-        //        new Book { bookSTT = 10, bookID = "VN010", author = "Tô Hoài", name = "Dế Mèn phiêu lưu ký", category = "Thiếu nhi", salePrice = 85000, importPrice = 60000, publisher = "NXB Kim Đồng" },
-        //        new Book { bookSTT = 11, bookID = "VN011", author = "Nguyễn Công Hoan", name = "Kép Tư Bền", category = "Truyện ngắn", salePrice = 72000, importPrice = 50000, publisher = "NXB Văn học" },
-        //        new Book { bookSTT = 12, bookID = "VN012", author = "Thạch Lam", name = "Gió đầu mùa", category = "Truyện ngắn", salePrice = 76000, importPrice = 54000, publisher = "NXB Văn học" },
-        //        new Book { bookSTT = 13, bookID = "VN013", author = "Nguyễn Khải", name = "Mùa lạc", category = "Tiểu thuyết", salePrice = 80000, importPrice = 58000, publisher = "NXB Văn học" },
-        //        new Book { bookSTT = 14, bookID = "VN014", author = "Nguyễn Tuân", name = "Vang bóng một thời", category = "Truyện ngắn", salePrice = 82000, importPrice = 60000, publisher = "NXB Văn học" },
-        //        new Book { bookSTT = 15, bookID = "EN015", author = "Victor Hugo", name = "Những người khốn khổ", category = "Kinh điển", salePrice = 140000, importPrice = 110000, publisher = "NXB Văn học nước ngoài" }
-        //    };
-        //}
+        //command cho thao tác tìm kiếm - load lại
+        public ICommand SearchBookCommand { get; set; }
+
+        //command cho in / xuất excel
+        public ICommand ExportCommand { get; set; }
+        public ICommand PrintCommand { get; set; }
+
         #endregion
 
+        #region Load book from db
         private void LoadBooksFromDatabase()
         {
-            var result = _bookService.GetAllBooks();//Ở ĐÂY CÓ BUG 
+            var result = _bookService.GetAllBooks();
 
             if (!result.IsSuccess)
             {
@@ -97,64 +111,20 @@ namespace bookstore_Management.Presentation.ViewModels
 
             Books = new ObservableCollection<Book>(books);
         }
+        #endregion
+
         public BookViewModel(IBookService bookService)
         {
             _bookService = bookService ?? new BookService();
-
-            #region code cũ chưa xài database
-            // LoadSampleData();
-
-            //AddBookCommand = new RelayCommand<object>((p) =>
-            //{
-            //    var dialog = new Views.Dialogs.Books.InputBooksDialog();
-            //    if(dialog.ShowDialog() == true)
-            //    {
-            //        // Logic to add a new book
-            //        var newBook = new Book
-            //        {
-            //            bookSTT = Books.Count + 1,
-            //            bookID = dialog.BookID,
-            //            author = dialog.Author,
-            //            name = dialog.BookName,
-            //            category = "New Category",
-            //            publisher = dialog.Publisher,
-            //            salePrice = dialog.SalePrice,
-            //            importPrice = dialog.ImportPrice
-            //        };
-            //        Books.Add(newBook);
-            //    }               
-            //});
-
-            //RemoveBookCommand = new RelayCommand<Book>((book) =>
-            //{
-            //    var dialog = new Views.Dialogs.Books.ConfirmBooksDialog();
-            //    if (dialog.ShowDialog() == true)
-            //    {
-            //        if (book != null && Books.Contains(book))
-            //        {
-            //            Books.Remove(book);
-            //        }
-            //    }
-            //});
-
-            //EditBookCommand = new RelayCommand<Book>((book) =>
-            //{
-            //    if (book != null)
-            //    {
-            //        book.name += " (Edited)";
-            //        OnPropertyChanged(nameof(Books));
-            //    }
-            //});
-            #endregion
 
             Books = new ObservableCollection<Book>();
 
             LoadBooksFromDatabase();
 
+            #region AddCommand
             AddBookCommand = new RelayCommand<object>((p) =>
             {
-                // Logic to add a new book
-                var dialog = new Views.Dialogs.Books.InputBooksDialog();
+                var dialog = new Views.Dialogs.Books.AddBookDialog();
                 if (dialog.ShowDialog() == true)
                 {
                     // Call service to add book to database
@@ -177,17 +147,127 @@ namespace bookstore_Management.Presentation.ViewModels
                     LoadBooksFromDatabase();
                 }
             });
+            #endregion
+
+            #region RemoveCommand
+            RemoveBookCommand = new RelayCommand<object>((p) =>
+            {
+                var book = p as Book;
+                if (book == null)
+                {
+                    MessageBox.Show("Vui lòng chọn sách để xóa");
+                    return;
+                }
+
+                bool confirmed = Views.Dialogs.Share.Delete.ShowForBook(
+                    bookName: book.Name,
+                    bookId: book.BookId
+                );
+
+                if (!confirmed) return;
+
+                var result = _bookService.DeleteBook(book.BookId);
+                if (!result.IsSuccess)
+                {
+                    MessageBox.Show("Lỗi khi xóa sách: " + result.ErrorMessage,
+                                    "Lỗi",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
+                    return;
+                }
+                LoadBooksFromDatabase();
+            });
+            #endregion
+
+            #region EditCommand
+            EditBookCommand = new RelayCommand<object>((p) =>
+            {
+                var dialog = new Views.Dialogs.Books.UpdateBook();
+                var book = p as Book;
+                if (book == null)
+                {
+                    MessageBox.Show("Vui lòng chọn sách để chỉnh sửa");
+                    return;
+                }
+
+                //đưa dữ liệu cũ lên dialog
+                dialog.BookID = book.BookId;
+                dialog.BookName = book.Name;
+                dialog.Author = book.Author;
+                dialog.Category = book.Category;
+                //dialog.SalePrice = book.SalePrice;
+                dialog.Publisher = book.SupplierId;
+
+                if (dialog.ShowDialog() == true)
+                {
+                    var updateDto = new DTOs.Book.Requests.UpdateBookRequestDto
+                    {
+                        Name = book.Name,
+                        Author = book.Author,
+                        Category = book.Category,
+                        SalePrice = book.SalePrice,
+                        SupplierId = book.SupplierId
+                    };
+
+                    var result = _bookService.UpdateBook(book.BookId, updateDto);
+                    if (!result.IsSuccess)
+                    {
+                        MessageBox.Show("Lỗi khi cập nhật / chỉnh sửa sách");
+                        return;
+                    }
+
+                    LoadBooksFromDatabase();
+                }
+            });
+            #endregion
+
+            #region SearchCommand
+            SearchBookCommand = new RelayCommand<object>((p) =>
+            {
+                if (string.IsNullOrEmpty(SearchKeywork))
+                {
+                    LoadBooksFromDatabase();//k nhập gì thì hiện lại list
+                    return;
+                }
+
+                var result = _bookService.SearchByName(SearchKeywork);
+                if(!result.IsSuccess)
+                {
+                    MessageBox.Show("Lỗi khi tìm sách");
+                    return;
+                }
+                Books.Clear();
+                foreach (var b in result.Data)
+                {
+                    Books.Add(new Book
+                    {
+                        BookId = b.BookId,
+                        Name = b.Name,
+                        Author = b.Author,
+                        Category = b.Category,
+                        SalePrice = b.SalePrice,
+                        SupplierId = b.SupplierName
+                    });
+                }
+            });
+            #endregion
+
+            //chưa làm xong
+            #region PrintCommand 
+            PrintCommand = new RelayCommand<object>((p) =>
+            {
+                
+            });
+            #endregion
+
+            #region ExportCommand
+            ExportCommand = new RelayCommand<object>((p) =>
+            {
+
+            });
+            #endregion
+
         }
     }
-
-    //k cần xài class riêng nữa vì đã có model Book trong Data\Models
-    //public class tempBook
-    //{
-    //    public string BookId { get; set; }
-    //    public string Name { get; set; }
-    //    public string Author { get; set; }
-    //    public string SupplierId { get; set; }
-    //    public BookCategory Category { get; set; }
-    //    public decimal? SalePrice { get; set; }
-    //}
 }
+
