@@ -43,7 +43,7 @@ namespace bookstore_Management.Services.Implementations
                 {
                     Id = staffId,
                     Name = dto.Name.Trim(),
-                    CitizenId = dto.CitizenId,
+                    CitizenId = dto.CitizenId.Trim(),
                     Phone = dto.Phone,
                     UserRole = dto.UserRole,
                     CreatedDate = DateTime.Now,
@@ -79,7 +79,7 @@ namespace bookstore_Management.Services.Implementations
                 
                 
                 staff.Name = dto.Name.Trim();
-                staff.CitizenId = dto.CitizenId;
+                staff.CitizenId = dto.CitizenId.Trim();
                 staff.Phone = dto.Phone;
                 if (dto.UserRole.HasValue)
                     staff.UserRole = dto.UserRole.Value;

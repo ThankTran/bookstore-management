@@ -40,7 +40,7 @@ namespace bookstore_Management.Data.Context
             modelBuilder.Entity<Customer>().HasKey(c => c.CustomerId);
             modelBuilder.Entity<Staff>().HasKey(s => s.Id);
             modelBuilder.Entity<Publisher>().HasKey(s => s.Id);
-            modelBuilder.Entity<User>().HasKey(u => u.UserId);
+            modelBuilder.Entity<User>().HasKey(u => u.Username);
             modelBuilder.Entity<ImportBill>().HasKey(ib => ib.Id);
             modelBuilder.Entity<ImportBillDetail>().HasKey(ibd => new { ibd.BookId, ibd.ImportId });
             modelBuilder.Entity<AuditLog>().HasKey(al => al.Id);

@@ -26,12 +26,10 @@ Ví dụ constructor của BookService:
 
     internal BookService(
     IBookRepository bookRepository,
-    IStockRepository stockRepository,
     ISupplierRepository supplierRepository,
     IImportBillDetailRepository importBillDetailRepository)
     {
     _bookRepository = bookRepository;
-    _stockRepository = stockRepository;
     _supplierRepository = supplierRepository;
     _importBillDetailRepository = importBillDetailRepository;
     }
@@ -44,17 +42,12 @@ thì trong phần ViewModel ta cần phải khai báo như sau
     
         public BookViewModel()
         {
-            using ( var context = new BookstoreDbContext())
-            {
-                _bookService = new BookService(
-                new BookRepository(context),
-                new StockRepository(context),
-                new SupplierRepository(context),
-                new ImportBillDetailRepository(context)
-                );
-            }
-            
+                var context = new BookstoreDbContext();
+                var bookRepo = new BookRepository(context);
+                var stockRepo = new StockRepository(context);
+                _bookService = new BookService(bookRepo, stockRepo);
         }
+        
     
         public void AddNewBook()
         {

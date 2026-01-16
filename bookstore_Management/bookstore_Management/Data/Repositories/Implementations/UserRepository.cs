@@ -12,8 +12,7 @@ namespace bookstore_Management.Data.Repositories.Implementations
         public UserRepository(BookstoreDbContext context) : base(context) { }
 
         /// <summary>
-        /// Gets user by username, excluding soft-deleted users
-        /// Returns only active users for authentication
+        /// Gets user by username, đã lọc soft delete
         /// </summary>
         public User GetByUsername(string username)
         {
@@ -21,7 +20,7 @@ namespace bookstore_Management.Data.Repositories.Implementations
         }
 
         /// <summary>
-        /// Checks if username exists, excluding soft-deleted users
+        /// Kiểm tra Username có tồn tại không, đã lọc soft delete
         /// </summary>
         public bool UsernameExists(string username)
         {
