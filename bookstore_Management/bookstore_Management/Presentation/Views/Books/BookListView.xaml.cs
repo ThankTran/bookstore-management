@@ -20,15 +20,15 @@ namespace bookstore_Management.Views.Books
 
     public partial class BookListView : UserControl
     {
-        private BookViewModel _viewModel;
+        //private BookViewModel _viewModel;
 
-        public BookListView()
-        {
-            InitializeComponent();
-            IBookService bookService = new BookService();
-            _viewModel = new BookViewModel(bookService);
-            this.DataContext = _viewModel;
-        }
+        // public BookListView()
+        // {
+        //     InitializeComponent();
+        //     IBookService bookService = new BookService();
+        //     _viewModel = new BookViewModel(bookService);
+        //     this.DataContext = _viewModel;
+        // }
         #region Event Handlers
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {

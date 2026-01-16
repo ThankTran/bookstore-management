@@ -31,6 +31,16 @@ namespace bookstore_Management.Models
         public string Phone { get; set; }
         
         [Required]
+        [Column("email")]
+        [StringLength(50)]
+        public string Email { get; set; }
+        
+        [Required]
+        [Column("address")]
+        [StringLength(250)]
+        public string Address { get; set; }
+        
+        [Required]
         [Column("member_level")]
         public MemberTier MemberLevel { get; set; } = MemberTier.Bronze;
         

@@ -20,6 +20,16 @@ namespace bookstore_Management.Models
         [StringLength(50)]
         [Column("name")]
         public string Name { get; set; }
+        
+        [Required]
+        [StringLength(10)]
+        [Column("phone")]
+        public string Phone { get; set; }
+        
+        [Required]
+        [StringLength(10)]
+        [Column("citizen_id")]
+        public string CitizenId { get; set; }
 
         [Required]
         [Column("role")]

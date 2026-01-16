@@ -10,6 +10,8 @@ namespace bookstore_Management.Data.Repositories.Interfaces
         IEnumerable<Customer> SearchByName(string name);
         IEnumerable<Customer> GetByMemberLevel(MemberTier tier);
         Customer SearchByPhone(string phone);
+        bool UsePoint(string customerId, decimal points);
+        bool AddPoint(string customerId, decimal points);
         
         /// <summary>
         /// Gets all active (non-deleted) customers for list view

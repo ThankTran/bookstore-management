@@ -19,67 +19,40 @@ namespace bookstore_Management.Migrations
         protected override void Seed(bookstore_Management.Data.Context.BookstoreDbContext context)
         {
             // ============================================
-            // Suppliers
+            // Publishers
             // ============================================
-            var suppliers = new List<Supplier>
+            var publishers = new List<Publisher>
             {
-                new Supplier { Id = "NXB001", Name = "NXB Kim Đồng", Phone = "0243854354", CreatedDate = DateTime.Now },
-                new Supplier { Id = "NXB002", Name = "NXB Trẻ", Phone = "0283931628", CreatedDate = DateTime.Now },
-                new Supplier { Id = "NXB003", Name = "NXB Phụ Nữ", Phone = "0243822539", CreatedDate = DateTime.Now }
+                new Publisher { Id = "NXB001", Name = "NXB Kim Đồng", Phone = "0243854354", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB002", Name = "NXB Trẻ", Phone = "0283931628", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB003", Name = "NXB Phụ Nữ", Phone = "0243822539", CreatedDate = DateTime.Now }
             };
-            context.Suppliers.AddOrUpdate(s => s.Id, suppliers.ToArray());
+            context.Publishers.AddOrUpdate(s => s.Id, publishers.ToArray());
             context.SaveChanges();
-
-            // ============================================
-            // Warehouses
-            // ============================================
-            var warehouses = new List<Warehouse>
-            {
-                new Warehouse { WarehouseId = "WH001", Name = "Kho Hà Nội", Address = "HN", CreatedDate = DateTime.Now },
-                new Warehouse { WarehouseId = "WH002", Name = "Kho TP.HCM", Address = "HCM", CreatedDate = DateTime.Now }
-            };
-            context.Warehouses.AddOrUpdate(w => w.WarehouseId, warehouses.ToArray());
-            context.SaveChanges();
-
+            
             // ============================================
             // Books
             // ============================================
             var books = new List<Book>
             {
-                new Book { BookId = "S00001", Name = "Đắc Nhân Tâm", Author = "Dale Carnegie", SupplierId = "NXB001", Category = BookCategory.Psychology, SalePrice = 80000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00002", Name = "Nhà Giả Kim", Author = "Paulo Coelho", SupplierId = "NXB001", Category = BookCategory.Novel, SalePrice = 75000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00003", Name = "Tuổi Trẻ Đáng Giá Bao Nhiêu", Author = "Rosie Nguyễn", SupplierId = "NXB002", Category = BookCategory.Literature, SalePrice = 50000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00004", Name = "Tôi Tài Giỏi Bạn Cũng Thế", Author = "Adam Khoo", SupplierId = "NXB002", Category = BookCategory.Economics, SalePrice = 65000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00005", Name = "Bố Già", Author = "Mario Puzo", SupplierId = "NXB003", Category = BookCategory.Literature, SalePrice = 95000, CreatedDate = DateTime.Now }
+                new Book { BookId = "S00001", Name = "Đắc Nhân Tâm", Author = "Dale Carnegie", PublisherId = "NXB001", Category = BookCategory.Psychology, SalePrice = 80000, Stock = 30, CreatedDate = DateTime.Now },
+                new Book { BookId = "S00002", Name = "Nhà Giả Kim", Author = "Paulo Coelho", PublisherId = "NXB001", Category = BookCategory.Novel, SalePrice = 75000, Stock = 50, CreatedDate = DateTime.Now },
+                new Book { BookId = "S00003", Name = "Tuổi Trẻ Đáng Giá Bao Nhiêu", Author = "Rosie Nguyễn", PublisherId = "NXB002", Category = BookCategory.Literature, SalePrice = 50000, Stock = 10 , CreatedDate = DateTime.Now },
+                new Book { BookId = "S00004", Name = "Tôi Tài Giỏi Bạn Cũng Thế", Author = "Adam Khoo", PublisherId = "NXB002", Category = BookCategory.Economics, SalePrice = 65000, Stock = 35, CreatedDate = DateTime.Now },
+                new Book { BookId = "S00005", Name = "Bố Già", Author = "Mario Puzo", PublisherId = "NXB003", Category = BookCategory.Literature, SalePrice = 95000, Stock = 100 , CreatedDate = DateTime.Now }
             };
             context.Books.AddOrUpdate(b => b.BookId, books.ToArray());
             context.SaveChanges();
-
-            // ============================================
-            // Stocks (theo kho)
-            // ============================================
-            var stocks = new List<Stock>
-            {
-                new Stock { WarehouseId = "WH001", BookId = "S00001", StockQuantity = 50 },
-                new Stock { WarehouseId = "WH001", BookId = "S00002", StockQuantity = 30 },
-                new Stock { WarehouseId = "WH001", BookId = "S00003", StockQuantity = 60 },
-                new Stock { WarehouseId = "WH002", BookId = "S00003", StockQuantity = 40 },
-                new Stock { WarehouseId = "WH002", BookId = "S00004", StockQuantity = 70 },
-                new Stock { WarehouseId = "WH002", BookId = "S00005", StockQuantity = 25 }
-            };
-            context.Stocks.AddOrUpdate(
-                s => new { s.WarehouseId, s.BookId },
-                stocks.ToArray());
-            context.SaveChanges();
+            
 
             // ============================================
             // Staff
             // ============================================
             var staffs = new List<Staff>
             {
-                new Staff { Id = "NV0001", Name = "Nguyễn Văn A", UserRole = UserRole.SalesManager, CreatedDate = DateTime.Now },
-                new Staff { Id = "NV0002", Name = "Trần Thị B", UserRole = UserRole.CustomerManager, CreatedDate = DateTime.Now },
-                new Staff { Id = "NV0003", Name = "Phạm Quang C", UserRole = UserRole.SalesStaff, CreatedDate = DateTime.Now }
+                new Staff { Id = "NV0001", Name = "Nguyễn Văn A", Phone = "123456789", CitizenId = "123456789",UserRole = UserRole.SalesManager, CreatedDate = DateTime.Now },
+                new Staff { Id = "NV0002", Name = "Trần Thị B", Phone = "222222222", CitizenId = "111111111", UserRole = UserRole.CustomerManager, CreatedDate = DateTime.Now },
+                new Staff { Id = "NV0003", Name = "Phạm Quang C", Phone = "33333333", CitizenId = "4444444444", UserRole = UserRole.SalesStaff, CreatedDate = DateTime.Now }
             };
             context.Staff.AddOrUpdate(s => s.Id, staffs.ToArray());
             context.SaveChanges();
@@ -89,8 +62,8 @@ namespace bookstore_Management.Migrations
             // ============================================
             var customers = new List<Customer>
             {
-                new Customer { CustomerId = "KH0001", Name = "Lê Văn C", Phone = "0934567890", MemberLevel = MemberTier.Bronze, LoyaltyPoints = 0, CreatedDate = DateTime.Now },
-                new Customer { CustomerId = "KH0002", Name = "Phạm Thị D", Phone = "0945678901", MemberLevel = MemberTier.Silver, LoyaltyPoints = 500, CreatedDate = DateTime.Now }
+                new Customer { CustomerId = "KH0001", Name = "Lê Văn C", Phone = "0934567890", Email = "abc@gmail.com", Address = "Quận 7",MemberLevel = MemberTier.Bronze, LoyaltyPoints = 0, CreatedDate = DateTime.Now },
+                new Customer { CustomerId = "KH0002", Name = "Phạm Thị D", Phone = "0945678901" , Email = "def@gmail.com", Address = "Quận 8", MemberLevel = MemberTier.Silver, LoyaltyPoints = 500, CreatedDate = DateTime.Now }
             };
             context.Customers.AddOrUpdate(c => c.CustomerId, customers.ToArray());
             context.SaveChanges();
@@ -100,8 +73,8 @@ namespace bookstore_Management.Migrations
             // ============================================
             var importBills = new List<ImportBill>
             {
-                new ImportBill { Id = "PN0001", SupplierId = "NXB001", WarehouseId = "WH001", TotalAmount = 3_500_000, Notes = "Nhập sách tâm lý", CreatedBy = "NV0001", CreatedDate = DateTime.Now.AddDays(-30) },
-                new ImportBill { Id = "PN0002", SupplierId = "NXB002", WarehouseId = "WH002", TotalAmount = 4_000_000, Notes = "Nhập sách giáo khoa", CreatedBy = "NV0002", CreatedDate = DateTime.Now.AddDays(-15) }
+                new ImportBill { Id = "PN0001", PublisherId = "NXB001",  TotalAmount = 3_500_000, Notes = "Nhập sách tâm lý", CreatedBy = "NV0001", CreatedDate = DateTime.Now.AddDays(-30) },
+                new ImportBill { Id = "PN0002", PublisherId = "NXB002", TotalAmount = 4_000_000, Notes = "Nhập sách giáo khoa", CreatedBy = "NV0002", CreatedDate = DateTime.Now.AddDays(-15) }
             };
             context.ImportBills.AddOrUpdate(ib => ib.Id, importBills.ToArray());
             context.SaveChanges();

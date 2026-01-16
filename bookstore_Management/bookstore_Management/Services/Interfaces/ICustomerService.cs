@@ -23,17 +23,11 @@ namespace bookstore_Management.Services.Interfaces
         Result<IEnumerable<CustomerDetailResponseDto>> GetByMemberLevel(MemberTier level);
         Result<IEnumerable<CustomerDetailResponseDto>> SearchByTotalSpent(decimal minimum, decimal maximum, DateTime startDate, DateTime endDate);
         
-
-        // Quản lý điểm tích lũy, doanh thu trên tháng
-        Result AddPoints(string customerId, decimal points);
-        Result UsePoints(string customerId, decimal points);
-        Result<decimal> GetPoints(string customerId);
-
         // Quản lý hạng thành viên
         Result UpgradeMemberLevel(string customerId);
         Result DowngradeMemberLevel(string customerId);
-        Result<MemberTier> CalculateMemberLevel(decimal totalSpent);
-
+        Result<MemberTier> CalculateMemberTier(decimal totalSpent);
+        
         // Lịch sử mua hàng
         Result<IEnumerable<Order>> GetCustomerOrderHistory(string customerId, DateTime fromDate, DateTime toDate);
         Result <decimal> CustomerTotalSpentPerDay(string customerId, DateTime date);

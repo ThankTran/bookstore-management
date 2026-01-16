@@ -217,56 +217,42 @@
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="Nhà xuất bản *" Style="{StaticResource LabelStyle}"/>
                             <Border Style="{StaticResource InputBorderStyle}">
-                                <TextBox x:Name="tbPublisher"
-                                         Style="{StaticResource InputTextBoxStyle}"/>
+                                <ComboBox x:Name="cbPublisher"
+                                          BorderThickness="0"
+                                          Background="Transparent"
+                                          FontSize="13"
+                                          ItemsSource="{Binding Publishers}"
+                                          SelectedItem="{Binding SelectedPublisher, Mode=TwoWay}"
+                                          IsSynchronizedWithCurrentItem="False">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" 
+                                                        FontFamily="{StaticResource PrimaryFont}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                             </Border>
                         </StackPanel>
                     </Grid>
 
-                    <!-- Giá nhập & Giá bán -->
-                    <Grid Margin="0,0,0,20">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="15"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="Giá nhập (₫) *" Style="{StaticResource LabelStyle}"/>
-                            <Border Style="{StaticResource InputBorderStyle}">
-                                <Grid>
-                                    <TextBox x:Name="tbImportPrice"
-                                             Style="{StaticResource InputTextBoxStyle}"
-                                             PreviewTextInput="NumericOnly_PreviewTextInput"/>
-                                    <TextBlock Text="₫"
-                                               FontSize="13"
-                                               Foreground="#999999"
-                                               HorizontalAlignment="Right"
-                                               VerticalAlignment="Center"
-                                               Margin="0,0,5,0"
-                                               IsHitTestVisible="False"/>
-                                </Grid>
-                            </Border>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="Giá bán (₫) *" Style="{StaticResource LabelStyle}"/>
-                            <Border Style="{StaticResource InputBorderStyle}">
-                                <Grid>
-                                    <TextBox x:Name="tbSalePrice"
-                                             Style="{StaticResource InputTextBoxStyle}"
-                                             PreviewTextInput="NumericOnly_PreviewTextInput"/>
-                                    <TextBlock Text="₫"
-                                               FontSize="13"
-                                               Foreground="#999999"
-                                               HorizontalAlignment="Right"
-                                               VerticalAlignment="Center"
-                                               Margin="0,0,5,0"
-                                               IsHitTestVisible="False"/>
-                                </Grid>
-                            </Border>
-                        </StackPanel>
-                    </Grid>
+                    <!-- Giá bán -->
+                    <StackPanel Margin="0,0,0,20">
+                        <TextBlock Text="Giá bán (₫) *" Style="{StaticResource LabelStyle}"/>
+                        <Border Style="{StaticResource InputBorderStyle}">
+                            <Grid>
+                                <TextBox x:Name="tbSalePrice"
+                                         Style="{StaticResource InputTextBoxStyle}"
+                                         PreviewTextInput="NumericOnly_PreviewTextInput"/>
+                                <TextBlock Text="₫"
+                                           FontSize="13"
+                                           Foreground="#999999"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,5,0"
+                                           IsHitTestVisible="False"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
 
                     <!-- Preview Card -->
                     <Border Background="#F8F9FA"

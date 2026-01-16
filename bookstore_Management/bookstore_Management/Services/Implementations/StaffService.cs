@@ -36,14 +36,15 @@ namespace bookstore_Management.Services.Implementations
                     return Result<string>.Fail("Tên không được trống");
                 
                 
-                // Generate Staff ID
+                // Gen Id
                 var staffId = GenerateStaffId();
                 
-                // Create staff
                 var staff = new Staff
                 {
                     Id = staffId,
                     Name = dto.Name.Trim(),
+                    CitizenId = dto.CitizenId,
+                    Phone = dto.Phone,
                     UserRole = dto.UserRole,
                     CreatedDate = DateTime.Now,
                     UpdatedDate = null,
@@ -78,6 +79,8 @@ namespace bookstore_Management.Services.Implementations
                 
                 
                 staff.Name = dto.Name.Trim();
+                staff.CitizenId = dto.CitizenId;
+                staff.Phone = dto.Phone;
                 if (dto.UserRole.HasValue)
                     staff.UserRole = dto.UserRole.Value;
                 staff.UpdatedDate = DateTime.Now;
@@ -211,6 +214,8 @@ namespace bookstore_Management.Services.Implementations
             {
                 Id = staff.Id,
                 Name = staff.Name,
+                CitizenId = staff.CitizenId,
+                Phone = staff.Phone,
                 UserRole = staff.UserRole,
                 CreatedDate = staff.CreatedDate,
                 TotalOrders = totalOrders
@@ -226,7 +231,7 @@ namespace bookstore_Management.Services.Implementations
             if (lastStaff == null || !lastStaff.Id.StartsWith("NV"))
                 return "NV0001";
                 
-            int lastNumber = int.Parse(lastStaff.Id.Substring(2));
+            var lastNumber = int.Parse(lastStaff.Id.Substring(2));
             return $"NV{(lastNumber + 1):D4}";
         }
     }

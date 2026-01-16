@@ -10,9 +10,9 @@ namespace bookstore_Management.Data.Repositories.Implementations
     {
         public ImportBillRepository(BookstoreDbContext context) : base(context) { }
 
-        public IEnumerable<ImportBill> GetBySupplier(string supplierId)
+        public IEnumerable<ImportBill> GetByPublisher(string publisherId)
         {
-            return Find(ib => ib.SupplierId == supplierId);
+            throw new NotImplementedException();
         }
 
         public IEnumerable<ImportBill> GetByDateRange(DateTime start, DateTime end)
