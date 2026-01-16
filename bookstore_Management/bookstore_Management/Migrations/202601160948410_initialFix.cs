@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class initialFix : DbMigration
     {
         public override void Up()
         {
@@ -29,16 +29,17 @@
                         id = c.String(nullable: false, maxLength: 6),
                         name = c.String(nullable: false, maxLength: 50),
                         author = c.String(nullable: false, maxLength: 50),
-                        supplier_id = c.String(maxLength: 6),
+                        publisher_id = c.String(maxLength: 6),
                         category = c.Int(nullable: false),
                         sale_price = c.Decimal(precision: 18, scale: 2),
+                        stock = c.Int(nullable: false),
                         created_date = c.DateTime(nullable: false),
                         updated_date = c.DateTime(),
                         deleted_date = c.DateTime(),
                     })
                 .PrimaryKey(t => t.id)
-                .ForeignKey("dbo.Publishers", t => t.supplier_id)
-                .Index(t => t.supplier_id);
+                .ForeignKey("dbo.Publishers", t => t.publisher_id)
+                .Index(t => t.publisher_id);
             
             CreateTable(
                 "dbo.OrderDetails",
@@ -85,6 +86,8 @@
                         id = c.String(nullable: false, maxLength: 6),
                         name = c.String(nullable: false, maxLength: 50),
                         phone = c.String(nullable: false, maxLength: 20),
+                        email = c.String(nullable: false, maxLength: 50),
+                        address = c.String(nullable: false, maxLength: 250),
                         member_level = c.Int(nullable: false),
                         loyalty_points = c.Decimal(nullable: false, precision: 18, scale: 2),
                         created_date = c.DateTime(nullable: false),
@@ -99,6 +102,8 @@
                     {
                         id = c.String(nullable: false, maxLength: 6),
                         name = c.String(nullable: false, maxLength: 50),
+                        phone = c.String(nullable: false, maxLength: 10),
+                        citizen_id = c.String(nullable: false, maxLength: 10),
                         role = c.Int(nullable: false),
                         created_date = c.DateTime(nullable: false),
                         updated_date = c.DateTime(),
@@ -107,28 +112,13 @@
                 .PrimaryKey(t => t.id);
             
             CreateTable(
-                "dbo.Stocks",
-                c => new
-                    {
-                        warehouse_id = c.String(nullable: false, maxLength: 6),
-                        book_id = c.String(nullable: false, maxLength: 6),
-                        quantity = c.Int(nullable: false),
-                        updated_date = c.DateTime(),
-                        deleted_date = c.DateTime(),
-                    })
-                .PrimaryKey(t => new { t.warehouse_id, t.book_id })
-                .ForeignKey("dbo.Books", t => t.book_id)
-                .ForeignKey("dbo.Warehouses", t => t.warehouse_id)
-                .Index(t => t.warehouse_id)
-                .Index(t => t.book_id);
-            
-            CreateTable(
-                "dbo.Warehouses",
+                "dbo.Publishers",
                 c => new
                     {
                         id = c.String(nullable: false, maxLength: 6),
                         name = c.String(nullable: false, maxLength: 50),
-                        address = c.String(maxLength: 200),
+                        phone = c.String(nullable: false, maxLength: 20),
+                        email = c.String(maxLength: 100),
                         created_date = c.DateTime(nullable: false),
                         updated_date = c.DateTime(),
                         deleted_date = c.DateTime(),
@@ -140,8 +130,7 @@
                 c => new
                     {
                         id = c.String(nullable: false, maxLength: 6),
-                        supplier_id = c.String(nullable: false, maxLength: 6),
-                        warehouse_id = c.String(nullable: false, maxLength: 6),
+                        publisher_id = c.String(nullable: false, maxLength: 6),
                         total_amount = c.Decimal(nullable: false, precision: 18, scale: 2),
                         notes = c.String(maxLength: 500),
                         created_by = c.String(nullable: false, maxLength: 6),
@@ -150,10 +139,8 @@
                         deleted_date = c.DateTime(),
                     })
                 .PrimaryKey(t => t.id)
-                .ForeignKey("dbo.Publishers", t => t.supplier_id)
-                .ForeignKey("dbo.Warehouses", t => t.warehouse_id)
-                .Index(t => t.supplier_id)
-                .Index(t => t.warehouse_id);
+                .ForeignKey("dbo.Publishers", t => t.publisher_id)
+                .Index(t => t.publisher_id);
             
             CreateTable(
                 "dbo.ImportBillDetails",
@@ -170,20 +157,6 @@
                 .ForeignKey("dbo.ImportBills", t => t.import_id)
                 .Index(t => t.book_id)
                 .Index(t => t.import_id);
-            
-            CreateTable(
-                "dbo.Publishers",
-                c => new
-                    {
-                        id = c.String(nullable: false, maxLength: 6),
-                        name = c.String(nullable: false, maxLength: 50),
-                        phone = c.String(nullable: false, maxLength: 20),
-                        email = c.String(maxLength: 100),
-                        created_date = c.DateTime(nullable: false),
-                        updated_date = c.DateTime(),
-                        deleted_date = c.DateTime(),
-                    })
-                .PrimaryKey(t => t.id);
             
             CreateTable(
                 "dbo.Users",
@@ -204,34 +177,26 @@
         
         public override void Down()
         {
-            DropForeignKey("dbo.Books", "supplier_id", "dbo.Publishers");
-            DropForeignKey("dbo.Stocks", "warehouse_id", "dbo.Warehouses");
-            DropForeignKey("dbo.ImportBills", "warehouse_id", "dbo.Warehouses");
-            DropForeignKey("dbo.ImportBills", "supplier_id", "dbo.Publishers");
+            DropForeignKey("dbo.Books", "publisher_id", "dbo.Publishers");
+            DropForeignKey("dbo.ImportBills", "publisher_id", "dbo.Publishers");
             DropForeignKey("dbo.ImportBillDetails", "import_id", "dbo.ImportBills");
             DropForeignKey("dbo.ImportBillDetails", "book_id", "dbo.Books");
-            DropForeignKey("dbo.Stocks", "book_id", "dbo.Books");
             DropForeignKey("dbo.OrderDetails", "order_id", "dbo.Orders");
             DropForeignKey("dbo.Orders", "staff_id", "dbo.Staffs");
             DropForeignKey("dbo.Orders", "customer_id", "dbo.Customers");
             DropForeignKey("dbo.OrderDetails", "book_id", "dbo.Books");
             DropIndex("dbo.ImportBillDetails", new[] { "import_id" });
             DropIndex("dbo.ImportBillDetails", new[] { "book_id" });
-            DropIndex("dbo.ImportBills", new[] { "warehouse_id" });
-            DropIndex("dbo.ImportBills", new[] { "supplier_id" });
-            DropIndex("dbo.Stocks", new[] { "book_id" });
-            DropIndex("dbo.Stocks", new[] { "warehouse_id" });
+            DropIndex("dbo.ImportBills", new[] { "publisher_id" });
             DropIndex("dbo.Orders", new[] { "customer_id" });
             DropIndex("dbo.Orders", new[] { "staff_id" });
             DropIndex("dbo.OrderDetails", new[] { "order_id" });
             DropIndex("dbo.OrderDetails", new[] { "book_id" });
-            DropIndex("dbo.Books", new[] { "supplier_id" });
+            DropIndex("dbo.Books", new[] { "publisher_id" });
             DropTable("dbo.Users");
-            DropTable("dbo.Publishers");
             DropTable("dbo.ImportBillDetails");
             DropTable("dbo.ImportBills");
-            DropTable("dbo.Warehouses");
-            DropTable("dbo.Stocks");
+            DropTable("dbo.Publishers");
             DropTable("dbo.Staffs");
             DropTable("dbo.Customers");
             DropTable("dbo.Orders");

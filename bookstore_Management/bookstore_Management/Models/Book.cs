@@ -43,6 +43,8 @@ namespace bookstore_Management.Models
         [Column("sale_price")]
         public decimal? SalePrice { get; set; }
         
+        [Column("stock")]
+        public int Stock { get; set; }
 
         // các thông tin để kiểm tra
         [Required]
@@ -57,7 +59,6 @@ namespace bookstore_Management.Models
 
         // Navigation properties
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<Stock> Stocks { get; set; } 
         public virtual Publisher Publisher { get; set; }
         
         
