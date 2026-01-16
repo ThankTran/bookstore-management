@@ -2,9 +2,7 @@ using System.Collections.Generic;
 
 namespace bookstore_Management.DTOs.ImportBill.Requests
 {
-    /// <summary>
-    /// DTO for creating a new import bill
-    /// </summary>
+    
     public class CreateImportBillRequestDto
     {
         public string SupplierId { get; set; }

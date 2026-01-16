@@ -273,7 +273,7 @@
     <Compile Include="Data\Repositories\Implementations\Repository.cs" />
     <Compile Include="Data\Repositories\Implementations\StaffRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\StockRepository.cs" />
-    <Compile Include="Data\Repositories\Implementations\SupplierRepository.cs" />
+    <Compile Include="Data\Repositories\Implementations\PublisherRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\UserRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\AuditLogRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\UnitOfWork.cs" />
@@ -286,7 +286,7 @@
     <Compile Include="Data\Repositories\Interfaces\IRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IStaffRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IStockRepository.cs" />
-    <Compile Include="Data\Repositories\Interfaces\ISupplierRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IPublisherRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IAuditLogRepository.cs" />
     <Compile Include="DTOs\Book\Requests\CreateBookRequestDto.cs" />
@@ -300,7 +300,7 @@
     <Compile Include="DTOs\Common\Reports\InventorySummaryReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\SalesReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\StaffPerformanceReportResponseDto.cs" />
-    <Compile Include="DTOs\Common\Reports\SupplierImportReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\PublisherImportReportResponseDto.cs" />
     <Compile Include="DTOs\Customer\Requests\CreateCustomerRequestDto.cs" />
     <Compile Include="DTOs\Customer\Requests\UpdateCustomerRequestDto.cs" />
     <Compile Include="DTOs\Customer\Responses\CustomerDetailResponseDto.cs" />
@@ -320,10 +320,11 @@
     <Compile Include="DTOs\Staff\Responses\StaffResponseDto.cs" />
     <Compile Include="DTOs\Stock\Requests\CreateStockRequestDto.cs" />
     <Compile Include="DTOs\Stock\Requests\UpdateStockRequestDto.cs" />
+    <Compile Include="DTOs\Stock\Responses\StockResponseByWareHouseDto.cs" />
     <Compile Include="DTOs\Stock\Responses\StockResponseDto.cs" />
-    <Compile Include="DTOs\Supplier\Requests\CreateSupplierRequestDto.cs" />
-    <Compile Include="DTOs\Supplier\Requests\UpdateSupplierRequestDto.cs" />
-    <Compile Include="DTOs\Supplier\Responses\SupplierResponseDto.cs" />
+    <Compile Include="DTOs\Publisher\Requests\CreatePublisherRequestDto.cs" />
+    <Compile Include="DTOs\Publisher\Requests\UpdatePublisherRequestDto.cs" />
+    <Compile Include="DTOs\Publisher\Responses\PublisherResponseDto.cs" />
     <Compile Include="DTOs\Auth\LoginRequestDto.cs" />
     <Compile Include="DTOs\Auth\LoginResponseDto.cs" />
     <Compile Include="DTOs\Auth\UserAuthInfoDto.cs" />
@@ -339,6 +340,10 @@
     <Compile Include="Migrations\202601110937402_InitialCreate.Designer.cs">
       <DependentUpon>202601110937402_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202601151121199_NewTable.cs" />
+    <Compile Include="Migrations\202601151121199_NewTable.Designer.cs">
+      <DependentUpon>202601151121199_NewTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
     <Compile Include="Models\Book.cs" />
@@ -349,7 +354,7 @@
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />
     <Compile Include="Models\Stock.cs" />
-    <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\Publisher.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\WareHouse.cs" />
     <Compile Include="Presentation\Converters\BoolToVisibilityConverter.cs" />
@@ -364,7 +369,6 @@
     <Compile Include="Presentation\ViewModels\LoginViewModel.cs" />
     <Compile Include="Presentation\ViewModels\MainViewModel.cs" />
     <Compile Include="Presentation\ViewModels\PaymentViewModel.cs" />
-    <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
     <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
     <Compile Include="Presentation\Views\Books\BookListView.xaml.cs">
       <DependentUpon>BookListView.xaml</DependentUpon>
@@ -478,7 +482,7 @@
     <Compile Include="Services\Implementations\ReportService.cs" />
     <Compile Include="Services\Implementations\StaffService.cs" />
     <Compile Include="Services\Implementations\StockService.cs" />
-    <Compile Include="Services\Implementations\SupplierService.cs" />
+    <Compile Include="Services\Implementations\PublisherService.cs" />
     <Compile Include="Services\Implementations\UserService.cs" />
     <Compile Include="Services\Interfaces\IAuthService.cs" />
     <Compile Include="Services\Interfaces\IBookService.cs" />
@@ -488,16 +492,20 @@
     <Compile Include="Services\Interfaces\IReportService.cs" />
     <Compile Include="Services\Interfaces\IStaffService.cs" />
     <Compile Include="Services\Interfaces\IStockService.cs" />
-    <Compile Include="Services\Interfaces\ISupplierService.cs" />
+    <Compile Include="Services\Interfaces\IPublisherService.cs" />
     <Compile Include="Services\Interfaces\IAuditLogService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
     <Compile Include="Tests\AuthServiceTests.cs" />
+    <Compile Include="Tests\BookServiceTests.cs" />
     <Compile Include="Tests\ReportServiceTests.cs" />
     <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202601110937402_InitialCreate.resx">
       <DependentUpon>202601110937402_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202601151121199_NewTable.resx">
+      <DependentUpon>202601151121199_NewTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -550,6 +558,9 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk">
       <Version>17.10.0</Version>
     </PackageReference>
+    <PackageReference Include="Moq">
+      <Version>4.20.72</Version>
+    </PackageReference>
     <PackageReference Include="NUnit">
       <Version>3.13.3</Version>
     </PackageReference>
@@ -566,6 +577,7 @@
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
+    <Content Include="Services\ServiceOverview.md" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\export.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\print.png" />
   </ItemGroup>

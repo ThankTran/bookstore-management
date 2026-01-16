@@ -38,6 +38,13 @@ namespace bookstore_Management.Services.Implementations
                 if (dto.Phone.Length < 10 || dto.Phone.Length > 20 || !dto.Phone.All(char.IsDigit))
                     return Result<string>.Fail("Số điện thoại phải từ 10-20 chữ số");
 
+                //
+                // 
+                // kiểm tra thông tin email hợp lệ ?
+                //
+                //
+                
+                
                 // Kiểm tra trùng số điện thoại
                 var existing = _customerRepository.SearchByPhone(dto.Phone);
                 if (existing != null)
@@ -50,6 +57,8 @@ namespace bookstore_Management.Services.Implementations
                     CustomerId = customerId,
                     Name = dto.Name.Trim(),
                     Phone = dto.Phone,
+                    Email = dto.Email,
+                    Address = dto.Address,
                     LoyaltyPoints = 0,
                     MemberLevel = MemberTier.Bronze,
                     CreatedDate = DateTime.Now,
@@ -87,6 +96,12 @@ namespace bookstore_Management.Services.Implementations
 
                 if (dto.Phone.Length < 10 || dto.Phone.Length > 20 || !dto.Phone.All(char.IsDigit))
                     return Result.Fail("Số điện thoại phải từ 10-20 chữ số");
+                
+                //
+                // 
+                // kiểm tra thông tin email hợp lệ ?
+                //
+                //
 
                 // Kiểm tra phone trùng
                 if (dto.Phone != customer.Phone)
@@ -96,8 +111,10 @@ namespace bookstore_Management.Services.Implementations
                         return Result.Fail("Số điện thoại đã được sử dụng");
                 }
 
-                customer.Name = dto.Name.Trim();
+                customer.Name = dto.Name;
                 customer.Phone = dto.Phone;
+                customer.Email = dto.Email;
+                customer.Address = dto.Address;
                 if (dto.MemberLevel.HasValue)
                     customer.MemberLevel = dto.MemberLevel.Value;
                 if (dto.LoyaltyPoints.HasValue)
@@ -154,13 +171,15 @@ namespace bookstore_Management.Services.Implementations
                 if (c == null || c.DeletedDate != null)
                     return Result<CustomerDetailResponseDto>.Fail("Khách hàng không tồn tại");
 
-                var orders = c.Orders?.Where(o => o.DeletedDate == null) ?? Enumerable.Empty<Order>();
+                var orders = c.Orders?.Where(o => o.DeletedDate == null).ToList() ?? Enumerable.Empty<Order>().ToList();
 
                 var dto = new CustomerDetailResponseDto
                 {
                     CustomerId = c.CustomerId,
                     Name = c.Name,
                     Phone = c.Phone,
+                    Email = c.Email,
+                    Address = c.Address,
                     MemberLevel = c.MemberLevel,
                     LoyaltyPoints = c.LoyaltyPoints,
                     CreatedDate = c.CreatedDate,
@@ -185,12 +204,14 @@ namespace bookstore_Management.Services.Implementations
                     .OrderBy(c => c.Name)
                     .Select(c =>
                     {
-                        var orders = c.Orders.Where(o => o.DeletedDate == null);
+                        var orders = c.Orders.Where(o => o.DeletedDate == null).ToList();
                         return new CustomerDetailResponseDto
                         {
                             CustomerId = c.CustomerId,
                             Name = c.Name,
                             Phone = c.Phone,
+                            Email = c.Email,
+                            Address = c.Address,
                             MemberLevel = c.MemberLevel,
                             LoyaltyPoints = c.LoyaltyPoints,
                             CreatedDate = c.CreatedDate,
@@ -216,13 +237,16 @@ namespace bookstore_Management.Services.Implementations
                 if (c == null || c.DeletedDate != null)
                     return Result<CustomerDetailResponseDto>.Fail("Không tìm thấy khách hàng");
 
-                var orders = c.Orders?.Where(o => o.DeletedDate == null) ?? Enumerable.Empty<Order>();
-
+                var orders = c.Orders?.Where(o => o.DeletedDate == null).ToList() ?? Enumerable.Empty<Order>().ToList();
+                
+                
                 var dto = new CustomerDetailResponseDto
                 {
                     CustomerId = c.CustomerId,
                     Name = c.Name,
                     Phone = c.Phone,
+                    Email = c.Email,
+                    Address = c.Address,
                     MemberLevel = c.MemberLevel,
                     LoyaltyPoints = c.LoyaltyPoints,
                     CreatedDate = c.CreatedDate,
@@ -250,12 +274,14 @@ namespace bookstore_Management.Services.Implementations
                     .OrderBy(c => c.Name)
                     .Select(c =>
                     {
-                        var orders = c.Orders.Where(o => o.DeletedDate == null);
+                        var orders = c.Orders.Where(o => o.DeletedDate == null).ToList();
                         return new CustomerDetailResponseDto
                         {
                             CustomerId = c.CustomerId,
                             Name = c.Name,
                             Phone = c.Phone,
+                            Email = c.Email,
+                            Address = c.Address,
                             MemberLevel = c.MemberLevel,
                             LoyaltyPoints = c.LoyaltyPoints,
                             CreatedDate = c.CreatedDate,
@@ -282,12 +308,14 @@ namespace bookstore_Management.Services.Implementations
                     .OrderBy(c => c.Name)
                     .Select(c =>
                     {
-                        var orders = c.Orders.Where(o => o.DeletedDate == null);
+                        var orders = c.Orders.Where(o => o.DeletedDate == null).ToList();
                         return new CustomerDetailResponseDto
                         {
                             CustomerId = c.CustomerId,
                             Name = c.Name,
                             Phone = c.Phone,
+                            Email = c.Email,
+                            Address = c.Address,
                             MemberLevel = c.MemberLevel,
                             LoyaltyPoints = c.LoyaltyPoints,
                             CreatedDate = c.CreatedDate,
@@ -319,15 +347,16 @@ namespace bookstore_Management.Services.Implementations
 
                         return totalSpent >= minimum && totalSpent <= maximum;
                     })
-                    .OrderBy(c => c.Name)
                     .Select(s =>
                     {
-                        var orders = s.Orders.Where(o => o.DeletedDate == null);
+                        var orders = s.Orders.Where(o => o.DeletedDate == null).ToList();
                         return new CustomerDetailResponseDto
                         {
                             CustomerId = s.CustomerId,
                             Name = s.Name,
                             Phone = s.Phone,
+                            Email = s.Email,
+                            Address = s.Address,
                             MemberLevel = s.MemberLevel,
                             LoyaltyPoints = s.LoyaltyPoints,
                             CreatedDate = s.CreatedDate,
@@ -343,84 +372,7 @@ namespace bookstore_Management.Services.Implementations
                 return Result<IEnumerable<CustomerDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
-
-        // ==================================================================
-        // ----------------------- QUẢN LÝ ĐIỂM TÍCH LŨY --------------------
-        // ==================================================================
-        public Result AddPoints(string customerId, decimal points)
-        {
-            try
-            {
-                if (points <= 0)
-                    return Result.Fail("Điểm phải lớn hơn 0");
-
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result.Fail("Khách hàng không tồn tại");
-
-                customer.LoyaltyPoints += points;
-                customer.UpdatedDate = DateTime.Now;
-
-                _customerRepository.Update(customer);
-                _customerRepository.SaveChanges();
-
-                return Result.Success($"Thêm {points} điểm thành công. Tổng: {customer.LoyaltyPoints}");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
         
-        public Result UsePoints(string customerId, decimal points)
-        {
-            try
-            {
-                if (points <= 0)
-                    return Result.Fail("Điểm phải lớn hơn 0");
-
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result.Fail("Khách hàng không tồn tại");
-
-                if (customer.LoyaltyPoints < points)
-                    return Result.Fail($"Không đủ điểm. Hiện có: {customer.LoyaltyPoints}");
-
-                customer.LoyaltyPoints -= points;
-                customer.UpdatedDate = DateTime.Now;
-
-                _customerRepository.Update(customer);
-                _customerRepository.SaveChanges();
-
-                return Result.Success($"Sử dụng {points} điểm thành công. Còn lại: {customer.LoyaltyPoints}");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        
-        public Result<decimal> GetPoints(string customerId)
-        {
-            try
-            {
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result<decimal>.Fail("Khách hàng không tồn tại");
-                    
-                return Result<decimal>.Success(customer.LoyaltyPoints);
-            }
-            catch (Exception ex)
-            {
-                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        // ==================================================================
-        // ----------------------- QUẢN LÝ HẠN THÀNH VIÊN -------------------
-        // ==================================================================
         public Result UpgradeMemberLevel(string customerId)
         {
             try
@@ -643,10 +595,10 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                // Get all active customers (already filtered by DeletedDate in repository)
+             
                 var customers = _customerRepository.GetAllForListView().ToList();
 
-                // Map to DTOs (only required ListView fields)
+
                 var result = customers.Select(customer => new CustomerListResponseDto
                 {
                     CustomerId = customer.CustomerId,

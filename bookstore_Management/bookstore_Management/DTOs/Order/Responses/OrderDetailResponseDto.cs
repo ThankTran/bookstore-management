@@ -1,8 +1,6 @@
 namespace bookstore_Management.DTOs.Order.Responses
 {
-    /// <summary>
-    /// DTO for order detail response
-    /// </summary>
+    
     public class OrderDetailResponseDto
     {
         public string OrderId { get; set; }
