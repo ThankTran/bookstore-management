@@ -12,10 +12,6 @@ namespace bookstore_Management.Models
     public class User
     {
         [Key]
-        [Column("user_id")]
-        [StringLength(10)] // tăng lên để tránh tràn
-        public string UserId { get; set; } // mã số nhân viên : NV001,NV002,...
-
         [Required] 
         [Column("username")]
         [StringLength(50)] 

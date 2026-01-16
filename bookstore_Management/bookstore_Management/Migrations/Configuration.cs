@@ -124,11 +124,11 @@ namespace bookstore_Management.Migrations
             // ============================================
             var users = new List<User>
             {
-                new User { UserId = "NV0001", Username = "admin", PasswordHash = Encryptor.Hash("Admin@123"), StaffId = "NV0001", CreatedDate = DateTime.Now },
-                new User { UserId = "NV0002", Username = "manager", PasswordHash = Encryptor.Hash("Manager@123"), StaffId = "NV0002", CreatedDate = DateTime.Now },
-                new User { UserId = "NV0003", Username = "staff", PasswordHash = Encryptor.Hash("Staff@123"), StaffId = "NV0003", CreatedDate = DateTime.Now }
+                new User { Username = "admin", PasswordHash = Encryptor.Hash("Admin@123"), StaffId = "NV0001", CreatedDate = DateTime.Now },
+                new User { Username = "manager", PasswordHash = Encryptor.Hash("Manager@123"), StaffId = "NV0002", CreatedDate = DateTime.Now },
+                new User { Username = "staff", PasswordHash = Encryptor.Hash("Staff@123"), StaffId = "NV0003", CreatedDate = DateTime.Now }
             };
-            context.Users.AddOrUpdate(u => u.UserId, users.ToArray());
+            context.Users.AddOrUpdate(u => u.Username, users.ToArray());
             context.SaveChanges();
             
 

@@ -81,7 +81,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
         public void LoadPublisherData(string publisherId, string name, string phone, string email,
                                  DateTime? createdDate = null, DateTime? lastModified = null)
         {
-            PublisherID = customerId;
+            PublisherID = PublisherID;
             PublisherName = name;
             Phone = phone;
             Email = email;

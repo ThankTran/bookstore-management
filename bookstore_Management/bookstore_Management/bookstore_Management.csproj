@@ -295,8 +295,6 @@
     <Compile Include="DTOs\Common\Reports\CustomerSpendingReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventoryReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventorySummaryReportResponseDto.cs" />
-    <Compile Include="DTOs\Common\Reports\SalesReportResponseDto.cs" />
-    <Compile Include="DTOs\Common\Reports\StaffPerformanceReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\PublisherImportReportResponseDto.cs" />
     <Compile Include="DTOs\Customer\Requests\CreateCustomerRequestDto.cs" />
     <Compile Include="DTOs\Customer\Requests\UpdateCustomerRequestDto.cs" />
@@ -332,6 +330,10 @@
     <Compile Include="Migrations\202601160948410_initialFix.cs" />
     <Compile Include="Migrations\202601160948410_initialFix.Designer.cs">
       <DependentUpon>202601160948410_initialFix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202601161749123_UserPrimeKeyToUserName.cs" />
+    <Compile Include="Migrations\202601161749123_UserPrimeKeyToUserName.Designer.cs">
+      <DependentUpon>202601161749123_UserPrimeKeyToUserName.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
@@ -489,6 +491,9 @@
     <EmbeddedResource Include="Migrations\202601160948410_initialFix.resx">
       <DependentUpon>202601160948410_initialFix.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202601161749123_UserPrimeKeyToUserName.resx">
+      <DependentUpon>202601161749123_UserPrimeKeyToUserName.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -559,6 +564,9 @@
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
+    <Content Include="Services\Interfaces\Note.txt">
+      <DependentUpon>IImportBillService.cs</DependentUpon>
+    </Content>
     <Content Include="Services\ServiceOverview.md" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\export.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\print.png" />
@@ -566,10 +574,6 @@
   <ItemGroup>
     <Resource Include="Presentation\AppResources\Images\Icons\Login\user.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\timeline.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Presentation\Views\Dialogs\Invoices\" />
-    <Folder Include="Presentation\Views\Dialogs\Payment\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
