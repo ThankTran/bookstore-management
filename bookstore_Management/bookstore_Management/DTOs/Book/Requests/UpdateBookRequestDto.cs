@@ -8,7 +8,7 @@ namespace bookstore_Management.DTOs.Book.Requests
         public string Author { get; set; }
         public BookCategory? Category { get; set; }
         public decimal? SalePrice { get; set; }
-        public string SupplierId { get; set; }
+        public string PublisherName { get; set; } // cbx
     }
 }
 

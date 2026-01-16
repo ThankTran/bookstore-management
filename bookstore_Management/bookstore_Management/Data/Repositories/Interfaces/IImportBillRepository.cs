@@ -6,7 +6,7 @@ namespace bookstore_Management.Data.Repositories.Interfaces
 {
     internal interface IImportBillRepository : IRepository<ImportBill,string>
     {
-        IEnumerable<ImportBill> GetBySupplier(string supplierId);
+        IEnumerable<ImportBill> GetByPublisher(string publisherId);
         IEnumerable<ImportBill> GetByDateRange(DateTime start, DateTime end);
     }
 }

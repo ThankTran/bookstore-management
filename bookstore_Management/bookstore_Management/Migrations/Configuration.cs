@@ -29,48 +29,21 @@ namespace bookstore_Management.Migrations
             };
             context.Publishers.AddOrUpdate(s => s.Id, publishers.ToArray());
             context.SaveChanges();
-
-            // ============================================
-            // Warehouses
-            // ============================================
-            var warehouses = new List<Warehouse>
-            {
-                new Warehouse { WarehouseId = "WH001", Name = "Kho Hà Nội", Address = "HN", CreatedDate = DateTime.Now },
-                new Warehouse { WarehouseId = "WH002", Name = "Kho TP.HCM", Address = "HCM", CreatedDate = DateTime.Now }
-            };
-            context.Warehouses.AddOrUpdate(w => w.WarehouseId, warehouses.ToArray());
-            context.SaveChanges();
-
+            
             // ============================================
             // Books
             // ============================================
             var books = new List<Book>
             {
-                new Book { BookId = "S00001", Name = "Đắc Nhân Tâm", Author = "Dale Carnegie", PublisherId = "NXB001", Category = BookCategory.Psychology, SalePrice = 80000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00002", Name = "Nhà Giả Kim", Author = "Paulo Coelho", PublisherId = "NXB001", Category = BookCategory.Novel, SalePrice = 75000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00003", Name = "Tuổi Trẻ Đáng Giá Bao Nhiêu", Author = "Rosie Nguyễn", PublisherId = "NXB002", Category = BookCategory.Literature, SalePrice = 50000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00004", Name = "Tôi Tài Giỏi Bạn Cũng Thế", Author = "Adam Khoo", PublisherId = "NXB002", Category = BookCategory.Economics, SalePrice = 65000, CreatedDate = DateTime.Now },
-                new Book { BookId = "S00005", Name = "Bố Già", Author = "Mario Puzo", PublisherId = "NXB003", Category = BookCategory.Literature, SalePrice = 95000, CreatedDate = DateTime.Now }
+                new Book { BookId = "S00001", Name = "Đắc Nhân Tâm", Author = "Dale Carnegie", PublisherId = "NXB001", Category = BookCategory.Psychology, SalePrice = 80000, Stock = 30, CreatedDate = DateTime.Now },
+                new Book { BookId = "S00002", Name = "Nhà Giả Kim", Author = "Paulo Coelho", PublisherId = "NXB001", Category = BookCategory.Novel, SalePrice = 75000, Stock = 50, CreatedDate = DateTime.Now },
+                new Book { BookId = "S00003", Name = "Tuổi Trẻ Đáng Giá Bao Nhiêu", Author = "Rosie Nguyễn", PublisherId = "NXB002", Category = BookCategory.Literature, SalePrice = 50000, Stock = 10 , CreatedDate = DateTime.Now },
+                new Book { BookId = "S00004", Name = "Tôi Tài Giỏi Bạn Cũng Thế", Author = "Adam Khoo", PublisherId = "NXB002", Category = BookCategory.Economics, SalePrice = 65000, Stock = 35, CreatedDate = DateTime.Now },
+                new Book { BookId = "S00005", Name = "Bố Già", Author = "Mario Puzo", PublisherId = "NXB003", Category = BookCategory.Literature, SalePrice = 95000, Stock = 100 , CreatedDate = DateTime.Now }
             };
             context.Books.AddOrUpdate(b => b.BookId, books.ToArray());
             context.SaveChanges();
-
-            // ============================================
-            // Stocks (theo kho)
-            // ============================================
-            var stocks = new List<Stock>
-            {
-                new Stock { WarehouseId = "WH001", BookId = "S00001", StockQuantity = 50 },
-                new Stock { WarehouseId = "WH001", BookId = "S00002", StockQuantity = 30 },
-                new Stock { WarehouseId = "WH001", BookId = "S00003", StockQuantity = 60 },
-                new Stock { WarehouseId = "WH002", BookId = "S00003", StockQuantity = 40 },
-                new Stock { WarehouseId = "WH002", BookId = "S00004", StockQuantity = 70 },
-                new Stock { WarehouseId = "WH002", BookId = "S00005", StockQuantity = 25 }
-            };
-            context.Stocks.AddOrUpdate(
-                s => new { s.WarehouseId, s.BookId },
-                stocks.ToArray());
-            context.SaveChanges();
+            
 
             // ============================================
             // Staff
@@ -100,8 +73,8 @@ namespace bookstore_Management.Migrations
             // ============================================
             var importBills = new List<ImportBill>
             {
-                new ImportBill { Id = "PN0001", PublisherId = "NXB001", WarehouseId = "WH001", TotalAmount = 3_500_000, Notes = "Nhập sách tâm lý", CreatedBy = "NV0001", CreatedDate = DateTime.Now.AddDays(-30) },
-                new ImportBill { Id = "PN0002", PublisherId = "NXB002", WarehouseId = "WH002", TotalAmount = 4_000_000, Notes = "Nhập sách giáo khoa", CreatedBy = "NV0002", CreatedDate = DateTime.Now.AddDays(-15) }
+                new ImportBill { Id = "PN0001", PublisherId = "NXB001",  TotalAmount = 3_500_000, Notes = "Nhập sách tâm lý", CreatedBy = "NV0001", CreatedDate = DateTime.Now.AddDays(-30) },
+                new ImportBill { Id = "PN0002", PublisherId = "NXB002", TotalAmount = 4_000_000, Notes = "Nhập sách giáo khoa", CreatedBy = "NV0002", CreatedDate = DateTime.Now.AddDays(-15) }
             };
             context.ImportBills.AddOrUpdate(ib => ib.Id, importBills.ToArray());
             context.SaveChanges();

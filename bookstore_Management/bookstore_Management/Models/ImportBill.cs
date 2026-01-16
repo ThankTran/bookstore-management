@@ -20,12 +20,6 @@ namespace bookstore_Management.Models
         [StringLength(6)]
         [Column("publisher_id")]
         public string PublisherId { get; set; }
-        
-        [Required]
-        [StringLength(6)]
-        [Column("warehouse_id")]
-        public string WarehouseId { get; set; }
-
 
         [Required]
         [Column("total_amount")]
@@ -53,6 +47,5 @@ namespace bookstore_Management.Models
         // Navigation properties
         public virtual ICollection<ImportBillDetail> ImportBillDetails { get; set; }
         public virtual Publisher Publisher { get; set; }
-        public virtual Warehouse Warehouse { get; set; }
     }
 }

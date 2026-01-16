@@ -272,7 +272,6 @@
     <Compile Include="Data\Repositories\Implementations\OrderRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\Repository.cs" />
     <Compile Include="Data\Repositories\Implementations\StaffRepository.cs" />
-    <Compile Include="Data\Repositories\Implementations\StockRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\PublisherRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\UserRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\AuditLogRepository.cs" />
@@ -285,7 +284,6 @@
     <Compile Include="Data\Repositories\Interfaces\IOrderRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IStaffRepository.cs" />
-    <Compile Include="Data\Repositories\Interfaces\IStockRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IPublisherRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IAuditLogRepository.cs" />
@@ -293,7 +291,6 @@
     <Compile Include="DTOs\Book\Requests\UpdateBookRequestDto.cs" />
     <Compile Include="DTOs\Book\Responses\BookDetailResponseDto.cs" />
     <Compile Include="DTOs\Book\Responses\BookListResponseDto.cs" />
-    <Compile Include="DTOs\Book\Shared\StockInfoDto.cs" />
     <Compile Include="DTOs\Common\Reports\BookSalesReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\CustomerSpendingReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventoryReportResponseDto.cs" />
@@ -320,7 +317,6 @@
     <Compile Include="DTOs\Staff\Responses\StaffResponseDto.cs" />
     <Compile Include="DTOs\Stock\Requests\CreateStockRequestDto.cs" />
     <Compile Include="DTOs\Stock\Requests\UpdateStockRequestDto.cs" />
-    <Compile Include="DTOs\Stock\Responses\StockResponseByWareHouseDto.cs" />
     <Compile Include="DTOs\Stock\Responses\StockResponseDto.cs" />
     <Compile Include="DTOs\Publisher\Requests\CreatePublisherRequestDto.cs" />
     <Compile Include="DTOs\Publisher\Requests\UpdatePublisherRequestDto.cs" />
@@ -330,19 +326,12 @@
     <Compile Include="DTOs\Auth\UserAuthInfoDto.cs" />
     <Compile Include="DTOs\User\Requests\ChangePasswordRequestDto.cs" />
     <Compile Include="DTOs\User\Requests\CreateUserRequestDto.cs" />
-    <Compile Include="DTOs\Warehouse\Requests\CreateWarehouseRequestDto.cs" />
-    <Compile Include="DTOs\Warehouse\Requests\UpdateWarehouseRequestDto.cs" />
-    <Compile Include="DTOs\Warehouse\Responses\WarehouseResponseDto.cs" />
     <Compile Include="Helpers\ExcelExporter.cs" />
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
-    <Compile Include="Migrations\202601110937402_InitialCreate.cs" />
-    <Compile Include="Migrations\202601110937402_InitialCreate.Designer.cs">
-      <DependentUpon>202601110937402_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202601151121199_NewTable.cs" />
-    <Compile Include="Migrations\202601151121199_NewTable.Designer.cs">
-      <DependentUpon>202601151121199_NewTable.cs</DependentUpon>
+    <Compile Include="Migrations\202601160948410_initialFix.cs" />
+    <Compile Include="Migrations\202601160948410_initialFix.Designer.cs">
+      <DependentUpon>202601160948410_initialFix.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
@@ -353,10 +342,8 @@
     <Compile Include="Models\Staff.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />
-    <Compile Include="Models\Stock.cs" />
     <Compile Include="Models\Publisher.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\WareHouse.cs" />
     <Compile Include="Presentation\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Presentation\Converters\CurrencyConverter.cs" />
     <Compile Include="Presentation\Converters\DateConverter.cs" />
@@ -481,7 +468,6 @@
     <Compile Include="Services\Implementations\OrderService.cs" />
     <Compile Include="Services\Implementations\ReportService.cs" />
     <Compile Include="Services\Implementations\StaffService.cs" />
-    <Compile Include="Services\Implementations\StockService.cs" />
     <Compile Include="Services\Implementations\PublisherService.cs" />
     <Compile Include="Services\Implementations\UserService.cs" />
     <Compile Include="Services\Interfaces\IAuthService.cs" />
@@ -491,7 +477,6 @@
     <Compile Include="Services\Interfaces\IOrderService.cs" />
     <Compile Include="Services\Interfaces\IReportService.cs" />
     <Compile Include="Services\Interfaces\IStaffService.cs" />
-    <Compile Include="Services\Interfaces\IStockService.cs" />
     <Compile Include="Services\Interfaces\IPublisherService.cs" />
     <Compile Include="Services\Interfaces\IAuditLogService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
@@ -501,11 +486,8 @@
     <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202601110937402_InitialCreate.resx">
-      <DependentUpon>202601110937402_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202601151121199_NewTable.resx">
-      <DependentUpon>202601151121199_NewTable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202601160948410_initialFix.resx">
+      <DependentUpon>202601160948410_initialFix.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

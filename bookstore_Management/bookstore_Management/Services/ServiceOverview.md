@@ -44,12 +44,16 @@ thì trong phần ViewModel ta cần phải khai báo như sau
     
         public BookViewModel()
         {
-            _bookService = new BookService(
-                new BookRepository(new BookstoreDbContext()),
-                new StockRepository(new BookstoreDbContext()),
-                new SupplierRepository(new BookstoreDbContext()),
-                new ImportBillDetailRepository(new BookstoreDbContext())
-            );
+            using ( var context = new BookstoreDbContext())
+            {
+                _bookService = new BookService(
+                new BookRepository(context),
+                new StockRepository(context),
+                new SupplierRepository(context),
+                new ImportBillDetailRepository(context)
+                );
+            }
+            
         }
     
         public void AddNewBook()
