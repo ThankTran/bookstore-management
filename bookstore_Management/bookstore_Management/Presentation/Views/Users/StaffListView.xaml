@@ -384,27 +384,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-
-                            <!-- Lương cơ bản -->
-                            <DataGridTextColumn Header="Lương CB" 
-                                                Binding="{Binding BaseSalary, StringFormat={}{0:N0} ₫}" 
-                                                Width="130"
-                                                IsReadOnly="True">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock" BasedOn="{StaticResource RightAlignedCell}">
-                                        <Setter Property="Foreground" Value="#FF6B6B"/>
-                                        <Setter Property="FontWeight" Value="SemiBold"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-
-                            <!-- Hệ số lương -->
-                            <DataGridTextColumn Header="Hệ số" 
-                                                Binding="{Binding SalaryRate, StringFormat={}{0:F2}}" 
-                                                Width="70"
-                                                IsReadOnly="True"
-                                                ElementStyle="{StaticResource CenterAlignedCell}"/>
-
+                            
                             <!-- Trạng thái -->
                             <DataGridTemplateColumn Header="Trạng thái" Width="110">
                                 <DataGridTemplateColumn.CellTemplate>

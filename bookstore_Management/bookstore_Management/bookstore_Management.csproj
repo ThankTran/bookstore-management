@@ -128,6 +128,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Invoices\AddImportForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Invoices\AddOrderForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Publishers\AddPublisher.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -140,11 +148,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Share\ExportExcel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Share\NDelete.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\Views\Dialogs\Share\NUpdate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Share\Print.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -295,6 +311,8 @@
     <Compile Include="DTOs\Common\Reports\CustomerSpendingReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventoryReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventorySummaryReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\SalesReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\StaffPerformanceReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\PublisherImportReportResponseDto.cs" />
     <Compile Include="DTOs\Customer\Requests\CreateCustomerRequestDto.cs" />
     <Compile Include="DTOs\Customer\Requests\UpdateCustomerRequestDto.cs" />
@@ -380,6 +398,12 @@
     <Compile Include="Presentation\Views\Dialogs\Customers\UpdateCustomer.xaml.cs">
       <DependentUpon>UpdateCustomer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Invoices\AddImportForm.xaml.cs">
+      <DependentUpon>AddImportForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Invoices\AddOrderForm.xaml.cs">
+      <DependentUpon>AddOrderForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Publishers\AddPublisher.xaml.cs">
       <DependentUpon>AddPublisher.xaml</DependentUpon>
     </Compile>
@@ -389,11 +413,17 @@
     <Compile Include="Presentation\Views\Dialogs\Share\Delete.xaml.cs">
       <DependentUpon>Delete.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\ExportExcel.xaml.cs">
+      <DependentUpon>ExportExcel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\NDelete.xaml.cs">
       <DependentUpon>NDelete.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\NUpdate.xaml.cs">
       <DependentUpon>NUpdate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\Print.xaml.cs">
+      <DependentUpon>Print.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\Warning.xaml.cs">
       <DependentUpon>Warning.xaml</DependentUpon>
@@ -574,6 +604,9 @@
   <ItemGroup>
     <Resource Include="Presentation\AppResources\Images\Icons\Login\user.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\timeline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Presentation\Views\Dialogs\Payment\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
