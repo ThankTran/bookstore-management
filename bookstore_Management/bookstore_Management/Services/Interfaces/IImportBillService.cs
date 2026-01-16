@@ -20,7 +20,6 @@ namespace bookstore_Management.Services.Interfaces
         Result<IEnumerable<ImportBillResponseDto>> GetByDateRange(DateTime fromDate, DateTime toDate);
 
         // Quản lý chi tiết
-        Result AddImportItem(string importBillId, ImportBillDetailCreateRequestDto item);
         Result RemoveImportItem(string importBillId, string bookId);
         Result UpdateImportItem(string importBillId, string bookId, int newQuantity, decimal? newPrice);
         Result<IEnumerable<ImportBillDetailResponseDto>> GetImportDetails(string importBillId);
