@@ -13,7 +13,6 @@ namespace bookstore_Management.Services.Interfaces
         Result<string> CreateOrder(CreateOrderRequestDto dto);
         Result UpdateOrder(string orderId, UpdateOrderRequestDto dto);
         Result DeleteOrder(string orderId);
-        Result CancelOrder(string orderId, string reason);
         Result<OrderResponseDto> GetOrderById(string orderId);
         Result<IEnumerable<OrderResponseDto>> GetAllOrders();
         

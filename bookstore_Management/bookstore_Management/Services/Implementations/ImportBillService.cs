@@ -188,9 +188,8 @@ namespace bookstore_Management.Services.Implementations
                 var bills = _importBillRepository.GetAll()
                     .Where(b => b.DeletedDate == null)
                     .OrderByDescending(b => b.CreatedDate)
-                    .ToList();
-                var dtos = bills.Select(MapToImportBillResponseDto).ToList();
-                return Result<IEnumerable<ImportBillResponseDto>>.Success(dtos);
+                    .Select(MapToImportBillResponseDto);
+                return Result<IEnumerable<ImportBillResponseDto>>.Success(bills);
             }
             catch (Exception ex)
             {
@@ -205,9 +204,8 @@ namespace bookstore_Management.Services.Implementations
                 var bills = _importBillRepository.GetByPublisher(supplierId)
                     .Where(b => b.DeletedDate == null)
                     .OrderByDescending(b => b.CreatedDate)
-                    .ToList();
-                var dtos = bills.Select(MapToImportBillResponseDto).ToList();
-                return Result<IEnumerable<ImportBillResponseDto>>.Success(dtos);
+                    .Select(MapToImportBillResponseDto);
+                return Result<IEnumerable<ImportBillResponseDto>>.Success(bills);
             }
             catch (Exception ex)
             {
@@ -222,9 +220,8 @@ namespace bookstore_Management.Services.Implementations
                 var bills = _importBillRepository.GetByDateRange(fromDate, toDate)
                     .Where(b => b.DeletedDate == null)
                     .OrderByDescending(b => b.CreatedDate)
-                    .ToList();
-                var dtos = bills.Select(MapToImportBillResponseDto).ToList();
-                return Result<IEnumerable<ImportBillResponseDto>>.Success(dtos);
+                    .Select(MapToImportBillResponseDto);
+                return Result<IEnumerable<ImportBillResponseDto>>.Success(bills);
             }
             catch (Exception ex)
             {
@@ -235,50 +232,6 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         // ----------------------- CHI TIẾT --------------------------------
         // ==================================================================
-        public Result AddImportItem(string importBillId, ImportBillDetailCreateRequestDto item)
-        {
-            try
-            {
-                var bill = _importBillRepository.GetById(importBillId);
-                if (bill == null || bill.DeletedDate != null)
-                    return Result.Fail("Hóa đơn nhập không tồn tại");
-
-                var book = _bookRepository.GetById(item.BookId);
-                if (book == null || book.DeletedDate != null)
-                    return Result.Fail("Sách không tồn tại");
-
-                if (item.Quantity <= 0 || item.ImportPrice <= 0)
-                    return Result.Fail("Số lượng và giá nhập phải > 0");
-
-                var existing = _importBillDetailRepository.GetByImportId(importBillId)
-                    .FirstOrDefault(d => d.BookId == item.BookId);
-                if (existing != null)
-                    return Result.Fail("Sách đã tồn tại trong hóa đơn");
-
-                var detail = new ImportBillDetail
-                {
-                    ImportId = importBillId,
-                    BookId = item.BookId,
-                    Quantity = item.Quantity,
-                    ImportPrice = item.ImportPrice
-                };
-
-                _importBillDetailRepository.Add(detail);
-                _importBillDetailRepository.SaveChanges();
-                
-                book.UpdatedDate = DateTime.Now;
-                _bookRepository.Update(book);
-                _bookRepository.SaveChanges();
-
-                RecalculateBillTotal(importBillId);
-                return Result.Success("Đã thêm sách vào hóa đơn");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
         public Result RemoveImportItem(string importBillId, string bookId)
         {
             try
@@ -415,7 +368,7 @@ namespace bookstore_Management.Services.Implementations
         /// <summary>
         /// Maps ImportBill entity to ImportBillResponseDto
         /// </summary>
-        private ImportBillResponseDto MapToImportBillResponseDto(ImportBill bill)
+        private static ImportBillResponseDto MapToImportBillResponseDto(ImportBill bill)
         {
             return new ImportBillResponseDto
             {
