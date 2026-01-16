@@ -171,21 +171,9 @@ namespace bookstore_Management.Services.Implementations
                 if (c == null || c.DeletedDate != null)
                     return Result<CustomerDetailResponseDto>.Fail("Khách hàng không tồn tại");
 
-                var orders = c.Orders?.Where(o => o.DeletedDate == null).ToList() ?? Enumerable.Empty<Order>().ToList();
+               
 
-                var dto = new CustomerDetailResponseDto
-                {
-                    CustomerId = c.CustomerId,
-                    Name = c.Name,
-                    Phone = c.Phone,
-                    Email = c.Email,
-                    Address = c.Address,
-                    MemberLevel = c.MemberLevel,
-                    LoyaltyPoints = c.LoyaltyPoints,
-                    CreatedDate = c.CreatedDate,
-                    TotalOrders = orders.Count(),
-                    TotalSpent = orders.Sum(o => o.TotalPrice)
-                };
+                var dto = MapToCustomerResponseDto(c);
 
                 return Result<CustomerDetailResponseDto>.Success(dto);
             }
@@ -202,24 +190,7 @@ namespace bookstore_Management.Services.Implementations
                 var customers = _customerRepository.GetAll()
                     .Where(c => c.DeletedDate == null)
                     .OrderBy(c => c.Name)
-                    .Select(c =>
-                    {
-                        var orders = c.Orders.Where(o => o.DeletedDate == null).ToList();
-                        return new CustomerDetailResponseDto
-                        {
-                            CustomerId = c.CustomerId,
-                            Name = c.Name,
-                            Phone = c.Phone,
-                            Email = c.Email,
-                            Address = c.Address,
-                            MemberLevel = c.MemberLevel,
-                            LoyaltyPoints = c.LoyaltyPoints,
-                            CreatedDate = c.CreatedDate,
-                            TotalOrders = orders.Count(),
-                            TotalSpent = orders.Sum(o => o.TotalPrice)
-                        };
-                    })
-                    .ToList();
+                    .Select(MapToCustomerResponseDto);
 
                 return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
             }
@@ -237,22 +208,7 @@ namespace bookstore_Management.Services.Implementations
                 if (c == null || c.DeletedDate != null)
                     return Result<CustomerDetailResponseDto>.Fail("Không tìm thấy khách hàng");
 
-                var orders = c.Orders?.Where(o => o.DeletedDate == null).ToList() ?? Enumerable.Empty<Order>().ToList();
-                
-                
-                var dto = new CustomerDetailResponseDto
-                {
-                    CustomerId = c.CustomerId,
-                    Name = c.Name,
-                    Phone = c.Phone,
-                    Email = c.Email,
-                    Address = c.Address,
-                    MemberLevel = c.MemberLevel,
-                    LoyaltyPoints = c.LoyaltyPoints,
-                    CreatedDate = c.CreatedDate,
-                    TotalOrders = orders.Count(),
-                    TotalSpent = orders.Sum(o => o.TotalPrice)
-                };
+                var dto = MapToCustomerResponseDto(c);
 
                 return Result<CustomerDetailResponseDto>.Success(dto);
             }
@@ -272,25 +228,7 @@ namespace bookstore_Management.Services.Implementations
                 var customers = _customerRepository.SearchByName(name)
                     .Where(c => c.DeletedDate == null)
                     .OrderBy(c => c.Name)
-                    .Select(c =>
-                    {
-                        var orders = c.Orders.Where(o => o.DeletedDate == null).ToList();
-                        return new CustomerDetailResponseDto
-                        {
-                            CustomerId = c.CustomerId,
-                            Name = c.Name,
-                            Phone = c.Phone,
-                            Email = c.Email,
-                            Address = c.Address,
-                            MemberLevel = c.MemberLevel,
-                            LoyaltyPoints = c.LoyaltyPoints,
-                            CreatedDate = c.CreatedDate,
-                            TotalOrders = orders.Count(),
-                            TotalSpent = orders.Sum(o => o.TotalPrice)
-                        };
-                    })
-                    .ToList();
-
+                    .Select(MapToCustomerResponseDto);
                 return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
             }
             catch (Exception ex)
@@ -306,24 +244,7 @@ namespace bookstore_Management.Services.Implementations
                 var customers = _customerRepository.GetAll()
                     .Where(c => c.DeletedDate == null && c.MemberLevel == level)
                     .OrderBy(c => c.Name)
-                    .Select(c =>
-                    {
-                        var orders = c.Orders.Where(o => o.DeletedDate == null).ToList();
-                        return new CustomerDetailResponseDto
-                        {
-                            CustomerId = c.CustomerId,
-                            Name = c.Name,
-                            Phone = c.Phone,
-                            Email = c.Email,
-                            Address = c.Address,
-                            MemberLevel = c.MemberLevel,
-                            LoyaltyPoints = c.LoyaltyPoints,
-                            CreatedDate = c.CreatedDate,
-                            TotalOrders = orders.Count(),
-                            TotalSpent = orders.Sum(o => o.TotalPrice)
-                        };
-                    })
-                    .ToList();
+                    .Select(MapToCustomerResponseDto);
 
                 return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
             }
@@ -347,23 +268,7 @@ namespace bookstore_Management.Services.Implementations
 
                         return totalSpent >= minimum && totalSpent <= maximum;
                     })
-                    .Select(s =>
-                    {
-                        var orders = s.Orders.Where(o => o.DeletedDate == null).ToList();
-                        return new CustomerDetailResponseDto
-                        {
-                            CustomerId = s.CustomerId,
-                            Name = s.Name,
-                            Phone = s.Phone,
-                            Email = s.Email,
-                            Address = s.Address,
-                            MemberLevel = s.MemberLevel,
-                            LoyaltyPoints = s.LoyaltyPoints,
-                            CreatedDate = s.CreatedDate,
-                            TotalOrders = orders.Count(),
-                            TotalSpent = orders.Sum(o => o.TotalPrice)
-                        };
-                    });
+                    .Select(MapToCustomerResponseDto);
 
                 return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
             }
@@ -448,7 +353,7 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result<MemberTier> CalculateMemberLevel(decimal totalSpent)
+        public Result<MemberTier> CalculateMemberTier(decimal totalSpent)
         {
             try
             {
@@ -586,6 +491,27 @@ namespace bookstore_Management.Services.Implementations
             
             var lastNumber = int.Parse(lastCustomer.CustomerId.Substring(2));
             return $"KH{(lastNumber + 1):D4}";
+        }
+        
+        /// <summary>
+        /// Maps Customer entity to CustomerResponseDTO
+        /// </summary>
+        private CustomerDetailResponseDto MapToCustomerResponseDto(Customer cus)
+        {
+            var orders = _orderRepository.GetByCustomer(cus.CustomerId).ToList();
+            return new CustomerDetailResponseDto
+            {
+                CustomerId = cus.CustomerId,
+                Name = cus.Name,
+                Address = cus.Address,
+                Email = cus.Email,
+                LoyaltyPoints = cus.LoyaltyPoints,
+                Phone = cus.Phone,
+                MemberLevel = cus.MemberLevel,
+                CreatedDate = cus.CreatedDate,
+                TotalOrders = orders.Count(),
+                TotalSpent = orders.Sum(o => o.TotalPrice)
+            };
         }
 
         // ==================================================================

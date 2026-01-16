@@ -18,21 +18,18 @@ namespace bookstore_Management.Services.Implementations
         private readonly IImportBillRepository _importBillRepository;
         private readonly IImportBillDetailRepository _importBillDetailRepository;
         private readonly IBookRepository _bookRepository;
-        private readonly ISupplierRepository _supplierRepository;
-        private readonly IStockRepository _stockRepository;
+        private readonly IPublisherRepository _publisherRepository;
 
         internal ImportBillService(
             IImportBillRepository importBillRepository,
             IImportBillDetailRepository importBillDetailRepository,
             IBookRepository bookRepository,
-            ISupplierRepository supplierRepository,
-            IStockRepository stockRepository)
+            IPublisherRepository publisherRepository)
         {
             _importBillRepository = importBillRepository;
             _importBillDetailRepository = importBillDetailRepository;
             _bookRepository = bookRepository;
-            _supplierRepository = supplierRepository;
-            _stockRepository = stockRepository;
+            _publisherRepository = publisherRepository;
         }
 
         // ==================================================================
@@ -42,12 +39,10 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(dto.SupplierId))
+                if (string.IsNullOrWhiteSpace(dto.PublisherId))
                     return Result<string>.Fail("Nhà cung cấp bắt buộc");
-                if (string.IsNullOrWhiteSpace(dto.WarehouseId))
-                    return Result<string>.Fail("Kho nhập bắt buộc");
 
-                var supplier = _supplierRepository.GetById(dto.SupplierId);
+                var supplier = _publisherRepository.GetById(dto.PublisherId);
                 if (supplier == null || supplier.DeletedDate != null)
                     return Result<string>.Fail("Nhà cung cấp không tồn tại");
 
@@ -92,8 +87,7 @@ namespace bookstore_Management.Services.Implementations
                 var importBill = new ImportBill
                 {
                     Id = importId,
-                    SupplierId = dto.SupplierId,
-                    WarehouseId = dto.WarehouseId,
+                    PublisherId = dto.PublisherId,
                     TotalAmount = totalAmount,
                     Notes = string.IsNullOrWhiteSpace(dto.Notes) ? null : dto.Notes.Trim(),
                     CreatedBy = string.IsNullOrWhiteSpace(dto.CreatedBy) ? "SYSTEM" : dto.CreatedBy,
@@ -108,25 +102,12 @@ namespace bookstore_Management.Services.Implementations
                 // Cập nhật tồn kho theo kho nhập
                 foreach (var item in details)
                 {
-                    var stock = _stockRepository.Get(dto.WarehouseId, item.BookId);
-                    if (stock != null)
-                    {
-                        stock.StockQuantity += item.Quantity;
-                        stock.UpdatedDate = DateTime.Now;
-                        _stockRepository.Update(stock);
-                    }
-                    else
-                    {
-                        _stockRepository.Add(new Stock
-                        {
-                            WarehouseId = dto.WarehouseId,
-                            BookId = item.BookId,
-                            StockQuantity = item.Quantity,
-                            UpdatedDate = DateTime.Now
-                        });
-                    }
+                    var stock = _bookRepository.GetById(item.BookId);
+                    stock.Stock+= item.Quantity;
+                    stock.UpdatedDate = DateTime.Now;
+
                 }
-                _stockRepository.SaveChanges();
+                _bookRepository.SaveChanges();
 
                 return Result<string>.Success(importId, "Tạo hóa đơn nhập thành công");
             }
@@ -221,7 +202,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bills = _importBillRepository.GetBySupplier(supplierId)
+                var bills = _importBillRepository.GetByPublisher(supplierId)
                     .Where(b => b.DeletedDate == null)
                     .OrderByDescending(b => b.CreatedDate)
                     .ToList();
@@ -389,7 +370,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bills = _importBillRepository.GetBySupplier(supplierId)
+                var bills = _importBillRepository.GetByPublisher(supplierId)
                     .Where(b => b.CreatedDate >= fromDate && b.CreatedDate <= toDate && b.DeletedDate == null);
                 var total = bills.Sum(b => b.TotalAmount);
                 return Result<decimal>.Success(total);
@@ -439,10 +420,8 @@ namespace bookstore_Management.Services.Implementations
             return new ImportBillResponseDto
             {
                 Id = bill.Id,
-                SupplierId = bill.SupplierId,
-                SupplierName = bill.Supplier?.Name,
-                WarehouseId = bill.WarehouseId,
-                WarehouseName = bill.Warehouse?.Name,
+                PublisherId = bill.PublisherId,
+                PublisherName = bill.Publisher?.Name,
                 TotalAmount = bill.TotalAmount,
                 Notes = bill.Notes,
                 CreatedBy = bill.CreatedBy,

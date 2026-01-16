@@ -1,29 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using bookstore_Management.Core.Results;
-using bookstore_Management.DTOs.Supplier.Requests;
-using bookstore_Management.DTOs.Supplier.Responses;
+using bookstore_Management.DTOs.Publisher.Requests;
+using bookstore_Management.DTOs.Publisher.Responses;
 using bookstore_Management.Models;
 namespace bookstore_Management.Services.Interfaces
 {
-    public interface ISupplierService
+    public interface IPublisherService
     {
         // CRUD
-        Result<string> AddSupplier(CreateSupplierRequestDto dto);
-        Result UpdateSupplier(string supplierId, UpdateSupplierRequestDto dto);
-        Result DeleteSupplier(string supplierId);
-        Result<SupplierResponseDto> GetSupplierById(string supplierId);
-        Result<IEnumerable<SupplierResponseDto>> GetAllSuppliers();
+        Result<string> AddPublisher(CreatePublisherRequestDto dto);
+        Result UpdatePublisher(string publisherId, UpdatePublisherRequestDto dto);
+        Result DeletePublisher(string publisherId);
+        Result<PublisherResponseDto> GetPublisherById(string publisherId);
+        Result<IEnumerable<PublisherResponseDto>> GetAllPublishers();
         
         // Tìm kiếm
-        Result<SupplierResponseDto> GetSupplierByPhone(string phone);
-        Result<SupplierResponseDto> GetSupplierByEmail(string email);
+        Result<PublisherResponseDto> GetPublisherByPhone(string phone);
+        Result<PublisherResponseDto> GetPublisherByEmail(string email);
+        Result<IEnumerable<Publisher>> SearchByName(string name);
 
         // Quản lý sách từ NCC
-        Result<IEnumerable<Book>> GetBooksBySupplier(string supplierId);
+        Result<IEnumerable<Book>> GetBooksByPublisher(string publisherId);
 
         // Báo cáo
-        Result<decimal> CalculateTotalImportValue(string supplierId);
-        Result<decimal> CalculateTotalImportValueByDateRange(string supplierId, DateTime fromDate, DateTime toDate);
+        Result<decimal> CalculateTotalImportValue(string publisherId);
+        Result<decimal> CalculateTotalImportValueByDateRange(string publisherId, DateTime fromDate, DateTime toDate);
     }
 }

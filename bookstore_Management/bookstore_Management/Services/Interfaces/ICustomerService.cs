@@ -26,8 +26,7 @@ namespace bookstore_Management.Services.Interfaces
         // Quản lý hạng thành viên
         Result UpgradeMemberLevel(string customerId);
         Result DowngradeMemberLevel(string customerId);
-        Result<MemberTier> CalculateMemberLevel(decimal totalSpent);
-        
+        Result<MemberTier> CalculateMemberTier(decimal totalSpent);
         
         // Lịch sử mua hàng
         Result<IEnumerable<Order>> GetCustomerOrderHistory(string customerId, DateTime fromDate, DateTime toDate);
