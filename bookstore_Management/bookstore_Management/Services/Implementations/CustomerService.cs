@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using bookstore_Management.Core.Enums;
+﻿using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
+using bookstore_Management.Data.Context;
+using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.DTOs.Customer.Requests;
 using bookstore_Management.DTOs.Customer.Responses;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace bookstore_Management.Services.Implementations
 {
@@ -20,6 +22,15 @@ namespace bookstore_Management.Services.Implementations
         {
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
+        }
+        internal CustomerService()
+        {
+            var context = new BookstoreDbContext();
+            _customerRepository = new CustomerRepository(context);        
+        }
+        internal CustomerService(ICustomerRepository cusrepo)
+        {
+            _customerRepository= cusrepo;
         }
         
         // ==================================================================

@@ -4,11 +4,8 @@ using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 namespace bookstore_Management.Presentation.ViewModels
