@@ -4,10 +4,10 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Interfaces
 {
-    internal interface ISupplierRepository : IRepository<Publisher,string>
+    internal interface IPublisherRepository : IRepository<Publisher,string>
     {
         IEnumerable<Publisher> SearchByName(string name);
-        string GetNameBySupplierId(string supplierId);
+        string GetNameByPublisherId(string publisherId);
         Publisher GetByPhone(string phone);
         Publisher GetByEmail(string email);
     }

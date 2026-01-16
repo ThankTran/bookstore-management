@@ -20,14 +20,13 @@ namespace bookstore_Management.Data.Context
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Staff> Staff { get; set; }
-        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<Publisher> Publishers { get; set; }
         
         public DbSet<User> Users { get; set; }
         public DbSet<ImportBill> ImportBills { get; set; }
         public DbSet<ImportBillDetail> ImportBillDetails { get; set; }
-        public DbSet<Stock> Stocks { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
-        public DbSet<Warehouse> Warehouses { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -40,13 +39,12 @@ namespace bookstore_Management.Data.Context
             modelBuilder.Entity<OrderDetail>().HasKey(od => new { od.BookId, od.OrderId });
             modelBuilder.Entity<Customer>().HasKey(c => c.CustomerId);
             modelBuilder.Entity<Staff>().HasKey(s => s.Id);
-            modelBuilder.Entity<Supplier>().HasKey(s => s.Id);
+            modelBuilder.Entity<Publisher>().HasKey(s => s.Id);
             modelBuilder.Entity<User>().HasKey(u => u.UserId);
             modelBuilder.Entity<ImportBill>().HasKey(ib => ib.Id);
             modelBuilder.Entity<ImportBillDetail>().HasKey(ibd => new { ibd.BookId, ibd.ImportId });
-            modelBuilder.Entity<Stock>().HasKey(st => new { st.WarehouseId, st.BookId });
             modelBuilder.Entity<AuditLog>().HasKey(al => al.Id);
-            modelBuilder.Entity<Warehouse>().HasKey(w => w.WarehouseId);
+
             // ============================================
             // FOREIGN KEYS & RELATIONSHIPS
             // ============================================
@@ -80,26 +78,20 @@ namespace bookstore_Management.Data.Context
                 .WillCascadeOnDelete(false);
             
 
-            // ImportBill → Supplier (1 ImportBill có 1 Supplier)
+            // ImportBill → Publisher (1 ImportBill có 1 Supplier)
             modelBuilder.Entity<ImportBill>()
-                .HasRequired(ib => ib.Supplier)
+                .HasRequired(ib => ib.Publisher)
                 .WithMany(s => s.ImportBills)
-                .HasForeignKey(ib => ib.SupplierId)
+                .HasForeignKey(ib => ib.PublisherId)
                 .WillCascadeOnDelete(false);
 
-            // Book -> Supplier (optional)
+            // Book -> Publisher (optional)
             modelBuilder.Entity<Book>()
-                .HasOptional(b => b.Supplier)
+                .HasOptional(b => b.Publisher)
                 .WithMany()
-                .HasForeignKey(b => b.SupplierId)
+                .HasForeignKey(b => b.PublisherId)
                 .WillCascadeOnDelete(false);
-
-            // ImportBill → Warehouse (1 ImportBill có 1 Warehouse)
-            modelBuilder.Entity<ImportBill>()
-                .HasRequired(ib => ib.Warehouse)
-                .WithMany(w => w.ImportBills)
-                .HasForeignKey(ib => ib.WarehouseId)
-                .WillCascadeOnDelete(false);
+            
 
             // ImportBillDetail → ImportBill (1 ImportBillDetail thuộc 1 ImportBill)
             modelBuilder.Entity<ImportBillDetail>()
@@ -113,19 +105,6 @@ namespace bookstore_Management.Data.Context
                 .HasRequired(ibd => ibd.Book)
                 .WithMany()  // Book không có navigation property đến ImportBillDetail
                 .HasForeignKey(ibd => ibd.BookId)
-                .WillCascadeOnDelete(false);
-
-            // Stock → Book/Warehouse (mỗi kho có tồn kho cho từng sách)
-            modelBuilder.Entity<Stock>()
-                .HasRequired(st => st.Book)
-                .WithMany(b => b.Stocks)
-                .HasForeignKey(st => st.BookId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Stock>()
-                .HasRequired(st => st.Warehouse)
-                .WithMany(w => w.Stocks)
-                .HasForeignKey(st => st.WarehouseId)
                 .WillCascadeOnDelete(false);
             
             

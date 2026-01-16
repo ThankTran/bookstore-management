@@ -9,9 +9,9 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Implementations
 {
-    internal class SupplierRepository : Repository<Publisher, string>, ISupplierRepository
+    internal class PublisherRepository : Repository<Publisher, string>, IPublisherRepository
     {
-        public SupplierRepository(BookstoreDbContext context) : base(context)
+        public PublisherRepository(BookstoreDbContext context) : base(context)
         {
         }
 
@@ -20,9 +20,9 @@ namespace bookstore_Management.Data.Repositories.Implementations
             return Find(s => s.Name.Contains(name) && s.DeletedDate == null);
         }
 
-        public string GetNameBySupplierId(string supplierId)
+        public string GetNameByPublisherId(string publisherId)
         {
-            return Find(s => s.Id == supplierId && s.DeletedDate == null)
+            return Find(s => s.Id == publisherId && s.DeletedDate == null)
                 .Select(s => s.Name)
                 .FirstOrDefault();
         }
