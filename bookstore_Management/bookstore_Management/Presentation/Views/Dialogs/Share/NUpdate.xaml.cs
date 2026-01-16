@@ -12,29 +12,26 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Presentation.Views.Dialogs.Books
+namespace bookstore_Management.Presentation.Views.Dialogs.Share
 {
     /// <summary>
-    /// Interaction logic for ConfirmBooksDialog.xaml
+    /// Interaction logic for NUpdate.xaml
     /// </summary>
-    public partial class ConfirmBooksDialog : Window
+    public partial class NUpdate : Window
     {
-        public ConfirmBooksDialog()
+        public NUpdate()
         {
             InitializeComponent();
         }
 
-        private void BtnConfirm_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;   // confirm
             this.Close();
         }
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;  // cancel
             this.Close();
         }
-
     }
 }
