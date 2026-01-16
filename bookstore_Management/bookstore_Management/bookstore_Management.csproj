@@ -148,7 +148,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\Share\ExportExcel.xaml">
+    <Page Include="Presentation\Views\Dialogs\Books\ExportExcel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -160,7 +160,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\Share\Print.xaml">
+    <Page Include="Presentation\Views\Dialogs\Books\Print.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -388,6 +388,12 @@
     <Compile Include="Presentation\Views\Dialogs\Books\UpdateBook.xaml.cs">
       <DependentUpon>UpdateBook.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\ExportExcel.xaml.cs">
+      <DependentUpon>ExportExcel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\Print.xaml.cs">
+      <DependentUpon>Print.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml.cs">
       <DependentUpon>AddCustomer.xaml</DependentUpon>
     </Compile>
@@ -409,18 +415,14 @@
     <Compile Include="Presentation\Views\Dialogs\Share\Delete.xaml.cs">
       <DependentUpon>Delete.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Share\ExportExcel.xaml.cs">
-      <DependentUpon>ExportExcel.xaml</DependentUpon>
-    </Compile>
+    
     <Compile Include="Presentation\Views\Dialogs\Share\NDelete.xaml.cs">
       <DependentUpon>NDelete.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\NUpdate.xaml.cs">
       <DependentUpon>NUpdate.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Share\Print.xaml.cs">
-      <DependentUpon>Print.xaml</DependentUpon>
-    </Compile>
+    
     <Compile Include="Presentation\Views\Dialogs\Share\Warning.xaml.cs">
       <DependentUpon>Warning.xaml</DependentUpon>
     </Compile>
@@ -587,6 +589,7 @@
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Functions\preview.png" />
     <Content Include="Services\ServiceOverview.md" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\export.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\print.png" />
