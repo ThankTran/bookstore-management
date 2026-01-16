@@ -9,7 +9,7 @@ namespace bookstore_Management.Models
     /// <summary>
     /// Thông tin của nhà cung cấp
     /// </summary>
-    public class Supplier
+    public class Publisher
     {
         [Required]
         [StringLength(6)]

@@ -37,7 +37,7 @@
                         deleted_date = c.DateTime(),
                     })
                 .PrimaryKey(t => t.id)
-                .ForeignKey("dbo.Suppliers", t => t.supplier_id)
+                .ForeignKey("dbo.Publishers", t => t.supplier_id)
                 .Index(t => t.supplier_id);
             
             CreateTable(
@@ -150,7 +150,7 @@
                         deleted_date = c.DateTime(),
                     })
                 .PrimaryKey(t => t.id)
-                .ForeignKey("dbo.Suppliers", t => t.supplier_id)
+                .ForeignKey("dbo.Publishers", t => t.supplier_id)
                 .ForeignKey("dbo.Warehouses", t => t.warehouse_id)
                 .Index(t => t.supplier_id)
                 .Index(t => t.warehouse_id);
@@ -172,7 +172,7 @@
                 .Index(t => t.import_id);
             
             CreateTable(
-                "dbo.Suppliers",
+                "dbo.Publishers",
                 c => new
                     {
                         id = c.String(nullable: false, maxLength: 6),
@@ -204,10 +204,10 @@
         
         public override void Down()
         {
-            DropForeignKey("dbo.Books", "supplier_id", "dbo.Suppliers");
+            DropForeignKey("dbo.Books", "supplier_id", "dbo.Publishers");
             DropForeignKey("dbo.Stocks", "warehouse_id", "dbo.Warehouses");
             DropForeignKey("dbo.ImportBills", "warehouse_id", "dbo.Warehouses");
-            DropForeignKey("dbo.ImportBills", "supplier_id", "dbo.Suppliers");
+            DropForeignKey("dbo.ImportBills", "supplier_id", "dbo.Publishers");
             DropForeignKey("dbo.ImportBillDetails", "import_id", "dbo.ImportBills");
             DropForeignKey("dbo.ImportBillDetails", "book_id", "dbo.Books");
             DropForeignKey("dbo.Stocks", "book_id", "dbo.Books");
@@ -227,7 +227,7 @@
             DropIndex("dbo.OrderDetails", new[] { "book_id" });
             DropIndex("dbo.Books", new[] { "supplier_id" });
             DropTable("dbo.Users");
-            DropTable("dbo.Suppliers");
+            DropTable("dbo.Publishers");
             DropTable("dbo.ImportBillDetails");
             DropTable("dbo.ImportBills");
             DropTable("dbo.Warehouses");

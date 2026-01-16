@@ -31,8 +31,8 @@ namespace bookstore_Management.Models
         
         // dùng để truy vấn nhà xuất bản
         [StringLength(6)]
-        [Column("supplier_id")]
-        public string SupplierId { get; set; }
+        [Column("publisher_id")]
+        public string PublisherId { get; set; }
 
         // thể loại
         [Required]
@@ -58,7 +58,7 @@ namespace bookstore_Management.Models
         // Navigation properties
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Stock> Stocks { get; set; } 
-        public virtual Supplier Supplier { get; set; }
+        public virtual Publisher Publisher { get; set; }
         
         
     }

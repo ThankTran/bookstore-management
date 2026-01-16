@@ -62,7 +62,7 @@ namespace bookstore_Management.Services.Implementations
                 // Generate ID
                 var supplierId = GenerateSupplierId();
                 
-                var supplier = new Supplier
+                var supplier = new Publisher
                 {
                     Id = supplierId,
                     Name = dto.Name.Trim(),
@@ -233,23 +233,23 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result<IEnumerable<Supplier>> SearchByName(string name)
+        public Result<IEnumerable<Publisher>> SearchByName(string name)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(name))
-                    return Result<IEnumerable<Supplier>>.Success(new List<Supplier>());
+                    return Result<IEnumerable<Publisher>>.Success(new List<Publisher>());
                     
                 var suppliers = _supplierRepository.SearchByName(name.Trim())
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
                     .ToList();
                     
-                return Result<IEnumerable<Supplier>>.Success(suppliers);
+                return Result<IEnumerable<Publisher>>.Success(suppliers);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Supplier>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<Publisher>>.Fail($"Lỗi: {ex.Message}");
             }
         }
         
@@ -355,15 +355,15 @@ namespace bookstore_Management.Services.Implementations
         /// <summary>
         /// Maps Supplier entity to SupplierResponseDto
         /// </summary>
-        private SupplierResponseDto MapToSupplierResponseDto(Supplier supplier)
+        private SupplierResponseDto MapToSupplierResponseDto(Publisher publisher)
         {
             return new SupplierResponseDto
             {
-                Id = supplier.Id,
-                Name = supplier.Name,
-                Phone = supplier.Phone,
-                Email = supplier.Email,
-                CreatedDate = supplier.CreatedDate
+                Id = publisher.Id,
+                Name = publisher.Name,
+                Phone = publisher.Phone,
+                Email = publisher.Email,
+                CreatedDate = publisher.CreatedDate
             };
         }
 
