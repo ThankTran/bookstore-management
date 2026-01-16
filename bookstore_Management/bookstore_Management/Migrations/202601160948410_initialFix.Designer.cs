@@ -7,13 +7,13 @@ namespace bookstore_Management.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class InitialCreate : IMigrationMetadata
+    public sealed partial class initialFix : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(initialFix));
         
         string IMigrationMetadata.Id
         {
-            get { return "202601110937402_InitialCreate"; }
+            get { return "202601160948410_initialFix"; }
         }
         
         string IMigrationMetadata.Source

@@ -31,6 +31,6 @@ namespace bookstore_Management.Services.Interfaces
         Result<int> GetNewCustomersCount(DateTime fromDate, DateTime toDate);
 
         // Báo cáo nhà cung cấp
-        Result<IEnumerable<SupplierImportReportResponseDto>> GetSupplierImportReport(DateTime fromDate, DateTime toDate);
+        Result<IEnumerable<PublisherImportReportResponseDto>> GetPublisherImportReport(DateTime fromDate, DateTime toDate);
     }
 }

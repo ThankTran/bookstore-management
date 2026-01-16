@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,6 +25,11 @@ namespace bookstore_Management.Views.Books
             this.DataContext = _viewModel;
         }
         #region Event Handlers
+        private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            // Lấy chỉ số dòng (bắt đầu từ 0) + 1
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
             //try
@@ -68,36 +75,36 @@ namespace bookstore_Management.Views.Books
             //}
         }
 
-        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            //try
-            //{
-            //    string searchText = txtSearch.Text.ToLower().Trim();
+        //private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    //try
+        //    //{
+        //    //    string searchText = txtSearch.Text.ToLower().Trim();
 
-            //    if (string.IsNullOrEmpty(searchText))
-            //    {
-            //        dgBooks.ItemsSource = _viewModel.Books;
-            //    }
-            //    else
-            //    {
-            //        var filteredBooks = _viewModel.Books.Where(b =>
-            //            (b.bookID?.ToLower().Contains(searchText) ?? false) ||
-            //            (b.name?.ToLower().Contains(searchText) ?? false) ||
-            //            (b.author?.ToLower().Contains(searchText) ?? false) ||
-            //            (b.publisher?.ToLower().Contains(searchText) ?? false)
-            //        ).ToList();
+        //    //    if (string.IsNullOrEmpty(searchText))
+        //    //    {
+        //    //        dgBooks.ItemsSource = _viewModel.Books;
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        var filteredBooks = _viewModel.Books.Where(b =>
+        //    //            (b.bookID?.ToLower().Contains(searchText) ?? false) ||
+        //    //            (b.name?.ToLower().Contains(searchText) ?? false) ||
+        //    //            (b.author?.ToLower().Contains(searchText) ?? false) ||
+        //    //            (b.publisher?.ToLower().Contains(searchText) ?? false)
+        //    //        ).ToList();
 
-            //        dgBooks.ItemsSource = filteredBooks;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Lỗi khi tìm kiếm: {ex.Message}",
-            //        "Lỗi",
-            //        MessageBoxButton.OK,
-            //        MessageBoxImage.Error);
-            //}
-        }
+        //    //        dgBooks.ItemsSource = filteredBooks;
+        //    //    }
+        //    //}
+        //    //catch (Exception ex)
+        //    //{
+        //    //    MessageBox.Show($"Lỗi khi tìm kiếm: {ex.Message}",
+        //    //        "Lỗi",
+        //    //        MessageBoxButton.OK,
+        //    //        MessageBoxImage.Error);
+        //    //}
+        //}
 
 
         private void dgBooks_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -131,23 +138,23 @@ namespace bookstore_Management.Views.Books
         }
         #endregion
 
-        #region Public Methods
+        //    #region Public Methods
 
-        //public void RefreshBookList()
-        //{
-        //    try
+        //    public void RefreshBookList()
         //    {
-        //        dgBooks.Items.Refresh();
-        //        txtSearch.Clear();
+        //        try
+        //        {
+        //            dgBooks.Items.Refresh();
+        //            txtSearch.Clear();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show($"Lỗi khi làm mới danh sách: {ex.Message}",
+        //                "Lỗi",
+        //                MessageBoxButton.OK,
+        //                MessageBoxImage.Error);
+        //        }
         //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Lỗi khi làm mới danh sách: {ex.Message}",
-        //            "Lỗi",
-        //            MessageBoxButton.OK,
-        //            MessageBoxImage.Error);
-        //    }
-        //}
-        #endregion
+        //    #endregion
     }
 }

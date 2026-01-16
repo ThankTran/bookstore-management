@@ -162,7 +162,7 @@
                         FontSize="13"
                         Foreground="#666666"
                         FontFamily="{StaticResource PrimaryFont}"
-                        Text="{Binding SearchKeywork, UpdateSourceTrigger=PropertyChanged}">        
+                        Text="{Binding SearchKeywork, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
                                     <Style.Triggers>
@@ -261,6 +261,7 @@
                               ItemsSource="{Binding Books}"
                               SelectedItem="{Binding SelectedBook}"
                               MouseDoubleClick="dgBooks_MouseDoubleClick"
+                              LoadingRow="DataGrid_LoadingRow"
                               Margin="0">
 
                         <DataGrid.Resources>
@@ -270,7 +271,7 @@
                         <DataGrid.Columns>
                             <!-- STT -->
                             <DataGridTextColumn Header="STT" 
-                                                Binding="{Binding BookId}" 
+                                                Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}" 
                                                 Width="70"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
@@ -323,7 +324,7 @@
 
                             <!-- Nhà xuất bản -->
                             <DataGridTextColumn Header="Nhà xuất bản" 
-                                                Binding="{Binding SupplierId}" 
+                                                Binding="{Binding Puplisher}" 
                                                 Width="150"
                                                 IsReadOnly="True"
                                                 ElementStyle="{StaticResource CenterAlignedCell}"/>

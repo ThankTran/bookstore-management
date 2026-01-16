@@ -18,14 +18,8 @@ namespace bookstore_Management.Models
 
         [Required]
         [StringLength(6)]
-        [Column("supplier_id")]
-        public string SupplierId { get; set; }
-        
-        [Required]
-        [StringLength(6)]
-        [Column("warehouse_id")]
-        public string WarehouseId { get; set; }
-
+        [Column("publisher_id")]
+        public string PublisherId { get; set; }
 
         [Required]
         [Column("total_amount")]
@@ -52,7 +46,6 @@ namespace bookstore_Management.Models
 
         // Navigation properties
         public virtual ICollection<ImportBillDetail> ImportBillDetails { get; set; }
-        public virtual Supplier Supplier { get; set; }
-        public virtual Warehouse Warehouse { get; set; }
+        public virtual Publisher Publisher { get; set; }
     }
 }

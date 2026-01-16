@@ -11,11 +11,10 @@ namespace bookstore_Management.Data.Repositories.Implementations
 
         internal IBookRepository Books { get; }
         internal ICustomerRepository Customers { get; }
-        internal ISupplierRepository Suppliers { get; }
+        internal IPublisherRepository Publishers { get; }
         internal IOrderRepository Orders { get; }
         internal IOrderDetailRepository OrderDetails { get; }
         internal IStaffRepository Staffs { get; }
-        internal IStockRepository Stocks { get; }
         internal IImportBillRepository ImportBills { get; }
         internal IImportBillDetailRepository ImportBillDetails { get; }
         internal IUserRepository Users { get; }
@@ -27,11 +26,10 @@ namespace bookstore_Management.Data.Repositories.Implementations
 
             Books = new BookRepository(_context);
             Customers = new CustomerRepository(_context);
-            Suppliers = new SupplierRepository(_context);
+            Publishers = new PublisherRepository(_context);
             Orders = new OrderRepository(_context);
             OrderDetails = new OrderDetailRepository(_context);
             Staffs = new StaffRepository(_context);
-            Stocks = new StockRepository(_context);
             ImportBills = new ImportBillRepository(_context);
             ImportBillDetails = new ImportBillDetailRepository(_context);
             Users = new UserRepository(_context);

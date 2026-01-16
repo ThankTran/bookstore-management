@@ -1,11 +1,15 @@
-﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
+using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 namespace bookstore_Management.Presentation.ViewModels
@@ -14,7 +18,7 @@ namespace bookstore_Management.Presentation.ViewModels
     {
         #region các khai báo
         //lấy service
-        private readonly IBookService _bookService = new BookService();
+        private readonly IBookService _bookService;      
 
         //dữ liệu để view binding
         private ObservableCollection<Book> _books;
@@ -61,7 +65,7 @@ namespace bookstore_Management.Presentation.ViewModels
             get => _searchKeywork;
             set
             {
-                _searchKeywork= value;
+                _searchKeywork = value;
                 OnPropertyChanged();
                 SearchBookCommand.Execute(null);
             }
@@ -72,7 +76,7 @@ namespace bookstore_Management.Presentation.ViewModels
         //khai báo command cho thao tác thêm, xóa, sửa sách
         public ICommand AddBookCommand { get; set; }
         public ICommand RemoveBookCommand { get; set; }
-        public ICommand EditBookCommand { get; set; }  
+        public ICommand EditBookCommand { get; set; }
 
         //command cho thao tác tìm kiếm - load lại
         public ICommand SearchBookCommand { get; set; }
@@ -80,7 +84,6 @@ namespace bookstore_Management.Presentation.ViewModels
         //command cho in / xuất excel
         public ICommand ExportCommand { get; set; }
         public ICommand PrintCommand { get; set; }
-
         #endregion
 
         #region Load book from db
@@ -101,7 +104,10 @@ namespace bookstore_Management.Presentation.ViewModels
                 BookId = dto.BookId,
                 Name = dto.Name,
                 Author = dto.Author,
-                SupplierId = dto.SupplierName,
+                Publisher = new Publisher
+                {
+                    Name = dto.PublisherName 
+                },
                 Category = dto.Category,
                 SalePrice = dto.SalePrice,
             });
@@ -112,6 +118,12 @@ namespace bookstore_Management.Presentation.ViewModels
 
         public BookViewModel(IBookService bookService)
         {
+            //// 1. Tạo các Repository trước
+            //var pubRepo = new PublisherRepository(); /*PublisherRepository(); */// Class này thực thi IPublisherRepository
+            //var billRepo = new ImportBillDetailRepository();
+
+            //// 2. Truyền nó vào BookService
+            //_bookService = new BookService(pubRepo, billRepo);
             _bookService = bookService ?? new BookService();
 
             Books = new ObservableCollection<Book>();
@@ -132,7 +144,7 @@ namespace bookstore_Management.Presentation.ViewModels
                         Author = dialog.Author,
                         Category = dialog.Category,
                         SalePrice = dialog.SalePrice,
-                        SupplierId = dialog.Publisher
+                        PublisherName = dialog.Publisher
                     };
                     var result = _bookService.CreateBook(newBookDto);
                     if (!result.IsSuccess)
@@ -193,7 +205,13 @@ namespace bookstore_Management.Presentation.ViewModels
                 dialog.Author = book.Author;
                 dialog.Category = book.Category;
                 //dialog.SalePrice = book.SalePrice;
-                dialog.Publisher = book.SupplierId;
+                //dialog.Publisher = book.Publisher;
+                // Giả sử Dialog có property SelectedPublisherId hoặc bạn gán trực tiếp cho ComboBox
+                //if (book.Publisher != null)
+                //{
+                //    dialog.SelectedPublisherId = book.Publisher.Id;
+                //    // ComboBox trong dialog sẽ tự nhảy đến NXB tương ứng dựa trên ID này
+                //}
 
                 if (dialog.ShowDialog() == true)
                 {
@@ -203,7 +221,7 @@ namespace bookstore_Management.Presentation.ViewModels
                         Author = book.Author,
                         Category = book.Category,
                         SalePrice = book.SalePrice,
-                        SupplierId = book.SupplierId
+                        PublisherName = book.Publisher?.Name
                     };
 
                     var result = _bookService.UpdateBook(book.BookId, updateDto);
@@ -228,7 +246,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
 
                 var result = _bookService.SearchByName(SearchKeywork);
-                if(!result.IsSuccess)
+                if (!result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi tìm sách");
                     return;
@@ -243,7 +261,10 @@ namespace bookstore_Management.Presentation.ViewModels
                         Author = b.Author,
                         Category = b.Category,
                         SalePrice = b.SalePrice,
-                        SupplierId = b.SupplierName
+                        Publisher = new Publisher
+                        {
+                            Name = b.PublisherName
+                        },
                     });
                 }
             });
@@ -253,7 +274,7 @@ namespace bookstore_Management.Presentation.ViewModels
             #region PrintCommand 
             PrintCommand = new RelayCommand<object>((p) =>
             {
-                
+
             });
             #endregion
 
