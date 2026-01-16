@@ -23,7 +23,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             // Track changes
             tbBookName.TextChanged += (s, e) => _hasChanges = true;
             tbAuthor.TextChanged += (s, e) => _hasChanges = true;
-            tbPublisher.TextChanged += (s, e) => _hasChanges = true;
+            cbPublisher.SelectionChanged += (s, e) => _hasChanges = true;
             tbImportPrice.TextChanged += (s, e) => _hasChanges = true;
             tbSalePrice.TextChanged += (s, e) => _hasChanges = true;
             cbCategory.SelectionChanged += (s, e) => _hasChanges = true;
@@ -57,9 +57,10 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
 
         public string Publisher
         {
-            get { return tbPublisher.Text; }
-            set { tbPublisher.Text = value; }
+            get => cbPublisher.SelectedItem as string;
+            set => cbPublisher.SelectedItem = value; 
         }
+
 
         public decimal SalePrice
         {
@@ -106,7 +107,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             BookID = bookId;
             BookName = name;
             Author = author;
-            Publisher = publisher;
+            cbPublisher.SelectedItem = publisher; 
             Category = category;
             ImportPrice = importPrice;
             SalePrice = salePrice;
@@ -127,7 +128,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
 
         private void BtnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            // Check if any changes were made
             if (!_hasChanges)
             {
                 var noChangeResult = MessageBox.Show(
@@ -144,9 +144,15 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
                 return;
             }
 
-            // Validate all required fields
             if (!ValidateForm())
+                return;
+
+            // Lấy publisher từ ComboBox (string)
+            var publisherName = cbPublisher.SelectedItem as string;
+            if (string.IsNullOrWhiteSpace(publisherName))
             {
+                ShowValidationError("Vui lòng chọn nhà xuất bản!");
+                cbPublisher.Focus();
                 return;
             }
 
@@ -160,20 +166,37 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
 
             // Confirm update
             var confirmResult = MessageBox.Show(
-                $"Bạn có chắc muốn cập nhật thông tin sách \"{BookName}\"?",
+                $"Bạn có chắc muốn cập nhật thông tin sách \"{tbBookName.Text.Trim()}\"?",
                 "Xác nhận cập nhật",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
 
             if (confirmResult == MessageBoxResult.No)
-            {
                 return;
-            }
 
             // Update last modified time
             LastModifiedDate = DateTime.Now;
 
+            #region Call Update Service (if neccessary)
+            // Nếu có gọi service update thật sự, map dữ liệu ở đây (ví dụ):
+            // var dto = new UpdateBookRequestDto
+            // {
+            //     BookId = tbBookID.Text.Trim(),
+            //     BookName = tbBookName.Text.Trim(),
+            //     Author = tbAuthor.Text.Trim(),
+            //     PublisherName = publisherName,
+            //     Category = (BookCategory)cbCategory.SelectedItem,
+            //     ImportPrice = ImportPrice,
+            //     SalePrice = SalePrice,
+            //     LastModified = LastModifiedDate.Value
+            // };
+            // var result = _bookService.UpdateBook(dto);
+            // if (!result.IsSuccess) { ShowValidationError(result.Message); return; }
+
             // Success - close dialog
+
+            #endregion
+
             MessageBox.Show(
                 "Cập nhật thông tin sách thành công!",
                 "Thành công",
@@ -183,6 +206,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             this.DialogResult = true;
             this.Close();
         }
+
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
@@ -263,24 +287,10 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             }
 
             // Check Publisher
-            if (string.IsNullOrWhiteSpace(tbPublisher.Text))
+            if (cbPublisher.SelectedItem == null)
             {
-                ShowValidationError("Vui lòng nhập nhà xuất bản!");
-                tbPublisher.Focus();
-                return false;
-            }
-
-            if (tbPublisher.Text.Length < 2)
-            {
-                ShowValidationError("Tên nhà xuất bản phải có ít nhất 2 ký tự!");
-                tbPublisher.Focus();
-                return false;
-            }
-
-            if (!Regex.IsMatch(tbPublisher.Text, @"^[a-zA-Z\s]+$"))
-            {
-                ShowValidationError("Tên nhà xuất bản chỉ được chứa chữ cái và khoảng trắng!");
-                tbPublisher.Focus();
+                ShowValidationError("Vui lòng chọn nhà xuất bản!");
+                cbPublisher.Focus();
                 return false;
             }
 
