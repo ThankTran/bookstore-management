@@ -1,11 +1,11 @@
 using System;
 
-namespace bookstore_Management.DTOs.Supplier.Responses
+namespace bookstore_Management.DTOs.Publisher.Responses
 {
     /// <summary>
     /// DTO for supplier response
     /// </summary>
-    public class SupplierResponseDto
+    public class PublisherResponseDto
     {
         public string Id { get; set; }
         public string Name { get; set; }
