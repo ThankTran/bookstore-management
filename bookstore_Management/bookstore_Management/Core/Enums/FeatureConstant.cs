@@ -5,10 +5,13 @@
     /// </summary>
     public enum FeatureConstants
     {
-        /*
-        book = 1,
-        customer = 2,
-        dashboard = 3
-        */
+        Payment = 0,
+        Customer = 1,
+        Publisher = 2,
+        Book = 3,
+        Staff = 4,
+        Dashboard = 5,
+        Invoices = 6,
+        Accounts = 7
     }
 }   
