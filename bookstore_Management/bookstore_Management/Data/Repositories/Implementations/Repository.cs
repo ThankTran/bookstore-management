@@ -78,6 +78,12 @@ namespace bookstore_Management.Data.Repositories.Implementations
         {
             _dbSet.AddRange(items);
         }
+        
+        // các function để xóa
+        public void Delete(T item)
+        {
+            _dbSet.Remove(item);
+        }
 
         // các function để sửa bảng
         public void Update(T item)

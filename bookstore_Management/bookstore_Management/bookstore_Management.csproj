@@ -349,6 +349,10 @@
     <Compile Include="Migrations\202601160948410_initialFix.Designer.cs">
       <DependentUpon>202601160948410_initialFix.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202601161749123_UserPrimeKeyToUserName.cs" />
+    <Compile Include="Migrations\202601161749123_UserPrimeKeyToUserName.Designer.cs">
+      <DependentUpon>202601161749123_UserPrimeKeyToUserName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
     <Compile Include="Models\Book.cs" />
@@ -516,6 +520,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202601160948410_initialFix.resx">
       <DependentUpon>202601160948410_initialFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202601161749123_UserPrimeKeyToUserName.resx">
+      <DependentUpon>202601161749123_UserPrimeKeyToUserName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
