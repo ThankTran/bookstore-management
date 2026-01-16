@@ -12,17 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Presentation.Views.Payment
+namespace bookstore_Management.Presentation.Views.Dialogs.Share
 {
     /// <summary>
-    /// Interaction logic for OrderDetailView.xaml
+    /// Interaction logic for ExportExcel.xaml
     /// </summary>
-    public partial class OrderDetailView : UserControl
+    public partial class ExportExcel : Window
     {
-        public OrderDetailView()
+        public ExportExcel()
         {
             InitializeComponent();
         }
-
     }
 }
