@@ -363,6 +363,7 @@
     <Compile Include="Presentation\ViewModels\LoginViewModel.cs" />
     <Compile Include="Presentation\ViewModels\MainViewModel.cs" />
     <Compile Include="Presentation\ViewModels\PaymentViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\StaffViewModel.cs" />
     <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
     <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
     <Compile Include="Presentation\Views\Books\BookListView.xaml.cs">

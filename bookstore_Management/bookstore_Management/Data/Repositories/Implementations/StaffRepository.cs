@@ -7,7 +7,7 @@ using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
 
 
-namespace bookstore_Management.Data.Repositories.implementations
+namespace bookstore_Management.Data.Repositories.Implementations
 {
     internal class StaffRepository : Repository<Staff,string>, IStaffRepository
     {
