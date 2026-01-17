@@ -50,7 +50,7 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Padding="15,8"
-                                Click="btnAdd_Click"
+                                Command="{Binding AddCusCommand}"
                                 Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Presentation/AppResources/Images/Icons/Actions/add.png" 
@@ -255,6 +255,9 @@
                               x:Name="dgCustomers"
                               Style="{StaticResource MainDataGrid}"
                               MouseDoubleClick="dgCustomers_MouseDoubleClick"
+                              ItemsSource="{Binding Customers}"
+                              SelectedItem="{Binding SelectedCustomer}"
+                              LoadingRow="dgCustomers_LoadingRow"
                               Margin="0">
 
                         <DataGrid.Resources>
@@ -264,7 +267,7 @@
                         <DataGrid.Columns>
                             <!-- STT -->
                             <DataGridTextColumn Header="STT" 
-                                                Binding="{Binding STT}" 
+                                                Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}" 
                                                 Width="70"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
@@ -276,7 +279,7 @@
 
                             <!-- Mã khách hàng -->
                             <DataGridTextColumn Header="Mã KH" 
-                                                Binding="{Binding MaKH}" 
+                                                Binding="{Binding CustomerId}" 
                                                 Width="120"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
@@ -288,7 +291,7 @@
 
                             <!-- Tên khách hàng -->
                             <DataGridTextColumn Header="Tên khách hàng" 
-                                                Binding="{Binding TenKH}" 
+                                                Binding="{Binding Name}" 
                                                 Width="*"
                                                 MinWidth="200"
                                                 IsReadOnly="True">
@@ -302,7 +305,7 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
 
-                            <!-- Hạng thành viên với Badge -->
+                            <!-- Hạng thành viên với Badge --><!--
                             <DataGridTemplateColumn Header="Hạng thành viên" Width="140">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -360,22 +363,22 @@
                                         </Border>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            </DataGridTemplateColumn>-->
 
                             <!-- Số điện thoại -->
                             <DataGridTextColumn Header="Số điện thoại" 
-                                                Binding="{Binding SDT}" 
+                                                Binding="{Binding Phone}" 
                                                 Width="130"
                                                 IsReadOnly="True"
                                                 ElementStyle="{StaticResource CenterAlignedCell}"/>
 
-                            <!-- Doanh thu -->
-                            <DataGridTextColumn Header="Doanh thu" 
-                                                Binding="{Binding DoanhThu, StringFormat={}{0:N0} ₫}" 
-                                                Width="150"
+                             <!--Doanh thu--> 
+                            <DataGridTextColumn Header="Email" 
+                                                Binding="{Binding Email}" 
+                                                Width="250"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock" BasedOn="{StaticResource RightAlignedCell}">
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource CenterAlignedCell}">
                                         <Setter Property="Foreground" Value="#FF6B6B"/>
                                         <Setter Property="FontWeight" Value="SemiBold"/>
                                     </Style>

@@ -1,14 +1,12 @@
-﻿using bookstore_Management.Models;
+﻿using bookstore_Management.Data.Context;
+using bookstore_Management.Data.Repositories.Implementations;
+using bookstore_Management.Models;
 using bookstore_Management.Presentation.ViewModels;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
+using bookstore_Management.Presentation.Views.Dialogs;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -17,7 +15,7 @@ namespace bookstore_Management.ViewModels
     internal class CustomerViewModel : BaseViewModel
     {
         #region khai báo
-        private readonly ICustomerService _customerService = new CustomerService();
+        private readonly ICustomerService _customerService;
 
         private ObservableCollection<Customer> _customers;
         public ObservableCollection<Customer> Customers
@@ -51,7 +49,7 @@ namespace bookstore_Management.ViewModels
             {
                 _searchKeywork = value;
                 OnPropertyChanged();
-                //SearchBookCommand.Execute(null);
+                SearchCusCommand.Execute(null);
             }
         }
         #endregion
@@ -82,18 +80,73 @@ namespace bookstore_Management.ViewModels
                 MessageBox.Show("Lỗi khi tải dữ liệu khách hàng: " + result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (result.Data == null) return; // Tránh lỗi khi Data rỗng
+            if (result.Data == null)
+            {
+                MessageBox.Show("db không có dữ liệu!");
+                return; // Tránh lỗi khi Data rỗng
+            }               
 
             var cuss = result.Data.Select(dto => new Customer
             {
+                  CustomerId = dto.CustomerId,
                   Name = dto.Name,
-                  Phone = dto.Phone,
-                  
+                  Phone = dto.Phone,  
+                  Email = dto.Email,
             });
 
             Customers = new ObservableCollection<Customer>(cuss);
         }
         #endregion
 
+        public CustomerViewModel(ICustomerService customerService)
+        {
+            //_customerService = customerService??new CustomerService();
+            var context = new BookstoreDbContext();
+
+            _customerService = new CustomerService(
+            new CustomerRepository(context),
+            new OrderRepository(context)
+            );
+
+            Customers = new ObservableCollection<Customer>();
+
+            LoadCusFromDatabase();
+
+            #region AddCommand
+            AddCusCommand = new RelayCommand<object>((p) =>
+            {
+                var dialog = new Presentation.Views.Dialogs.Customers.AddCustomer();
+                if (dialog.ShowDialog() == true)
+                {
+                    var newCusDto = new DTOs.Customer.Requests.CreateCustomerRequestDto()
+                    {
+                        Name=dialog.CustomerName,
+                        Address=dialog.Address,
+                        Email=dialog.Email,
+                    };
+                    var result = _customerService.AddCustomer(newCusDto);
+                    if (!result.IsSuccess)
+                    {
+                        MessageBox.Show("Lỗi khi thêm khách hàng");
+                        return;
+                    }
+                    LoadCusFromDatabase();
+                }
+            });
+            #endregion
+            #region EditCommand
+            EditCusCommand = new RelayCommand<object>((p) => { });
+            #endregion
+            #region RemoveCommand
+            RemoveCusCommand = new RelayCommand<object>((p) => { });
+            #endregion
+            #region SearchCommand
+            SearchCusCommand = new RelayCommand<object>((p)=> { });
+            #endregion
+            #region Print & Export
+            PrintCommand = new RelayCommand<object>((p)=> { });
+            ExportCommand = new RelayCommand<object>((p) => { });
+            #endregion
+        }
     }
 }

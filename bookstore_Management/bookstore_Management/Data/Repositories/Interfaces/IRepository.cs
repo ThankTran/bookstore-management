@@ -31,6 +31,9 @@ namespace bookstore_Management.Data.Repositories.Interfaces
         void Update(T item); // sửa thông tin
         void Update(IEnumerable<T> items); // overload sửa nhiều thông tin
         
+        // Delete 
+        void Delete(T item);
+        
         
         // Save
         int SaveChanges(); // lưu thông tin

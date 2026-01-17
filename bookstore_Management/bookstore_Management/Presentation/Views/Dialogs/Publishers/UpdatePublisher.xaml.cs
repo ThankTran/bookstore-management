@@ -1,4 +1,6 @@
 ﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.DTOs.Publisher.Requests;
+using bookstore_Management.Models;
 using System;
 using System.Security.Policy;
 using System.Text.RegularExpressions;
@@ -21,7 +23,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
             txtLastModified.Text = "Chưa có";
 
             // Track changes
-            tbPublisherName.TextChanged += (s, e) => _hasChanges = true;
+            cbPublisher.SelectionChanged += (s, e) => _hasChanges = true;
             tbPhone.TextChanged += (s, e) => _hasChanges = true;
             tbEmail.TextChanged += (s, e) => _hasChanges = true;
         }
@@ -36,8 +38,8 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
 
         public string PublisherName
         {
-            get { return tbPublisherName.Text; }
-            set { tbPublisherName.Text = value; }
+            get => cbPublisher.SelectedItem as string;
+            set => cbPublisher.SelectedItem = value;
         }
 
         public string Phone
@@ -82,7 +84,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
                                  DateTime? createdDate = null, DateTime? lastModified = null)
         {
             PublisherID = publisherId;
+<<<<<<< HEAD
             PublisherName = name;
+=======
+            cbPublisher.SelectedItem = name;
+>>>>>>> 0cec4d7c66d093b86ac19a03aba91f2e8d9b22da
             Phone = phone;
             Email = email;
 
@@ -125,6 +131,15 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
                 return;
             }
 
+            // Lấy publisher từ ComboBox (string)
+            var publisherName = cbPublisher.SelectedItem as string;
+            if (string.IsNullOrWhiteSpace(publisherName))
+            {
+                ShowValidationError("Vui lòng chọn nhà xuất bản!");
+                cbPublisher.Focus();
+                return;
+            }
+
             // Confirm update
             var confirmResult = MessageBox.Show(
                 $"Bạn có chắc muốn cập nhật thông tin NXB \"{PublisherName}\"?",
@@ -139,6 +154,43 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
 
             // Update last modified time
             LastModifiedDate = DateTime.Now;
+
+            #region Call Update Service (If nesessary)
+
+            try
+            {
+                // Lấy dữ liệu sạch
+                var publisherId = PublisherID?.Trim();
+                var PublisherName = (cbPublisher.SelectedItem as string)?.Trim();
+                var phone = Phone?.Trim();
+                var email = Email?.Trim();
+
+                // Map sang DTO 
+                var dto = new UpdatePublisherRequestDto
+                {
+                    Name = publisherName,
+                    Phone = phone,
+                    Email = email,
+                };
+
+                // Gọi service cập nhật NXB mà lỗi nên cm xài thì lấy ra
+                //var result = _publisherService.UpdatePublisher(publisherId, dto);
+
+                //if (result == null || !result.IsSuccess)
+                //{
+                //    ShowValidationError(result?.Message ?? "Cập nhật thất bại, vui lòng thử lại.");
+                //    return;
+                //}
+            }
+            catch (Exception ex)
+            {
+                ShowValidationError($"Có lỗi xảy ra khi cập nhật NXB: {ex.Message}");
+                return;
+            }
+
+            #endregion
+
+
 
             // Success - close dialog
             MessageBox.Show(
@@ -199,25 +251,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
 
         private bool ValidateForm()
         {
-            // Check Customer Name
-            if (string.IsNullOrWhiteSpace(tbPublisherName.Text))
+            // Check Publisher
+            if (cbPublisher.SelectedItem == null)
             {
-                ShowValidationError("Vui lòng nhập tên khách hàng!");
-                tbPublisherName.Focus();
-                return false;
-            }
-
-            if (tbPublisherName.Text.Length < 2)
-            {
-                ShowValidationError("Tên khách hàng phải có ít nhất 2 ký tự!");
-                tbPublisherName.Focus();
-                return false;
-            }
-
-            if (!Regex.IsMatch(tbPublisherName.Text, @"^[a-zA-Z\s]+$"))
-            {
-                ShowValidationError("Tên khách hàng chỉ được chứa chữ cái và khoảng trắng!");
-                tbPublisherName.Focus();
+                ShowValidationError("Vui lòng chọn nhà xuất bản!");
+                cbPublisher.Focus();
                 return false;
             }
 

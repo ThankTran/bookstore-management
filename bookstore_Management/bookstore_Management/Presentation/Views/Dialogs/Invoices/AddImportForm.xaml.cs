@@ -12,17 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Presentation.Views.Payment
+namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 {
     /// <summary>
-    /// Interaction logic for OrderDetailView.xaml
+    /// Interaction logic for AddImportForm.xaml
     /// </summary>
-    public partial class OrderDetailView : UserControl
+    public partial class AddImportForm : Window
     {
-        public OrderDetailView()
+        public AddImportForm()
         {
             InitializeComponent();
         }
-
     }
 }

@@ -1,15 +1,14 @@
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
+using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
+using Moq;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 namespace bookstore_Management.Presentation.ViewModels
@@ -118,13 +117,15 @@ namespace bookstore_Management.Presentation.ViewModels
 
         public BookViewModel(IBookService bookService)
         {
-            //// 1. Tạo các Repository trước
-            //var pubRepo = new PublisherRepository(); /*PublisherRepository(); */// Class này thực thi IPublisherRepository
-            //var billRepo = new ImportBillDetailRepository();
-
-            //// 2. Truyền nó vào BookService
-            //_bookService = new BookService(pubRepo, billRepo);
-            _bookService = bookService ?? new BookService();
+            //_bookService = bookService ?? new BookService();
+            var context = new BookstoreDbContext();   
+            
+            _bookService = new BookService(
+            new BookRepository(context),
+            new PublisherRepository(context),
+            new ImportBillDetailRepository(context)
+            );
+            
 
             Books = new ObservableCollection<Book>();
 

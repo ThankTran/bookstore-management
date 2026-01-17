@@ -7,6 +7,5 @@ namespace bookstore_Management.Services.Interfaces
     internal interface IAuthService
     {
         Result<LoginResponseDto> Login(LoginRequestDto dto);
-        Result ChangePassword(string userId, ChangePasswordRequestDto dto);
     }
 }

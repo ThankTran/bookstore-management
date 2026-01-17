@@ -42,7 +42,6 @@ namespace bookstore_Management.Services.Implementations
 
                 var user = new User
                 {
-                    UserId = dto.StaffId, // dùng StaffId làm key user
                     Username = dto.Username.Trim(),
                     PasswordHash = Encryptor.Hash(dto.Password),
                     StaffId = dto.StaffId,
@@ -51,7 +50,7 @@ namespace bookstore_Management.Services.Implementations
 
                 _userRepository.Add(user);
                 _userRepository.SaveChanges();
-                return Result<string>.Success(user.UserId, "Tạo tài khoản thành công");
+                return Result<string>.Success(user.Username, "Tạo tài khoản thành công");
             }
             catch (Exception ex)
             {
@@ -66,12 +65,6 @@ namespace bookstore_Management.Services.Implementations
                 var user = _userRepository.GetById(userId);
                 if (user == null || user.DeletedDate != null)
                     return Result.Fail("User không tồn tại");
-
-                if (!Encryptor.Verify(dto.OldPassword, user.PasswordHash))
-                    return Result.Fail("Mật khẩu cũ không đúng");
-
-                if (dto.NewPassword != dto.ConfirmPassword)
-                    return Result.Fail("Mật khẩu xác nhận không khớp");
 
                 user.PasswordHash = Encryptor.Hash(dto.NewPassword);
                 user.UpdatedDate = DateTime.Now;
@@ -176,6 +169,7 @@ namespace bookstore_Management.Services.Implementations
                 return Result<UserRole>.Fail($"Lỗi: {ex.Message}");
             }
         }
+        
     }
 }
 

@@ -58,15 +58,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             set { cbCategory.SelectedItem = value; }
         }
 
-        public string Publisher
+        public string SelectedPublisher
         {
-            get { return tbPublisher.Text; }
-            set { tbPublisher.Text = value; }
+            get => cbPublisher.SelectedItem as string;
         }
 
-        public decimal SalePrice => decimal.TryParse(tbSalePrice.Text, out var val) ? val : 0;
 
-        public decimal ImportPrice => decimal.TryParse(tbImportPrice.Text, out var val) ? val : 0;
+        public decimal SalePrice => decimal.TryParse(tbSalePrice.Text, out var val) ? val : 0;
 
         #endregion
 
@@ -76,22 +74,32 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
         {
             // Validate all required fields
             if (!ValidateForm())
+                return;
+
+            // Lấy publisher từ ComboBox
+            var publisherName = cbPublisher.SelectedItem as string; // hoặc SelectedPublisher
+
+            if (string.IsNullOrWhiteSpace(publisherName))
             {
+                ShowValidationError("Vui lòng chọn nhà xuất bản!");
+                cbPublisher.Focus();
                 return;
             }
 
-            // Additional business logic validation
-            if (SalePrice <= ImportPrice)
-            {
-                ShowValidationError("Giá bán phải lớn hơn giá nhập!");
-                tbSalePrice.Focus();
-                return;
-            }
+            // Nếu có DTO để trả ra ngoài/đẩy vào service, map ở đây:
+            // var dto = new CreateBookRequestDto {
+            //     BookName = tbBookName.Text.Trim(),
+            //     Author = tbAuthor.Text.Trim(),
+            //     Category = (BookCategory)cbCategory.SelectedItem,
+            //     PublisherName = publisherName,
+            //     ImportPrice = ImportPrice,
+            //     SalePrice = SalePrice
+            // };
 
-            // Success - close dialog
             this.DialogResult = true;
             this.Close();
         }
+
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
@@ -164,24 +172,10 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             }
 
             // Check Publisher
-            if (string.IsNullOrWhiteSpace(tbPublisher.Text))
+            if (cbPublisher.SelectedItem == null)
             {
-                ShowValidationError("Vui lòng nhập nhà xuất bản!");
-                tbPublisher.Focus();
-                return false;
-            }
-
-            if (tbPublisher.Text.Length < 2)
-            {
-                ShowValidationError("Tên nhà xuất bản phải có ít nhất 2 ký tự!");
-                tbPublisher.Focus();
-                return false;
-            }
-
-            if (!Regex.IsMatch(tbPublisher.Text, @"^[a-zA-Z\s]+$"))
-            {
-                ShowValidationError("Tên nhà xuất bản chỉ được chứa chữ cái và khoảng trắng!");
-                tbPublisher.Focus();
+                ShowValidationError("Vui lòng chọn nhà xuất bản!");
+                cbPublisher.Focus();
                 return false;
             }
 
@@ -190,28 +184,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             {
                 ShowValidationError("Vui lòng chọn thể loại sách!");
                 cbCategory.Focus();
-                return false;
-            }
-
-            // Check Import Price
-            if (string.IsNullOrWhiteSpace(tbImportPrice.Text))
-            {
-                ShowValidationError("Vui lòng nhập giá nhập!");
-                tbImportPrice.Focus();
-                return false;
-            }
-
-            if (ImportPrice <= 0)
-            {
-                ShowValidationError("Giá nhập phải lớn hơn 0!");
-                tbImportPrice.Focus();
-                return false;
-            }
-
-            if (ImportPrice > 1000000000)
-            {
-                ShowValidationError("Giá nhập không hợp lệ (quá lớn)!");
-                tbImportPrice.Focus();
                 return false;
             }
 
@@ -252,8 +224,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
         {
             return !string.IsNullOrWhiteSpace(tbBookName.Text) ||
                    !string.IsNullOrWhiteSpace(tbAuthor.Text) ||
-                   !string.IsNullOrWhiteSpace(tbPublisher.Text) ||
-                   !string.IsNullOrWhiteSpace(tbImportPrice.Text) ||
                    !string.IsNullOrWhiteSpace(tbSalePrice.Text);
         }
 
