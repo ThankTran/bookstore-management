@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
-using bookstore_Management.ViewModels;
+using bookstore_Management.Presentation.ViewModels;
 
-namespace bookstore_Management.Views.Orders
+namespace bookstore_Management.Presentation.Views.Orders
 {
     /// <summary>
     /// Interaction logic for PaymentView.xaml
@@ -10,7 +10,7 @@ namespace bookstore_Management.Views.Orders
     {
         public PaymentView()
         {
-            InitializeComponent();
+            //InitializeComponent();
             //DataContext = new PaymentViewModel();
         }
     }
