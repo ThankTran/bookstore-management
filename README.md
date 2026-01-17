@@ -107,6 +107,8 @@ BookstoreManagement/
 ├── App.xaml
 └── BookstoreManagement.sln
 
+```
+
 ---
 
 ## ⚙️ Installation Guide
