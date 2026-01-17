@@ -23,29 +23,25 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
     /// <summary>
     /// Interaction logic for ExportExcelCustomer.xaml
     /// </summary>
-    /// <summary>
-    /// Interaction logic for ExportExcelCustomer.xaml
-    /// </summary>
+
     public partial class ExportExcelCustomer : Window
     {
-        private List<Customer> _dataSource;
+        private readonly ICustomerService _customerService;
         private int _totalRecords;
 
-        private readonly ICustomerService _customerService;
         /// <summary>
-        /// Constructor với dữ liệu cần xuất
+        /// Constructor - chỉ cần service, không cần truyền data
         /// </summary>
-        public ExportExcelCustomer(ICustomerService customerService, List<Customer> customers = null)
+        public ExportExcelCustomer(ICustomerService customerService)
         {
             InitializeComponent();
             _customerService = customerService;
 
-            _dataSource = customers ?? new List<Customer>();
-            _totalRecords = _dataSource.Count;
+            // Lấy tổng số từ service
+            var result = customerService.GetCustomerList();
+            _totalRecords = result.IsSuccess ? result.Data.Count() : 0;
             txtTotalRecords.Text = _totalRecords.ToString();
         }
-
-
 
         #region Event Handlers
 
@@ -90,10 +86,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                     return;
                 }
 
-                // Kiểm tra có dữ liệu
-                if (_dataSource == null || _dataSource.Count == 0)
+                //  LẤY DỮ LIỆU TỪ SERVICE
+                var result = _customerService.GetCustomerList();
+                if (!result.IsSuccess || result.Data == null || !result.Data.Any())
                 {
-                    MessageBox.Show("Không có dữ liệu để xuất!",
+                    MessageBox.Show(result.ErrorMessage ?? "Không có dữ liệu để xuất!",
                                   "Thông báo",
                                   MessageBoxButton.OK,
                                   MessageBoxImage.Warning);
@@ -108,7 +105,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 string defaultPath = System.IO.Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                         "Downloads");
-
 
                 switch (selectedFormat)
                 {
@@ -155,6 +151,17 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             if (saveDialog.ShowDialog() != true)
                 return;
 
+            // ✅ LẤY DỮ LIỆU TỪ SERVICE
+            var result = _customerService.GetCustomerList();
+            if (!result.IsSuccess || result.Data == null)
+            {
+                MessageBox.Show(result.ErrorMessage ?? "Không lấy được danh sách khách hàng để xuất!",
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var data = result.Data.ToList();
+
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Danh sách khách hàng");
@@ -169,17 +176,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                     worksheet.Cell(1, col).Style.Fill.BackgroundColor = XLColor.LightBlue;
                     col++;
                 }
-
-                var result = _customerService.GetCustomerList();
-                if (!result.IsSuccess || result.Data == null)
-                {
-                    MessageBox.Show(result.ErrorMessage ?? "Không lấy được danh sách khách hàng để xuất!",
-                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                var data = result.Data.ToList(); // IEnumerable<CustomerListResponseDto>
-
 
                 // Thêm dữ liệu
                 int row = 2;
@@ -204,7 +200,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                         worksheet.Cell(row, col++).Value = customer.Email ?? "";
 
                     if (chkAddress.IsChecked == true)
-                        worksheet.Cell(row, col++).Value = "";
+                        worksheet.Cell(row, col++).Value = customer.Address ?? "";
 
                     if (chkRank.IsChecked == true)
                         worksheet.Cell(row, col++).Value = customer.MemberLevel.ToString();
@@ -214,8 +210,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
 
                     row++;
                 }
-
-
 
                 // Auto-fit columns
                 worksheet.Columns().AdjustToContents();
@@ -245,7 +239,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             if (saveDialog.ShowDialog() != true)
                 return;
 
-            // LẤY DATA TỪ SERVICE giống Excel (tránh phụ thuộc _dataSource)
+            // ✅ LẤY DỮ LIỆU TỪ SERVICE
             var result = _customerService.GetCustomerList();
             if (!result.IsSuccess || result.Data == null)
             {
@@ -271,9 +265,9 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                     if (chkCustomerName.IsChecked == true) values.Add($"\"{customer.Name ?? ""}\"");
                     if (chkPhone.IsChecked == true) values.Add($"\"{customer.Phone ?? ""}\"");
                     if (chkEmail.IsChecked == true) values.Add($"\"{customer.Email ?? ""}\"");
-                    if (chkAddress.IsChecked == true) values.Add($"\"\""); // DTO list view chưa có Address
+                    if (chkAddress.IsChecked == true) values.Add($"\"{customer.Address ?? ""}\"");
                     if (chkRank.IsChecked == true) values.Add($"\"{customer.MemberLevel}\"");
-                    if (chkPoint.IsChecked == true) values.Add((customer.LoyaltyPoints).ToString());
+                    if (chkPoint.IsChecked == true) values.Add(customer.LoyaltyPoints.ToString());
 
                     writer.WriteLine(string.Join(",", values));
                 }
@@ -283,13 +277,12 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-
         /// <summary>
         /// Xuất ra file PDF
         /// </summary>
         private void ExportToPdf(string path, string fileName)
         {
-            // TODO: Implement PDF export using iTextSharp or similar library
+            // Implement PDF export using iTextSharp or similar library
             MessageBox.Show("Chức năng xuất PDF đang được phát triển!",
                           "Thông báo",
                           MessageBoxButton.OK,

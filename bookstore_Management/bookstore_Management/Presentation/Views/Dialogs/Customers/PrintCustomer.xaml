@@ -71,7 +71,8 @@
                             ToolTip="Đóng">
                         <Button Background="Transparent"
                                 BorderThickness="0"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                Click="BtnClose_Click">
                             <TextBlock Text="✕" 
                                        FontSize="16"
                                        FontWeight="Bold"
@@ -201,7 +202,8 @@
                                         Width="30" Height="30"
                                         Background="#F5F5F5"
                                         BorderThickness="0"
-                                        Cursor="Hand"/>
+                                        Cursor="Hand"
+                                        Click="BtnDecrease_Click"/>
                                 <TextBox Grid.Column="1"
                                          x:Name="txtCopies"
                                          Text="1"
@@ -221,7 +223,7 @@
                                         Foreground="White"
                                         BorderThickness="0"
                                         Cursor="Hand"
-                                        />
+                                        Click="BtnIncrease_Click"/>
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -331,7 +333,9 @@
                             <Button Background="Transparent"
                                     BorderThickness="0"
                                     Cursor="Hand"
-                                    Height="42" Margin="-35,0,-35,0">
+                                    Height="42" 
+                                    Margin="-35,0,-35,0"
+                                    Click="BtnPreview_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Presentation/AppResources/Images/Icons/Functions/preview.png"
                                            Width="37"
@@ -362,7 +366,7 @@
                             <Button Background="Transparent"
                                     BorderThickness="0"
                                     Cursor="Hand" Height="42" Margin="-12,0,-12,0"
-                                    >
+                                    Click="BtnPrint_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Presentation/AppResources/Images/Icons/Functions/print.png"
                                            Width="30"
