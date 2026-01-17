@@ -160,6 +160,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Publishers\ExportExcelPublisher.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Publishers\PrintPublisher.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Publishers\UpdatePublisher.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -176,7 +184,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-
     <Page Include="Presentation\Views\Dialogs\Share\Warning.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -429,7 +436,6 @@
     <Compile Include="Presentation\Views\Dialogs\Invoices\SelectBookDialog.xaml.cs">
       <DependentUpon>SelectBookDialog.xaml</DependentUpon>
     </Compile>
-
     <Compile Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml.cs">
       <DependentUpon>AddCustomer.xaml</DependentUpon>
     </Compile>
@@ -439,20 +445,24 @@
     <Compile Include="Presentation\Views\Dialogs\Publishers\AddPublisher.xaml.cs">
       <DependentUpon>AddPublisher.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Publishers\ExportExcelPublisher.xaml.cs">
+      <DependentUpon>ExportExcelPublisher.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Publishers\PrintPublisher.xaml.cs">
+      <DependentUpon>PrintPublisher.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Publishers\UpdatePublisher.xaml.cs">
       <DependentUpon>UpdatePublisher.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\Delete.xaml.cs">
       <DependentUpon>Delete.xaml</DependentUpon>
     </Compile>
-
     <Compile Include="Presentation\Views\Dialogs\Share\NDelete.xaml.cs">
       <DependentUpon>NDelete.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\NUpdate.xaml.cs">
       <DependentUpon>NUpdate.xaml</DependentUpon>
     </Compile>
-
     <Compile Include="Presentation\Views\Dialogs\Share\Warning.xaml.cs">
       <DependentUpon>Warning.xaml</DependentUpon>
     </Compile>
@@ -650,8 +660,6 @@
     <Resource Include="Presentation\AppResources\Images\Icons\Login\user.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Sidebar\timeline.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Presentation\Views\Dialogs\Invoices\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
