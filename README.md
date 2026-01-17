@@ -76,32 +76,34 @@ The project is developed following **clean architecture principles** and applies
 
 ## 📂 Project Structure
 
+```text
 BookstoreManagement/
 │
-├── Core/ # Constants, Enums, Exceptions, Interfaces, Results, Utils
+├── Core/                    # Constants, Enums, Exceptions, Interfaces, Results, Utils
 ├── Data/
-│ ├── Context/ # DbContext
-│ ├── Repositories/ # Data access layer
+│   ├── Context/             # DbContext
+│   └── Repositories/        # Data access layer
 │
-├── Models/ # Domain models
+├── Models/                  # Domain models
 │
-├── DTOs/ # Request / Response DTOs
+├── DTOs/                    # Request / Response DTOs
 │
 ├── Services/
-│ ├── Interfaces/
-│ └── Implementations/
+│   ├── Interfaces/
+│   └── Implementations/
 │
-├── Migrations
+├── Migrations/              # Database migrations
 │
-├── Helpers/ # Print / Export
+├── Helpers/                 # Print / Export helpers
 │
 ├── Presentation/
-│ ├── AppResources
-│ ├── Converters
-│ ├── Views/ # XAML Views, Dialogs
-│ ├── ViewModels/ # MVVM ViewModels
+│   ├── AppResources/        # Styles, Colors, Fonts
+│   ├── Converters/          # Value converters
+│   ├── Views/               # XAML Views, Dialogs
+│   └── ViewModels/          # MVVM ViewModels
 │
-├──Tests
+├── Tests/                   # Unit tests
+│
 ├── App.xaml
 └── BookstoreManagement.sln
 
@@ -112,6 +114,8 @@ BookstoreManagement/
 ### 1️⃣ Database Setup
 
 ### 2️⃣ Build & Run
+
+---
 
 ## 🚀 Usage
 
