@@ -207,6 +207,7 @@
                     BorderBrush="#E0E0E0"
                     BorderThickness="1"
                     Padding="0">
+                
                 <Border.Effect>
                     <DropShadowEffect Color="#000000" 
                                     BlurRadius="15" 
@@ -260,18 +261,21 @@
                               Style="{StaticResource MainDataGrid}"
                               ItemsSource="{Binding Books}"
                               SelectedItem="{Binding SelectedBook}"
+                              MouseDoubleClick="dgBooks_MouseDoubleClick"
                               LoadingRow="DataGrid_LoadingRow"
                               Margin="0">
 
                         <DataGrid.Resources>
-                            <Style TargetType="ScrollBar" BasedOn="{StaticResource DataGridScrollBar}"/>
+                            <Style TargetType="ScrollBar" 
+                                   BasedOn="{StaticResource DataGridScrollBar}"/>
                         </DataGrid.Resources>
+                        
 
                         <DataGrid.Columns>
                             <!-- STT -->
                             <DataGridTextColumn Header="STT" 
                                                 Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}" 
-                                                Width="70"
+                                                Width="Auto"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock" BasedOn="{StaticResource CenterAlignedCell}">
@@ -283,7 +287,7 @@
                             <!-- Mã sách -->
                             <DataGridTextColumn Header="Mã sách" 
                                                 Binding="{Binding BookId}" 
-                                                Width="110"
+                                                Width="Auto"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock" BasedOn="{StaticResource PrimaryColorCell}">
@@ -329,7 +333,7 @@
                                                 ElementStyle="{StaticResource CenterAlignedCell}"/>
 
                             <!-- Thể loại -->
-                            <DataGridTemplateColumn Header="Thể loại" Width="120">
+                            <DataGridTemplateColumn Header="Thể loại" Width="Auto">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Border CornerRadius="12" 
@@ -387,7 +391,7 @@
                             <!-- Giá bán -->
                             <DataGridTextColumn Header="Giá bán" 
                                                 Binding="{Binding SalePrice, StringFormat={}{0:N0} ₫}" 
-                                                Width="130"
+                                                Width="Auto"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock" BasedOn="{StaticResource RightAlignedCell}">
@@ -398,7 +402,7 @@
                             </DataGridTextColumn>
 
                             <!-- Actions -->
-                            <DataGridTemplateColumn Header="Thao tác" Width="130">
+                            <DataGridTemplateColumn Header="Thao tác" Width="Auto">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" 
@@ -456,7 +460,7 @@
                         <Grid>
                             <TextBlock HorizontalAlignment="Left"
                                        VerticalAlignment="Center">
-                                <Run Text="Nhấp đúp vào dòng để xem chi tiết sách"
+                                <Run Text="📖 Quản lý thông tin sách"
                                      FontSize="12"
                                      Foreground="#999999"
                                      FontStyle="Italic"/>

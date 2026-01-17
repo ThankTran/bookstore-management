@@ -115,6 +115,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Books\ExportExcelBook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Books\PrintBook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Books\UpdateBook.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -128,6 +136,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Invoices\CreateImportBill.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Invoices\CreateOrderBill.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Invoices\SelectBookDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Publishers\AddPublisher.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -136,11 +156,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Share\ExportExcel.xaml">
     <Page Include="Presentation\Views\Dialogs\Share\Delete.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Presentation\Views\Dialogs\Share\ExportExcel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -161,6 +179,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\Views\Dialogs\Staffs\AddStaff.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Staffs\PrintStaff.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -380,8 +402,26 @@
     <Compile Include="Presentation\Views\Dialogs\Books\AddBookDialog.xaml.cs">
       <DependentUpon>AddBookDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\ExportExcelBook.xaml.cs">
+      <DependentUpon>ExportExcelBook.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\PrintBook.xaml.cs">
+      <DependentUpon>PrintBook.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Books\UpdateBook.xaml.cs">
       <DependentUpon>UpdateBook.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Invoices\CreateImportBill.xaml.cs">
+      <DependentUpon>CreateImportBill.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Invoices\CreateOrderBill.xaml.cs">
+      <DependentUpon>CreateOrderBill.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Invoices\SelectBookDialog.xaml.cs">
+      <DependentUpon>SelectBookDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\Print.xaml.cs">
+      <DependentUpon>Print.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Customers\AddCustomer.xaml.cs">
       <DependentUpon>AddCustomer.xaml</DependentUpon>
@@ -415,6 +455,9 @@
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Staffs\AddStaff.xaml.cs">
       <DependentUpon>AddStaff.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Staffs\PrintStaff.xaml.cs">
+      <DependentUpon>PrintStaff.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Staffs\UpdateStaff.xaml.cs">
       <DependentUpon>UpdateStaff.xaml</DependentUpon>
@@ -594,6 +637,8 @@
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Medium.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-Regular.ttf" />
     <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Functions\preview.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Functions\calendar.png" />
     <Content Include="Services\ServiceOverview.md" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\export.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\print.png" />

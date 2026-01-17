@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 {
     /// <summary>
-    /// Interaction logic for AddOrderForm.xaml
+    /// Interaction logic for CreateOrderBill.xaml
     /// </summary>
-    public partial class AddOrderForm : Window
+    public partial class CreateOrderBill : Window
     {
-        public AddOrderForm()
+        public CreateOrderBill()
         {
             InitializeComponent();
         }
