@@ -3,7 +3,7 @@
     /// <summary>
     /// Các tên feature trong hệ thống
     /// </summary>
-    public enum FeatureConstants
+    public enum Feature
     {
         Payment = 0,
         Customer = 1,
@@ -12,6 +12,7 @@
         Staff = 4,
         Dashboard = 5,
         Invoices = 6,
-        Accounts = 7
+        Accounts = 7,   
+        Report = 8
     }
 }   

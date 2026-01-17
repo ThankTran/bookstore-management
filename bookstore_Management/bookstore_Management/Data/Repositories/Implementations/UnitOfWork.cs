@@ -1,29 +1,31 @@
 ﻿using System;
 using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.implementations;
+using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Data.Repositories.Interfaces;
 
 namespace bookstore_Management.Data.Repositories.Implementations
 {
-    public class UnitOfWork : IDisposable
+    internal class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly BookstoreDbContext _context;
 
-        internal IBookRepository Books { get; }
-        internal ICustomerRepository Customers { get; }
-        internal IPublisherRepository Publishers { get; }
-        internal IOrderRepository Orders { get; }
-        internal IOrderDetailRepository OrderDetails { get; }
-        internal IStaffRepository Staffs { get; }
-        internal IImportBillRepository ImportBills { get; }
-        internal IImportBillDetailRepository ImportBillDetails { get; }
-        internal IUserRepository Users { get; }
-        internal IAuditLogRepository AuditLogs { get; }
-
+        // Dùng public thay vì internal để có thể truy cập từ bên ngoài
+        public IBookRepository Books { get; }
+        public ICustomerRepository Customers { get; }
+        public IPublisherRepository Publishers { get; }
+        public IOrderRepository Orders { get; }
+        public IOrderDetailRepository OrderDetails { get; }
+        public IStaffRepository Staffs { get; }
+        public IImportBillRepository ImportBills { get; }
+        public IImportBillDetailRepository ImportBillDetails { get; }
+        public IUserRepository Users { get; }
+        public IAuditLogRepository AuditLogs { get; }
         public UnitOfWork(BookstoreDbContext context)
         {
             _context = context;
 
+            // Khởi tạo tất cả repositories với cùng 1 DbContext
             Books = new BookRepository(_context);
             Customers = new CustomerRepository(_context);
             Publishers = new PublisherRepository(_context);
@@ -36,14 +38,22 @@ namespace bookstore_Management.Data.Repositories.Implementations
             AuditLogs = new AuditLogRepository(_context);
         }
 
-        public int Complete()
+        // Phương thức lưu tất cả thay đổi
+        public int SaveChanges()
         {
             return _context.SaveChanges();
         }
 
+        // Thêm phương thức Complete (alias của SaveChanges)
+        public int Complete()
+        {
+            return SaveChanges();
+        }
+
+        // Giải phóng resources
         public void Dispose()
         {
-            _context.Dispose();
+            _context?.Dispose();
         }
     }
 }
