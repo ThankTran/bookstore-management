@@ -34,8 +34,8 @@
                     Background="{StaticResource PrimaryBrush}"
                     CornerRadius="20,20,0,0"
                     Padding="30,20"
-                    >
-                    <!--MouseLeftButtonDown="Header_MouseLeftButtonDown"-->
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                    <!---->
                     <Grid>
                         <StackPanel Orientation="Horizontal">
                             <Border Background="White"
@@ -211,8 +211,8 @@
                                          FontWeight="SemiBold"
                                          VerticalContentAlignment="Center"
                                          Margin="10,0"
-                                         />
-                                    <!--PreviewTextInput="NumberOnly_PreviewTextInput"-->
+                                         PreviewTextInput="NumberOnly_PreviewTextInput"/>
+                                    <!---->
                                     <Button Grid.Column="2"
                                         Content="+"
                                         FontSize="18"

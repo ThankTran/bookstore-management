@@ -24,7 +24,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             tbBookName.TextChanged += (s, e) => _hasChanges = true;
             tbAuthor.TextChanged += (s, e) => _hasChanges = true;
             cbPublisher.SelectionChanged += (s, e) => _hasChanges = true;
-            tbImportPrice.TextChanged += (s, e) => _hasChanges = true;
             tbSalePrice.TextChanged += (s, e) => _hasChanges = true;
             cbCategory.SelectionChanged += (s, e) => _hasChanges = true;
         }
@@ -68,11 +67,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             set { tbSalePrice.Text = value.ToString("N0"); }
         }
 
-        public decimal ImportPrice
-        {
-            get { return decimal.TryParse(tbImportPrice.Text, out var val) ? val : 0; }
-            set { tbImportPrice.Text = value.ToString("N0"); }
-        }
 
         public DateTime CreatedDate
         {
@@ -109,7 +103,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             Author = author;
             cbPublisher.SelectedItem = publisher; 
             Category = category;
-            ImportPrice = importPrice;
             SalePrice = salePrice;
 
             if (createdDate.HasValue)
@@ -156,13 +149,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
                 return;
             }
 
-            // Additional business logic validation
-            if (SalePrice <= ImportPrice)
-            {
-                ShowValidationError("Giá bán phải lớn hơn giá nhập!");
-                tbSalePrice.Focus();
-                return;
-            }
 
             // Confirm update
             var confirmResult = MessageBox.Show(
@@ -302,27 +288,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
                 return false;
             }
 
-            // Check Import Price
-            if (string.IsNullOrWhiteSpace(tbImportPrice.Text))
-            {
-                ShowValidationError("Vui lòng nhập giá nhập!");
-                tbImportPrice.Focus();
-                return false;
-            }
-
-            if (ImportPrice <= 0)
-            {
-                ShowValidationError("Giá nhập phải lớn hơn 0!");
-                tbImportPrice.Focus();
-                return false;
-            }
-
-            if (ImportPrice > 1000000000) 
-            {
-                ShowValidationError("Giá nhập không hợp lệ (quá lớn)!");
-                tbImportPrice.Focus();
-                return false;
-            }
 
             // Check Sale Price
             if (string.IsNullOrWhiteSpace(tbSalePrice.Text))

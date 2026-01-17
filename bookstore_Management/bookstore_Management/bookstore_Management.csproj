@@ -105,6 +105,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Presentation\Views\Customers\ExportExcelCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Customers\PrintCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <!-- Views - Dialogs - Accounts -->
     <Page Include="Presentation\Views\Dialogs\Accounts\AddAccountDialog.xaml">
       <SubType>Designer</SubType>
@@ -394,6 +402,12 @@
     </Compile>
     <Compile Include="Presentation\Views\Customers\CustomerListView.xaml.cs">
       <DependentUpon>CustomerListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Customers\ExportExcelCustomer.xaml.cs">
+      <DependentUpon>ExportExcelCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Customers\PrintCustomer.xaml.cs">
+      <DependentUpon>PrintCustomer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Books\AddBookDialog.xaml.cs">
       <DependentUpon>AddBookDialog.xaml</DependentUpon>
