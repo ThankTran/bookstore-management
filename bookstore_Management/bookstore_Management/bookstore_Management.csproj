@@ -309,6 +309,7 @@
     <Compile Include="DTOs\Book\Responses\BookDetailResponseDto.cs" />
     <Compile Include="DTOs\Book\Responses\BookListResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\BookSalesReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\CustomerPurchaseRatioDto.cs" />
     <Compile Include="DTOs\Common\Reports\CustomerSpendingReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventoryReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventorySummaryReportResponseDto.cs" />

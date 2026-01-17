@@ -38,8 +38,6 @@ namespace bookstore_Management.Data.Repositories.Implementations
             if (!bookIdList.Any())
                 return new Dictionary<string, decimal?>();
 
-            // Get latest import price for each book
-            // Join with ImportBill to get CreatedDate for ordering
             var result = _dbSet
                 .Where(ibd => ibd.DeletedDate == null && bookIdList.Contains(ibd.BookId))
                 .Join(_dbContext.Set<ImportBill>(),
