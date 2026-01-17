@@ -145,7 +145,7 @@ namespace bookstore_Management.Presentation.ViewModels
                         Author = dialog.Author,
                         Category = dialog.Category,
                         SalePrice = dialog.SalePrice,
-                        PublisherName = dialog.Publisher
+                        PublisherName = dialog.cbPublisher.SelectedItem as string,
                     };
                     var result = _bookService.CreateBook(newBookDto);
                     if (!result.IsSuccess)

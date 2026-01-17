@@ -19,48 +19,48 @@ namespace bookstore_Management.Migrations
         protected override void Seed(bookstore_Management.Data.Context.BookstoreDbContext context)
         {
             #region Publishers
-  // ============================================
-  // Publishers
-  // ============================================
-  var publishers = new List<Publisher>
-  {
-      new Publisher { Id = "NXB001", Name = "NXB Kim Đồng", Phone = "0243854354", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB002", Name = "NXB Trẻ", Phone = "0283931628", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB003", Name = "NXB Phụ Nữ", Phone = "0243822539", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB004", Name = "NXB Giáo Dục Việt Nam", Phone = "02438220801", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB005", Name = "NXB Lao Động", Phone = "0243854687", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB006", Name = "NXB Văn Học", Phone = "0243943485", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB007", Name = "NXB Tổng Hợp TP.HCM", Phone = "02838222840", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB008", Name = "NXB Chính Trị Quốc Gia", Phone = "02437472007", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB009", Name = "NXB Khoa Học & Kỹ Thuật", Phone = "0243971632", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB010", Name = "NXB Đại Học Quốc Gia Hà Nội", Phone = "02437547963", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB011", Name = "NXB Đại Học Quốc Gia TP.HCM", Phone = "02837242181", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB012", Name = "NXB Thanh Niên", Phone = "02838293801", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB013", Name = "NXB Văn Hóa – Văn Nghệ", Phone = "02838368907", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB014", Name = "NXB Hồng Đức", Phone = "02437732295", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB015", Name = "NXB Thế Giới", Phone = "02439347968", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB016", Name = "NXB Công Thương", Phone = "02422205555", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB017", Name = "NXB Y Học", Phone = "02438225505", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB018", Name = "NXB Tài Chính", Phone = "02439423365", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB019", Name = "NXB Giao Thông Vận Tải", Phone = "02439422055", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB020", Name = "NXB Xây Dựng", Phone = "02439430578", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB021", Name = "NXB Mỹ Thuật", Phone = "02438223657", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB022", Name = "NXB Âm Nhạc", Phone = "02439336572", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB023", Name = "NXB Sự Thật", Phone = "02437472222", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB024", Name = "NXB Thông Tin & Truyền Thông", Phone = "02439444567", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB025", Name = "NXB Kinh Tế Quốc Dân", Phone = "02438696699", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB026", Name = "NXB Đại Học Sư Phạm", Phone = "02437547890", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB027", Name = "NXB Tư Pháp", Phone = "02438222888", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB028", Name = "NXB Khoa Học Xã Hội", Phone = "02439332211", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB029", Name = "NXB Dân Trí", Phone = "02439441122", CreatedDate = DateTime.Now },
-      new Publisher { Id = "NXB030", Name = "NXB Tri Thức", Phone = "02439335544", CreatedDate = DateTime.Now }
-  };
+            // ============================================
+            // Publishers
+            // ============================================
+            var publishers = new List<Publisher>
+            {
+                new Publisher { Id = "NXB001", Name = "NXB Kim Đồng", Phone = "0243854354", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB002", Name = "NXB Trẻ", Phone = "0283931628", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB003", Name = "NXB Phụ Nữ", Phone = "0243822539", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB004", Name = "NXB Giáo Dục Việt Nam", Phone = "02438220801", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB005", Name = "NXB Lao Động", Phone = "0243854687", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB006", Name = "NXB Văn Học", Phone = "0243943485", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB007", Name = "NXB Tổng Hợp TP.HCM", Phone = "02838222840", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB008", Name = "NXB Chính Trị Quốc Gia", Phone = "02437472007", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB009", Name = "NXB Khoa Học & Kỹ Thuật", Phone = "0243971632", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB010", Name = "NXB Đại Học Quốc Gia Hà Nội", Phone = "02437547963", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB011", Name = "NXB Đại Học Quốc Gia TP.HCM", Phone = "02837242181", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB012", Name = "NXB Thanh Niên", Phone = "02838293801", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB013", Name = "NXB Văn Hóa – Văn Nghệ", Phone = "02838368907", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB014", Name = "NXB Hồng Đức", Phone = "02437732295", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB015", Name = "NXB Thế Giới", Phone = "02439347968", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB016", Name = "NXB Công Thương", Phone = "02422205555", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB017", Name = "NXB Y Học", Phone = "02438225505", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB018", Name = "NXB Tài Chính", Phone = "02439423365", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB019", Name = "NXB Giao Thông Vận Tải", Phone = "02439422055", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB020", Name = "NXB Xây Dựng", Phone = "02439430578", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB021", Name = "NXB Mỹ Thuật", Phone = "02438223657", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB022", Name = "NXB Âm Nhạc", Phone = "02439336572", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB023", Name = "NXB Sự Thật", Phone = "02437472222", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB024", Name = "NXB Thông Tin & Truyền Thông", Phone = "02439444567", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB025", Name = "NXB Kinh Tế Quốc Dân", Phone = "02438696699", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB026", Name = "NXB Đại Học Sư Phạm", Phone = "02437547890", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB027", Name = "NXB Tư Pháp", Phone = "02438222888", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB028", Name = "NXB Khoa Học Xã Hội", Phone = "02439332211", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB029", Name = "NXB Dân Trí", Phone = "02439441122", CreatedDate = DateTime.Now },
+                new Publisher { Id = "NXB030", Name = "NXB Tri Thức", Phone = "02439335544", CreatedDate = DateTime.Now }
+            };
 
-  context.Publishers.AddOrUpdate(s => s.Id, publishers.ToArray());
-  context.SaveChanges();
+            context.Publishers.AddOrUpdate(s => s.Id, publishers.ToArray());
+            context.SaveChanges();
 
-  #endregion  
-            
+            #endregion
+
             #region Books
             // ============================================
             // Books
@@ -373,38 +373,39 @@ namespace bookstore_Management.Migrations
             // ============================================
             var users = new List<User>
             {
-                new User {  Username = "admin", PasswordHash = Encryptor.Hash("Admin@123"), StaffId = "NV0001", CreatedDate = DateTime.Now },
-                new User {  Username = "cust.manager", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0002", CreatedDate = DateTime.Now },
-                new User { Username = "sales.staff01", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0003", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff02", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0004", CreatedDate = DateTime.Now },
-                new User {  Username = "inventory.manager01", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0005", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff03", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0006", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff04", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0007", CreatedDate = DateTime.Now },
-                new User {  Username = "inventory.manager02", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0008", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff05", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0009", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff06", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0010", CreatedDate = DateTime.Now },
-                new User {  Username = "cust.manager02", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0012", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff08", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0013", CreatedDate = DateTime.Now },
+                new User {/* UserId = "NV0001" ,*/ Username = "admin", PasswordHash = Encryptor.Hash("Admin@123"), StaffId = "NV0001", CreatedDate = DateTime.Now },
+                new User { /*UserId = "NV0002",*/ Username = "cust.manager", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0002", CreatedDate = DateTime.Now },
+                new User { /*UserId = "NV0003",*/ Username = "sales.staff01", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0003", CreatedDate = DateTime.Now },
+                new User { /*UserId = "NV0004",*/ Username = "sales.staff02", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0004", CreatedDate = DateTime.Now },
+                new User {/* UserId = "NV0005",*/ Username = "inventory.manager01", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0005", CreatedDate = DateTime.Now },
+                new User { /*UserId = "NV0006",*/ Username = "sales.staff03", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0006", CreatedDate = DateTime.Now },
+                new User {/* UserId = "NV0007",*/ Username = "sales.staff04", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0007", CreatedDate = DateTime.Now },
+                new User {/* UserId = "NV0008", */Username = "inventory.manager02", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0008", CreatedDate = DateTime.Now },
+                new User { /*UserId = "NV0009",*/ Username = "sales.staff05", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0009", CreatedDate = DateTime.Now },
+                new User { /*UserId = "NV0010",*/ Username = "sales.staff06", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0010", CreatedDate = DateTime.Now },
+                new User { /*UserId = "NV0011",*/ Username = "sales.staff07", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0011", CreatedDate = DateTime.Now },
+                new User { /*UserId = "NV0012",*/ Username = "cust.manager02", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0012", CreatedDate = DateTime.Now },
+                new User { Username = "sales.staff08", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0013", CreatedDate = DateTime.Now },
                 new User { Username = "inventory.manager03", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0014", CreatedDate = DateTime.Now },
-                new User { Username = "sales.staff09", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0015", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff10", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0016", CreatedDate = DateTime.Now },
+                new User { /* UserId = "NV0015" ,*/ Username = "sales.staff09", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0015", CreatedDate = DateTime.Now },
+                new User { Username = "sales.staff10", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0016", CreatedDate = DateTime.Now },
                 new User { Username = "inventory.manager04", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0017", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff11", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0018", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff12", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0019", CreatedDate = DateTime.Now },
-                new User {  Username = "inventory.manager05", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0020", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff13", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0021", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff14", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0022", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff15", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0023", CreatedDate = DateTime.Now },
-                new User {  Username = "cust.manager03", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0024", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff16", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0025", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff17", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0026", CreatedDate = DateTime.Now },
-                new User {  Username = "inventory.manager06", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0027", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff18", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0028", CreatedDate = DateTime.Now },
-                new User {  Username = "sales.staff19", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0029", CreatedDate = DateTime.Now },
-                new User {  Username = "admin2", PasswordHash = Encryptor.Hash("Admin@123"), StaffId = "NV0030", CreatedDate = DateTime.Now }
+                new User { Username = "sales.staff11", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0018", CreatedDate = DateTime.Now },
+                new User { Username = "sales.staff12", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0019", CreatedDate = DateTime.Now },
+                new User { Username = "inventory.manager05", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0020", CreatedDate = DateTime.Now },
+                new User { Username = "sales.staff13", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0021", CreatedDate = DateTime.Now },
+                new User { /* UserId = "NV0022",*/ Username = "sales.staff14", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0022", CreatedDate = DateTime.Now },
+                new User { Username = "sales.staff15", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0023", CreatedDate = DateTime.Now },
+                new User { Username = "cust.manager03", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0024", CreatedDate = DateTime.Now },
+                new User { Username = "sales.staff16", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0025", CreatedDate = DateTime.Now },
+                new User { Username = "sales.staff17", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0026", CreatedDate = DateTime.Now },
+                new User { Username = "inventory.manager06", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0027", CreatedDate = DateTime.Now },
+                new User { Username = "sales.staff18", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0028", CreatedDate = DateTime.Now },
+                new User { Username = "sales.staff19", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0029", CreatedDate = DateTime.Now },
+                new User { Username = "admin2", PasswordHash = Encryptor.Hash("Admin@123"), StaffId = "NV0030", CreatedDate = DateTime.Now }
             };
 
-            context.Users.AddOrUpdate(u => u.UserId, users.ToArray());
+            context.Users.AddOrUpdate(u => u.Username, users.ToArray());
             context.SaveChanges();
 
             #endregion
