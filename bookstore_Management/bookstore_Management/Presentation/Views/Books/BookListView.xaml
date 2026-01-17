@@ -261,7 +261,6 @@
                               Style="{StaticResource MainDataGrid}"
                               ItemsSource="{Binding Books}"
                               SelectedItem="{Binding SelectedBook}"
-                              MouseDoubleClick="dgBooks_MouseDoubleClick"
                               LoadingRow="DataGrid_LoadingRow"
                               Margin="0">
 

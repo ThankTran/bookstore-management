@@ -125,6 +125,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
+
             #region EditCommand
             EditPusCommand = new RelayCommand<object>((p) =>
             {
@@ -156,6 +157,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
+
             #region RemoveCommand
             RemovePusCommand = new RelayCommand<object>((p) =>
             {
@@ -175,6 +177,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 LoadPublishersFromDatabase();
             });
             #endregion
+
             #region SearchCommand
             SearchPusCommand = new RelayCommand<object>((p) =>
             {
@@ -204,6 +207,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
+
             #region Print & Export
             PrintCommand = new RelayCommand<object>((p) =>
             {
