@@ -27,7 +27,7 @@ namespace bookstore_Management.Models
         public string Phone { get; set; }
         
         [Required]
-        [StringLength(10)]
+        [StringLength(12)]
         [Column("citizen_id")]
         public string CitizenId { get; set; }
 
