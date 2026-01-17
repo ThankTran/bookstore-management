@@ -332,25 +332,25 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Staffs
         /// <summary>
         /// Tạo dialog in cho danh sách nhân viên
         /// </summary>
-        public static Print ForStaffList(IEnumerable<object> staffList)
+        public static PrintStaff ForStaffList(IEnumerable<object> staffList)
         {
-            return new Print("Danh Sách Nhân Viên", staffList);
+            return new PrintStaff("Danh Sách Nhân Viên", staffList);
         }
 
         /// <summary>
         /// Tạo dialog in cho danh sách sách
         /// </summary>
-        public static Print ForBookList(IEnumerable<object> bookList)
+        public static PrintStaff ForBookList(IEnumerable<object> bookList)
         {
-            return new Print("Danh Sách Sách", bookList);
+            return new PrintStaff("Danh Sách Sách", bookList);
         }
 
         /// <summary>
         /// Tạo dialog in cho danh sách khách hàng
         /// </summary>
-        public static Print ForCustomerList(IEnumerable<object> customerList)
+        public static PrintStaff ForCustomerList(IEnumerable<object> customerList)
         {
-            return new Print("Danh Sách Khách Hàng", customerList);
+            return new PrintStaff("Danh Sách Khách Hàng", customerList);
         }
 
         #endregion
