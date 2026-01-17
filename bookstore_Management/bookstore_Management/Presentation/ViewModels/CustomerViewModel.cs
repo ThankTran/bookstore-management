@@ -40,13 +40,13 @@ namespace bookstore_Management.Presentation.ViewModels
         }
 
         //keyword để tìm kiếm
-        private string _searchKeywork;
-        public string SearchKeywork
+        private string _searchKeyword;
+        public string SearchKeyword
         {
-            get => _searchKeywork;
+            get => _searchKeyword;
             set
             {
-                _searchKeywork = value;
+                _searchKeyword = value;
                 OnPropertyChanged();
                 SearchCusCommand.Execute(null);
             }
@@ -188,12 +188,12 @@ namespace bookstore_Management.Presentation.ViewModels
             #region SearchCommand
             SearchCusCommand = new RelayCommand<object>((p)=> 
             {
-                if (string.IsNullOrWhiteSpace(SearchKeywork))
+                if (string.IsNullOrEmpty(SearchKeyword))
                 {
                     LoadCusFromDatabase();
                     return;
                 }
-                var result = _customerService.SearchByName(SearchKeywork);
+                var result = _customerService.SearchByName(SearchKeyword);
                 if (!result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi tìm kiếm khách hàng: " + result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
