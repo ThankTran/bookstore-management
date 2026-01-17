@@ -115,6 +115,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Books\ExportExcelBook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Books\PrintBook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Books\UpdateBook.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -145,10 +153,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\Views\Dialogs\Share\Delete.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Presentation\Views\Dialogs\Share\ExportExcel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -384,11 +388,14 @@
     <Compile Include="Presentation\Views\Dialogs\Books\AddBookDialog.xaml.cs">
       <DependentUpon>AddBookDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\ExportExcelBook.xaml.cs">
+      <DependentUpon>ExportExcelBook.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Books\PrintBook.xaml.cs">
+      <DependentUpon>PrintBook.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Books\UpdateBook.xaml.cs">
       <DependentUpon>UpdateBook.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Share\ExportExcel.xaml.cs">
-      <DependentUpon>ExportExcel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\Print.xaml.cs">
       <DependentUpon>Print.xaml</DependentUpon>
