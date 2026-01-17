@@ -18,7 +18,7 @@ namespace bookstore_Management.Services.Interfaces
         // Tìm kiếm
         Result<PublisherResponseDto> GetPublisherByPhone(string phone);
         Result<PublisherResponseDto> GetPublisherByEmail(string email);
-        Result<IEnumerable<Publisher>> SearchByName(string name);
+        Result<IEnumerable<PublisherResponseDto>> SearchByName(string name);
 
         // Quản lý sách từ NCC
         Result<IEnumerable<Book>> GetBooksByPublisher(string publisherId);

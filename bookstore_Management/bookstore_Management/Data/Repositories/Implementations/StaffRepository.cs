@@ -18,6 +18,10 @@ namespace bookstore_Management.Data.Repositories.implementations
         {
             return Find(s => s.UserRole == userRole);
         }
-        
+
+        public IEnumerable<Staff> SearchByName(string name)
+        {
+            return Find(s => s.Name.Contains(name) && s.DeletedDate == null);
+        }
     }
 }

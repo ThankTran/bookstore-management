@@ -8,6 +8,7 @@ using bookstore_Management.DTOs.User.Requests;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
 using bookstore_Management.Core.Utils;
+using bookstore_Management.DTOs.User.Response;
 using bookstore_Management.Utils;
 
 namespace bookstore_Management.Services.Implementations
@@ -97,46 +98,53 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result<User> GetById(string userId)
+        public Result<UserResponseDto> GetById(string userId)
         {
             try
             {
                 var user = _userRepository.GetById(userId);
                 if (user == null || user.DeletedDate != null)
-                    return Result<User>.Fail("User không tồn tại");
-                return Result<User>.Success(user);
+                    return Result<UserResponseDto>.Fail("User không tồn tại");
+
+
+                var dto = MapToStaffResponseDto(user);
+                
+                return Result<UserResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<User>.Fail($"Lỗi: {ex.Message}");
+                return Result<UserResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<User> GetByUsername(string username)
+        public Result<UserResponseDto> GetByUsername(string username)
         {
             try
             {
                 var user = _userRepository.GetByUsername(username);
                 if (user == null || user.DeletedDate != null)
-                    return Result<User>.Fail("User không tồn tại");
-                return Result<User>.Success(user);
+                    return Result<UserResponseDto>.Fail("User không tồn tại");
+
+                var dto = MapToStaffResponseDto(user);
+                return Result<UserResponseDto>.Success(dto);
             }
             catch (Exception ex)
             {
-                return Result<User>.Fail($"Lỗi: {ex.Message}");
+                return Result<UserResponseDto>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
-        public Result<IEnumerable<User>> GetAll()
+        public Result<IEnumerable<UserResponseDto>> GetAll()
         {
             try
             {
-                var users = _userRepository.GetAll().Where(u => u.DeletedDate == null).ToList();
-                return Result<IEnumerable<User>>.Success(users);
+                var users = _userRepository.GetAll().Where(u => u.DeletedDate == null)
+                    .Select( MapToStaffResponseDto);
+                return Result<IEnumerable<UserResponseDto>>.Success(users);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<User>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<UserResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
@@ -168,6 +176,17 @@ namespace bookstore_Management.Services.Implementations
             {
                 return Result<UserRole>.Fail($"Lỗi: {ex.Message}");
             }
+        }
+        
+        private UserResponseDto MapToStaffResponseDto(User user)
+        {
+            return new UserResponseDto
+            {
+                UserName = user.Username.Trim(),
+                Password = user.PasswordHash,
+                StaffId = user.StaffId,
+                CreateDate = user.CreatedDate
+            };
         }
         
     }

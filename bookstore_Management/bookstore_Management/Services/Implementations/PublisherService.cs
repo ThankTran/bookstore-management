@@ -233,23 +233,23 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result<IEnumerable<Publisher>> SearchByName(string name)
+        public Result<IEnumerable<PublisherResponseDto>> SearchByName(string name)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(name))
-                    return Result<IEnumerable<Publisher>>.Success(new List<Publisher>());
-                    
+                    return Result<IEnumerable<PublisherResponseDto>>.Success(new List<PublisherResponseDto>());
+
                 var publishers = _publisherRepository.SearchByName(name.Trim())
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
-                    .ToList();
+                    .Select(MapToPublisherResponseDto);
                     
-                return Result<IEnumerable<Publisher>>.Success(publishers);
+                return Result<IEnumerable<PublisherResponseDto>>.Success(publishers);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Publisher>>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<PublisherResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
         
