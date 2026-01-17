@@ -5,7 +5,6 @@ using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
-using Moq;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -158,7 +157,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
             #region RemoveCommand
             RemoveBookCommand = new RelayCommand<object>((p) =>
             {
@@ -188,7 +186,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 LoadBooksFromDatabase();
             });
             #endregion
-
             #region EditCommand
             EditBookCommand = new RelayCommand<object>((p) =>
             {
@@ -236,7 +233,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
             #region SearchCommand
             SearchBookCommand = new RelayCommand<object>((p) =>
             {
@@ -278,7 +274,6 @@ namespace bookstore_Management.Presentation.ViewModels
 
             });
             #endregion
-
             #region ExportCommand
             ExportCommand = new RelayCommand<object>((p) =>
             {

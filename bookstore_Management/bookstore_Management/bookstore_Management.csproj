@@ -140,6 +140,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Share\ExportExcel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Share\NDelete.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -147,6 +151,10 @@
     <Page Include="Presentation\Views\Dialogs\Share\NUpdate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Share\Print.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\Views\Dialogs\Share\Warning.xaml">
       <SubType>Designer</SubType>
@@ -243,7 +251,7 @@
     <Compile Include="Core\Constants\PermissionConstants.cs" />
     <Compile Include="Core\Constants\RoleConstants.cs" />
     <Compile Include="Core\Enums\BookCategory.cs" />
-    <Compile Include="Core\Enums\FeatureConstant.cs" />
+    <Compile Include="Core\Enums\Feature.cs" />
     <Compile Include="Core\Enums\MemberTier.cs" />
     <Compile Include="Core\Enums\OrderStatus.cs" />
     <Compile Include="Core\Enums\PaymentType.cs" />
@@ -285,6 +293,7 @@
     <Compile Include="Data\Repositories\Interfaces\IRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IStaffRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IPublisherRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Data\Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IAuditLogRepository.cs" />
     <Compile Include="DTOs\Book\Requests\CreateBookRequestDto.cs" />
@@ -327,6 +336,10 @@
     <Compile Include="Helpers\ExcelExporter.cs" />
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
+    <Compile Include="Migrations\202601170425362_CreateDb.cs" />
+    <Compile Include="Migrations\202601170425362_CreateDb.Designer.cs">
+      <DependentUpon>202601170425362_CreateDb.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
     <Compile Include="Models\Book.cs" />
@@ -382,11 +395,17 @@
     <Compile Include="Presentation\Views\Dialogs\Share\Delete.xaml.cs">
       <DependentUpon>Delete.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\ExportExcel.xaml.cs">
+      <DependentUpon>ExportExcel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\NDelete.xaml.cs">
       <DependentUpon>NDelete.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\NUpdate.xaml.cs">
       <DependentUpon>NUpdate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\Print.xaml.cs">
+      <DependentUpon>Print.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\Warning.xaml.cs">
       <DependentUpon>Warning.xaml</DependentUpon>
@@ -481,6 +500,9 @@
     <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\202601170425362_CreateDb.resx">
+      <DependentUpon>202601170425362_CreateDb.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

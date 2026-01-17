@@ -142,12 +142,16 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Search Icon -->
-                        <Image Grid.Column="0"
-                               Source="/Presentation/AppResources/Images/Icons/Actions/search.png"
-                               Width="18" 
-                               Height="18"
-                               Margin="0,0,10,0"
-                               Opacity="0.5"/>
+                        <Button BorderThickness="0"
+                                Background="Transparent"
+                                Command="{Binding SearchCusCommand}">
+                            <Image Grid.Column="0"
+                                   Source="/Presentation/AppResources/Images/Icons/Actions/search.png"
+                                   Width="18" 
+                                   Height="18"
+                                   Margin="0,0,10,0"
+                                   Opacity="0.5"/>
+                        </Button>
 
                         <!-- Search TextBox -->
                         <TextBox x:Name="txtSearch"
@@ -157,6 +161,7 @@
                                  VerticalContentAlignment="Center"
                                  FontSize="13"
                                  Foreground="#666666"
+                                 
                                  FontFamily="{StaticResource PrimaryFont}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
@@ -398,10 +403,12 @@
                                                     Cursor="Hand"
                                                     ToolTip="Chỉnh sửa">
                                                 <Button Style="{StaticResource SmallIconButton}"
-                                                        Click="btnEdit_Click"
                                                         Background="Transparent"
                                                         Width="32"
-                                                        Height="32">
+                                                        Height="32"
+                                                        Command="{Binding DataContext.EditCusCommand,
+                                                        RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                        CommandParameter="{Binding}">
                                                     <Image Source="/Presentation/AppResources/Images/Icons/Actions/edit.png" 
                                                            Width="16" 
                                                            Height="16"/>
@@ -414,10 +421,11 @@
                                                     Cursor="Hand"
                                                     ToolTip="Xóa">
                                                 <Button Style="{StaticResource SmallIconButton}"
-                                                        Click="btnDelete_Click"
                                                         Background="Transparent"
                                                         Width="32"
-                                                        Height="32">
+                                                        Height="32"
+                                                        Command="{Binding DataContext.RemoveCusCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                        CommandParameter="{Binding}">
                                                     <Image Source="/Presentation/AppResources/Images/Icons/Actions/recyclebin.png" 
                                                            Width="16" 
                                                            Height="16"/>

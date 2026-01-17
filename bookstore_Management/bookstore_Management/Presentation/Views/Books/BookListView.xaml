@@ -260,7 +260,6 @@
                               Style="{StaticResource MainDataGrid}"
                               ItemsSource="{Binding Books}"
                               SelectedItem="{Binding SelectedBook}"
-                              MouseDoubleClick="dgBooks_MouseDoubleClick"
                               LoadingRow="DataGrid_LoadingRow"
                               Margin="0">
 
@@ -411,7 +410,6 @@
                                                     Cursor="Hand"
                                                     ToolTip="Chỉnh sửa">
                                                 <Button Style="{StaticResource SmallIconButton}"
-                                                        Click="btnEdit_Click"
                                                         Background="Transparent"
                                                         Width="32"
                                                         Height="32"
@@ -430,7 +428,6 @@
                                                     Cursor="Hand"
                                                     ToolTip="Xóa">
                                                 <Button Style="{StaticResource SmallIconButton}"
-                                                        Click="btnDelete_Click"
                                                         Background="Transparent"
                                                         Width="32"
                                                         Height="32"

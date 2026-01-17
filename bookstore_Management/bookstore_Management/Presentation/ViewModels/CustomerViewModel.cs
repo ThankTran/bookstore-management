@@ -1,16 +1,15 @@
 ﻿using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
-using bookstore_Management.Presentation.ViewModels;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
-using bookstore_Management.Presentation.Views.Dialogs;
+using DocumentFormat.OpenXml.VariantTypes;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
-namespace bookstore_Management.ViewModels
+namespace bookstore_Management.Presentation.ViewModels
 {
     internal class CustomerViewModel : BaseViewModel
     {
@@ -135,13 +134,88 @@ namespace bookstore_Management.ViewModels
             });
             #endregion
             #region EditCommand
-            EditCusCommand = new RelayCommand<object>((p) => { });
+            EditCusCommand = new RelayCommand<object>((p) => 
+            { 
+                var dialog = new Presentation.Views.Dialogs.Customers.UpdateCustomer();
+                var cus = p as Customer;
+                if (cus == null)
+                {
+                    MessageBox.Show("Vui lòng chọn khách hàng để sửa.");
+                    return;
+                }
+                dialog.CustomerName = cus.Name;
+                dialog.Phone = cus.Phone;
+                dialog.Email = cus.Email;
+                if (dialog.ShowDialog() == true)
+                {
+                    var updateCusDto = new DTOs.Customer.Requests.UpdateCustomerRequestDto()
+                    {
+                        Name = dialog.CustomerName,
+                        Address = dialog.Address,
+                        Email = dialog.Email,
+                    };
+                    var result = _customerService.UpdateCustomer(cus.CustomerId, updateCusDto);
+                    if (!result.IsSuccess)
+                    {
+                        MessageBox.Show("Lỗi khi sửa khách hàng");
+                        return;
+                    }
+                    LoadCusFromDatabase();
+                }
+            });
             #endregion
             #region RemoveCommand
-            RemoveCusCommand = new RelayCommand<object>((p) => { });
+            RemoveCusCommand = new RelayCommand<object>((p) => 
+            {
+                var cus = p as Customer;
+                if (cus == null)
+                {
+                    MessageBox.Show("Vui lòng chọn khách hàng để xóa.");
+                    return;
+                }
+                bool confirmed = Views.Dialogs.Share.Delete.ShowForCustomer(cus.Name, cus.CustomerId);
+                if (!confirmed) return;
+                
+                var result = _customerService.DeleteCustomer(cus.CustomerId);
+                if (!result.IsSuccess)
+                {
+                    MessageBox.Show("Lỗi khi xóa khách hàng");
+                    return;
+                }
+                LoadCusFromDatabase();
+            });
             #endregion
             #region SearchCommand
-            SearchCusCommand = new RelayCommand<object>((p)=> { });
+            SearchCusCommand = new RelayCommand<object>((p)=> 
+            {
+                if (string.IsNullOrWhiteSpace(SearchKeywork))
+                {
+                    LoadCusFromDatabase();
+                    return;
+                }
+                var result = _customerService.SearchByName(SearchKeywork);
+                if (!result.IsSuccess)
+                {
+                    MessageBox.Show("Lỗi khi tìm kiếm khách hàng: " + result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                if (result.Data == null)
+                {
+                    MessageBox.Show("db không có dữ liệu!");
+                    return; // Tránh lỗi khi Data rỗng
+                }
+                Customers.Clear();
+                foreach(var c in result.Data)
+                {
+                    Customers.Add(new Customer
+                    {
+                        CustomerId = c.CustomerId,
+                        Name = c.Name,
+                        Phone = c.Phone,
+                        Email = c.Email,
+                    });
+                }
+            });
             #endregion
             #region Print & Export
             PrintCommand = new RelayCommand<object>((p)=> { });
