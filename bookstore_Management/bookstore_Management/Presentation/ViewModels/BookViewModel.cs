@@ -116,6 +116,7 @@ namespace bookstore_Management.Presentation.ViewModels
         }
         #endregion
 
+        #region constructor
         public BookViewModel(IBookService bookService)
         {
             //_bookService = bookService ?? new BookService();
@@ -288,6 +289,7 @@ namespace bookstore_Management.Presentation.ViewModels
             #endregion
 
         }
+        #endregion
     }
 }
 
