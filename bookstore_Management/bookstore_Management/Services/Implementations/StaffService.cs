@@ -172,6 +172,22 @@ namespace bookstore_Management.Services.Implementations
                 return Result<IEnumerable<StaffResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
+
+        public Result<IEnumerable<StaffResponseDto>> SearchByName(string name)
+        {
+            try
+            {
+                var staff = _staffRepository.SearchByName(name)
+                    .Where(s => s.DeletedDate == null)
+                    .OrderBy(s => s.Name)
+                    .Select(MapToStaffResponseDto);
+                return Result<IEnumerable<StaffResponseDto>>.Success(staff);
+            }
+            catch (Exception e)
+            {
+                return Result<IEnumerable<StaffResponseDto>>.Fail(e.Message);
+            }
+        }
         
         // ==================================================================
         // ----------------------- Hàm Logic - ------------------------------

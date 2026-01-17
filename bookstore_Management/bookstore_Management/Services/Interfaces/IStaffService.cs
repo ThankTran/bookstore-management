@@ -17,6 +17,7 @@ namespace bookstore_Management.Services.Interfaces
         Result<IEnumerable<StaffResponseDto>> GetAllStaff();
         // Tìm kiếm
         Result<IEnumerable<StaffResponseDto>> GetByRole(UserRole userRole);
+        Result<IEnumerable<StaffResponseDto>> SearchByName(string name);
         
 
         // Quản lý trạng thái
