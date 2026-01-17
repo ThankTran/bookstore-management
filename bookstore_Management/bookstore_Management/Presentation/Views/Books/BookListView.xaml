@@ -299,7 +299,7 @@
                             <!-- Tên sách -->
                             <DataGridTextColumn Header="Tên sách" 
                                                 Binding="{Binding Name}" 
-                                                Width="*"
+                                                Width="Auto"
                                                 MinWidth="200"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
@@ -315,7 +315,7 @@
                             <!-- Tác giả -->
                             <DataGridTextColumn Header="Tác giả" 
                                                 Binding="{Binding Author}" 
-                                                Width="160"
+                                                Width="Auto"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock" BasedOn="{StaticResource CenterAlignedCell}">
@@ -328,7 +328,7 @@
                             <!-- Nhà xuất bản -->
                             <DataGridTextColumn Header="Nhà xuất bản" 
                                                 Binding="{Binding Puplisher}" 
-                                                Width="150"
+                                                Width="Auto"
                                                 IsReadOnly="True"
                                                 ElementStyle="{StaticResource CenterAlignedCell}"/>
 
@@ -400,7 +400,20 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-
+                            
+                            <!-- Số lượng tồn kho -->
+                            <DataGridTextColumn Header="Tồn kho" 
+                                                Binding="{Binding Stock}" 
+                                                Width="Auto"
+                                                IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource RightAlignedCell}">
+                                        <Setter Property="Foreground" Value="#FF6B6B"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            
                             <!-- Actions -->
                             <DataGridTemplateColumn Header="Thao tác" Width="Auto">
                                 <DataGridTemplateColumn.CellTemplate>

@@ -5,6 +5,7 @@ using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
+using Moq;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -57,13 +58,13 @@ namespace bookstore_Management.Presentation.ViewModels
         }
 
         //keyword để tìm kiếm
-        private string _searchKeyword;
-        public string SearchKeyword
+        private string _searchKeywork;
+        public string SearchKeywork
         {
-            get => _searchKeyword;
+            get => _searchKeywork;
             set
             {
-                _searchKeyword = value;
+                _searchKeywork = value;
                 OnPropertyChanged();
                 SearchBookCommand.Execute(null);
             }
@@ -88,6 +89,7 @@ namespace bookstore_Management.Presentation.ViewModels
         private void LoadBooksFromDatabase()
         {
             var result = _bookService.GetAllBooks();
+
             if (!result.IsSuccess)
             {
                 // Xử lý lỗi, để sau này làm thông báo lỗi sau
@@ -107,6 +109,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 },
                 Category = dto.Category,
                 SalePrice = dto.SalePrice,
+                Stock = dto.StockQuantity,
             });
 
             Books = new ObservableCollection<Book>(books);
@@ -127,6 +130,7 @@ namespace bookstore_Management.Presentation.ViewModels
             
 
             Books = new ObservableCollection<Book>();
+
             LoadBooksFromDatabase();
 
             #region AddCommand
@@ -138,6 +142,7 @@ namespace bookstore_Management.Presentation.ViewModels
                     // Call service to add book to database
                     var newBookDto = new DTOs.Book.Requests.CreateBookRequestDto
                     {
+                        Id = dialog.BookID,
                         Name = dialog.BookName,
                         Author = dialog.Author,
                         Category = dialog.Category,
@@ -155,6 +160,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
+
             #region RemoveCommand
             RemoveBookCommand = new RelayCommand<object>((p) =>
             {
@@ -184,6 +190,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 LoadBooksFromDatabase();
             });
             #endregion
+
             #region EditCommand
             EditBookCommand = new RelayCommand<object>((p) =>
             {
@@ -231,16 +238,17 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
+
             #region SearchCommand
             SearchBookCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(SearchKeyword))
+                if (string.IsNullOrEmpty(SearchKeywork))
                 {
                     LoadBooksFromDatabase();//k nhập gì thì hiện lại list
                     return;
                 }
 
-                var result = _bookService.SearchByName(SearchKeyword);
+                var result = _bookService.SearchByName(SearchKeywork);
                 if (!result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi tìm sách");
@@ -272,6 +280,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
             });
             #endregion
+
             #region ExportCommand
             ExportCommand = new RelayCommand<object>((p) =>
             {
