@@ -388,7 +388,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             
-                            <!-- Trạng thái -->
+                            <!-- Trạng thái --><!--
                             <DataGridTemplateColumn Header="Trạng thái" Width="110">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -434,7 +434,7 @@
                                         </Border>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            </DataGridTemplateColumn>-->
 
                             <!-- Actions -->
                             <DataGridTemplateColumn Header="Thao tác" Width="130">
