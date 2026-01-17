@@ -10,7 +10,7 @@ namespace bookstore_Management.Core.Constants
         /// <summary>
         /// Quyền truy cập Quản Lý Sách
         /// </summary>
-        public static class BookManagement
+        public static class BookView
         {
             public static readonly UserRole[] View =
             {
@@ -37,7 +37,7 @@ namespace bookstore_Management.Core.Constants
         /// <summary>
         /// Quyền truy cập Quản Lý Hóa Đơn
         /// </summary>
-        public static class BillingManagement
+        public static class InvoiceView
         {
             public static readonly UserRole[] View =
             {
@@ -64,7 +64,7 @@ namespace bookstore_Management.Core.Constants
         /// <summary>
         /// Quyền truy cập Quản Lý Kho
         /// </summary>
-        public static class StockManagement
+        public static class PublisherView
         {
             public static readonly UserRole[] View =
             {
@@ -92,7 +92,7 @@ namespace bookstore_Management.Core.Constants
         /// <summary>
         /// Quyền truy cập Quản Lý Nhân Viên
         /// </summary>
-        public static class EmployeeManagement
+        public static class StaffView
         {
             public static readonly UserRole[] View =
             {
@@ -118,7 +118,7 @@ namespace bookstore_Management.Core.Constants
         /// <summary>
         /// Quyền truy cập Quản Lý Khách Hàng
         /// </summary>
-        public static class CustomerManagement
+        public static class CustomerManageView
         {
             public static readonly UserRole[] View =
             {
@@ -147,7 +147,7 @@ namespace bookstore_Management.Core.Constants
         /// <summary>
         /// Quyền truy cập Báo Cáo Doanh Thu
         /// </summary>
-        public static class ReportManagement
+        public static class ReportView
         {
             public static readonly UserRole[] View =
             {

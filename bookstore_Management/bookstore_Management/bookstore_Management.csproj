@@ -259,7 +259,7 @@
     <Compile Include="Core\Constants\PermissionConstants.cs" />
     <Compile Include="Core\Constants\RoleConstants.cs" />
     <Compile Include="Core\Enums\BookCategory.cs" />
-    <Compile Include="Core\Enums\FeatureConstant.cs" />
+    <Compile Include="Core\Enums\Feature.cs" />
     <Compile Include="Core\Enums\MemberTier.cs" />
     <Compile Include="Core\Enums\OrderStatus.cs" />
     <Compile Include="Core\Enums\PaymentType.cs" />
@@ -301,6 +301,7 @@
     <Compile Include="Data\Repositories\Interfaces\IRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IStaffRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IPublisherRepository.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Data\Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IAuditLogRepository.cs" />
     <Compile Include="DTOs\Book\Requests\CreateBookRequestDto.cs" />
