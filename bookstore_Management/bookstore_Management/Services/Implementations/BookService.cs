@@ -307,11 +307,11 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                
+
 
                 var books = _bookRepository
                     .Find(b => b.DeletedDate == null)
-                    .Where(b => b.Stock <=  minStock)
+                    .Where(b => b.Stock <= minStock)
                     .Select(MapToBookResponseDto);
 
                 return Result<IEnumerable<BookDetailResponseDto>>.Success(books);
@@ -326,7 +326,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-            
+
                 var books = _bookRepository
                     .Find(b => b.DeletedDate == null)
                     .Where(b => b.Stock == 0)
@@ -347,17 +347,17 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                
+
                 var books = _bookRepository.GetAllForListView().ToList();
 
                 if (!books.Any())
                     return Result<IEnumerable<BookListResponseDto>>.Success(new List<BookListResponseDto>());
 
-                
+
                 var bookIds = books.Select(b => b.BookId).ToList();
                 var importPrices = _importBillDetailRepository.GetLatestImportPricesByBookIds(bookIds);
 
-               
+
                 var result = books.Select((book, index) => new BookListResponseDto
                 {
                     Index = index + 1,
@@ -392,8 +392,8 @@ namespace bookstore_Management.Services.Implementations
             var lastNumber = int.Parse(lastBook.BookId.Substring(1));
             return $"S{(lastNumber + 1):D5}";
         }
-        
-        
+
+
         /// <summary>
         /// Maps Book entity to BookResponseDTO
         /// </summary>

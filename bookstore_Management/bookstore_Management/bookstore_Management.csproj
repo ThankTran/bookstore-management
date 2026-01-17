@@ -132,6 +132,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\ExportExcelCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\PrintCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Customers\UpdateCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -410,6 +418,12 @@
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Books\UpdateBook.xaml.cs">
       <DependentUpon>UpdateBook.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\ExportExcelCustomer.xaml.cs">
+      <DependentUpon>ExportExcelCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\PrintCustomer.xaml.cs">
+      <DependentUpon>PrintCustomer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Invoices\CreateImportBill.xaml.cs">
       <DependentUpon>CreateImportBill.xaml</DependentUpon>
