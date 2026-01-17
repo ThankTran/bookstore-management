@@ -1,41 +1,45 @@
-//using System;
-//using bookstore_Management.Data.Context;
-//using bookstore_Management.Data.Repositories.implementations;
-//using bookstore_Management.Data.Repositories.Implementations;
-//using bookstore_Management.Services.Implementations;
-//using NUnit.Framework;
-
-//namespace bookstore_Management.Tests
-//{
-//    [TestFixture]
-//    public class ReportServiceTests
-//    {
-//        private BookstoreDbContext _context;
-//        private ReportService _service;
-
-//        [SetUp]
-//        public void SetUp()
-//        {
-//            _context = new BookstoreDbContext();
-//            _service = new ReportService(
-//                new OrderRepository(_context),
-//                new OrderDetailRepository(_context),
-//                new StockRepository(_context),
-//                new BookRepository(_context),
-//                new CustomerRepository(_context),
-//                new StaffRepository(_context),
-//                new ImportBillRepository(_context),
-//                new ImportBillDetailRepository(_context)
-//            );
-//        }
-
-//        [Test]
-//        public void GetTotalRevenue_ShouldReturnNonNegative()
-//        {
-//            var result = _service.GetTotalRevenue(DateTime.Today.AddMonths(-1), DateTime.Today);
-//            Assert.IsTrue(result.IsSuccess);
-//            Assert.GreaterOrEqual(result.Data, 0);
-//        }
-//    }
-//}
-
+// using NUnit.Framework;
+// using bookstore_Management.Services.Interfaces;
+// using System;
+//
+// namespace bookstore_Management.Tests
+// {
+//     [TestFixture]
+//     public class ReportServiceTests
+//     {
+//         [SetUp]
+//         public void Setup()
+//         {
+//             Console.WriteLine("[ReportServiceTest] Đã kết nối database");
+//         }
+//
+//         [Test]
+//         public void GetTotalRevenue_Should_ReturnGreaterThanZero_When_DataExist()
+//         {
+//             var service = TestHelper.GetReportService();
+//             var from = DateTime.Now.AddYears(-1);
+//             var to = DateTime.Now;
+//             var result = service.GetTotalRevenue(from, to);
+//             Assert.That(result.IsSuccess && result.Data >= 0, $"{result.ErrorMessage}");
+//             Console.WriteLine($"Tổng doanh thu: {result.Data:#,##0}");
+//         }
+//
+//         [Test]
+//         public void GetTotalProfit_Should_NotThrowException()
+//         {
+//             var service = TestHelper.GetReportService();
+//             var from = DateTime.Now.AddYears(-1);
+//             var to = DateTime.Now;
+//             Assert.DoesNotThrow(() => { var r = service.GetTotalProfit(from, to); Console.WriteLine($"Profit: {r.Data}"); });
+//         }
+//
+//         [Test]
+//         public void GetInventorySummary_Should_ReturnInventory()
+//         {
+//             var service = TestHelper.GetReportService();
+//             var result = service.GetInventorySummary();
+//             Assert.IsTrue(result.IsSuccess);
+//             Console.WriteLine($"Tồn kho tổng: {result.Data.TotalBooks}, Giá trị: {result.Data.TotalValue}");
+//         }
+//     }
+// }

@@ -342,6 +342,7 @@
     <Compile Include="DTOs\Auth\UserAuthInfoDto.cs" />
     <Compile Include="DTOs\User\Requests\ChangePasswordRequestDto.cs" />
     <Compile Include="DTOs\User\Requests\CreateUserRequestDto.cs" />
+    <Compile Include="DTOs\User\Response\UserResponseDto.cs" />
     <Compile Include="Helpers\ExcelExporter.cs" />
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
@@ -508,9 +509,16 @@
     <Compile Include="Services\Interfaces\IPublisherService.cs" />
     <Compile Include="Services\Interfaces\IAuditLogService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
+    <Compile Include="Tests\AuditLogServiceTests.cs" />
     <Compile Include="Tests\AuthServiceTests.cs" />
     <Compile Include="Tests\BookServiceTests.cs" />
+    <Compile Include="Tests\CustomerServiceTests.cs" />
+    <Compile Include="Tests\ImportBillServiceTests.cs" />
+    <Compile Include="Tests\OrderServiceTests.cs" />
+    <Compile Include="Tests\PermissionHelperTests.cs" />
+    <Compile Include="Tests\PublisherServiceTests.cs" />
     <Compile Include="Tests\ReportServiceTests.cs" />
+    <Compile Include="Tests\StaffServiceTests.cs" />
     <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>

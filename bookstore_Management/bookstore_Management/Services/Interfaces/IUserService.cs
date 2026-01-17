@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.DTOs.User.Requests;
+using bookstore_Management.DTOs.User.Response;
 using bookstore_Management.Models;
 
 namespace bookstore_Management.Services.Interfaces
@@ -12,10 +13,10 @@ namespace bookstore_Management.Services.Interfaces
         Result<string> CreateUser(CreateUserRequestDto dto);
         Result ChangePassword(string userId, ChangePasswordRequestDto dto);
         Result Deactivate(string userId);
-        Result<User> GetById(string userId);
-        Result<User> GetByUsername(string username);
+        Result<UserResponseDto> GetById(string userId);
+        Result<UserResponseDto> GetByUsername(string username);
         Result<UserRole> GetUserRole(string userId);
         Result<bool> Login(string username, string password);
-        Result<IEnumerable<User>> GetAll();
+        Result<IEnumerable<UserResponseDto>> GetAll();
     }
 }
