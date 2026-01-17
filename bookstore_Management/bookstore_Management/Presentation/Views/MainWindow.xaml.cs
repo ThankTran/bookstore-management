@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using bookstore_Management.Presentation.Views.Orders;
+using bookstore_Management.Models;
 
 namespace bookstore_Management
 {
