@@ -162,7 +162,7 @@
                         FontSize="13"
                         Foreground="#666666"
                         FontFamily="{StaticResource PrimaryFont}"
-                        Text="{Binding SearchKeywork, UpdateSourceTrigger=PropertyChanged}">
+                        Text="{Binding SearchKeyword, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
                                     <Style.Triggers>
@@ -427,7 +427,6 @@
                                                     Cursor="Hand"
                                                     ToolTip="Chỉnh sửa">
                                                 <Button Style="{StaticResource SmallIconButton}"
-                                                        Click="btnEdit_Click"
                                                         Background="Transparent"
                                                         Width="32"
                                                         Height="32"
@@ -446,7 +445,6 @@
                                                     Cursor="Hand"
                                                     ToolTip="Xóa">
                                                 <Button Style="{StaticResource SmallIconButton}"
-                                                        Click="btnDelete_Click"
                                                         Background="Transparent"
                                                         Width="32"
                                                         Height="32"

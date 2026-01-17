@@ -300,7 +300,7 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
 
-                            <!-- Email -->
+                            <!-- Email --><!--
                             <DataGridTemplateColumn Header="Email" Width="240">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -321,7 +321,7 @@
                                         </Border>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            </DataGridTemplateColumn>-->
 
                             <!-- Chức vụ -->
                             <DataGridTemplateColumn Header="Chức vụ" Width="130">
@@ -389,7 +389,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <!-- Trạng thái -->
+                            <!-- Trạng thái --><!--
                             <DataGridTemplateColumn Header="Trạng thái" Width="110">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -429,7 +429,7 @@
                                         </Border>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            </DataGridTemplateColumn>-->
 
                             <!-- Thao tác -->
                             <DataGridTemplateColumn Header="Thao tác" Width="180">

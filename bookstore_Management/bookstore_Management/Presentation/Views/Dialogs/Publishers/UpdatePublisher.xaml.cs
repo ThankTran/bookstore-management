@@ -84,7 +84,9 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
                                  DateTime? createdDate = null, DateTime? lastModified = null)
         {
             PublisherID = publisherId;
+
             cbPublisher.SelectedItem = name;
+
             Phone = phone;
             Email = email;
 
