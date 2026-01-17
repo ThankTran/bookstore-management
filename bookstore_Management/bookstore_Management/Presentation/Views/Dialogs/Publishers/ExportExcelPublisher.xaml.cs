@@ -1,45 +1,35 @@
-﻿using bookstore_Management.Models;
-using bookstore_Management.Services.Implementations;
-using bookstore_Management.Services.Interfaces;
-using ClosedXML.Excel;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ClosedXML.Excel;
+using Microsoft.Win32;
+using bookstore_Management.DTOs.Publisher.Responses;
 
-namespace bookstore_Management.Presentation.Views.Dialogs.Customers
+namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
 {
     /// <summary>
-    /// Interaction logic for ExportExcelCustomer.xaml
+    /// Interaction logic for ExportExcelPublisher.xaml
     /// </summary>
-
-    public partial class ExportExcelCustomer : Window
+    public partial class ExportExcelPublisher : Window
     {
-        private readonly ICustomerService _customerService;
+        private List<PublisherResponseDto> _dataSource;
         private int _totalRecords;
 
-        /// <summary>
-        /// Constructor - chỉ cần service, không cần truyền data
-        /// </summary>
-        public ExportExcelCustomer(ICustomerService customerService)
+        public ExportExcelPublisher()
         {
             InitializeComponent();
-            _customerService = customerService;
+        }
 
-            // Lấy tổng số từ service
-            var result = customerService.GetCustomerList();
-            _totalRecords = result.IsSuccess ? result.Data.Count() : 0;
+        /// <summary>
+        /// Constructor với dữ liệu cần xuất
+        /// </summary>
+        public ExportExcelPublisher(List<PublisherResponseDto> publishers) : this()
+        {
+            _dataSource = publishers ?? new List<PublisherResponseDto>();
+            _totalRecords = _dataSource.Count;
             txtTotalRecords.Text = _totalRecords.ToString();
         }
 
@@ -76,7 +66,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
         {
             try
             {
-                // Kiểm tra có chọn ít nhất 1 cột
                 if (!HasSelectedColumns())
                 {
                     MessageBox.Show("Vui lòng chọn ít nhất 1 cột để xuất!",
@@ -86,22 +75,17 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                     return;
                 }
 
-                //  LẤY DỮ LIỆU TỪ SERVICE
-                var result = _customerService.GetCustomerList();
-                if (!result.IsSuccess || result.Data == null || !result.Data.Any())
+                if (_dataSource == null || _dataSource.Count == 0)
                 {
-                    MessageBox.Show(result.ErrorMessage ?? "Không có dữ liệu để xuất!",
+                    MessageBox.Show("Không có dữ liệu để xuất!",
                                   "Thông báo",
                                   MessageBoxButton.OK,
                                   MessageBoxImage.Warning);
                     return;
                 }
 
-                // Lấy format được chọn
                 var selectedFormat = ((ComboBoxItem)cbFileFormat.SelectedItem).Tag.ToString();
-
-                // Tạo tên file
-                string fileName = $"DanhSachKhachHang_{DateTime.Now:yyyyMMdd_HHmmss}";
+                string fileName = $"DanhSachNhaXuatBan_{DateTime.Now:yyyyMMdd_HHmmss}";
                 string defaultPath = System.IO.Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                         "Downloads");
@@ -135,9 +119,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
 
         #region Export Methods
 
-        /// <summary>
-        /// Xuất ra file Excel
-        /// </summary>
         private void ExportToExcel(string path, string fileName)
         {
             var saveDialog = new SaveFileDialog
@@ -151,20 +132,9 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             if (saveDialog.ShowDialog() != true)
                 return;
 
-            // ✅ LẤY DỮ LIỆU TỪ SERVICE
-            var result = _customerService.GetCustomerList();
-            if (!result.IsSuccess || result.Data == null)
-            {
-                MessageBox.Show(result.ErrorMessage ?? "Không lấy được danh sách khách hàng để xuất!",
-                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var data = result.Data.ToList();
-
             using (var workbook = new XLWorkbook())
             {
-                var worksheet = workbook.Worksheets.Add("Danh sách khách hàng");
+                var worksheet = workbook.Worksheets.Add("Danh sách nhà xuất bản");
 
                 // Tạo header
                 int col = 1;
@@ -180,33 +150,21 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 // Thêm dữ liệu
                 int row = 2;
                 int stt = 1;
-                foreach (var customer in data)
+                foreach (var publisher in _dataSource)
                 {
                     col = 1;
-
                     if (chkSTT.IsChecked == true)
                         worksheet.Cell(row, col++).Value = stt++;
-
-                    if (chkCustomerID.IsChecked == true)
-                        worksheet.Cell(row, col++).Value = customer.CustomerId ?? "";
-
-                    if (chkCustomerName.IsChecked == true)
-                        worksheet.Cell(row, col++).Value = customer.Name ?? "";
-
+                    if (chkPublisherID.IsChecked == true)
+                        worksheet.Cell(row, col++).Value = publisher.Id;
+                    if (chkPublisherName.IsChecked == true)
+                        worksheet.Cell(row, col++).Value = publisher.Name;
                     if (chkPhone.IsChecked == true)
-                        worksheet.Cell(row, col++).Value = customer.Phone ?? "";
-
+                        worksheet.Cell(row, col++).Value = publisher.Phone;
                     if (chkEmail.IsChecked == true)
-                        worksheet.Cell(row, col++).Value = customer.Email ?? "";
-
-                    if (chkAddress.IsChecked == true)
-                        worksheet.Cell(row, col++).Value = customer.Address ?? "";
-
-                    if (chkRank.IsChecked == true)
-                        worksheet.Cell(row, col++).Value = customer.MemberLevel.ToString();
-
-                    if (chkPoint.IsChecked == true)
-                        worksheet.Cell(row, col++).Value = customer.LoyaltyPoints;
+                        worksheet.Cell(row, col++).Value = publisher.Email ?? "";
+                    if (chkCreatedDate.IsChecked == true)
+                        worksheet.Cell(row, col++).Value = publisher.CreatedDate.ToString("dd/MM/yyyy");
 
                     row++;
                 }
@@ -223,9 +181,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             }
         }
 
-        /// <summary>
-        /// Xuất ra file CSV
-        /// </summary>
         private void ExportToCsv(string path, string fileName)
         {
             var saveDialog = new SaveFileDialog
@@ -239,50 +194,43 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             if (saveDialog.ShowDialog() != true)
                 return;
 
-            // ✅ LẤY DỮ LIỆU TỪ SERVICE
-            var result = _customerService.GetCustomerList();
-            if (!result.IsSuccess || result.Data == null)
-            {
-                MessageBox.Show(result.ErrorMessage ?? "Không lấy được danh sách khách hàng để xuất!",
-                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var data = result.Data.ToList();
-
             using (var writer = new StreamWriter(saveDialog.FileName, false, System.Text.Encoding.UTF8))
             {
+                // Write header
                 var headers = GetSelectedHeaders();
                 writer.WriteLine(string.Join(",", headers.Select(h => $"\"{h}\"")));
 
+                // Write data
                 int stt = 1;
-                foreach (var customer in data)
+                foreach (var publisher in _dataSource)
                 {
                     var values = new List<string>();
 
-                    if (chkSTT.IsChecked == true) values.Add(stt++.ToString());
-                    if (chkCustomerID.IsChecked == true) values.Add($"\"{customer.CustomerId ?? ""}\"");
-                    if (chkCustomerName.IsChecked == true) values.Add($"\"{customer.Name ?? ""}\"");
-                    if (chkPhone.IsChecked == true) values.Add($"\"{customer.Phone ?? ""}\"");
-                    if (chkEmail.IsChecked == true) values.Add($"\"{customer.Email ?? ""}\"");
-                    if (chkAddress.IsChecked == true) values.Add($"\"{customer.Address ?? ""}\"");
-                    if (chkRank.IsChecked == true) values.Add($"\"{customer.MemberLevel}\"");
-                    if (chkPoint.IsChecked == true) values.Add(customer.LoyaltyPoints.ToString());
+                    if (chkSTT.IsChecked == true)
+                        values.Add(stt++.ToString());
+                    if (chkPublisherID.IsChecked == true)
+                        values.Add($"\"{publisher.Id}\"");
+                    if (chkPublisherName.IsChecked == true)
+                        values.Add($"\"{publisher.Name}\"");
+                    if (chkPhone.IsChecked == true)
+                        values.Add($"\"{publisher.Phone}\"");
+                    if (chkEmail.IsChecked == true)
+                        values.Add($"\"{publisher.Email ?? ""}\"");
+                    if (chkCreatedDate.IsChecked == true)
+                        values.Add($"\"{publisher.CreatedDate:dd/MM/yyyy}\"");
 
                     writer.WriteLine(string.Join(",", values));
                 }
             }
 
             MessageBox.Show($"Xuất file thành công!\nĐường dẫn: {saveDialog.FileName}",
-                "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                          "Thành công",
+                          MessageBoxButton.OK,
+                          MessageBoxImage.Information);
         }
 
-        /// <summary>
-        /// Xuất ra file PDF
-        /// </summary>
         private void ExportToPdf(string path, string fileName)
         {
-            // Implement PDF export using iTextSharp or similar library
             MessageBox.Show("Chức năng xuất PDF đang được phát triển!",
                           "Thông báo",
                           MessageBoxButton.OK,
@@ -293,9 +241,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
 
         #region Helper Methods
 
-        /// <summary>
-        /// Set tất cả checkbox
-        /// </summary>
         private void SetAllCheckboxes(bool isChecked)
         {
             foreach (var child in pnlColumns.Children)
@@ -307,9 +252,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             }
         }
 
-        /// <summary>
-        /// Kiểm tra có chọn cột nào không
-        /// </summary>
         private bool HasSelectedColumns()
         {
             foreach (var child in pnlColumns.Children)
@@ -322,21 +264,22 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             return false;
         }
 
-        /// <summary>
-        /// Lấy danh sách header đã chọn
-        /// </summary>
         private List<string> GetSelectedHeaders()
         {
             var headers = new List<string>();
 
-            if (chkSTT.IsChecked == true) headers.Add("STT");
-            if (chkCustomerID.IsChecked == true) headers.Add("Mã KH");
-            if (chkCustomerName.IsChecked == true) headers.Add("Tên KH");
-            if (chkPhone.IsChecked == true) headers.Add("SĐT");
-            if (chkEmail.IsChecked == true) headers.Add("Email");
-            if (chkAddress.IsChecked == true) headers.Add("Địa chỉ");
-            if (chkRank.IsChecked == true) headers.Add("Hạng");
-            if (chkPoint.IsChecked == true) headers.Add("Điểm");
+            if (chkSTT.IsChecked == true)
+                headers.Add("STT");
+            if (chkPublisherID.IsChecked == true)
+                headers.Add("Mã NXB");
+            if (chkPublisherName.IsChecked == true)
+                headers.Add("Tên nhà xuất bản");
+            if (chkPhone.IsChecked == true)
+                headers.Add("Số điện thoại");
+            if (chkEmail.IsChecked == true)
+                headers.Add("Email");
+            if (chkCreatedDate.IsChecked == true)
+                headers.Add("Ngày tạo");
 
             return headers;
         }
