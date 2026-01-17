@@ -1,4 +1,5 @@
 ﻿using bookstore_Management.Models;
+using ClosedXML.Excel;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -14,19 +15,18 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using ClosedXML.Excel;
 
-namespace bookstore_Management.Presentation.Views.Dialogs.Share
+namespace bookstore_Management.Presentation.Views.Dialogs.Books
 {
     /// <summary>
-    /// Interaction logic for ExportExcel.xaml
+    /// Interaction logic for ExportExcelBook.xaml
     /// </summary>
-    public partial class ExportExcel : Window
+    public partial class ExportExcelBook : Window
     {
         private List<Book> _dataSource;
         private int _totalRecords;
 
-        public ExportExcel()
+        public ExportExcelBook()
         {
             InitializeComponent();
         }
@@ -34,7 +34,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Share
         /// <summary>
         /// Constructor với dữ liệu cần xuất
         /// </summary>
-        public ExportExcel(List<Book> books) : this()
+        public ExportExcelBook(List<Book> books) : this()
         {
             _dataSource = books ?? new List<Book>();
             _totalRecords = _dataSource.Count;
