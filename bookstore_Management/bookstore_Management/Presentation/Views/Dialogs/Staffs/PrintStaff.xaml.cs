@@ -1,4 +1,5 @@
-﻿using System;
+﻿using bookstore_Management.Presentation.Views.Dialogs.Share;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,19 +14,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace bookstore_Management.Presentation.Views.Dialogs.Books
+namespace bookstore_Management.Presentation.Views.Dialogs.Staffs
 {
     /// <summary>
-    /// Interaction logic for PrintBook.xaml
+    /// Interaction logic for PrintStaff.xaml
     /// </summary>
-    public partial class PrintBook : Window
+    public partial class PrintStaff : Window
     {
         // Generic data source - can be any IEnumerable
         private IEnumerable<object> _dataSource;
         private string _documentTitle;
         private int _recordCount;
 
-        public PrintBook()
+        public PrintStaff()
         {
             InitializeComponent();
         }
@@ -33,7 +34,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
         /// <summary>
         /// Constructor với data source tùy chỉnh
         /// </summary>
-        public PrintBook(string title, IEnumerable<object> dataSource, int recordCount = 0) : this()
+        public PrintStaff(string title, IEnumerable<object> dataSource, int recordCount = 0) : this()
         {
             _documentTitle = title;
             _dataSource = dataSource;
@@ -331,25 +332,25 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
         /// <summary>
         /// Tạo dialog in cho danh sách nhân viên
         /// </summary>
-        public static PrintBook ForStaffList(IEnumerable<object> staffList)
+        public static Print ForStaffList(IEnumerable<object> staffList)
         {
-            return new PrintBook("Danh Sách Nhân Viên", staffList);
+            return new Print("Danh Sách Nhân Viên", staffList);
         }
 
         /// <summary>
         /// Tạo dialog in cho danh sách sách
         /// </summary>
-        public static PrintBook ForBookList(IEnumerable<object> bookList)
+        public static Print ForBookList(IEnumerable<object> bookList)
         {
-            return new PrintBook("Danh Sách Sách", bookList);
+            return new Print("Danh Sách Sách", bookList);
         }
 
         /// <summary>
         /// Tạo dialog in cho danh sách khách hàng
         /// </summary>
-        public static PrintBook ForCustomerList(IEnumerable<object> customerList)
+        public static Print ForCustomerList(IEnumerable<object> customerList)
         {
-            return new PrintBook("Danh Sách Khách Hàng", customerList);
+            return new Print("Danh Sách Khách Hàng", customerList);
         }
 
         #endregion

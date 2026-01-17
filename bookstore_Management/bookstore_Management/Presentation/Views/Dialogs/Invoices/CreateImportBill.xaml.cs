@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 {
     /// <summary>
-    /// Interaction logic for AddImportForm.xaml
+    /// Interaction logic for CreateImportBill.xaml
     /// </summary>
-    public partial class AddImportForm : Window
+    public partial class CreateImportBill : Window
     {
-        public AddImportForm()
+        public CreateImportBill()
         {
             InitializeComponent();
         }
