@@ -169,31 +169,47 @@
 
                             <!-- Danh sách các cột -->
                             <StackPanel x:Name="pnlColumns">
-                                <CheckBox x:Name="chkSTT" 
-                                          Content="STT" 
+                                <CheckBox x:Name="chkSTT"
+                                          Content="STT"
                                           Style="{StaticResource ExportCheckBox}"
                                           IsChecked="True"/>
-                                <CheckBox x:Name="chkPublisherID" 
-                                          Content="Mã nhà xuất bản" 
+
+                                <CheckBox x:Name="chkStaffID"
+                                          Content="Mã nhân viên"
                                           Style="{StaticResource ExportCheckBox}"
                                           IsChecked="True"/>
-                                <CheckBox x:Name="chkPublisherName" 
-                                          Content="Tên nhà xuất bản" 
+
+                                <CheckBox x:Name="chkStaffName"
+                                          Content="Tên nhân viên"
                                           Style="{StaticResource ExportCheckBox}"
                                           IsChecked="True"/>
-                                <CheckBox x:Name="chkPhone" 
-                                          Content="Số điện thoại" 
+
+                                <CheckBox x:Name="chkCitizenId"
+                                          Content="CCCD/CMND"
                                           Style="{StaticResource ExportCheckBox}"
                                           IsChecked="True"/>
-                                <CheckBox x:Name="chkEmail" 
-                                          Content="Email" 
+
+                                <CheckBox x:Name="chkPhone"
+                                          Content="Số điện thoại"
                                           Style="{StaticResource ExportCheckBox}"
                                           IsChecked="True"/>
-                                <CheckBox x:Name="chkCreatedDate" 
-                                          Content="Ngày tạo" 
+
+                                <CheckBox x:Name="chkUserRole"
+                                          Content="Vai trò"
+                                          Style="{StaticResource ExportCheckBox}"
+                                          IsChecked="True"/>
+
+                                <CheckBox x:Name="chkTotalOrders"
+                                          Content="Tổng đơn hàng"
+                                          Style="{StaticResource ExportCheckBox}"
+                                          IsChecked="True"/>
+
+                                <CheckBox x:Name="chkCreatedDate"
+                                          Content="Ngày tạo"
                                           Style="{StaticResource ExportCheckBox}"
                                           IsChecked="False"/>
                             </StackPanel>
+
                         </StackPanel>
                     </Border>
 
@@ -213,7 +229,7 @@
                                 <LineBreak/>
                                 <Run Text="• File sẽ được lưu tại thư mục Downloads"/>
                                 <LineBreak/>
-                                <Run Text="• Tên file: DanhSachNhaXuatBan_[Ngày]_[Giờ]"/>
+                                <Run Text="• Tên file: DanhSachNhanVien_[Ngày]_[Giờ]"/>
                                 <LineBreak/>
                                 <Run Text="• Dữ liệu xuất từ bảng hiện tại"/>
                             </TextBlock>
