@@ -193,18 +193,15 @@ namespace bookstore_Management.Presentation.ViewModels
                 var dialog = new Views.Dialogs.Invoices.CreateOrderBill();
                 if (dialog.ShowDialog() == true)
                 {
-                    //var newOrderDto = new DTOs.Order.Requests.CreateOrderRequestDto()
-                    //{
-                    //    StaffId = dialog.
-                    //};
-
-                    //var result = _importBillService.CreateImportBill(newImportDto);
-                    //if (!result.IsSuccess)
-                    //{
-                    //    MessageBox.Show("Lỗi khi thêm hóa đơn nhập");
-                    //    return;
-                    //}
-
+                    var newOrderDto = new DTOs.Order.Requests.CreateOrderRequestDto
+                    {
+                        //StaffId = dialog.id
+                        //CustomerId = dialog.CustomerId,
+                        //PaymentMethod = dialog.PaymentMethod,
+                        //Discount = dialog.Discount,
+                        //Notes = dialog.Notes,
+                        //OrderDetail
+                    };
                     LoadAllData();
                 }
             });

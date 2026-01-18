@@ -5,7 +5,7 @@ using bookstore_Management.Presentation.Views.Users;
 using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
 using bookstore_Management.Views.Statistics;
-using bookstore_Management.Views.Orders;
+using bookstore_Management.Presentation.Views.Payment;
 using bookstore_Management.Presentation.Views.Publishers;
 using System;
 using System.Security.Principal;
@@ -187,7 +187,7 @@ namespace bookstore_Management
             try
             {
                 SetClickedButtonColor(btnPayment);
-                MainFrame.Content = new Views.Orders.PaymentView();
+                MainFrame.Content = new Presentation.Views.Payment.PaymentView();
             }
             catch (Exception ex)
             {

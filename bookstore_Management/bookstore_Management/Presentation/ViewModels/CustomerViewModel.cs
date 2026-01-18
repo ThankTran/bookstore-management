@@ -61,6 +61,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         //command cho thao tác tìm kiếm - load lại
         public ICommand SearchCusCommand { get; set; }
+        public ICommand LoadData { get; set; }
 
         //command cho in / xuất excel
         public ICommand ExportCommand { get; set; }
@@ -215,6 +216,13 @@ namespace bookstore_Management.Presentation.ViewModels
                         Email = c.Email,
                     });
                 }
+            });
+            #endregion
+            #region LoadDataCommand
+            LoadData = new RelayCommand<object>((p) =>
+            {
+                SearchKeyword = string.Empty;
+                LoadCusFromDatabase();
             });
             #endregion
             #region Print & Export

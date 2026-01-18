@@ -58,13 +58,13 @@ namespace bookstore_Management.Presentation.ViewModels
         }
 
         //keyword để tìm kiếm
-        private string _searchKeywork;
-        public string SearchKeywork
+        private string _searchKeyword;
+        public string SearchKeyword
         {
-            get => _searchKeywork;
+            get => _searchKeyword;
             set
             {
-                _searchKeywork = value;
+                _searchKeyword = value;
                 OnPropertyChanged();
                 SearchBookCommand.Execute(null);
             }
@@ -79,6 +79,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         //command cho thao tác tìm kiếm - load lại
         public ICommand SearchBookCommand { get; set; }
+        public ICommand LoadData { get; set; }
 
         //command cho in / xuất excel
         public ICommand ExportCommand { get; set; }
@@ -242,13 +243,13 @@ namespace bookstore_Management.Presentation.ViewModels
             #region SearchCommand
             SearchBookCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(SearchKeywork))
+                if (string.IsNullOrEmpty(SearchKeyword))
                 {
                     LoadBooksFromDatabase();//k nhập gì thì hiện lại list
                     return;
                 }
 
-                var result = _bookService.SearchByName(SearchKeywork);
+                var result = _bookService.SearchByName(SearchKeyword);
                 if (!result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi tìm sách");
@@ -270,6 +271,14 @@ namespace bookstore_Management.Presentation.ViewModels
                         },
                     });
                 }
+            });
+            #endregion
+
+            #region LoadDataCommand
+            LoadData = new RelayCommand<object>((p) =>
+            {
+                SearchKeyword = string.Empty;
+                LoadBooksFromDatabase();
             });
             #endregion
 

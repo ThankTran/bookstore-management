@@ -10,7 +10,8 @@ namespace bookstore_Management.DTOs.Book.Responses
         public BookCategory Category { get; set; }
         public decimal? SalePrice { get; set; }
         public decimal ImportPrice { get; set; }
-        
+
+        public string PublisherId { get; set; }
         public int StockQuantity { get; set; }
         public string PublisherName { get; set; }
         

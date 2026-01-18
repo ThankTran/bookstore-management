@@ -61,6 +61,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         //command cho thao tác tìm kiếm - load lại
         public ICommand SearchPusCommand { get; set; }
+        public ICommand LoadData { get; set; }
 
         //command cho in / xuất excel
         public ICommand ExportCommand { get; set; }
@@ -125,7 +126,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
             #region EditCommand
             EditPusCommand = new RelayCommand<object>((p) =>
             {
@@ -157,7 +157,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
             #region RemoveCommand
             RemovePusCommand = new RelayCommand<object>((p) =>
             {
@@ -177,7 +176,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 LoadPublishersFromDatabase();
             });
             #endregion
-
             #region SearchCommand
             SearchPusCommand = new RelayCommand<object>((p) =>
             {
@@ -207,7 +205,13 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
+            #region LoadDataCommand
+            LoadData = new RelayCommand<object>((p) =>
+            {
+                SearchKeyword = string.Empty;
+                LoadPublishersFromDatabase();
+            });
+            #endregion
             #region Print & Export
             PrintCommand = new RelayCommand<object>((p) =>
             {

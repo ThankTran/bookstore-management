@@ -210,7 +210,8 @@ namespace bookstore_Management.Services.Implementations
             {
                 var books = _bookRepository.GetAll()
                     .Where(b => b.DeletedDate == null)
-                    .Select(MapToBookResponseDto);
+                    .Select(MapToBookResponseDto)
+                    .ToList();
 
                 return Result<IEnumerable<BookDetailResponseDto>>.Success(books);
             }
@@ -407,6 +408,7 @@ namespace bookstore_Management.Services.Implementations
                 Category = book.Category,
                 SalePrice = book.SalePrice,
                 StockQuantity = book.Stock,
+                PublisherId = book.PublisherId,
                 ImportPrice = _importBillDetailRepository.GetImportPriceByBookId(book.BookId),
                 PublisherName = _publisherRepository.GetNameByPublisherId(book.PublisherId)
             };
