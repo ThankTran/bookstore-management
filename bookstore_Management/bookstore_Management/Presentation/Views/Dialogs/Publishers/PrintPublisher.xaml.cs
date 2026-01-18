@@ -1,48 +1,40 @@
-﻿using bookstore_Management.Presentation.Views.Dialogs.Books;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using bookstore_Management.DTOs.Publisher.Responses;
 
-namespace bookstore_Management.Presentation.Views.Dialogs.Customers
+namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
 {
     /// <summary>
-    /// Interaction logic for PrintCustomer.xaml
+    /// Interaction logic for PrintPublisher.xaml
     /// </summary>
-    public partial class PrintCustomer : Window
+    public partial class PrintPublisher : Window
     {
-        // Generic data source - can be any IEnumerable
-        private IEnumerable<object> _dataSource;
+        private IEnumerable<PublisherResponseDto> _dataSource;
         private string _documentTitle;
         private int _recordCount;
 
-        public PrintCustomer()
+        public PrintPublisher()
         {
             InitializeComponent();
         }
 
         /// <summary>
-        /// Constructor với data source tùy chỉnh
+        /// Constructor với data source
         /// </summary>
-        public PrintCustomer(string title, IEnumerable<object> dataSource, int recordCount = 0) : this()
+        public PrintPublisher(string title, IEnumerable<PublisherResponseDto> dataSource, int recordCount = 0) : this()
         {
             _documentTitle = title;
             _dataSource = dataSource;
             _recordCount = recordCount > 0 ? recordCount : dataSource?.Count() ?? 0;
 
-            // Update UI
             txtTitle.Text = $"In {title}";
-            txtRecordCount.Text = $"• Sẽ in {_recordCount} bản ghi";
+            txtRecordCount.Text = $"• Sẽ in {_recordCount} nhà xuất bản";
         }
 
         #region Event Handlers
@@ -94,7 +86,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             try
             {
                 var doc = CreatePrintDocument();
-
                 PreviewContainer.Visibility = Visibility.Visible;
                 DocPreview.Document = doc;
             }
@@ -105,18 +96,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             }
         }
 
-
         private void BtnPrint_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Get settings
                 int copies = int.Parse(txtCopies.Text);
-                bool isColor = chkColor.IsChecked ?? false;
-                bool isDuplex = chkDuplex.IsChecked ?? false;
                 bool savePDF = chkSavePDF.IsChecked ?? false;
 
-                // Confirm
                 var result = MessageBox.Show(
                     $"Bạn có chắc muốn in {copies} bản {_documentTitle}?",
                     "Xác nhận in",
@@ -126,7 +112,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 if (result == MessageBoxResult.No)
                     return;
 
-                // Print
                 var printDialog = new System.Windows.Controls.PrintDialog();
 
                 if (printDialog.ShowDialog() == true)
@@ -138,7 +123,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                         printDialog.PrintDocument(((IDocumentPaginatorSource)document).DocumentPaginator, _documentTitle);
                     }
 
-                    // Save PDF if option enabled
                     if (savePDF)
                     {
                         SaveAsPDF(document);
@@ -165,9 +149,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
 
         #region Helper Methods
 
-        /// <summary>
-        /// Tạo FlowDocument để in
-        /// </summary>
         private FlowDocument CreatePrintDocument()
         {
             var doc = new FlowDocument
@@ -177,7 +158,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 FontSize = 12
             };
 
-            // Add title
             var titleParagraph = new Paragraph(new Run(_documentTitle))
             {
                 FontSize = 18,
@@ -187,7 +167,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             };
             doc.Blocks.Add(titleParagraph);
 
-            // Add date
             var dateParagraph = new Paragraph(new Run($"Ngày in: {DateTime.Now:dd/MM/yyyy HH:mm}"))
             {
                 FontSize = 10,
@@ -196,15 +175,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             };
             doc.Blocks.Add(dateParagraph);
 
-            // Add table with data
             if (_dataSource != null && _dataSource.Any())
             {
                 var table = CreateDataTable();
                 doc.Blocks.Add(table);
             }
 
-            // Add footer
-            var footerParagraph = new Paragraph(new Run($"Tổng số: {_recordCount} bản ghi"))
+            var footerParagraph = new Paragraph(new Run($"Tổng số: {_recordCount} nhà xuất bản"))
             {
                 FontSize = 10,
                 FontStyle = FontStyles.Italic,
@@ -215,9 +192,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             return doc;
         }
 
-        /// <summary>
-        /// Tạo bảng dữ liệu động
-        /// </summary>
         private Table CreateDataTable()
         {
             var table = new Table
@@ -230,61 +204,63 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             if (_dataSource == null || !_dataSource.Any())
                 return table;
 
-            // Get properties from first item
-            var firstItem = _dataSource.First();
-            var properties = firstItem.GetType().GetProperties()
-                .Where(p => p.CanRead && IsSimpleType(p.PropertyType))
-                .ToList();
+            // Add columns: STT, Mã NXB, Tên NXB, Số điện thoại, Email
+            table.Columns.Add(new TableColumn { Width = new GridLength(50) });  // STT
+            table.Columns.Add(new TableColumn { Width = new GridLength(80) });  // Mã
+            table.Columns.Add(new TableColumn { Width = new GridLength(150) }); // Tên
+            table.Columns.Add(new TableColumn { Width = new GridLength(100) }); // SĐT
+            table.Columns.Add(new TableColumn { Width = new GridLength(120) }); // Email
 
-            // Add columns
-            foreach (var prop in properties)
-            {
-                table.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
-            }
-
-            // Create row group
             var rowGroup = new TableRowGroup();
             table.RowGroups.Add(rowGroup);
 
-            // Add header row
+            // Header row
             var headerRow = new TableRow { Background = Brushes.LightGray };
-            foreach (var prop in properties)
-            {
-                var cell = new TableCell(new Paragraph(new Run(prop.Name)))
-                {
-                    FontWeight = FontWeights.Bold,
-                    Padding = new Thickness(5),
-                    BorderBrush = Brushes.Black,
-                    BorderThickness = new Thickness(1)
-                };
-                headerRow.Cells.Add(cell);
-            }
+
+            AddTableCell(headerRow, "STT", true);
+            AddTableCell(headerRow, "Mã NXB", true);
+            AddTableCell(headerRow, "Tên nhà xuất bản", true);
+            AddTableCell(headerRow, "Số điện thoại", true);
+            AddTableCell(headerRow, "Email", true);
+
             rowGroup.Rows.Add(headerRow);
 
-            // Add data rows
-            foreach (var item in _dataSource)
+            // Data rows
+            int stt = 1;
+            foreach (var publisher in _dataSource)
             {
                 var dataRow = new TableRow();
-                foreach (var prop in properties)
-                {
-                    var value = prop.GetValue(item)?.ToString() ?? "";
-                    var cell = new TableCell(new Paragraph(new Run(value)))
-                    {
-                        Padding = new Thickness(5),
-                        BorderBrush = Brushes.Black,
-                        BorderThickness = new Thickness(1)
-                    };
-                    dataRow.Cells.Add(cell);
-                }
+
+                AddTableCell(dataRow, stt.ToString());
+                AddTableCell(dataRow, publisher.Id ?? "");
+                AddTableCell(dataRow, publisher.Name ?? "");
+                AddTableCell(dataRow, publisher.Phone ?? "");
+                AddTableCell(dataRow, publisher.Email ?? "");
+
                 rowGroup.Rows.Add(dataRow);
+                stt++;
             }
 
             return table;
         }
 
-        /// <summary>
-        /// Lưu document thành PDF
-        /// </summary>
+        private void AddTableCell(TableRow row, string text, bool isHeader = false)
+        {
+            var cell = new TableCell(new Paragraph(new Run(text)))
+            {
+                Padding = new Thickness(5),
+                BorderBrush = Brushes.Black,
+                BorderThickness = new Thickness(1)
+            };
+
+            if (isHeader)
+            {
+                cell.FontWeight = FontWeights.Bold;
+            }
+
+            row.Cells.Add(cell);
+        }
+
         private void SaveAsPDF(FlowDocument document)
         {
             try
@@ -297,9 +273,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
 
                 if (saveDialog.ShowDialog() == true)
                 {
-                    // Sử dụng thư viện iTextSharp hoặc PdfSharp để convert
-                    // Code mẫu - cần cài package: Install-Package iTextSharp
-
                     MessageBox.Show($"Đã lưu PDF: {saveDialog.FileName}", "Thành công",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -311,49 +284,15 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             }
         }
 
-        /// <summary>
-        /// Kiểm tra xem type có phải simple type không (để hiển thị trong bảng)
-        /// </summary>
-        private bool IsSimpleType(Type type)
-        {
-            return type.IsPrimitive
-                || type.IsEnum
-                || type == typeof(string)
-                || type == typeof(decimal)
-                || type == typeof(DateTime)
-                || type == typeof(TimeSpan)
-                || type == typeof(Guid);
-        }
-
         #endregion
 
         #region Static Factory Methods
 
-        /// <summary>
-        /// Tạo dialog in cho danh sách nhân viên
-        /// </summary>
-        public static PrintBook ForStaffList(IEnumerable<object> staffList)
+        public static PrintPublisher ForPublisherList(IEnumerable<PublisherResponseDto> publisherList)
         {
-            return new PrintBook("Danh Sách Nhân Viên", staffList);
-        }
-
-        /// <summary>
-        /// Tạo dialog in cho danh sách sách
-        /// </summary>
-        public static PrintBook ForBookList(IEnumerable<object> bookList)
-        {
-            return new PrintBook("Danh Sách Sách", bookList);
-        }
-
-        /// <summary>
-        /// Tạo dialog in cho danh sách khách hàng
-        /// </summary>
-        public static PrintBook ForCustomerList(IEnumerable<object> customerList)
-        {
-            return new PrintBook("Danh Sách Khách Hàng", customerList);
+            return new PrintPublisher("Danh Sách Nhà Xuất Bản", publisherList);
         }
 
         #endregion
-
     }
 }

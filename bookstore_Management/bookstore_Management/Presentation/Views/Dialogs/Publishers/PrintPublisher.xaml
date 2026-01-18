@@ -1,12 +1,10 @@
-﻿<Window x:Class="bookstore_Management.Presentation.Views.Dialogs.Customers.PrintCustomer"
+﻿<Window x:Class="bookstore_Management.Presentation.Views.Dialogs.Publishers.PrintPublisher"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:bookstore_Management.Presentation.Views.Dialogs.Customers"
+        xmlns:local="clr-namespace:bookstore_Management.Presentation.Views.Dialogs.Publishers"
         mc:Ignorable="d"
-        Title="PrintCustomer" 
-        
         Height="600" Width="500"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
@@ -50,7 +48,7 @@
                         </Border>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock x:Name="txtTitle"
-                                       Text="In Danh Sách Khách Hàng" 
+                                       Text="In Danh Sách Nhà Xuất Bản" 
                                        FontSize="18"
                                        FontWeight="Bold"
                                        Foreground="White"/>
@@ -109,7 +107,7 @@
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"/>
 
-                            <!-- Actual preview container (will be populated by code-behind) -->
+                            <!-- Actual preview container -->
                             <Border x:Name="PreviewContainer"
                                     Background="White"
                                     CornerRadius="5"
@@ -120,7 +118,6 @@
                                                           VerticalScrollBarVisibility="Auto"
                                                           IsToolBarVisible="False"/>
                             </Border>
-
                         </Grid>
                     </Border>
 
@@ -256,7 +253,7 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Data Range (specific to Book list) -->
+                    <!-- Data Range -->
                     <TextBlock Text="📊 Phạm Vi Dữ Liệu"
                                FontSize="14"
                                FontWeight="Bold"
@@ -268,16 +265,16 @@
                             Padding="15"
                             Margin="0,0,0,15">
                         <StackPanel>
-                            <RadioButton x:Name="rbAllCustomer"
-                                         Content="Tất cả khách hàng"
+                            <RadioButton x:Name="rbAllPublisher"
+                                         Content="Tất cả nhà xuất bản"
                                          IsChecked="True"
                                          Margin="0,0,0,8"
                                          FontSize="13"/>
-                            <RadioButton x:Name="rbSelectedCustomer"
-                                         Content="Chỉ khách hàng đã chọn"
+                            <RadioButton x:Name="rbSelectedPublisher"
+                                         Content="Chỉ nhà xuất bản đã chọn"
                                          Margin="0,0,0,8"
                                          FontSize="13"/>
-                            <RadioButton x:Name="rbFilteredCustomer"
+                            <RadioButton x:Name="rbFilteredPublisher"
                                          Content="Theo bộ lọc hiện tại"
                                          FontSize="13"/>
                         </StackPanel>
@@ -302,7 +299,7 @@
                                        Foreground="#666666"
                                        Margin="0,0,0,3"/>
                             <TextBlock x:Name="txtRecordCount"
-                                       Text="• Sẽ in 15 khách hàng"
+                                       Text="• Sẽ in 0 nhà xuất bản"
                                        FontSize="11"
                                        FontWeight="SemiBold"
                                        Foreground="#F57C00"/>
@@ -333,9 +330,8 @@
                             <Button Background="Transparent"
                                     BorderThickness="0"
                                     Cursor="Hand"
-                                    Height="42" 
-                                    Margin="-35,0,-35,0"
-                                    Click="BtnPreview_Click">
+                                    Click="BtnPreview_Click"
+                                    Height="42" Margin="-35,0,-35,0">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Presentation/AppResources/Images/Icons/Functions/preview.png"
                                            Width="37"
@@ -359,13 +355,15 @@
                                 Cursor="Hand" Height="55" Width="151">
                             <Border.Effect>
                                 <DropShadowEffect Color="{Binding Source={StaticResource PrimaryBrush}, Path=Color}"
-                                                BlurRadius="15"
-                                                ShadowDepth="3"
-                                                Opacity="0.3"/>
+                                                  BlurRadius="15"
+                                                  ShadowDepth="3"
+                                                  Opacity="0.3"/>
                             </Border.Effect>
                             <Button Background="Transparent"
                                     BorderThickness="0"
-                                    Cursor="Hand" Height="42" Margin="-12,0,-12,0"
+                                    Cursor="Hand" 
+                                    Height="42" 
+                                    Margin="-12,0,-12,0"
                                     Click="BtnPrint_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Presentation/AppResources/Images/Icons/Functions/print.png"
