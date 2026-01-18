@@ -51,7 +51,8 @@
                         </Border.Effect>
                         <Button Background="Transparent"
                                 BorderThickness="0"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                Click="TabAll_Click">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📊" 
                                            FontSize="16"
@@ -75,7 +76,8 @@
                             Cursor="Hand">
                         <Button Background="Transparent"
                                 BorderThickness="0"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                Click="TabImport_Click">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📥" 
                                            FontSize="16"
@@ -98,7 +100,8 @@
                             Cursor="Hand">
                         <Button Background="Transparent"
                                 BorderThickness="0"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                Click="TabExport_Click">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📤" 
                                            FontSize="16"
@@ -128,7 +131,8 @@
                                        FontSize="12"
                                        Foreground="#2E7D32"
                                        FontWeight="SemiBold"/>
-                            <TextBlock Text="24" 
+                            <TextBlock x:Name="tbImportCount"
+                                       Text="0" 
                                        FontSize="13"
                                        Foreground="#2E7D32"
                                        FontWeight="Bold"/>
@@ -144,7 +148,8 @@
                                        FontSize="12"
                                        Foreground="#1976D2"
                                        FontWeight="SemiBold"/>
-                            <TextBlock Text="156" 
+                            <TextBlock x:Name="tbExportCount"
+                                       Text="0" 
                                        FontSize="13"
                                        Foreground="#1976D2"
                                        FontWeight="Bold"/>
@@ -181,7 +186,8 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Padding="15,8"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                Click="BtnAddImport_Click">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📥" 
                                            FontSize="16"
@@ -210,7 +216,8 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Padding="15,8"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                Click="BtnAddExport_Click">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📤" 
                                            FontSize="16"
@@ -241,7 +248,8 @@
                                 BorderThickness="0"
                                 Padding="12,8"
                                 ToolTip="In danh sách"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                Click="BtnPrint_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Presentation/AppResources/Images/Icons/Functions/print.png" 
                                        Width="20" 
@@ -315,7 +323,8 @@
                                  VerticalContentAlignment="Center"
                                  FontSize="13"
                                  Foreground="#666666"
-                                 FontFamily="{StaticResource PrimaryFont}">
+                                 FontFamily="{StaticResource PrimaryFont}"
+                                 TextChanged="TxtSearch_TextChanged">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
                                     <Style.Triggers>
@@ -324,7 +333,7 @@
                                                 <Setter.Value>
                                                     <VisualBrush Stretch="None" AlignmentX="Left">
                                                         <VisualBrush.Visual>
-                                                            <TextBlock Text="Tìm kiếm theo mã hóa đơn, khách hàng..." 
+                                                            <TextBlock Text="Tìm kiếm theo mã hóa đơn, đối tác..." 
                                                                        Foreground="#999999" 
                                                                        FontSize="13"/>
                                                         </VisualBrush.Visual>
@@ -392,7 +401,8 @@
                                            FontSize="13"
                                            Foreground="#666666"
                                            VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding Invoices.Count}"
+                                <TextBlock x:Name="tbTotalCount"
+                                           Text="0"
                                            FontSize="14"
                                            FontWeight="Bold"
                                            Foreground="{StaticResource PrimaryBrush}"
@@ -412,6 +422,8 @@
                               x:Name="dgInvoices"
                               Style="{StaticResource MainDataGrid}"
                               ItemsSource="{Binding Invoices}"
+                              AutoGenerateColumns="False"
+                              MouseDoubleClick="DataGrid_MouseDoubleClick"
                               Margin="0">
 
                         <DataGrid.Resources>
@@ -433,7 +445,7 @@
 
                             <!-- Mã hóa đơn -->
                             <DataGridTextColumn Header="Mã hóa đơn" 
-                                                Binding="{Binding MaHD}" 
+                                                Binding="{Binding InvoiceId}" 
                                                 Width="130"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
@@ -454,10 +466,10 @@
                                             <Border.Style>
                                                 <Style TargetType="Border">
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding LoaiHD}" Value="Nhập">
+                                                        <DataTrigger Binding="{Binding TypeDisplay}" Value="Nhập">
                                                             <Setter Property="Background" Value="#E8F5E9"/>
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding LoaiHD}" Value="Xuất">
+                                                        <DataTrigger Binding="{Binding TypeDisplay}" Value="Xuất">
                                                             <Setter Property="Background" Value="#E3F2FD"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -468,27 +480,27 @@
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding LoaiHD}" Value="Nhập">
+                                                                <DataTrigger Binding="{Binding TypeDisplay}" Value="Nhập">
                                                                     <Setter Property="Text" Value="📥"/>
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding LoaiHD}" Value="Xuất">
+                                                                <DataTrigger Binding="{Binding TypeDisplay}" Value="Xuất">
                                                                     <Setter Property="Text" Value="📤"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </TextBlock.Style>
                                                 </TextBlock>
-                                                <TextBlock Text="{Binding LoaiHD}"
+                                                <TextBlock Text="{Binding TypeDisplay}"
                                                            FontSize="12"
                                                            FontWeight="SemiBold"
                                                            HorizontalAlignment="Center">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding LoaiHD}" Value="Nhập">
+                                                                <DataTrigger Binding="{Binding TypeDisplay}" Value="Nhập">
                                                                     <Setter Property="Foreground" Value="#2E7D32"/>
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding LoaiHD}" Value="Xuất">
+                                                                <DataTrigger Binding="{Binding TypeDisplay}" Value="Xuất">
                                                                     <Setter Property="Foreground" Value="#1976D2"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
@@ -503,7 +515,7 @@
 
                             <!-- Đối tác -->
                             <DataGridTextColumn Header="Đối tác" 
-                                                Binding="{Binding DoiTac}" 
+                                                Binding="{Binding Partner}" 
                                                 Width="*"
                                                 MinWidth="180"
                                                 IsReadOnly="True">
@@ -526,7 +538,7 @@
                                                 Padding="10,5"
                                                 HorizontalAlignment="Center"
                                                 Margin="5,0">
-                                            <TextBlock Text="{Binding NgayTao}"
+                                            <TextBlock Text="{Binding CreatedDateDisplay}"
                                                        FontSize="12"
                                                        Foreground="#F57C00"
                                                        FontWeight="Medium"/>
@@ -537,7 +549,7 @@
 
                             <!-- Tổng tiền -->
                             <DataGridTextColumn Header="Tổng tiền" 
-                                                Binding="{Binding TongTien, StringFormat={}{0:N0} ₫}" 
+                                                Binding="{Binding TotalAmountDisplay}" 
                                                 Width="160"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
@@ -551,13 +563,13 @@
 
                             <!-- Người tạo -->
                             <DataGridTextColumn Header="Người tạo" 
-                                                Binding="{Binding NguoiTao}" 
+                                                Binding="{Binding CreatedBy}" 
                                                 Width="140"
                                                 IsReadOnly="True"
                                                 ElementStyle="{StaticResource CenterAlignedCell}"/>
 
                             <!-- Actions -->
-                            <DataGridTemplateColumn Header="Thao tác" Width="130">
+                            <DataGridTemplateColumn Header="Thao tác" Width="200">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" 
@@ -571,22 +583,60 @@
                                                 <Button Style="{StaticResource SmallIconButton}"
                                                         Background="Transparent"
                                                         Width="32"
-                                                        Height="32">
+                                                        Height="32"
+                                                        Tag="{Binding}"
+                                                        Click="BtnView_Click">
                                                     <TextBlock Text="👁" 
                                                                FontSize="16"/>
                                                 </Button>
                                             </Border>
 
-                                            <!-- Print Button -->
+                                            <!-- Edit Button -->
                                             <Border Background="#FFF3E0"
                                                     CornerRadius="6"
+                                                    Margin="0,0,5,0"
+                                                    Cursor="Hand"
+                                                    ToolTip="Sửa hóa đơn">
+                                                <Button Style="{StaticResource SmallIconButton}"
+                                                        Background="Transparent"
+                                                        Width="32"
+                                                        Height="32"
+                                                        Tag="{Binding}"
+                                                        Click="BtnEdit_Click">
+                                                    <TextBlock Text="✏️" 
+                                                               FontSize="16"/>
+                                                </Button>
+                                            </Border>
+
+                                            <!-- Print Button -->
+                                            <Border Background="#E8F5E9"
+                                                    CornerRadius="6"
+                                                    Margin="0,0,5,0"
                                                     Cursor="Hand"
                                                     ToolTip="In hóa đơn">
                                                 <Button Style="{StaticResource SmallIconButton}"
                                                         Background="Transparent"
                                                         Width="32"
-                                                        Height="32">
+                                                        Height="32"
+                                                        Tag="{Binding}"
+                                                        Click="BtnPrint_Click">
                                                     <TextBlock Text="🖨" 
+                                                               FontSize="16"/>
+                                                </Button>
+                                            </Border>
+
+                                            <!-- Delete Button -->
+                                            <Border Background="#FFEBEE"
+                                                    CornerRadius="6"
+                                                    Cursor="Hand"
+                                                    ToolTip="Xóa hóa đơn">
+                                                <Button Style="{StaticResource SmallIconButton}"
+                                                        Background="Transparent"
+                                                        Width="32"
+                                                        Height="32"
+                                                        Tag="{Binding}"
+                                                        Click="BtnDelete_Click">
+                                                    <TextBlock Text="🗑" 
                                                                FontSize="16"/>
                                                 </Button>
                                             </Border>
@@ -622,7 +672,8 @@
                                        FontSize="12"
                                        Foreground="#666666">
                                 <Run Text="Hiển thị"/>
-                                <Run Text="{Binding Invoices.Count}" 
+                                <Run x:Name="tbDisplayCount"
+                                     Text="0" 
                                      FontWeight="SemiBold"
                                      Foreground="{StaticResource PrimaryBrush}"/>
                                 <Run Text="hóa đơn"/>
