@@ -192,6 +192,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Staffs\ExportExcelStaff.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Staffs\PrintStaff.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -468,6 +472,9 @@
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Staffs\AddStaff.xaml.cs">
       <DependentUpon>AddStaff.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Staffs\ExportExcelStaff.xaml.cs">
+      <DependentUpon>ExportExcelStaff.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Staffs\PrintStaff.xaml.cs">
       <DependentUpon>PrintStaff.xaml</DependentUpon>
