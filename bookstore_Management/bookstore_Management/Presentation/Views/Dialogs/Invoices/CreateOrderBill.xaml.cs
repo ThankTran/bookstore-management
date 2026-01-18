@@ -170,7 +170,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
         #endregion
 
-
         #region Button handlers
 
         private void BtnAddCustomer_Click(object sender, RoutedEventArgs e)
@@ -242,7 +241,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         }
 
         #endregion
-
 
         #region Input handlers
 
@@ -373,56 +371,163 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             }
         }
 
+        #endregion
+
+        #region Validation
         private bool ValidateForm()
         {
-            // Staff bắt buộc
+            // Validate Staff (bắt buộc)
             if (_vm.SelectedStaff == null || string.IsNullOrWhiteSpace(_vm.SelectedStaff.Id))
             {
-                MessageBox.Show("Vui lòng chọn nhân viên!", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Vui lòng chọn nhân viên!", "Lỗi nhập liệu",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 cbStaff.Focus();
                 return false;
             }
 
-            // OrderItems bắt buộc
+            // Validate OrderItems (bắt buộc)
             if (!_vm.OrderItems.Any())
             {
-                MessageBox.Show("Vui lòng thêm ít nhất một sách vào danh sách!", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Vui lòng thêm ít nhất một sách vào danh sách!", "Lỗi nhập liệu",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
+            // Check for duplicates
+            var duplicates = _vm.OrderItems
+                .GroupBy(x => x.BookId)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            if (duplicates.Any())
+            {
+                MessageBox.Show($"Có sách bị trùng lặp trong danh sách!\nVui lòng kiểm tra lại.",
+                    "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            // Validate each item
             foreach (var item in _vm.OrderItems)
             {
                 if (string.IsNullOrWhiteSpace(item.BookId))
                 {
-                    MessageBox.Show("Có sách không hợp lệ (thiếu mã sách).", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Có sách không hợp lệ (thiếu mã sách).", "Lỗi nhập liệu",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                     return false;
                 }
 
                 if (item.Quantity <= 0)
                 {
-                    MessageBox.Show($"Số lượng sách '{item.BookName}' phải lớn hơn 0!", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show($"Số lượng sách '{item.BookName}' phải lớn hơn 0!", "Lỗi nhập liệu",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+
+                if (item.Quantity > 10000)
+                {
+                    MessageBox.Show($"Số lượng sách '{item.BookName}' không được vượt quá 10,000!",
+                        "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return false;
                 }
 
                 if (item.SalePrice <= 0)
                 {
-                    MessageBox.Show($"Sách '{item.BookName}' chưa có giá bán hợp lệ!", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show($"Sách '{item.BookName}' chưa có giá bán hợp lệ!", "Lỗi nhập liệu",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+
+                if (item.SalePrice > 10_000_000m)
+                {
+                    MessageBox.Show($"Giá bán sách '{item.BookName}' vượt quá giới hạn!", "Lỗi nhập liệu",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+
+                // Check stock availability (if you have stock info in BookDetailResponseDto)
+                // This would require passing stock data to OrderBookItem
+                // if (item.AvailableStock < item.Quantity) { ... }
+            }
+
+            // Validate Discount VND
+            var subtotal = _vm.OrderItems.Sum(x => x.Subtotal);
+            var discountVnd = ParseDecimalSafe(tbDiscount.Text);
+
+            if (discountVnd < 0)
+            {
+                MessageBox.Show("Giảm giá không được âm!", "Lỗi nhập liệu",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                tbDiscount.Focus();
+                return false;
+            }
+
+            if (discountVnd > subtotal)
+            {
+                MessageBox.Show("Giảm giá không được lớn hơn tổng tiền hàng!", "Lỗi nhập liệu",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                tbDiscount.Focus();
+                return false;
+            }
+
+            // Validate discount rate
+            var discountRate = subtotal > 0 ? (discountVnd / subtotal) : 0;
+            if (discountRate > 0.5m) // > 50%
+            {
+                var confirm = MessageBox.Show(
+                    $"Giảm giá {discountRate:P0} ({discountVnd:N0} ₫) có vẻ cao bất thường.\n" +
+                    "Bạn có chắc chắn muốn tiếp tục?",
+                    "Xác nhận giảm giá cao",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning
+                );
+
+                if (confirm != MessageBoxResult.Yes)
+                {
+                    tbDiscount.Focus();
                     return false;
                 }
             }
 
-            // Discount VND không âm
-            var discountVnd = ParseDecimalSafe(tbDiscount.Text);
-            if (discountVnd < 0)
+            // Validate total amount
+            var total = subtotal - discountVnd;
+
+            if (total < 0)
             {
-                MessageBox.Show("Giảm giá không được âm!", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
-                tbDiscount.Focus();
+                MessageBox.Show("Tổng tiền không hợp lệ!", "Lỗi nhập liệu",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (total > 1_000_000_000m) // > 1 tỷ
+            {
+                var confirm = MessageBox.Show(
+                    $"Tổng tiền hóa đơn rất lớn: {total:N0} ₫\n" +
+                    $"Số loại sách: {_vm.OrderItems.Count}\n" +
+                    $"Tổng số lượng: {_vm.OrderItems.Sum(x => x.Quantity):N0} cuốn\n\n" +
+                    "Bạn có chắc chắn muốn tạo hóa đơn này?",
+                    "Xác nhận hóa đơn lớn",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                );
+
+                if (confirm != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+            }
+
+            // Validate payment method
+            if (cbPaymentMethod.SelectedIndex < 0)
+            {
+                MessageBox.Show("Vui lòng chọn phương thức thanh toán!", "Lỗi nhập liệu",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                cbPaymentMethod.Focus();
                 return false;
             }
 
             return true;
         }
-
         #endregion
 
         #region Helper methods

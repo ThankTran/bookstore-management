@@ -161,7 +161,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
             #region RemoveCommand
             RemoveBookCommand = new RelayCommand<object>((p) =>
             {
@@ -191,7 +190,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 LoadBooksFromDatabase();
             });
             #endregion
-
             #region EditCommand
             EditBookCommand = new RelayCommand<object>((p) =>
             {
@@ -239,7 +237,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
             #region SearchCommand
             SearchBookCommand = new RelayCommand<object>((p) =>
             {
@@ -273,7 +270,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
             #region LoadDataCommand
             LoadData = new RelayCommand<object>((p) =>
             {
@@ -282,14 +278,19 @@ namespace bookstore_Management.Presentation.ViewModels
             });
             #endregion
 
+            #region
             //chưa làm xong
-            #region PrintCommand 
             PrintCommand = new RelayCommand<object>((p) =>
             {
+                // Lấy danh sách đang hiển thị (Ví dụ: _datalist hoặc FilteredList)
+                var data = Books;
 
+                // Truyền data vào khi tạo cửa sổ
+                var dialog = new Views.Dialogs.Books.PrintBook(data);
+
+                dialog.ShowDialog();
             });
             #endregion
-
             #region ExportCommand
             ExportCommand = new RelayCommand<object>((p) =>
             {

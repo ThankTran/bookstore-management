@@ -26,6 +26,7 @@ namespace bookstore_Management
         public MainWindow()
         {
             InitializeComponent();
+            SetClickedButtonColor(btnHome);
             MainFrame.Content = new HomeView();
         }
 
@@ -113,7 +114,7 @@ namespace bookstore_Management
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
             SetClickedButtonColor(btnHome);
-            //LoadHomePage();
+            MainFrame.Content = new HomeView();
         }
 
         // Xử lý click menu Quản lý khách hàng
