@@ -301,8 +301,10 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             tbTotalAmount.Text = $"{CalculateTotalAmount():N0} ₫";
         }
 
+        #region Validation
         private bool ValidateForm()
         {
+            // Validate Publisher
             if (string.IsNullOrEmpty(PublisherId))
             {
                 ShowValidationError("Vui lòng chọn nhà xuất bản!");
@@ -310,6 +312,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
                 return false;
             }
 
+            // Validate CreatedBy
             if (string.IsNullOrWhiteSpace(CreatedBy))
             {
                 ShowValidationError("Vui lòng nhập người tạo phiếu!");
@@ -317,12 +320,34 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
                 return false;
             }
 
+            if (CreatedBy.Length < 3)
+            {
+                ShowValidationError("Tên người tạo phải có ít nhất 3 ký tự!");
+                tbCreatedBy.Focus();
+                return false;
+            }
+
+            // Validate book items
             if (!_bookItems.Any())
             {
                 ShowValidationError("Vui lòng thêm ít nhất một sách vào danh sách!");
                 return false;
             }
 
+            // Check duplicates
+            var duplicates = _bookItems
+                .GroupBy(x => x.BookId)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            if (duplicates.Any())
+            {
+                ShowValidationError($"Có sách bị trùng lặp trong danh sách: {string.Join(", ", duplicates)}\nVui lòng kiểm tra lại!");
+                return false;
+            }
+
+            // Validate each item
             foreach (var item in _bookItems)
             {
                 if (string.IsNullOrWhiteSpace(item.BookId))
@@ -337,22 +362,88 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
                     return false;
                 }
 
+                if (item.Quantity > 10000)
+                {
+                    ShowValidationError($"Số lượng sách '{item.BookName}' không được vượt quá 10,000!");
+                    return false;
+                }
+
                 if (item.ImportPrice <= 0)
                 {
                     ShowValidationError($"Giá nhập sách '{item.BookName}' phải lớn hơn 0!");
                     return false;
                 }
 
-                // optional: chặn giá quá lớn
                 if (item.ImportPrice > 1_000_000_000m)
                 {
                     ShowValidationError($"Giá nhập sách '{item.BookName}' không hợp lệ (quá lớn)!");
                     return false;
                 }
+
+                // Warn for suspiciously low prices
+                if (item.ImportPrice < 1000)
+                {
+                    var confirm = MessageBox.Show(
+                        $"Sách '{item.BookName}' có giá nhập rất thấp ({item.ImportPrice:N0} ₫).\n" +
+                        "Bạn có chắc chắn muốn tiếp tục?",
+                        "Cảnh báo giá nhập",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning
+                    );
+
+                    if (confirm != MessageBoxResult.Yes)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+
+            // Validate total amount
+            var totalAmount = CalculateTotalAmount();
+
+            if (totalAmount <= 0)
+            {
+                ShowValidationError("Tổng tiền phải lớn hơn 0!");
+                return false;
+            }
+
+            if (totalAmount > 10_000_000_000m) // > 10 tỷ
+            {
+                ShowValidationError("Tổng tiền vượt quá giới hạn cho phép (10 tỷ)!\nVui lòng tách thành nhiều phiếu nhập.");
+                return false;
+            }
+
+            // Warn for large orders
+            if (totalAmount > 500_000_000m) // > 500 triệu
+            {
+                var confirm = MessageBox.Show(
+                    $"Tổng giá trị phiếu nhập: {totalAmount:N0} ₫\n" +
+                    $"Số loại sách: {_bookItems.Count}\n" +
+                    $"Tổng số lượng: {_bookItems.Sum(x => x.Quantity):N0} cuốn\n\n" +
+                    "Bạn có chắc chắn muốn tạo phiếu nhập này?",
+                    "Xác nhận phiếu nhập lớn",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                );
+
+                if (confirm != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+            }
+
+            // Validate Notes length
+            if (!string.IsNullOrWhiteSpace(Notes) && Notes.Length > 500)
+            {
+                ShowValidationError("Ghi chú không được vượt quá 500 ký tự!");
+                tbNotes.Focus();
+                return false;
             }
 
             return true;
         }
+        #endregion
 
         private void ShowValidationError(string message)
         {
@@ -362,6 +453,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         #endregion
     }
 
+    #region ImportBookItem class
     public class ImportBookItem : INotifyPropertyChanged
     {
         private int _quantity;
@@ -403,4 +495,5 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+    #endregion
 }

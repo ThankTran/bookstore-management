@@ -23,7 +23,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         private List<BookDetailResponseDto> _filteredBooks = new List<BookDetailResponseDto>();
         private BookDetailResponseDto _selectedBook;
 
-        // Trả về cho CreateImportBill
         public ImportBookItem SelectedBookItem { get; private set; }
 
         public SelectBookDialog(string publisherId)
@@ -32,7 +31,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
             _publisherId = publisherId;
 
-            // Tự khởi tạo service (để phù hợp CreateImportBill hiện tại đang new dialog trực tiếp)
             var context = new BookstoreDbContext();
             var bookRepo = new BookRepository(context);
             var publisherRepo = new PublisherRepository(context);
@@ -41,17 +39,21 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             _bookService = new BookService(bookRepo, publisherRepo, importBillDetailRepo);
         }
 
+        #region Window Dragging
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadBooksFromDatabase();
             tbSearch.Focus();
         }
 
+
         private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed) DragMove();
         }
+        #endregion
 
+        #region Window Control Buttons
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             if (!ValidateInput()) return;
@@ -84,6 +86,9 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         {
             FilterBooks(tbSearch.Text);
         }
+        #endregion
+
+        #region Book Item Events
 
         private void BookItem_Click(object sender, MouseButtonEventArgs e)
         {
@@ -109,12 +114,15 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             }
         }
 
+        #endregion
+
         private void NumericOnly_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             // chỉ cho nhập số
             e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
         }
 
+        #region Loading Books
         private void LoadBooksFromDatabase()
         {
             try
@@ -128,7 +136,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
                     return;
                 }
 
-                // ✅ Filter theo PublisherId (đúng nghiệp vụ)
                 _allBooks = result.Data
                     .Where(dto => dto.PublisherId == _publisherId)
                     .ToList();
@@ -143,6 +150,9 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             }
         }
 
+        #endregion
+
+        #region Filtering and Selection
         private void FilterBooks(string searchText)
         {
             if (string.IsNullOrWhiteSpace(searchText))
@@ -180,59 +190,127 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             tbQuantity.Focus();
             tbQuantity.SelectAll();
         }
+        #endregion 
 
+        #region Validation
         private bool ValidateInput()
         {
+            // Validate selected book
             if (_selectedBook == null)
             {
                 ShowValidationError("Vui lòng chọn sách!");
                 return false;
             }
 
+            // Validate quantity field
             if (string.IsNullOrWhiteSpace(tbQuantity.Text))
             {
                 ShowValidationError("Vui lòng nhập số lượng!");
                 tbQuantity.Focus();
+                tbQuantity.SelectAll();
                 return false;
             }
 
-            if (!int.TryParse(tbQuantity.Text.Trim(), out int quantity) || quantity <= 0)
+            var qtyText = tbQuantity.Text.Trim().Replace(",", "");
+            if (!int.TryParse(qtyText, out int quantity))
             {
-                ShowValidationError("Số lượng phải là số nguyên dương!");
+                ShowValidationError("Số lượng phải là số nguyên hợp lệ!");
                 tbQuantity.Focus();
+                tbQuantity.SelectAll();
+                return false;
+            }
+
+            if (quantity <= 0)
+            {
+                ShowValidationError("Số lượng phải lớn hơn 0!");
+                tbQuantity.Focus();
+                tbQuantity.SelectAll();
                 return false;
             }
 
             if (quantity > 10000)
             {
-                ShowValidationError("Số lượng không được vượt quá 10,000!");
+                ShowValidationError("Số lượng không được vượt quá 10,000!\nNếu cần nhập số lượng lớn hơn, vui lòng tạo nhiều phiếu nhập.");
                 tbQuantity.Focus();
+                tbQuantity.SelectAll();
                 return false;
             }
 
+            // Validate import price field
             if (string.IsNullOrWhiteSpace(tbImportPrice.Text))
             {
                 ShowValidationError("Vui lòng nhập giá nhập!");
                 tbImportPrice.Focus();
+                tbImportPrice.SelectAll();
                 return false;
             }
 
-            if (!decimal.TryParse(tbImportPrice.Text.Trim(), out decimal price) || price <= 0)
+            var priceText = tbImportPrice.Text.Trim().Replace(",", "");
+            if (!decimal.TryParse(priceText, out decimal price))
             {
-                ShowValidationError("Giá nhập phải là số dương!");
+                ShowValidationError("Giá nhập phải là số hợp lệ!");
                 tbImportPrice.Focus();
+                tbImportPrice.SelectAll();
                 return false;
+            }
+
+            if (price <= 0)
+            {
+                ShowValidationError("Giá nhập phải lớn hơn 0!");
+                tbImportPrice.Focus();
+                tbImportPrice.SelectAll();
+                return false;
+            }
+
+            if (price < 1000)
+            {
+                var confirm = MessageBox.Show(
+                    $"Giá nhập ({price:N0} ₫) có vẻ thấp bất thường.\nBạn có chắc chắn muốn tiếp tục?",
+                    "Xác nhận giá nhập",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning
+                );
+
+                if (confirm != MessageBoxResult.Yes)
+                {
+                    tbImportPrice.Focus();
+                    tbImportPrice.SelectAll();
+                    return false;
+                }
             }
 
             if (price > 1000000000)
             {
-                ShowValidationError("Giá nhập không được vượt quá 1 tỷ đồng!");
+                ShowValidationError("Giá nhập không được vượt quá 1 tỷ đồng!\nVui lòng kiểm tra lại.");
                 tbImportPrice.Focus();
+                tbImportPrice.SelectAll();
                 return false;
+            }
+
+            // Final confirmation for large orders
+            var totalValue = quantity * price;
+            if (totalValue > 100000000) // > 100 triệu
+            {
+                var confirm = MessageBox.Show(
+                    $"Tổng giá trị đơn hàng: {totalValue:N0} ₫\n" +
+                    $"Số lượng: {quantity:N0}\n" +
+                    $"Giá nhập: {price:N0} ₫/cuốn\n\n" +
+                    "Bạn có chắc chắn muốn tiếp tục?",
+                    "Xác nhận đơn hàng lớn",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                );
+
+                if (confirm != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
             }
 
             return true;
         }
+
+        #endregion
 
         private void ShowValidationError(string message)
         {
