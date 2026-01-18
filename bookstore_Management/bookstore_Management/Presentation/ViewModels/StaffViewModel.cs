@@ -28,21 +28,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        ////để lấy data từ list
-        //public Array BookCategories => Enum.GetValues(typeof(BookCategory));
-
-        //private BookCategory _category;
-        //public BookCategory Category
-        //{
-        //    get => _category;
-        //    set
-        //    {
-        //        _category = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
+       
         //sách đã chọn để xóa/sửa
         private Staff _selectedStaff;
         public Staff SelectedStafff

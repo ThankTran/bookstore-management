@@ -394,6 +394,7 @@
     <Compile Include="Presentation\ViewModels\CustomerViewModel.cs" />
     <Compile Include="Presentation\ViewModels\DashboardViewModel.cs" />
     <Compile Include="Presentation\ViewModels\InventoryViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\InvoiceViewModel.cs" />
     <Compile Include="Presentation\ViewModels\LoginViewModel.cs" />
     <Compile Include="Presentation\ViewModels\MainViewModel.cs" />
     <Compile Include="Presentation\ViewModels\PaymentViewModel.cs" />
