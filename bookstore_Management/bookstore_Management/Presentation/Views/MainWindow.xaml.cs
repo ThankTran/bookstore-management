@@ -1,19 +1,24 @@
 ﻿
-using bookstore_Management.Presentation.Views.Information;
+using bookstore_Management.Data.Context;
+using bookstore_Management.Models;
+using bookstore_Management.Presentation.ViewModels;
 using bookstore_Management.Presentation.Views;
-using bookstore_Management.Presentation.Views.Users;
-using bookstore_Management.Views.Books;
-using bookstore_Management.Views.Customers;
-using bookstore_Management.Views.Statistics;
+using bookstore_Management.Presentation.Views.Information;
+using bookstore_Management.Presentation.Views.Orders;
 using bookstore_Management.Presentation.Views.Payment;
 using bookstore_Management.Presentation.Views.Publishers;
+using bookstore_Management.Presentation.Views.Users;
+using bookstore_Management.Services.Implementations;
+using bookstore_Management.Views.Books;
+using bookstore_Management.Views.Customers;
+using bookstore_Management.Services.Interfaces;
+using bookstore_Management.Presentation.Views.Statistics;
 using System;
 using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using bookstore_Management.Presentation.Views.Orders;
-using bookstore_Management.Models;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 namespace bookstore_Management
 {
@@ -27,7 +32,10 @@ namespace bookstore_Management
         {
             InitializeComponent();
             SetClickedButtonColor(btnHome);
+
+
             MainFrame.Content = new HomeView();
+
         }
 
         #region Navigation helpers
@@ -152,7 +160,7 @@ namespace bookstore_Management
             try
             {
                 SetClickedButtonColor(btnStatistics);
-                MainFrame.Content = new Views.Statistics.DashboardView();
+                MainFrame.Content = new Presentation.Views.Statistics.DashboardView();
             }
             catch (Exception ex)
             {

@@ -227,13 +227,13 @@
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
                             </Border>
-                            <TextBlock Text="Doanh thu hôm nay"
+                            <TextBlock Text="Doanh thu tháng này"
                                        FontSize="13"
                                        Foreground="#666666"
                                        HorizontalAlignment="Center"
                                        Margin="0,15,0,8"
                                        FontWeight="SemiBold"/>
-                            <TextBlock Text="12,500,000 ₫"
+                            <TextBlock Text="{Binding TodayRevenue, StringFormat={}{0:N0} đ}"
                                        FontSize="22"
                                        FontWeight="Bold"
                                        Foreground="#4CAF50"
@@ -264,13 +264,13 @@
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
                             </Border>
-                            <TextBlock Text="Đơn hàng hôm nay"
+                            <TextBlock Text="Đơn hàng tháng này"
                                        FontSize="13"
                                        Foreground="#666666"
                                        HorizontalAlignment="Center"
                                        Margin="0,15,0,8"
                                        FontWeight="SemiBold"/>
-                            <TextBlock Text="156"
+                            <TextBlock Text="{Binding TodayOrders}"
                                        FontSize="22"
                                        FontWeight="Bold"
                                        Foreground="#2196F3"
@@ -301,13 +301,13 @@
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
                             </Border>
-                            <TextBlock Text="Khách hàng mới"
+                            <TextBlock Text="Khách hàng trong tháng"
                                        FontSize="13"
                                        Foreground="#666666"
                                        HorizontalAlignment="Center"
                                        Margin="0,15,0,8"
                                        FontWeight="SemiBold"/>
-                            <TextBlock Text="24"
+                            <TextBlock Text="{Binding NewCustomers}"
                                        FontSize="22"
                                        FontWeight="Bold"
                                        Foreground="#FF9800"
@@ -344,7 +344,7 @@
                                        HorizontalAlignment="Center"
                                        Margin="0,15,0,8"
                                        FontWeight="SemiBold"/>
-                            <TextBlock Text="18"
+                            <TextBlock Text="{Binding LowStockBooks}"
                                        FontSize="22"
                                        FontWeight="Bold"
                                        Foreground="#F44336"
@@ -390,9 +390,13 @@
                                                Foreground="{StaticResource PrimaryBrush}"
                                                VerticalAlignment="Center"/>
                                 </StackPanel>
-                                <TextBlock Text="Xem tất cả →"
-                                           Style="{StaticResource ViewAllLink}"
-                                           Foreground="{StaticResource PrimaryBrush}"/>
+                                <Button BorderThickness="0"
+                                        Background="Transparent"
+                                        Click="Button_Click_3">
+                                    <TextBlock Text="Xem tất cả →"
+                                               Style="{StaticResource ViewAllLink}"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                </Button>
                             </Grid>
 
                             <!-- Order Items -->
@@ -677,6 +681,10 @@
                     <Border Grid.Column="0"
                             Background="{StaticResource SuccessGradient}"
                             Style="{StaticResource ActionButton}">
+                        <Button 
+                            BorderThickness="0"
+                            Background="Transparent"
+                            Click="Button_Click">
                         <StackPanel Orientation="Horizontal">
                             <Border Background="White"
                                     CornerRadius="12"
@@ -700,64 +708,75 @@
                                            Margin="0,3,0,0"/>
                             </StackPanel>
                         </StackPanel>
+                        </Button>
                     </Border>
 
                     <!-- Quick Action: Manage Inventory -->
                     <Border Grid.Column="2"
                             Background="{StaticResource InfoGradient}"
                             Style="{StaticResource ActionButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <Border Background="White"
+                        <Button 
+                            BorderThickness="0"
+                            Background="Transparent"
+                            Click="Button_Click_1">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Background="White"
                                     CornerRadius="12"
                                     Width="50" Height="50"
                                     Margin="0,0,15,0"
                                     Opacity="0.95">
-                                <TextBlock Text="📦" 
+                                    <TextBlock Text="📦" 
                                            FontSize="24"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Quản lý kho hàng"
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Quản lý hóa đơn"
                                            FontSize="16"
                                            FontWeight="Bold"
                                            Foreground="White"/>
-                                <TextBlock Text="Kiểm tra tồn kho"
+                                    <TextBlock Text="Kiểm tra hóa đơn"
                                            FontSize="12"
                                            Foreground="White"
                                            Opacity="0.9"
                                            Margin="0,3,0,0"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
+                        </Button>
                     </Border>
 
                     <!-- Quick Action: View Reports -->
                     <Border Grid.Column="4"
                             Background="{StaticResource WarningGradient}"
                             Style="{StaticResource ActionButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <Border Background="White"
+                        <Button 
+                            BorderThickness="0"
+                            Background="Transparent"
+                            Click="Button_Click_2">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Background="White"
                                     CornerRadius="12"
                                     Width="50" Height="50"
                                     Margin="0,0,15,0"
                                     Opacity="0.95">
-                                <TextBlock Text="📊" 
+                                    <TextBlock Text="📊" 
                                            FontSize="24"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Xem báo cáo"
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Xem thống kê chi tiết"
                                            FontSize="16"
                                            FontWeight="Bold"
                                            Foreground="White"/>
-                                <TextBlock Text="Thống kê chi tiết"
+                                    <TextBlock Text="Thống kê chi tiết"
                                            FontSize="12"
                                            Foreground="White"
                                            Opacity="0.9"
                                            Margin="0,3,0,0"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
+                        </Button>
                     </Border>
                 </Grid>
             </Grid>

@@ -224,7 +224,7 @@ namespace bookstore_Management.Services.Implementations
                 books.ForEach(b =>
                 {
                     if ( b.Stock == 0 ) outOfStockCount++;
-                    else if (b.Stock > 0 && b.Stock < 5) lowStockCount++;
+                    else if (b.Stock > 0 && b.Stock < 50) lowStockCount++;
                 });
 
                 var report = new InventorySummaryReportResponseDto

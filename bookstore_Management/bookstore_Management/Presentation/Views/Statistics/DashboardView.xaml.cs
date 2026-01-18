@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using bookstore_Management.Presentation.ViewModels;
 
-namespace bookstore_Management.Views.Statistics
+namespace bookstore_Management.Presentation.Views.Statistics
 {
 
     public partial class DashboardView : UserControl
@@ -13,8 +13,8 @@ namespace bookstore_Management.Views.Statistics
         public DashboardView()
         {
             InitializeComponent();
-            _viewModel = new DashboardViewModel();
-            this.DataContext = _viewModel;
+            //_viewModel = new DashboardViewModel();
+            //this.DataContext = _viewModel;
         }
 
         //public void RefreshData()
