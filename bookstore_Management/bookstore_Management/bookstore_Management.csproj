@@ -162,6 +162,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Payment\ExportExcelPayment.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Payment\PrintPayment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -455,6 +459,9 @@
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Customers\UpdateCustomer.xaml.cs">
       <DependentUpon>UpdateCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Payment\ExportExcelPayment.xaml.cs">
+      <DependentUpon>ExportExcelPayment.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Payment\PrintPayment.xaml.cs">
       <DependentUpon>PrintPayment.xaml</DependentUpon>
