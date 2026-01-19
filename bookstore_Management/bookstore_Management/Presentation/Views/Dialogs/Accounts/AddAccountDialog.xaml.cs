@@ -53,6 +53,12 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Accounts
         {
             get => cbStaffId.SelectedItem as string;
         }
+       
+        //public UserRole Role
+        //{
+        //    get { return (UserRole)cbRole.SelectedItem; }
+        //    set { cbRole.SelectedItem = value; }
+        //}
 
         #endregion
 

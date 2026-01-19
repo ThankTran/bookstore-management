@@ -5,6 +5,7 @@ namespace bookstore_Management.DTOs.User.Response
 {
     public class UserResponseDto
     {
+        public string AccountId { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public string StaffId { get; set; }

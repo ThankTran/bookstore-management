@@ -1,15 +1,12 @@
-﻿using bookstore_Management.Data.Context;
+﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
-using Moq;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -52,6 +49,38 @@ namespace bookstore_Management.Presentation.ViewModels
                 SearchUserCommand.Execute(null);
             }
         }
+
+        public Array UserRoles =>Enum.GetValues(typeof(UserRole));
+        private UserRole _role;
+        public UserRole Role
+        {
+            get => _role;
+            set
+            {
+                _role = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string RoleDisplay
+        {
+            get
+            {
+                switch (Role)
+                {
+                    case UserRole.Administrator:
+                        return "Quản trị";
+                    case UserRole.SalesManager:
+                        return "Quản lý bán hàng";
+                    case UserRole.InventoryManager:
+                        return "Quản lý kho";
+                    default:
+                        return "Không xác định";
+                }
+            }
+        }
+
+
         #region Khai báo command
         //khai báo command cho thao tác thêm, xóa, sửa account
         public ICommand AddUserCommand { get; set; }
@@ -91,12 +120,8 @@ namespace bookstore_Management.Presentation.ViewModels
 
         public UserViewModel(IUserService userService)
         {
-            var context = new BookstoreDbContext();
 
-            _userService = new UserService(
-            new UserRepository(context),
-            new StaffRepository(context)
-            );
+            _userService = userService;
 
             Users = new ObservableCollection<User>();
 
@@ -154,7 +179,37 @@ namespace bookstore_Management.Presentation.ViewModels
                 LoadUsersFromDatabase();
             });
             #endregion
+            #region EditCommand
+            EditUserCommand = new RelayCommand<object>((p) =>
+            {
+                var dialog = new Views.Dialogs.Accounts.UpdateAccount();
+                var user = p as User;
+                if (user == null)
+                {
+                    MessageBox.Show("Vui lòng chọn để chỉnh sửa");
+                    return;
+                }
 
+                dialog.Password = user.PasswordHash;
+
+                if (dialog.ShowDialog() == true)
+                {
+                    var updateDto = new DTOs.User.Requests.ChangePasswordRequestDto
+                    { 
+                        NewPassword = dialog.Password
+                    };
+
+                    var result = _userService.ChangePassword(user.Username, updateDto);
+                    if (!result.IsSuccess)
+                    {
+                        MessageBox.Show("Lỗi khi cập nhật / chỉnh sửa sách");
+                        return;
+                    }
+
+                    LoadUsersFromDatabase();
+                }
+            });
+            #endregion
             #region SearchCommand
             SearchUserCommand = new RelayCommand<object>((p) =>
             {

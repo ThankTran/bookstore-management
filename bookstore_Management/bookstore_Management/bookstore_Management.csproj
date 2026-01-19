@@ -39,6 +39,7 @@
     <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Printing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -115,6 +116,14 @@
     </Page>
     <!-- Views - Dialogs - Accounts -->
     <Page Include="Presentation\Views\Dialogs\Accounts\AddAccountDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Accounts\ExportExelAccount.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Accounts\PrintAccount.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -317,6 +326,7 @@
     <Compile Include="Core\Enums\PaymentType.cs" />
     <Compile Include="Core\Enums\PermissionAction.cs" />
     <Compile Include="Core\Enums\StaffStatus.cs" />
+    <Compile Include="Core\Enums\TimeRange.cs" />
     <Compile Include="Core\Enums\UserRole.cs" />
     <Compile Include="Core\Exceptions\BookstoreException.cs" />
     <Compile Include="Core\Exceptions\DataNotFoundException.cs" />
@@ -366,6 +376,7 @@
     <Compile Include="DTOs\Common\Reports\InventoryReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventorySummaryReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\PublisherImportReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\RevenueDto.cs" />
     <Compile Include="DTOs\Customer\Requests\CreateCustomerRequestDto.cs" />
     <Compile Include="DTOs\Customer\Requests\UpdateCustomerRequestDto.cs" />
     <Compile Include="DTOs\Customer\Responses\CustomerDetailResponseDto.cs" />
@@ -442,6 +453,12 @@
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Accounts\AddAccountDialog.xaml.cs">
       <DependentUpon>AddAccountDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Accounts\ExportExelAccount.xaml.cs">
+      <DependentUpon>ExportExelAccount.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Accounts\PrintAccount.xaml.cs">
+      <DependentUpon>PrintAccount.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Accounts\UpdateAccount.xaml.cs">
       <DependentUpon>UpdateAccount.xaml</DependentUpon>
@@ -701,6 +718,9 @@
     <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\preview.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\calendar.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\lock.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\reset.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\unlock.png" />
     <Content Include="Services\ServiceOverview.md" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\export.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\print.png" />
