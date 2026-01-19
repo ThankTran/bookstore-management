@@ -280,7 +280,7 @@
 
                             <!-- Mã nhân viên -->
                             <DataGridTextColumn Header="Mã NV" 
-                                                Binding="{Binding UserId}" 
+                                                Binding="{Binding StaffId}" 
                                                 Width="100"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
