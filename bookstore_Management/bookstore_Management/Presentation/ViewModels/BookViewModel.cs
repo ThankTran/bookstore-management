@@ -2,6 +2,7 @@ using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
+using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
@@ -17,7 +18,8 @@ namespace bookstore_Management.Presentation.ViewModels
     {
         #region các khai báo
         //lấy service
-        private readonly IBookService _bookService;      
+        private readonly IBookService _bookService;
+        private readonly IPublisherRepository _publisherRepository;
 
         //dữ liệu để view binding
         private ObservableCollection<Book> _books;
@@ -121,8 +123,8 @@ namespace bookstore_Management.Presentation.ViewModels
         public BookViewModel(IBookService bookService)
         {
             //_bookService = bookService ?? new BookService();
-            var context = new BookstoreDbContext();   
-            
+            var context = new BookstoreDbContext();
+            _publisherRepository = new PublisherRepository(context);
             _bookService = new BookService(
             new BookRepository(context),
             new PublisherRepository(context),
@@ -138,6 +140,11 @@ namespace bookstore_Management.Presentation.ViewModels
             AddBookCommand = new RelayCommand<object>((p) =>
             {
                 var dialog = new Views.Dialogs.Books.AddBookDialog();
+
+                var publishers = _publisherRepository.GetAll();
+                var publisherNames = publishers.Select(x => x.Name).ToList();
+                dialog.LoadPublishers(publisherNames);
+
                 if (dialog.ShowDialog() == true)
                 {
                     // Call service to add book to database
@@ -195,25 +202,25 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 var dialog = new Views.Dialogs.Books.UpdateBook();
                 var book = p as Book;
+
+                var publishers = _publisherRepository.GetAll();
+                var publisherNames = publishers.Select(x => x.Name).ToList();
+
+                // Nạp danh sách vào trước
+                dialog.LoadPublishers(publisherNames);
+
                 if (book == null)
                 {
                     MessageBox.Show("Vui lòng chọn sách để chỉnh sửa");
                     return;
                 }
-
+                decimal safeSalePrice = book.SalePrice ?? 0;
                 //đưa dữ liệu cũ lên dialog
                 dialog.BookID = book.BookId;
                 dialog.BookName = book.Name;
                 dialog.Author = book.Author;
                 dialog.Category = book.Category;
-                //dialog.SalePrice = book.SalePrice;
-                //dialog.Publisher = book.Publisher;
-                // Giả sử Dialog có property SelectedPublisherId hoặc bạn gán trực tiếp cho ComboBox
-                //if (book.Publisher != null)
-                //{
-                //    dialog.SelectedPublisherId = book.Publisher.Id;
-                //    // ComboBox trong dialog sẽ tự nhảy đến NXB tương ứng dựa trên ID này
-                //}
+                dialog.SalePrice = safeSalePrice;
 
                 if (dialog.ShowDialog() == true)
                 {
@@ -278,7 +285,7 @@ namespace bookstore_Management.Presentation.ViewModels
             });
             #endregion
 
-            #region
+            #region Print
             //chưa làm xong
             PrintCommand = new RelayCommand<object>((p) =>
             {

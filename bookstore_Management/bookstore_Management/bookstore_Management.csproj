@@ -36,11 +36,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+
     <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Printing" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -177,11 +183,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Invoices\ExportExcelInvoice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Invoices\PrintInvoice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Invoices\SelectBookDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\Views\Dialogs\Payment\ExportExcelPayment.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Payment\Pay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -409,9 +427,9 @@
     <Compile Include="Helpers\ExcelExporter.cs" />
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
-    <Compile Include="Migrations\202601170425362_CreateDb.cs" />
-    <Compile Include="Migrations\202601170425362_CreateDb.Designer.cs">
-      <DependentUpon>202601170425362_CreateDb.cs</DependentUpon>
+    <Compile Include="Migrations\202601190411178_createDb.cs" />
+    <Compile Include="Migrations\202601190411178_createDb.Designer.cs">
+      <DependentUpon>202601190411178_createDb.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
@@ -490,6 +508,12 @@
     <Compile Include="Presentation\Views\Dialogs\Invoices\EditOrderDialog.xaml.cs">
       <DependentUpon>EditOrderDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Invoices\ExportExcelInvoice.xaml.cs">
+      <DependentUpon>ExportExcelInvoice.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Invoices\PrintInvoice.xaml.cs">
+      <DependentUpon>PrintInvoice.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Invoices\SelectBookDialog.xaml.cs">
       <DependentUpon>SelectBookDialog.xaml</DependentUpon>
     </Compile>
@@ -501,6 +525,9 @@
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Payment\ExportExcelPayment.xaml.cs">
       <DependentUpon>ExportExcelPayment.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Payment\Pay.xaml.cs">
+      <DependentUpon>Pay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Payment\PrintPayment.xaml.cs">
       <DependentUpon>PrintPayment.xaml</DependentUpon>
@@ -632,8 +659,8 @@
     <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202601170425362_CreateDb.resx">
-      <DependentUpon>202601170425362_CreateDb.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202601190411178_createDb.resx">
+      <DependentUpon>202601190411178_createDb.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -98,6 +98,7 @@ namespace bookstore_Management.Presentation.ViewModels
         #region === COMMANDS ===
 
         public ICommand SelectTimeCommand { get; set; }
+        public ICommand RefreshCommand { get; set; }
 
         #endregion
 
@@ -119,6 +120,11 @@ namespace bookstore_Management.Presentation.ViewModels
             });
 
             SelectedTimeRange = TimeRange.Today;
+
+            RefreshCommand = new RelayCommand<TimeRange>(p =>
+            {
+
+            });
         }
 
         #endregion

@@ -1,4 +1,6 @@
 ﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.Data.Context;
+using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
@@ -6,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using bookstore_Management.Data.Context;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
@@ -14,7 +15,8 @@ namespace bookstore_Management.Presentation.ViewModels
     {
         #region các khai báo
         private readonly IPublisherService _publisherService;
-       
+        private readonly IPublisherRepository _publisherRepository;
+
         //dữ liệu để view binding
         private ObservableCollection<Publisher> _publishers;
         public ObservableCollection<Publisher> Publishers
@@ -85,6 +87,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 Phone = dto.Phone,
                 Email = dto.Email,
                 CreatedDate = dto.CreatedDate,
+
             });
             Publishers = new ObservableCollection<Publisher>(publishers);
         }
@@ -94,10 +97,15 @@ namespace bookstore_Management.Presentation.ViewModels
         public PublisherViewModel(IPublisherService publisherService)
         {
             var context = new BookstoreDbContext();
+            _publisherRepository = new Data.Repositories.Implementations.PublisherRepository(context);
+            var bookRepo = new Data.Repositories.Implementations.BookRepository(context);
+            var billRepo = new Data.Repositories.Implementations.ImportBillRepository(context);
+
+            // 2. Truyền repository đã khởi tạo vào Service
             _publisherService = new PublisherService(
-                new Data.Repositories.Implementations.PublisherRepository(context),
-                new Data.Repositories.Implementations.BookRepository(context),
-                new Data.Repositories.Implementations.ImportBillRepository(context)
+                _publisherRepository,
+                bookRepo,
+                billRepo
             );
 
             Publishers = new ObservableCollection<Publisher>();
@@ -131,6 +139,21 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 var dialog = new Presentation.Views.Dialogs.Publishers.UpdatePublisher();
                 var pus = p as Publisher;
+
+                var publishers = _publisherRepository.GetAll();
+                var publisherNames = publishers.Select(x => x.Name).ToList();
+
+                // Nạp danh sách vào trước
+                dialog.LoadPublisherData(
+                    publisherNames,       // <--- Truyền list vào đây
+                    pus.Id.ToString(),
+                    pus.Name,
+                    pus.Phone,
+                    pus.Email,
+                    // Nếu muốn truyền ngày thì thêm vào sau, không thì để null nó tự lấy mặc định
+                    null,
+                    null
+                );
                 if (pus == null) return;
 
                 //dialog.PublisherId = pus.Id;

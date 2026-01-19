@@ -123,6 +123,7 @@ namespace bookstore_Management.Presentation.ViewModels
                         Name=dialog.CustomerName,
                         Address=dialog.Address,
                         Email=dialog.Email,
+                        Phone=dialog.Phone,
                     };
                     var result = _customerService.AddCustomer(newCusDto);
                     if (!result.IsSuccess)
@@ -147,6 +148,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 dialog.CustomerName = cus.Name;
                 dialog.Phone = cus.Phone;
                 dialog.Email = cus.Email;
+                dialog.Address = cus.Address;
                 if (dialog.ShowDialog() == true)
                 {
                     var updateCusDto = new DTOs.Customer.Requests.UpdateCustomerRequestDto()
@@ -154,11 +156,13 @@ namespace bookstore_Management.Presentation.ViewModels
                         Name = dialog.CustomerName,
                         Address = dialog.Address,
                         Email = dialog.Email,
+                        Phone = dialog.Phone,
                     };
                     var result = _customerService.UpdateCustomer(cus.CustomerId, updateCusDto);
                     if (!result.IsSuccess)
                     {
-                        MessageBox.Show("Lỗi khi sửa khách hàng");
+                        // SỬA DÒNG NÀY: In ra result.ErrorMessage để biết DB đang từ chối vì lý do gì
+                        MessageBox.Show($"Chi tiết lỗi: {result.ErrorMessage}", "Lỗi thêm khách hàng", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                     LoadCusFromDatabase();
@@ -180,7 +184,10 @@ namespace bookstore_Management.Presentation.ViewModels
                 var result = _customerService.DeleteCustomer(cus.CustomerId);
                 if (!result.IsSuccess)
                 {
-                    MessageBox.Show("Lỗi khi xóa khách hàng");
+                    MessageBox.Show($"Không thể xóa khách hàng.\nChi tiết lỗi: {result.ErrorMessage}",
+                        "Lỗi xóa dữ liệu",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                     return;
                 }
                 LoadCusFromDatabase();

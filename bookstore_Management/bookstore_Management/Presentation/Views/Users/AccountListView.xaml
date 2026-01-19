@@ -158,6 +158,7 @@
                                  VerticalContentAlignment="Center"
                                  FontSize="13"
                                  Foreground="#666666"
+                                 Text="{Binding SearchKeyword, UpdateSourceTrigger=PropertyChanged}"
                                  FontFamily="{StaticResource PrimaryFont}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
@@ -187,8 +188,10 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Cursor="Hand"
-                                Visibility="Collapsed">
-                            <!--Visibility="{Binding ElementName=txtSearch, Path=Text.Length, Converter={StaticResource CountToVisibilityConverter}}"-->
+                                Command="{Binding LoadData}"
+                                Visibility="{Binding ElementName=txtSearch, Path=Text.Length, Converter={StaticResource CountToVisibilityConverter}}">
+                            <!--Visibility="Collapsed"-->
+                            
                             <TextBlock Text="✕" 
                                        Foreground="#999999"
                                        FontSize="12"
@@ -358,7 +361,7 @@
                                                 </Style>
 
                                             </Border.Style>
-                                            <TextBlock Text="{Binding RoleDisplay}"
+                                            <TextBlock Text="{Binding UserRole}"
                                                        FontSize="11"
                                                        FontWeight="SemiBold"
                                                        HorizontalAlignment="Center">
@@ -481,8 +484,10 @@
                                                 <Button Style="{StaticResource SmallIconButton}"
                                                         Background="Transparent"
                                                         Width="32"
+                                                        Command="{Binding DataContext.RemoveUserCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                        CommandParameter="{Binding}"
                                                         Height="32">
-                                                    <Image Source="/Presentation/AppResources/Images/Icons/Actions/reset.png" 
+                                                    <Image Source="/Presentation/AppResources/Images/Icons/Actions/recyclebin.png"
                                                            Width="16" 
                                                            Height="16"/>
                                                 </Button>

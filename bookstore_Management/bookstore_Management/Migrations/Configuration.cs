@@ -374,38 +374,38 @@
                 // ============================================
                 var users = new List<User>
                 {
-                    new User {  Username = "admin", PasswordHash = Encryptor.Hash("Admin@123"), StaffId = "NV0001", CreatedDate = DateTime.Now },
-                    new User {  Username = "cust.manager", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0002", CreatedDate = DateTime.Now },
-                    new User { Username = "sales.staff01", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0003", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff02", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0004", CreatedDate = DateTime.Now },
-                    new User {  Username = "inventory.manager01", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0005", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff03", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0006", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff04", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0007", CreatedDate = DateTime.Now },
-                    new User {  Username = "inventory.manager02", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0008", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff05", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0009", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff06", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0010", CreatedDate = DateTime.Now },
-                    new User {  Username = "cust.manager02", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0012", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff08", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0013", CreatedDate = DateTime.Now },
-                    new User { Username = "inventory.manager03", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0014", CreatedDate = DateTime.Now },
-                    new User { Username = "sales.staff09", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0015", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff10", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0016", CreatedDate = DateTime.Now },
-                    new User { Username = "inventory.manager04", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0017", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff11", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0018", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff12", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0019", CreatedDate = DateTime.Now },
-                    new User {  Username = "inventory.manager05", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0020", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff13", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0021", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff14", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0022", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff15", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0023", CreatedDate = DateTime.Now },
-                    new User {  Username = "cust.manager03", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0024", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff16", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0025", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff17", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0026", CreatedDate = DateTime.Now },
-                    new User {  Username = "inventory.manager06", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0027", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff18", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0028", CreatedDate = DateTime.Now },
-                    new User {  Username = "sales.staff19", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0029", CreatedDate = DateTime.Now },
-                    new User {  Username = "admin2", PasswordHash = Encryptor.Hash("Admin@123"), StaffId = "NV0030", CreatedDate = DateTime.Now }
+                    new User {  UserId = "UID00001", Username = "admin", PasswordHash = Encryptor.Hash("Admin@123"), StaffId = "NV0001", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00002",Username = "cust.manager", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0002", CreatedDate = DateTime.Now },
+                    new User { UserId = "UID00003",Username = "sales.staff01", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0003", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00004",Username = "sales.staff02", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0004", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00005",Username = "inventory.manager01", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0005", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00006",Username = "sales.staff03", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0006", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00007",Username = "sales.staff04", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0007", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00008",Username = "inventory.manager02", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0008", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00009",Username = "sales.staff05", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0009", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00010",Username = "sales.staff06", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0010", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00011",Username = "cust.manager02", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0012", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00012",Username = "sales.staff08", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0013", CreatedDate = DateTime.Now },
+                    new User { UserId = "UID00013",Username = "inventory.manager03", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0014", CreatedDate = DateTime.Now },
+                    new User { UserId = "UID00014",Username = "sales.staff09", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0015", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00015",Username = "sales.staff10", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0016", CreatedDate = DateTime.Now },
+                    new User {UserId = "UID00016", Username = "inventory.manager04", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0017", CreatedDate = DateTime.Now },
+                    new User { UserId = "UID00017", Username = "sales.staff11", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0018", CreatedDate = DateTime.Now },
+                    new User { UserId = "UID00018", Username = "sales.staff12", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0019", CreatedDate = DateTime.Now },
+                    new User {UserId = "UID00019",  Username = "inventory.manager05", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0020", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00020",Username = "sales.staff13", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0021", CreatedDate = DateTime.Now },
+                    new User { UserId = "UID00021", Username = "sales.staff14", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0022", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00022",Username = "sales.staff15", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0023", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00023",Username = "cust.manager03", PasswordHash = Encryptor.Hash("CustManager@123"), StaffId = "NV0024", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00024",Username = "sales.staff16", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0025", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00025",Username = "sales.staff17", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0026", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00026",Username = "inventory.manager06", PasswordHash = Encryptor.Hash("Inventory@123"), StaffId = "NV0027", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00027",Username = "sales.staff18", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0028", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00028",Username = "sales.staff19", PasswordHash = Encryptor.Hash("SalesStaff@123"), StaffId = "NV0029", CreatedDate = DateTime.Now },
+                    new User {  UserId = "UID00029",Username = "admin2", PasswordHash = Encryptor.Hash("Admin@123"), StaffId = "NV0030", CreatedDate = DateTime.Now }
                 };
 
-                context.Users.AddOrUpdate(u => u.Username, users.ToArray());
+                context.Users.AddOrUpdate(u => u.UserId, users.ToArray());
                 context.SaveChanges();
 
                 #endregion

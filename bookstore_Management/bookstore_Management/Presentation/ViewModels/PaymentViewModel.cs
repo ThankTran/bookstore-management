@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class PaymentViewModel
+    internal class PaymentViewModel : BaseViewModel
     {
+
     }
 }

@@ -284,7 +284,7 @@
 
                             <!-- Mã NXB -->
                             <DataGridTextColumn Header="Mã NXB" 
-                                                Binding="{Binding MaNXB}" 
+                                                Binding="{Binding Id}" 
                                                 Width="110"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>

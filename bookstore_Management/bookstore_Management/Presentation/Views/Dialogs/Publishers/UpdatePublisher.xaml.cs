@@ -2,6 +2,7 @@
 using bookstore_Management.DTOs.Publisher.Requests;
 using bookstore_Management.Models;
 using System;
+using System.Collections.Generic;
 using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -80,13 +81,37 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
         /// <summary>
         /// Load book data into the dialog
         /// </summary>
-        public void LoadPublisherData(string publisherId, string name, string phone, string email,
-                                 DateTime? createdDate = null, DateTime? lastModified = null)
-        {
-            PublisherID = publisherId;
+        //public void LoadPublisherData(string publisherId, string name, string phone, string email,
+        //                         DateTime? createdDate = null, DateTime? lastModified = null)
+        //{
+        //    PublisherID = publisherId;
 
+        //    cbPublisher.SelectedItem = name;
+
+        //    Phone = phone;
+        //    Email = email;
+
+        //    if (createdDate.HasValue)
+        //        CreatedDate = createdDate.Value;
+
+        //    if (lastModified.HasValue)
+        //        LastModifiedDate = lastModified.Value;
+
+        //    // Reset change tracking after loading
+        //    _hasChanges = false;
+        //}
+        // Thêm tham số listNames vào đầu
+        public void LoadPublisherData(List<string> listNames, string publisherId, string name, string phone, string email,
+                                      DateTime? createdDate = null, DateTime? lastModified = null)
+        {
+            // 1. NẠP DỮ LIỆU CHO COMBOBOX TRƯỚC
+            cbPublisher.ItemsSource = listNames;
+
+            // 2. SAU ĐÓ MỚI CHỌN ĐƯỢC ITEM
+            PublisherID = publisherId;
             cbPublisher.SelectedItem = name;
 
+            // Các phần còn lại giữ nguyên
             Phone = phone;
             Email = email;
 
@@ -96,10 +121,8 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Publishers
             if (lastModified.HasValue)
                 LastModifiedDate = lastModified.Value;
 
-            // Reset change tracking after loading
             _hasChanges = false;
         }
-
         #endregion
 
         #region Event Handlers

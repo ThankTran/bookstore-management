@@ -27,6 +27,10 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             tbSalePrice.TextChanged += (s, e) => _hasChanges = true;
             cbCategory.SelectionChanged += (s, e) => _hasChanges = true;
         }
+        public void LoadPublishers(System.Collections.IEnumerable publishers)
+        {
+            cbPublisher.ItemsSource = publishers;
+        }
 
         #region Properties for Data Binding
 

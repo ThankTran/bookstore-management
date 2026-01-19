@@ -60,8 +60,22 @@ namespace bookstore_Management.Presentation.ViewModels
 
             TodayRevenue = _reportService.GetTotalRevenue(from, to).Data;
             TodayOrders = _reportService.GetTotalOrderCount(from, to).Data;
-            NewCustomers = _reportService.GetTotalCustomerCount(from, to).Data;
-            LowStockBooks = _reportService.GetInventorySummary().Data.OutOfStockCount;
+            NewCustomers = _reportService.GetTotalCustomerCount(from, to).Data;// 1. Gọi hàm 1 lần duy nhất và lưu kết quả vào biến
+                                                                               // Tách ra thành biến riêng để kiểm tra lỗi
+            var inventoryResult = _reportService.GetInventorySummary();
+
+            // Chỉ lấy dữ liệu khi Thành công (Succeeded) và Data khác null
+            if (inventoryResult.IsSuccess && inventoryResult.Data != null)
+            {
+                LowStockBooks = inventoryResult.Data.OutOfStockCount;
+            }
+            else
+            {
+                // Nếu lỗi thì gán = 0 và xem thử lỗi gì (để sửa ở Bước 2)
+                LowStockBooks = 0;
+                // Đặt chuột vào biến errorMessage bên dưới khi debug để xem nó báo lỗi gì
+                var errorMessage = inventoryResult.ErrorMessage;
+            }
 
             var topBooksResult = _reportService.GetTopSellingBooks(from, to, 3);
             if (topBooksResult.IsSuccess)

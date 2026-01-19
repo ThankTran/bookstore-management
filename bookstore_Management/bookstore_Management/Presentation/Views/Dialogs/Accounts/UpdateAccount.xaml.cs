@@ -1,5 +1,6 @@
 ﻿using bookstore_Management.Core.Enums;
 using System;
+using System.Collections.Generic;
 using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -23,6 +24,10 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Accounts
             // Track changes
             cbAccountId.SelectionChanged += (s, e) => _hasChanges = true;
             tbPassword.TextChanged += (s, e) => _hasChanges = true;
+        }
+        public void LoadStaffIds(List<string> staffIds)
+        {
+            cbAccountId.ItemsSource = staffIds;
         }
 
         #region Properties for Data Binding

@@ -76,6 +76,35 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
+        public Result<IEnumerable<decimal>> GetRevenue(DateTime fromDate, DateTime toDate, int jump = 1)
+        {
+            var revenue = new List<decimal>();
+
+            while (fromDate <= toDate)
+            {
+                var total = _orderRepository.Find(o => o.DeletedDate == null)
+                    .Sum(o => o.TotalPrice);
+                revenue.Add(total);
+                fromDate = fromDate.AddDays(jump);
+            }
+            return Result<IEnumerable<decimal>>.Success(revenue);  
+        }
+        
+        
+        public Result<IEnumerable<decimal>> GetImport(DateTime fromDate, DateTime toDate, int jump = 1)
+        {
+            var import = new List<decimal>();
+
+            while (fromDate <= toDate)
+            {
+                var total = _importBillRepository.Find(o => o.DeletedDate == null)
+                    .Sum(o => o.TotalAmount);
+                import.Add(total);
+                fromDate = fromDate.AddDays(jump);
+            }
+            return Result<IEnumerable<decimal>>.Success(import);  
+        }
+
         public Result<int> GetTotalCustomerCount(DateTime fromDate, DateTime toDate)
         {
             try
@@ -219,13 +248,10 @@ namespace bookstore_Management.Services.Implementations
                     (importPrices.TryGetValue(b.BookId, out var price) ? price ?? 0 : 0) * b.Stock
                 );
 
-                var lowStockCount = 0;
-                var outOfStockCount = 0;
-                books.ForEach(b =>
-                {
-                    if ( b.Stock == 0 ) outOfStockCount++;
-                    else if (b.Stock > 0 && b.Stock < 50) lowStockCount++;
-                });
+
+                var outOfStockCount = books.Count(b => b.Stock == 0); 
+                var lowStockCount = books.Count(b => b.Stock > 0 && b.Stock < 5);
+
 
                 var report = new InventorySummaryReportResponseDto
                 {

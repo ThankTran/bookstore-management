@@ -1,6 +1,7 @@
 ﻿using bookstore_Management.Core.Enums;
 using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
+using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
@@ -15,6 +16,7 @@ namespace bookstore_Management.Presentation.ViewModels
     internal class UserViewModel : BaseViewModel
     {
         private readonly IUserService _userService;
+        private readonly IStaffRepository _staffRepository;
 
         private ObservableCollection<User> _users;
         public ObservableCollection<User> Users
@@ -46,39 +48,23 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 _searchKeyword = value;
                 OnPropertyChanged();
-                SearchUserCommand.Execute(null);
+                SearchUser();
             }
         }
 
         public Array UserRoles =>Enum.GetValues(typeof(UserRole));
-        private UserRole _role;
-        public UserRole Role
-        {
-            get => _role;
-            set
-            {
-                _role = value;
-                OnPropertyChanged();
-            }
-        }
+        //private UserRole _role;
+        //public UserRole Role
+        //{
+        //    get => _role;
+        //    set
+        //    {
+        //        _role = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
-        public string RoleDisplay
-        {
-            get
-            {
-                switch (Role)
-                {
-                    case UserRole.Administrator:
-                        return "Quản trị";
-                    case UserRole.SalesManager:
-                        return "Quản lý bán hàng";
-                    case UserRole.InventoryManager:
-                        return "Quản lý kho";
-                    default:
-                        return "Không xác định";
-                }
-            }
-        }
+        
 
 
         #region Khai báo command
@@ -118,10 +104,42 @@ namespace bookstore_Management.Presentation.ViewModels
             Users = new ObservableCollection<User>(users);
         }
 
+        private void SearchUser()
+        {
+            // Nếu rỗng → load lại toàn bộ
+            if (string.IsNullOrWhiteSpace(SearchKeyword))
+            {
+                LoadUsersFromDatabase();
+                return;
+            }
+            var result = _userService.SearchByUsername(SearchKeyword);
+
+            if (!result.IsSuccess || result.Data == null)
+            {
+                Users.Clear();
+                return;
+            }
+
+            Users = new ObservableCollection<User>(
+                result.Data.Select(u => new User
+                {
+                    UserId = u.AccountId,
+                    StaffId = u.StaffId,
+                    Username = u.UserName,
+                    UserRole = u.Role,
+                    CreatedDate = u.CreateDate,
+                })
+            );
+        }
+
         public UserViewModel(IUserService userService)
         {
-
-            _userService = userService;
+            var context = new BookstoreDbContext();
+            _staffRepository = new StaffRepository(context);
+            _userService = new UserService(
+                new UserRepository(context),
+                new StaffRepository(context)
+            );
 
             Users = new ObservableCollection<User>();
 
@@ -131,6 +149,10 @@ namespace bookstore_Management.Presentation.ViewModels
             AddUserCommand = new RelayCommand<object>((p) =>
             {
                 var dialog = new Views.Dialogs.Accounts.AddAccountDialog();
+
+                var staffs = _staffRepository.GetAll();
+                var staffIds = staffs.Select(x =>x.Id).ToList();
+                dialog.LoadStaffId(staffIds);
                 if (dialog.ShowDialog() == true)
                 {
                     // Call service to add to database
@@ -154,6 +176,7 @@ namespace bookstore_Management.Presentation.ViewModels
             #region RemoveCommand
             RemoveUserCommand = new RelayCommand<object>((p) =>
             {
+
                 var user = p as User;
                 if (user == null)
                 {
@@ -180,68 +203,178 @@ namespace bookstore_Management.Presentation.ViewModels
             });
             #endregion
             #region EditCommand
+            //EditUserCommand = new RelayCommand<object>((p) =>
+            //{
+            //    var dialog = new Views.Dialogs.Accounts.UpdateAccount();
+            //    var user = p as User;
+
+
+            //    var staffs = _staffRepository.GetAll();
+            //    var staffIds = staffs.Select(s => s.Id).ToList();
+            //    if (user == null)
+            //    {
+            //        MessageBox.Show("Vui lòng chọn để chỉnh sửa");
+            //        return;
+            //    }
+
+            //    dialog.LoadStaffIds(staffIds);
+            //    dialog.Account = user.StaffId;
+
+            //    if (dialog.ShowDialog() == true)
+            //    {
+            //        string newPassword = dialog.Password;
+
+            //        // 1. Kiểm tra: Nếu người dùng không nhập gì (hoặc chỉ nhập khoảng trắng)
+            //        if (string.IsNullOrWhiteSpace(newPassword))
+            //        {
+            //            MessageBox.Show("Bạn chưa nhập mật khẩu mới. Không có thay đổi nào được lưu.");
+            //            return; // Thoát luôn, không gọi Service
+            //        }
+
+            //        // 2. Nếu có nhập, mới tạo DTO và gọi Service
+            //        var updateDto = new DTOs.User.Requests.ChangePasswordRequestDto
+            //        {
+            //            NewPassword = newPassword,
+            //        };
+
+            //        var result = _userService.ChangePassword(user.StaffId, updateDto);
+
+            //        if (!result.IsSuccess)
+            //        {
+            //            // Hiển thị lỗi chi tiết từ Server
+            //            MessageBox.Show($"Lỗi cập nhật: {result.ErrorMessage}", "Lỗi hệ thống", MessageBoxButton.OK, MessageBoxImage.Error);
+            //            return;
+            //        }
+
+            //        MessageBox.Show("Đổi mật khẩu thành công!");
+            //        LoadUsersFromDatabase();
+            //    }
+            //});
+
+            #region EditCommand
             EditUserCommand = new RelayCommand<object>((p) =>
             {
-                var dialog = new Views.Dialogs.Accounts.UpdateAccount();
-                var user = p as User;
-                if (user == null)
+                try
                 {
-                    MessageBox.Show("Vui lòng chọn để chỉnh sửa");
-                    return;
-                }
-
-                dialog.Password = user.PasswordHash;
-
-                if (dialog.ShowDialog() == true)
-                {
-                    var updateDto = new DTOs.User.Requests.ChangePasswordRequestDto
-                    { 
-                        NewPassword = dialog.Password
-                    };
-
-                    var result = _userService.ChangePassword(user.Username, updateDto);
-                    if (!result.IsSuccess)
+                    // 1. Kiểm tra User đầu vào
+                    var user = p as User;
+                    if (user == null)
                     {
-                        MessageBox.Show("Lỗi khi cập nhật / chỉnh sửa sách");
+                        MessageBox.Show("Lỗi: Không lấy được thông tin dòng đã chọn (User is null).");
                         return;
                     }
 
-                    LoadUsersFromDatabase();
+                    // 2. Chuẩn bị dữ liệu cho Dialog
+                    var dialog = new Views.Dialogs.Accounts.UpdateAccount();
+                    var staffs = _staffRepository.GetAll();
+                    if (staffs == null)
+                    {
+                        MessageBox.Show("Lỗi: Không tải được danh sách nhân viên từ CSDL.");
+                        return;
+                    }
+
+                    var staffIds = staffs.Select(s => s.Id).ToList();
+                    dialog.LoadStaffIds(staffIds);
+
+                    // Gán StaffId hiện tại (Xử lý trường hợp StaffId bị null trong DB)
+                    string currentStaffId = user.StaffId;
+                    if (string.IsNullOrEmpty(currentStaffId))
+                    {
+                        // Nếu user này chưa có StaffId, hãy cẩn thận. 
+                        // Có thể Service yêu cầu bắt buộc phải có StaffId.
+                        // Tạm thời gán rỗng hoặc xử lý tùy logic của bạn.
+                        currentStaffId = "";
+                    }
+                    else
+                    {
+                        currentStaffId = currentStaffId.Trim(); // Cắt khoảng trắng thừa
+                    }
+
+                    dialog.Account = currentStaffId;
+
+                    // 3. Hiện Dialog
+                    if (dialog.ShowDialog() == true)
+                    {
+                        string newPassword = dialog.Password;
+
+                        // Validate mật khẩu
+                        if (string.IsNullOrWhiteSpace(newPassword))
+                        {
+                            MessageBox.Show("Mật khẩu mới không được để trống.");
+                            return;
+                        }
+
+                        // Lấy StaffId từ Dialog (Phòng trường hợp người dùng đổi Staff khác)
+                        string targetStaffId = dialog.Account;
+
+                        // DEBUG: Kiểm tra xem dữ liệu gửi đi là gì
+                        if (string.IsNullOrEmpty(targetStaffId))
+                        {
+                            MessageBox.Show($"Lỗi: StaffID đang bị rỗng. User: {user.Username}");
+                            return;
+                        }
+
+                        // 4. Tạo DTO và gọi Service
+                        var updateDto = new DTOs.User.Requests.ChangePasswordRequestDto
+                        {
+                            NewPassword = newPassword,
+                        };
+
+                        // Gọi Service (Đảm bảo Trim() lần nữa cho chắc)
+                        var result = _userService.ChangePassword(targetStaffId.Trim(), updateDto);
+
+                        // 5. Kiểm tra kết quả trả về
+                        if (!result.IsSuccess)
+                        {
+                            // QUAN TRỌNG: In ra ErrorMessage để biết tại sao lỗi
+                            MessageBox.Show($"Service báo lỗi: {result.ErrorMessage}\n(Mã lỗi: {result.ErrorMessage})",
+                                            "Thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
+                        MessageBox.Show("Đổi mật khẩu thành công!");
+                        LoadUsersFromDatabase();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Bắt lỗi crash chương trình (Exception)
+                    MessageBox.Show($"Lỗi Crash ứng dụng: {ex.Message}\nStack Trace: {ex.StackTrace}",
+                                    "Nghiêm trọng", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             });
             #endregion
+            #endregion
             #region SearchCommand
-            SearchUserCommand = new RelayCommand<object>((p) =>
+            SearchUserCommand = new RelayCommand<object>(_ =>
             {
-                if (string.IsNullOrEmpty(SearchKeyword))
+                if (string.IsNullOrWhiteSpace(SearchKeyword))
                 {
-                    LoadUsersFromDatabase();//k nhập gì thì hiện lại list
+                    LoadUsersFromDatabase();
                     return;
                 }
 
-                var result = _userService.GetByUsername(SearchKeyword);
+                var result = _userService.SearchByUsername(SearchKeyword);
                 if (!result.IsSuccess)
                 {
-                    MessageBox.Show("Lỗi khi tìm ");
-                    return;
+                    MessageBox.Show("lỗi khi tìm account");return;  
                 }
                 Users.Clear();
-                //foreach (var u in result.Data)
-                //{
-                //    Books.Add(new Book
-                //    {
-                //        BookId = b.BookId,
-                //        Name = b.Name,
-                //        Author = b.Author,
-                //        Category = b.Category,
-                //        SalePrice = b.SalePrice,
-                //        Publisher = new Publisher
-                //        {
-                //            Name = b.PublisherName
-                //        },
-                //    });
-                //}
+
+                foreach (var u in result.Data)
+                {
+                    Users.Add(new User
+                    {
+                        UserId = u.AccountId,
+                        StaffId = u.StaffId,
+                        Username = u.UserName,
+                        UserRole = u.Role,
+                        CreatedDate = u.CreateDate
+                    });
+                }
+
             });
+
             #endregion
             #region LoadDataCommand
             LoadData = new RelayCommand<object>((p) =>

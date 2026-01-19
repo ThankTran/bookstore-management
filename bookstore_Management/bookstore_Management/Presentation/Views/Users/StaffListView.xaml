@@ -470,7 +470,7 @@
                                                 <Button Style="{StaticResource SmallIconButton}"
                                                         Background="Transparent"
                                                         Width="32"
-                                                        Command="{Binding DataContext.DeleteStaffCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                        Command="{Binding DataContext.RemoveStaffCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                         CommandParameter="{Binding}"
                                                         Height="32">
                                                     <Image Source="/Presentation/AppResources/Images/Icons/Actions/recyclebin.png" 
