@@ -7,8 +7,13 @@ namespace bookstore_Management.Services.Interfaces
     public interface IReportService
     {
         // Báo cáo doanh thu
-        Result<decimal> GetTotalRevenue(DateTime fromDate, DateTime toDate); // xu hướng doanh thu
-        Result<decimal> GetTotalProfit(DateTime fromDate, DateTime toDate); // lợi nhuận
+        Result<decimal> GetTotalRevenue(DateTime fromDate, DateTime toDate); // tổng doanh thu trong khoảng
+        Result<decimal> GetTotalProfit(DateTime fromDate, DateTime toDate); // tổng lợi nhuận trong khoảng
+        
+        Result<IEnumerable<decimal>> GetRevenue(DateTime fromDate, DateTime toDate, int jump = 1); // bước nhảy 1 ngày
+        Result<IEnumerable<decimal>> GetImport(DateTime fromDate, DateTime toDate, int jump = 1); 
+        
+        
         Result<decimal> GetAverageOrderValue(DateTime fromDate, DateTime toDate);
         // Báo cáo đơn hàng
         Result<int> GetTotalOrderCount(DateTime fromDate, DateTime toDate);

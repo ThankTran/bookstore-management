@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
@@ -33,7 +34,7 @@ namespace bookstore_Management.Services.Implementations
                     return Result<LoginResponseDto>.Fail("Tên đăng nhập hoặc mật khẩu không được để trống");
 
                 // Kiểm tra Username
-                var user = _userRepository.GetByUsername(dto.Username.Trim());
+                var user = _userRepository.GetByUsername(dto.Username.Trim()).FirstOrDefault();
                 
                 // nếu username không tồn tại thì trả về false
                 if (user == null)

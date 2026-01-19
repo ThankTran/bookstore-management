@@ -107,7 +107,7 @@ namespace bookstore_Management.Services.Implementations
                     return Result<UserResponseDto>.Fail("User không tồn tại");
 
 
-                var dto = MapToStaffResponseDto(user);
+                var dto = MapToUserResponseDto(user);
                 
                 return Result<UserResponseDto>.Success(dto);
             }
@@ -117,20 +117,18 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
-        public Result<UserResponseDto> GetByUsername(string username)
+        public Result<IEnumerable<UserResponseDto>> SearchByUsername(string username)
         {
             try
             {
-                var user = _userRepository.GetByUsername(username);
-                if (user == null || user.DeletedDate != null)
-                    return Result<UserResponseDto>.Fail("User không tồn tại");
-
-                var dto = MapToStaffResponseDto(user);
-                return Result<UserResponseDto>.Success(dto);
+                var user = _userRepository.GetByUsername(username)
+                    .Where(u => u.DeletedDate != null)
+                    .Select ( MapToUserResponseDto);
+                return Result<IEnumerable<UserResponseDto>>.Success(user);
             }
             catch (Exception ex)
             {
-                return Result<UserResponseDto>.Fail($"Lỗi: {ex.Message}");
+                return Result<IEnumerable<UserResponseDto>>.Fail($"Lỗi: {ex.Message}");
             }
         }
 
@@ -139,7 +137,7 @@ namespace bookstore_Management.Services.Implementations
             try
             {
                 var users = _userRepository.GetAll().Where(u => u.DeletedDate == null)
-                    .Select( MapToStaffResponseDto);
+                    .Select( MapToUserResponseDto);
                 return Result<IEnumerable<UserResponseDto>>.Success(users);
             }
             catch (Exception ex)
@@ -152,7 +150,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var  user = _userRepository.GetByUsername(username);
+                var  user = _userRepository.GetByUsername(username).FirstOrDefault();
                 if (user == null || user.DeletedDate != null)
                     return Result<bool>.Fail("User không tồn tại");
                 return  (!Encryptor.Verify(password, user.PasswordHash)) ? 
@@ -178,7 +176,7 @@ namespace bookstore_Management.Services.Implementations
             }
         }
         
-        private UserResponseDto MapToStaffResponseDto(User user)
+        private UserResponseDto MapToUserResponseDto(User user)
         {
             return new UserResponseDto
             {

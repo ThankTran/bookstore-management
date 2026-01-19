@@ -14,7 +14,7 @@ namespace bookstore_Management.Services.Interfaces
         Result ChangePassword(string userId, ChangePasswordRequestDto dto);
         Result Deactivate(string userId);
         Result<UserResponseDto> GetById(string userId);
-        Result<UserResponseDto> GetByUsername(string username);
+        Result<IEnumerable<UserResponseDto>> SearchByUsername(string username);
         Result<UserRole> GetUserRole(string userId);
         Result<bool> Login(string username, string password);
         Result<IEnumerable<UserResponseDto>> GetAll();
