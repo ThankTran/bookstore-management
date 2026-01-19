@@ -44,7 +44,7 @@ namespace bookstore_Management.Services.Implementations
                 var user = new User
                 {
                     Username = dto.Username.Trim(),
-                    PasswordHash = Encryptor.Hash(dto.Password),
+                    PasswordHash = dto.Password,
                     StaffId = dto.StaffId,
                     CreatedDate = DateTime.Now
                 };
@@ -67,7 +67,7 @@ namespace bookstore_Management.Services.Implementations
                 if (user == null || user.DeletedDate != null)
                     return Result.Fail("User không tồn tại");
 
-                user.PasswordHash = Encryptor.Hash(dto.NewPassword);
+                user.PasswordHash = dto.NewPassword;
                 user.UpdatedDate = DateTime.Now;
                 _userRepository.Update(user);
                 _userRepository.SaveChanges();
@@ -153,9 +153,7 @@ namespace bookstore_Management.Services.Implementations
                 var  user = _userRepository.GetByUsername(username).FirstOrDefault();
                 if (user == null || user.DeletedDate != null)
                     return Result<bool>.Fail("User không tồn tại");
-                return  (!Encryptor.Verify(password, user.PasswordHash)) ? 
-                    Result<bool>.Success(true) : 
-                    Result<bool>.Success(false);
+                return user.PasswordHash == password;
             }
             catch (Exception ex)
             {

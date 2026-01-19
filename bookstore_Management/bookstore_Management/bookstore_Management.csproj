@@ -371,6 +371,7 @@
     <Compile Include="DTOs\Book\Responses\BookDetailResponseDto.cs" />
     <Compile Include="DTOs\Book\Responses\BookListResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\BookSalesReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\CategoryReport.cs" />
     <Compile Include="DTOs\Common\Reports\CustomerPurchaseRatioDto.cs" />
     <Compile Include="DTOs\Common\Reports\CustomerSpendingReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventoryReportResponseDto.cs" />
@@ -684,6 +685,9 @@
     </PackageReference>
     <PackageReference Include="AutoMapper">
       <Version>10.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="iTextSharp">
+      <Version>5.5.13.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <Version>10.0.1</Version>

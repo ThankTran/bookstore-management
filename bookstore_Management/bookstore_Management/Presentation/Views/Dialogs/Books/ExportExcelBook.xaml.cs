@@ -5,16 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace bookstore_Management.Presentation.Views.Dialogs.Books
 {
@@ -262,11 +254,96 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
         /// </summary>
         private void ExportToPdf(string path, string fileName)
         {
-            // TODO: Implement PDF export using iTextSharp or similar library
-            MessageBox.Show("Chức năng xuất PDF đang được phát triển!",
-                          "Thông báo",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Information);
+             var saveDialog = new SaveFileDialog
+                {
+                    InitialDirectory = path,
+                    FileName = fileName,
+                    Filter = "PDF Files (*.pdf)|*.pdf",
+                    DefaultExt = "pdf"
+                };
+
+                if (saveDialog.ShowDialog() != true)
+                    return;
+
+                try
+                {
+                    using (var stream = new FileStream(saveDialog.FileName, FileMode.Create))
+                    {
+                        var document = new iTextSharp.text.Document(iTextSharp.text.PageSize.A4, 20, 20, 20, 20);
+                        var writer = iTextSharp.text.pdf.PdfWriter.GetInstance(document, stream);
+                        document.Open();
+
+                        // Font Unicode
+                        var baseFont = iTextSharp.text.pdf.BaseFont.CreateFont(
+                            @"C:\Windows\Fonts\arial.ttf",
+                            "Identity-H",
+                            iTextSharp.text.pdf.BaseFont.EMBEDDED
+                        );
+                        var font = new iTextSharp.text.Font(baseFont, 11);
+
+                        // Header
+                        var title = new iTextSharp.text.Paragraph("DANH SÁCH SÁCH\n\n", new iTextSharp.text.Font(baseFont, 16, iTextSharp.text.Font.BOLD));
+                        title.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
+                        document.Add(title);
+
+                        // Tạo bảng PDF
+                        var headers = GetSelectedHeaders();
+                        var table = new iTextSharp.text.pdf.PdfPTable(headers.Count)
+                        {
+                            WidthPercentage = 100
+                        };
+
+                        // Thêm header
+                        foreach (var header in headers)
+                        {
+                            var cell = new iTextSharp.text.pdf.PdfPCell(new iTextSharp.text.Phrase(header, font))
+                            {
+                                BackgroundColor = new iTextSharp.text.BaseColor(200, 200, 255),
+                                HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                                Padding = 5
+                            };
+                            table.AddCell(cell);
+                        }
+
+                        // Thêm dữ liệu
+                        int stt = 1;
+
+                        foreach (var book in _dataSource)
+                        {
+                            if (chkSTT.IsChecked == true)
+                                table.AddCell(new iTextSharp.text.Phrase(stt++.ToString(), font));
+                            if (chkBookID.IsChecked == true)
+                                table.AddCell(new iTextSharp.text.Phrase(book.BookId.ToString(), font));
+                            if (chkBookName.IsChecked == true)
+                                table.AddCell(new iTextSharp.text.Phrase(book.Name, font));
+                            if (chkAuthor.IsChecked == true)
+                                table.AddCell(new iTextSharp.text.Phrase(book.Author, font));
+                            if (chkSupplier.IsChecked == true)
+                                table.AddCell(new iTextSharp.text.Phrase(book.Publisher?.Name ?? "", font));
+                            if (chkCategory.IsChecked == true)
+                                table.AddCell(new iTextSharp.text.Phrase(book.Category.ToString(), font));
+                            if (chkImportPrice.IsChecked == true)
+                                table.AddCell(new iTextSharp.text.Phrase("0", font));
+                            if (chkSalePrice.IsChecked == true)
+                                table.AddCell(new iTextSharp.text.Phrase((book.SalePrice ?? 0).ToString(), font));
+                        }
+
+                        document.Add(table);
+                        document.Close();
+                    }
+
+                    MessageBox.Show($"Xuất PDF thành công!\nĐường dẫn: {saveDialog.FileName}",
+                                    "Thành công",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi xuất PDF: " + ex.Message,
+                                    "Lỗi",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
+                }
         }
 
         #endregion

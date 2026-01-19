@@ -24,7 +24,7 @@ namespace bookstore_Management.Services.Interfaces
         // Báo cáo sách bán chạy
         Result<IEnumerable<BookSalesReportResponseDto>> GetTopSellingBooks(DateTime fromDate, DateTime toDate, int topCount = 10);
         Result<IEnumerable<BookSalesReportResponseDto>> GetLowestSellingBooks(DateTime fromDate, DateTime toDate, int bottomCount = 5);
-        
+        Result<IEnumerable<decimal>> GetCategory
         
         // Báo cáo kho
         Result<InventorySummaryReportResponseDto> GetInventorySummary();

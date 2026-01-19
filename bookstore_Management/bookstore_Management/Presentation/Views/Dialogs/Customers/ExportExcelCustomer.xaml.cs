@@ -239,7 +239,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             if (saveDialog.ShowDialog() != true)
                 return;
 
-            // ✅ LẤY DỮ LIỆU TỪ SERVICE
+            
             var result = _customerService.GetCustomerList();
             if (!result.IsSuccess || result.Data == null)
             {
@@ -282,11 +282,108 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
         /// </summary>
         private void ExportToPdf(string path, string fileName)
         {
-            // Implement PDF export using iTextSharp or similar library
-            MessageBox.Show("Chức năng xuất PDF đang được phát triển!",
-                          "Thông báo",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Information);
+              var saveDialog = new SaveFileDialog
+            {
+                InitialDirectory = path,
+                FileName = fileName,
+                Filter = "PDF Files (*.pdf)|*.pdf",
+                DefaultExt = "pdf"
+            };
+
+            if (saveDialog.ShowDialog() != true)
+                return;
+
+            var result = _customerService.GetCustomerList();
+            if (!result.IsSuccess || result.Data == null)
+            {
+                MessageBox.Show("Không lấy được danh sách khách hàng!", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var data = result.Data.ToList();
+
+            try
+            {
+                using (var stream = new FileStream(saveDialog.FileName, FileMode.Create))
+                {
+                    var document = new iTextSharp.text.Document(iTextSharp.text.PageSize.A4, 20, 20, 20, 20);
+                    iTextSharp.text.pdf.PdfWriter.GetInstance(document, stream);
+                    document.Open();
+
+                    // Font Unicode
+                    var baseFont = iTextSharp.text.pdf.BaseFont.CreateFont(
+                       @"C:\Windows\Fonts\arial.ttf",
+                       "Identity-H",
+                       iTextSharp.text.pdf.BaseFont.EMBEDDED);
+
+                    var font = new iTextSharp.text.Font(baseFont, 11);
+                    var titleFont = new iTextSharp.text.Font(baseFont, 16, iTextSharp.text.Font.BOLD);
+
+                    // Title
+                    var title = new iTextSharp.text.Paragraph("DANH SÁCH KHÁCH HÀNG\n\n", titleFont);
+                    title.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
+                    document.Add(title);
+
+                    // Headers
+                    var headers = GetSelectedHeaders();
+                    var table = new iTextSharp.text.pdf.PdfPTable(headers.Count)
+                    {
+                        WidthPercentage = 100
+                    };
+
+                    foreach (var header in headers)
+                    {
+                        var cell = new iTextSharp.text.pdf.PdfPCell(new iTextSharp.text.Phrase(header, font))
+                        {
+                            BackgroundColor = new iTextSharp.text.BaseColor(200, 220, 255),
+                            HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                            Padding = 5
+                        };
+                        table.AddCell(cell);
+                    }
+
+                    // Data rows
+                    int stt = 1;
+                    foreach (var customer in data)
+                    {
+                        if (chkSTT.IsChecked == true)
+                            table.AddCell(new iTextSharp.text.Phrase(stt++.ToString(), font));
+
+                        if (chkCustomerID.IsChecked == true)
+                            table.AddCell(new iTextSharp.text.Phrase(customer.CustomerId ?? "", font));
+
+                        if (chkCustomerName.IsChecked == true)
+                            table.AddCell(new iTextSharp.text.Phrase(customer.Name ?? "", font));
+
+                        if (chkPhone.IsChecked == true)
+                            table.AddCell(new iTextSharp.text.Phrase(customer.Phone ?? "", font));
+
+                        if (chkEmail.IsChecked == true)
+                            table.AddCell(new iTextSharp.text.Phrase(customer.Email ?? "", font));
+
+                        if (chkAddress.IsChecked == true)
+                            table.AddCell(new iTextSharp.text.Phrase(customer.Address ?? "", font));
+
+                        if (chkRank.IsChecked == true)
+                            table.AddCell(new iTextSharp.text.Phrase(customer.MemberLevel.ToString(), font));
+
+                        if (chkPoint.IsChecked == true)
+                            table.AddCell(new iTextSharp.text.Phrase(customer.LoyaltyPoints.ToString(), font));
+                    }
+
+                    document.Add(table);
+                    document.Close();
+                }
+
+                MessageBox.Show($"Xuất PDF thành công!\nĐường dẫn: {saveDialog.FileName}",
+                    "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi tạo PDF: " + ex.Message,
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #endregion
