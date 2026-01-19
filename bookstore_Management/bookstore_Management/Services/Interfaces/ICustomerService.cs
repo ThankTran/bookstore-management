@@ -1,40 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using bookstore_Management.Core.Enums;
+﻿using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.DTOs.Customer.Requests;
 using bookstore_Management.DTOs.Customer.Responses;
 using bookstore_Management.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace bookstore_Management.Services.Interfaces
 {
     public interface ICustomerService
     {
-        // CRUD
-        Result<string> AddCustomer(CreateCustomerRequestDto dto);
-        Result UpdateCustomer(string customerId, UpdateCustomerRequestDto dto);
-        Result DeleteCustomer(string customerId);
-        Result<CustomerDetailResponseDto> GetCustomerById(string customerId);
-        Result<IEnumerable<CustomerDetailResponseDto>> GetAllCustomers();
+
+        Task<Result<string>> AddCustomerAsync(CreateCustomerRequestDto dto);
         
+
+        Task<Result> UpdateCustomerAsync(string customerId, UpdateCustomerRequestDto dto);
+
+
+        Task<Result> DeleteCustomerAsync(string customerId);
+
+
+        Task<Result<CustomerDetailResponseDto>> GetCustomerByIdAsync(string customerId);
         
-        // Tìm kiếm
-        Result<CustomerDetailResponseDto> GetCustomerByPhone(string phone);
-        Result<IEnumerable<CustomerDetailResponseDto>> SearchByName(string name);
-        Result<IEnumerable<CustomerDetailResponseDto>> GetByMemberLevel(MemberTier level);
-        Result<IEnumerable<CustomerDetailResponseDto>> SearchByTotalSpent(decimal minimum, decimal maximum, DateTime startDate, DateTime endDate);
+        Task<Result<IEnumerable<CustomerDetailResponseDto>>> GetAllCustomersAsync();
         
-        // Quản lý hạng thành viên
-        Result UpgradeMemberLevel(string customerId);
-        Result DowngradeMemberLevel(string customerId);
-        Result<MemberTier> CalculateMemberTier(decimal totalSpent);
+        Task<Result<CustomerDetailResponseDto>> GetCustomerByPhoneAsync(string phone);
         
-        // Lịch sử mua hàng
-        Result<IEnumerable<Order>> GetCustomerOrderHistory(string customerId, DateTime fromDate, DateTime toDate);
-        Result <decimal> CustomerTotalSpentPerDay(string customerId, DateTime date);
-        Result<decimal> CustomerTotalSpentPerMonth(string customerId, int month, int year);
-        Result<decimal> CustomerTotalSpentPerYear(string customerId, int year);
+        Task<Result<IEnumerable<CustomerDetailResponseDto>>> SearchByNameAsync(string name);
         
-        // Listviewitem
-        Result<IEnumerable<CustomerListResponseDto>> GetCustomerList();
+        Task<Result<IEnumerable<CustomerDetailResponseDto>>> GetByMemberLevelAsync(MemberTier level);
+        
+        Task<Result<IEnumerable<CustomerDetailResponseDto>>> SearchByTotalSpentAsync(
+            decimal minimum, decimal maximum, DateTime startDate, DateTime endDate);
+        
+
+        Task<Result> UpgradeMemberLevelAsync(string customerId);
+        
+        Task<Result> DowngradeMemberLevelAsync(string customerId);
+        
+        Task<Result<MemberTier>> CalculateMemberTierAsync(decimal totalSpent);
+
+
+        Task<Result<IEnumerable<Order>>> GetCustomerOrderHistoryAsync(
+            string customerId, DateTime fromDate, DateTime toDate);
+        
+        Task<Result<decimal>> CustomerTotalSpentPerDayAsync(string customerId, DateTime date);
+        
+        Task<Result<decimal>> CustomerTotalSpentPerMonthAsync(string customerId, int month, int year);
+        
+        Task<Result<decimal>> CustomerTotalSpentPerYearAsync(string customerId, int year);
+        
     }
 }

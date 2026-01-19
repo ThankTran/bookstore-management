@@ -4,9 +4,11 @@ using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using bookstore_Management.Data.Context;
+using bookstore_Management.Data.Repositories.Implementations;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
@@ -68,9 +70,9 @@ namespace bookstore_Management.Presentation.ViewModels
         #endregion
 
         #region Load publisher from db
-        private void LoadPublishersFromDatabase()
+        private async Task LoadPublishersFromDatabase()
         {
-            var result = _publisherService.GetAllPublishers();
+            var result = await _publisherService.GetAllPublishersAsync();
             if (!result.IsSuccess)
             {
                 // Xử lý lỗi, để sau này làm thông báo lỗi sau
@@ -90,21 +92,19 @@ namespace bookstore_Management.Presentation.ViewModels
         #endregion
 
         #region constructor
-        public PublisherViewModel(IPublisherService publisherService)
+        public PublisherViewModel()
         {
             var context = new BookstoreDbContext();
-            _publisherService = new PublisherService(
-                new Data.Repositories.Implementations.PublisherRepository(context),
-                new Data.Repositories.Implementations.BookRepository(context),
-                new Data.Repositories.Implementations.ImportBillRepository(context)
-            );
+            var unitOfWork = new UnitOfWork(context);
+            _publisherService = new PublisherService(unitOfWork);
 
             Publishers = new ObservableCollection<Publisher>();
-            LoadPublishersFromDatabase();
+            _ = LoadPublishersFromDatabase();
 
             #region AddCommand
             AddPusCommand = new RelayCommand<object>((p) =>
-            {
+            Task.Run(async () =>
+                {
                 var dialog = new Presentation.Views.Dialogs.Publishers.AddPublisher();
                 if(dialog.ShowDialog() == true)
                 {
@@ -114,21 +114,22 @@ namespace bookstore_Management.Presentation.ViewModels
                         Phone = dialog.Phone,
                         Email = dialog.Email,
                     };
-                    var result = _publisherService.AddPublisher(newPublisher);
+                    var result = await _publisherService.AddPublisherAsync(newPublisher);
                     if (!result.IsSuccess)
                     {
                         MessageBox.Show("Lỗi khi thêm nhà xuất bản: " + result.ErrorMessage, "Lỗi", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                         // Xử lý lỗi, để sau này làm thông báo lỗi sau
                         return;
                     }
-                    LoadPublishersFromDatabase();
+                    _ = LoadPublishersFromDatabase();
                 }
-            });
+            }));
             #endregion
 
             #region EditCommand
             EditPusCommand = new RelayCommand<object>((p) =>
-            {
+            Task.Run(async () =>
+                {
                 var dialog = new Presentation.Views.Dialogs.Publishers.UpdatePublisher();
                 var pus = p as Publisher;
                 if (pus == null) return;
@@ -146,48 +147,50 @@ namespace bookstore_Management.Presentation.ViewModels
                         Phone = dialog.Phone,
                         Email = dialog.Email,
                     };
-                    var result = _publisherService.UpdatePublisher(pus.Id,updatedPublisher);
+                    var result = await _publisherService.UpdatePublisherAsync(pus.Id,updatedPublisher);
                     if (!result.IsSuccess)
                     {
                         MessageBox.Show("Lỗi khi cập nhật nhà xuất bản: " + result.ErrorMessage, "Lỗi", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                         // Xử lý lỗi, để sau này làm thông báo lỗi sau
                         return;
                     }
-                    LoadPublishersFromDatabase();
+                    _ = LoadPublishersFromDatabase();
                 }
-            });
+            }));
             #endregion
 
             #region RemoveCommand
             RemovePusCommand = new RelayCommand<object>((p) =>
-            {
+            Task.Run(async () =>
+                {
                 var pus = p as Publisher;
                 if (pus == null) return;
 
                 bool comfirm = Views.Dialogs.Share.Delete.ShowForPublisher(pus.Name, pus.Id);
                 if (!comfirm) return;
 
-                var result = _publisherService.DeletePublisher(pus.Id);
+                var result = await _publisherService.DeletePublisherAsync(pus.Id);
                 if (!result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi xóa nhà xuất bản: " + result.ErrorMessage, "Lỗi", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                     // Xử lý lỗi, để sau này làm thông báo lỗi sau
                     return;
                 }
-                LoadPublishersFromDatabase();
-            });
+                _ = LoadPublishersFromDatabase();
+            }));
             #endregion
 
             #region SearchCommand
             SearchPusCommand = new RelayCommand<object>((p) =>
-            {
+            Task.Run(async () =>
+                {
                 if (string.IsNullOrWhiteSpace(SearchKeyword))
                 {
-                    LoadPublishersFromDatabase();
+                    _ = LoadPublishersFromDatabase();
                 }
                 else
                 {
-                    var result = _publisherService.SearchByName(SearchKeyword);
+                    var result = await _publisherService.SearchByNameAsync(SearchKeyword);
                     if (!result.IsSuccess)
                     {
                         // Xử lý lỗi, để sau này làm thông báo lỗi sau
@@ -205,7 +208,7 @@ namespace bookstore_Management.Presentation.ViewModels
                         });
                     }
                 }
-            });
+            }));
             #endregion
 
             #region Print & Export

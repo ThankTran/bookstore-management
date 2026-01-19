@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Interfaces;
@@ -11,31 +10,33 @@ namespace bookstore_Management.Data.Repositories.Implementations
 {
     internal class PublisherRepository : Repository<Publisher, string>, IPublisherRepository
     {
-        public PublisherRepository(BookstoreDbContext context) : base(context)
+        public PublisherRepository(BookstoreDbContext context) : base(context) { }
+
+        public IQueryable<Publisher> SearchByName(string keyword)
         {
+            return Query(p => p.Name.Contains(keyword) && p.DeletedDate == null);
         }
 
-        public IEnumerable<Publisher> SearchByName(string name)
+        public async Task<string> GetNameByPublisherIdAsync(string publisherId)
         {
-            return Find(s => s.Name.Contains(name) && s.DeletedDate == null);
-        }
-
-        public string GetNameByPublisherId(string publisherId)
-        {
-            return Find(s => s.Id == publisherId && s.DeletedDate == null)
+            return await DbSet
+                .Where(s => s.Id == publisherId && s.DeletedDate == null)
                 .Select(s => s.Name)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public Publisher GetByPhone(string phone)
+        public async Task<Publisher> GetByPhoneAsync(string phone)
         {
-            return Find(s => s.Phone == phone && s.DeletedDate == null).FirstOrDefault();
+            return await DbSet
+                .Where(s => s.Phone == phone && s.DeletedDate == null)
+                .FirstOrDefaultAsync();
         }
 
-        public Publisher GetByEmail(string email)
+        public async Task<Publisher> GetByEmailAsync(string email)
         {
-            return Find(s => s.Email == email && s.DeletedDate == null).FirstOrDefault();
+            return await DbSet
+                .Where(s => s.Email == email && s.DeletedDate == null)
+                .FirstOrDefaultAsync();
         }
-        
     }
 }

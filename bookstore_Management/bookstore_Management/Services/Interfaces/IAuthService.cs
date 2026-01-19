@@ -1,11 +1,12 @@
-﻿using bookstore_Management.Core.Results;
+﻿using System.Threading.Tasks;
+using bookstore_Management.Core.Results;
 using bookstore_Management.DTOs.Auth;
 using bookstore_Management.DTOs.User.Requests;
 
 namespace bookstore_Management.Services.Interfaces
 {
-    internal interface IAuthService
+    public interface IAuthService
     {
-        Result<LoginResponseDto> Login(LoginRequestDto dto);
+        Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto dto);
     }
 }

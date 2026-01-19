@@ -5,7 +5,6 @@ namespace bookstore_Management.DTOs.Book.Requests
     
     public class CreateBookRequestDto
     {
-        public string Id { get; set; }  // xóa
         public string Name { get; set; }
         public string Author { get; set; } 
         public BookCategory Category { get; set; }

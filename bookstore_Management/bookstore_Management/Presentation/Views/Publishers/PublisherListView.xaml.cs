@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Presentation.ViewModels;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
@@ -18,14 +19,7 @@ namespace bookstore_Management.Presentation.Views.Publishers
             InitializeComponent();
             IPublisherService publisherService;
 
-            var context = new Data.Context.BookstoreDbContext();
-            publisherService = new PublisherService(
-                new Data.Repositories.Implementations.PublisherRepository(context),
-                new Data.Repositories.Implementations.BookRepository(context),
-                new Data.Repositories.Implementations.ImportBillRepository(context)
-            );
-
-            _viewModel = new PublisherViewModel(publisherService);
+            _viewModel = new PublisherViewModel();
             this.DataContext = _viewModel;
         }
 

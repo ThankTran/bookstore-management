@@ -36,10 +36,8 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
             // Khởi tạo BookService giống SelectBookDialog (để tự load sách)
             var context = new BookstoreDbContext();
-            var bookRepo = new BookRepository(context);
-            var publisherRepo = new PublisherRepository(context);
-            var importBillDetailRepo = new ImportBillDetailRepository(context);
-            _bookService = new BookService(bookRepo, publisherRepo, importBillDetailRepo);
+            var unitOfWork = new UnitOfWork(context);
+            _bookService = new BookService(unitOfWork);
 
             DataContext = _vm;
 
@@ -281,11 +279,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
         #region ComboBox handlers
 
-        private void LoadBooksFromDatabase()
+        private async void LoadBooksFromDatabase()
         {
             try
             {
-                var result = _bookService.GetAllBooks();
+                var result = await _bookService.GetAllBooksAsync();
 
                 if (!result.IsSuccess || result.Data == null)
                 {

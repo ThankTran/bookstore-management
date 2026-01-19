@@ -18,13 +18,13 @@ namespace bookstore_Management.Views.Customers
         public CustomerListView()
         {
             InitializeComponent();
-            ICustomerService customerService = new CustomerService();
+         
             //var context = new BookstoreDbContext();
             //_customerService = new CustomerService(
             //    new CustomerRepository(context),
             //    new OrderRepository(context)
             //);
-            var _viewModel = new CustomerViewModel(customerService);
+            var _viewModel = new CustomerViewModel();
             this.DataContext = _viewModel;
             //LoadSampleData();
         }

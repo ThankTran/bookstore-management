@@ -3,107 +3,84 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using bookstore_Management.Data.Repositories.Interfaces;
+using System.Threading.Tasks;
 
-namespace bookstore_Management.Data.Repositories.Implementations
+public class Repository<T, TKey> : IRepository<T, TKey> where T : class
 {
-    /// <summary>
-    /// Class implement từ IRepository
-    /// Định nghĩa sơ lược các hàm làm gì
-    /// sử dụng linq để truy vấn --> không bị rối khi code
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TKey"></typeparam>
-    public class Repository<T, TKey> : IRepository<T, TKey> where T : class
+    protected readonly DbContext DbContext;
+    protected readonly DbSet<T> DbSet;
+
+    public Repository(DbContext context)
     {
-        // bảng dữ liệu và DB context
-        protected readonly DbContext _dbContext;
-        protected readonly DbSet<T> _dbSet;
+        DbContext = context;
+        DbSet = context.Set<T>();
+    }
 
-        // gán các thông tin cơ bản bằng constructor
-        protected Repository(DbContext context)
-        {
-            _dbContext = context;
-            _dbSet = context.Set<T>();
-        }
+    public IQueryable<T> Query(Expression<Func<T, bool>> predicate = null)
+    {
+        return predicate == null ? DbSet : DbSet.Where(predicate);
+    }
 
-        // các function để lấy dữ liệu từ bảng 
-        public IEnumerable<T> GetAll()
-        {
-            return _dbSet.ToList();
-        }
+    public async Task<IEnumerable<T>> GetAllAsync()
+    {
+        return await DbSet.ToListAsync();
+    }
 
-        public T GetById(TKey id)
-        {
-            // Hỗ trợ composite key cho EF6 (Find cần đúng số lượng key values).
-            // Quy ước: TKey có thể là ValueTuple<string,string> cho các entity có 2 khóa chính.
-            if (id == null)
-                return null;
+    public async Task<T> GetByIdAsync(TKey id)
+    {
+        return await DbSet.FindAsync(id);
+    }
 
-            if (id is ValueTuple<string, string> key2)
-                return _dbSet.Find(key2.Item1, key2.Item2);
+    public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await DbSet.Where(predicate).ToListAsync();
+    }
 
-            return _dbSet.Find(id);
-        }
+    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await DbSet.AnyAsync(predicate);
+    }
 
-        public IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
-        {
-            return _dbSet.Where(predicate).ToList(); 
-        }
+    public async Task<int> CountAsync()
+    {
+        return await DbSet.CountAsync();
+    }
 
-        // function để kiểm tra dữ lệu có tồn tại
-        public bool Exists(Expression<Func<T, bool>> predicate)
-        {
-            return _dbSet.Any(predicate);
-        }
+    public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await DbSet.CountAsync(predicate);
+    }
 
-        // các function dùng để đếm
-        public int Count()
-        {
-            return _dbSet.Count();
-        }
+    public Task AddAsync(T entity)
+    {
+        DbSet.Add(entity);
+        return Task.CompletedTask;
+    }
 
-        public int Count(Expression<Func<T, bool>> predicate)
-        {
-            return _dbSet.Count(predicate);
-        }
+    public Task AddRangeAsync(IEnumerable<T> entities)
+    {
+        DbSet.AddRange(entities);
+        return Task.CompletedTask;
+    }
 
-        // các function dùng để thêm vào bảng
-        public void Add(T item)
-        {
-            _dbSet.Add(item);
-        }
+    public void Update(T entity)
+    {
+        DbContext.Entry(entity).State = EntityState.Modified;
+    }
 
-        public void Add(IEnumerable<T> items)
-        {
-            _dbSet.AddRange(items);
-        }
-        
-        // các function để xóa
-        public void Delete(T item)
-        {
-            _dbSet.Remove(item);
-        }
+    public void UpdateRange(IEnumerable<T> entities)
+    {
+        foreach (var entity in entities)
+            Update(entity);
+    }
 
-        // các function để sửa bảng
-        public void Update(T item)
-        {
-            _dbSet.Attach(item);
-            _dbContext.Entry<T>(item).State = EntityState.Modified; // thông báo cho EF biết thông tin này đã bị sửa
-        }
+    public void Delete(T entity)
+    {
+        DbSet.Remove(entity);
+    }
 
-        public void Update(IEnumerable<T> items)
-        {
-            foreach (var i in items)
-            {
-                Update(i);
-            }
-        }
-
-        // function để lưu các thay đổi
-        public int SaveChanges()
-        {
-            return _dbContext.SaveChanges();
-        }
+    public async Task<int> SaveChangesAsync()
+    {
+        return await DbContext.SaveChangesAsync();
     }
 }

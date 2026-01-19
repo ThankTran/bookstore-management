@@ -32,11 +32,9 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             _publisherId = publisherId;
 
             var context = new BookstoreDbContext();
-            var bookRepo = new BookRepository(context);
-            var publisherRepo = new PublisherRepository(context);
-            var importBillDetailRepo = new ImportBillDetailRepository(context);
+            var unitOfWork = new UnitOfWork(context);
 
-            _bookService = new BookService(bookRepo, publisherRepo, importBillDetailRepo);
+            _bookService = new BookService(unitOfWork);
         }
 
         #region Window Dragging
@@ -123,11 +121,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         }
 
         #region Loading Books
-        private void LoadBooksFromDatabase()
+        private async void LoadBooksFromDatabase()
         {
             try
             {
-                var result = _bookService.GetAllBooks();
+                var result = await _bookService.GetAllBooksAsync();
 
                 if (!result.IsSuccess || result.Data == null)
                 {

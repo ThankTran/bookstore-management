@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using bookstore_Management.Core.Enums;
+using System.Threading.Tasks;
 using bookstore_Management.Core.Results;
 using bookstore_Management.DTOs.Order.Requests;
 using bookstore_Management.DTOs.Order.Responses;
-using bookstore_Management.Models;
+
 namespace bookstore_Management.Services.Interfaces
 {
     public interface IOrderService
     {
-        // CRUD
-        Result<string> CreateOrder(CreateOrderRequestDto dto);
-        Result UpdateOrder(string orderId, UpdateOrderRequestDto dto);
-        Result DeleteOrder(string orderId);
-        Result<OrderResponseDto> GetOrderById(string orderId);
-        Result<IEnumerable<OrderResponseDto>> GetAllOrders();
-        
-        // Tìm kiếm đơn hàng
-        Result<IEnumerable<OrderResponseDto>> GetOrdersByCustomer(string customerId);
-        Result<IEnumerable<OrderResponseDto>> GetOrdersByStaff(string staffId);
-        Result<IEnumerable<OrderResponseDto>> GetOrdersByDate(DateTime fromDate, DateTime toDate);
-        Result<IEnumerable<OrderDetailResponseDto>> GetOrderDetails(string orderId);
+        Task<Result<string>> CreateOrderAsync(CreateOrderRequestDto dto);
+        Task<Result> UpdateOrderAsync(string orderId, UpdateOrderRequestDto dto);
+        Task<Result> DeleteOrderAsync(string orderId);
+        Task<Result<OrderResponseDto>> GetOrderByIdAsync(string orderId);
+        Task<Result<IEnumerable<OrderResponseDto>>> GetAllOrdersAsync();
+        Task<Result<IEnumerable<OrderResponseDto>>> GetOrdersByCustomerAsync(string customerId);
+        Task<Result<IEnumerable<OrderResponseDto>>> GetOrdersByStaffAsync(string staffId);
+        Task<Result<IEnumerable<OrderResponseDto>>> GetOrdersByDateAsync(DateTime fromDate, DateTime toDate);
+        Task<Result<IEnumerable<OrderDetailResponseDto>>> GetOrderDetailsAsync(string orderId);
     }
 }

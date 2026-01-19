@@ -13,24 +13,24 @@ namespace bookstore_Management.Data.Repositories.Implementations
     internal class BookRepository : Repository<Book,string>,IBookRepository
     {
         public BookRepository(BookstoreDbContext context) : base(context) { }
-        public IEnumerable<Book> GetByCategory(BookCategory category)
+        public  Task<IEnumerable<Book>> GetByCategoryAsync(BookCategory category)
         {
-            return Find(b => b.Category == category && b.DeletedDate == null);
+            return FindAsync(b => b.Category == category && b.DeletedDate == null);
         }
 
-        public IEnumerable<Book> SearchByName(string keyword)
+        public IQueryable<Book> SearchByName(string keyword)
         {
-            return Find(b => b.Name.Contains(keyword) && b.DeletedDate == null);
+            return Query(b => b.Name.Contains(keyword) && b.DeletedDate == null);
         }
         
-        public IEnumerable<Book> GetByAuthor(string author)
+        public  Task<IEnumerable<Book>> GetByAuthorAsync(string author)
         {
-            return Find(b => b.Author.Contains(author) && b.DeletedDate == null);
+            return FindAsync(b => b.Author.Contains(author) && b.DeletedDate == null);
         }
 
-        public IEnumerable<Book> GetByPriceRange(decimal? minPrice, decimal? maxPrice)
+        public  Task<IEnumerable<Book>> GetByPriceRangeAsync(decimal? minPrice, decimal? maxPrice)
         {
-            return Find(b =>
+            return FindAsync(b =>
                 b.DeletedDate == null &&
                 (!minPrice.HasValue || (b.SalePrice.HasValue && b.SalePrice.Value >= minPrice.Value)) &&
                 (!maxPrice.HasValue || (b.SalePrice.HasValue && b.SalePrice.Value <= maxPrice.Value)));
@@ -40,9 +40,9 @@ namespace bookstore_Management.Data.Repositories.Implementations
         /// Gets all active (non-deleted) books for list view
         /// Filters by DeletedDate == null
         /// </summary>
-        public IEnumerable<Book> GetAllForListView()
+        public Task<IEnumerable<Book>> GetAllForListViewAsync()
         {
-            return Find(b => b.DeletedDate == null);
+            return FindAsync(b => b.DeletedDate == null);
         }
     }
 }

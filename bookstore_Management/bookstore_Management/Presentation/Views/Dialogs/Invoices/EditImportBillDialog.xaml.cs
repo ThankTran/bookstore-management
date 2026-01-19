@@ -33,12 +33,9 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
             // Initialize service
             var context = new BookstoreDbContext();
-            var importRepo = new ImportBillRepository(context);
-            var detailRepo = new ImportBillDetailRepository(context);
-            var bookRepo = new BookRepository(context);
-            var publisherRepo = new PublisherRepository(context);
+            var unitOfWork = new UnitOfWork(context);
 
-            _importBillService = new ImportBillService(importRepo, detailRepo, bookRepo, publisherRepo);
+            _importBillService = new ImportBillService(unitOfWork);
 
             icBooks.ItemsSource = _bookItems;
             _bookItems.CollectionChanged += (_, __) => UpdateTotalAmount();
@@ -49,11 +46,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             LoadImportBillData();
         }
 
-        private void LoadImportBillData()
+        private async void LoadImportBillData()
         {
             try
             {
-                var result = _importBillService.GetImportBillById(_importBillId);
+                var result = await _importBillService.GetImportBillByIdAsync(_importBillId);
 
                 if (!result.IsSuccess || result.Data == null)
                 {
@@ -104,7 +101,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             }
         }
 
-        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             if (!ValidateForm()) return;
 
@@ -125,7 +122,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
                     Notes = tbNotes.Text?.Trim()
                 };
 
-                var basicResult = _importBillService.UpdateImportBill(_importBillId, updateDto);
+                var basicResult =await _importBillService.UpdateImportBillAsync(_importBillId, updateDto);
 
                 if (!basicResult.IsSuccess)
                 {
@@ -137,7 +134,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
                 // Update details (Quantity & Price for each item)
                 foreach (var item in _bookItems)
                 {
-                    var detailResult = _importBillService.UpdateImportItem(
+                    var detailResult = await _importBillService.UpdateImportItemAsync(
                         _importBillId,
                         item.BookId,
                         item.Quantity,
@@ -185,7 +182,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             }
         }
 
-        private void BtnRemoveBook_Click(object sender, RoutedEventArgs e)
+        private async void BtnRemoveBook_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is ImportBookItem item)
             {
@@ -200,7 +197,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
                 try
                 {
-                    var result = _importBillService.RemoveImportItem(_importBillId, item.BookId);
+                    var result = await _importBillService.RemoveImportItemAsync(_importBillId, item.BookId);
 
                     if (result.IsSuccess)
                     {

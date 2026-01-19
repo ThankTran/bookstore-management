@@ -1,7 +1,5 @@
 ﻿using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
-using bookstore_Management.Data.Context;
-using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.DTOs.Customer.Requests;
 using bookstore_Management.DTOs.Customer.Responses;
@@ -10,547 +8,398 @@ using bookstore_Management.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace bookstore_Management.Services.Implementations
 {
     public class CustomerService : ICustomerService
     {
-        private readonly ICustomerRepository _customerRepository;
-        private readonly IOrderRepository _orderRepository;
-        
-        internal CustomerService(ICustomerRepository customerRepository, IOrderRepository orderRepository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        internal CustomerService(IUnitOfWork unitOfWork)
         {
-            _customerRepository = customerRepository;
-            _orderRepository = orderRepository;
-        }
-        internal CustomerService()
-        {
-            var context = new BookstoreDbContext();
-            _customerRepository = new CustomerRepository(context);        
-        }
-        internal CustomerService(ICustomerRepository cusrepo)
-        {
-            _customerRepository= cusrepo;
-        }
-        
-        // ==================================================================
-        // ---------------------- THÊM DỮ LIỆU ------------------------------
-        // ==================================================================
-        public Result<string> AddCustomer(CreateCustomerRequestDto dto)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(dto.Name))
-                    return Result<string>.Fail("Tên không được trống");
-
-                if (string.IsNullOrWhiteSpace(dto.Phone))
-                    return Result<string>.Fail("Số điện thoại không được trống");
-
-                if (dto.Phone.Length < 10 || dto.Phone.Length > 20 || !dto.Phone.All(char.IsDigit))
-                    return Result<string>.Fail("Số điện thoại phải từ 10-20 chữ số");
-
-                //
-                // 
-                // kiểm tra thông tin email hợp lệ ?
-                //
-                //
-                
-                
-                // Kiểm tra trùng số điện thoại
-                var existing = _customerRepository.SearchByPhone(dto.Phone);
-                if (existing != null)
-                    return Result<string>.Fail("Số điện thoại đã được đăng ký");
-
-                var customerId = GenerateCustomerId();
-
-                var customer = new Customer
-                {
-                    CustomerId = customerId,
-                    Name = dto.Name.Trim(),
-                    Phone = dto.Phone,
-                    Email = dto.Email,
-                    Address = dto.Address,
-                    LoyaltyPoints = 0,
-                    MemberLevel = MemberTier.Bronze,
-                    CreatedDate = DateTime.Now,
-                    UpdatedDate = null,
-                    DeletedDate = null
-                };
-
-                _customerRepository.Add(customer);
-                _customerRepository.SaveChanges();
-
-                return Result<string>.Success(customerId, "Thêm khách hàng thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result<string>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-        
-        // ==================================================================
-        // ----------------------- SỬA DỮ LIỆU ------------------------------
-        // ==================================================================
-        public Result UpdateCustomer(string customerId, UpdateCustomerRequestDto dto)
-        {
-            try
-            {
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result.Fail("Khách hàng không tồn tại");
-
-                if (string.IsNullOrWhiteSpace(dto.Name))
-                    return Result.Fail("Tên không được trống");
-
-                if (string.IsNullOrWhiteSpace(dto.Phone))
-                    return Result.Fail("Số điện thoại không được trống");
-
-                if (dto.Phone.Length < 10 || dto.Phone.Length > 20 || !dto.Phone.All(char.IsDigit))
-                    return Result.Fail("Số điện thoại phải từ 10-20 chữ số");
-                
-                //
-                // 
-                // kiểm tra thông tin email hợp lệ ?
-                //
-                //
-
-                // Kiểm tra phone trùng
-                if (dto.Phone != customer.Phone)
-                {
-                    var existing = _customerRepository.SearchByPhone(dto.Phone);
-                    if (existing != null && existing.CustomerId != customerId)
-                        return Result.Fail("Số điện thoại đã được sử dụng");
-                }
-
-                customer.Name = dto.Name;
-                customer.Phone = dto.Phone;
-                customer.Email = dto.Email;
-                customer.Address = dto.Address;
-                if (dto.MemberLevel.HasValue)
-                    customer.MemberLevel = dto.MemberLevel.Value;
-                if (dto.LoyaltyPoints.HasValue)
-                    customer.LoyaltyPoints = dto.LoyaltyPoints.Value;
-                customer.UpdatedDate = DateTime.Now;
-
-                _customerRepository.Update(customer);
-                _customerRepository.SaveChanges();
-
-                return Result.Success("Cập nhật khách hàng thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
+            _unitOfWork = unitOfWork;
         }
 
-        // ==================================================================
-        // ---------------------- XÓA DỮ LIỆU -------------------------------
-        // ==================================================================
-        public Result DeleteCustomer(string customerId)
+        // ============================================================
+        // ADD CUSTOMER
+        // ============================================================
+        public async Task<Result<string>> AddCustomerAsync(CreateCustomerRequestDto dto)
         {
-            try
+            if (string.IsNullOrWhiteSpace(dto.Name))
+                return Result<string>.Fail("Tên không được trống");
+
+            if (string.IsNullOrWhiteSpace(dto.Phone) || !dto.Phone.All(char.IsDigit))
+                return Result<string>.Fail("Số điện thoại không hợp lệ");
+
+            var existing = await _unitOfWork.Customers.SearchByPhoneAsync(dto.Phone);
+            if (existing != null)
+                return Result<string>.Fail("Số điện thoại đã tồn tại");
+
+            var customerId = await GenerateCustomerIdAsync();
+
+            var customer = new Customer
             {
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result.Fail("Khách hàng không tồn tại");
-
-                var orders = _orderRepository.Find(o => o.CustomerId == customerId && o.DeletedDate == null);
-                if (orders.Any())
-                    return Result.Fail("Không thể xóa khách hàng đã có đơn hàng");
-
-                // Soft delete
-                customer.DeletedDate = DateTime.Now;
-                _customerRepository.Update(customer);
-                _customerRepository.SaveChanges();
-
-                return Result.Success("Xóa khách hàng thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        // ==================================================================
-        // ----------------------- LẤY DỮ LIỆU ------------------------------
-        // ==================================================================
-        public Result<CustomerDetailResponseDto> GetCustomerById(string customerId)
-        {
-            try
-            {
-                var c = _customerRepository.GetById(customerId);
-                if (c == null || c.DeletedDate != null)
-                    return Result<CustomerDetailResponseDto>.Fail("Khách hàng không tồn tại");
-
-               
-
-                var dto = MapToCustomerResponseDto(c);
-
-                return Result<CustomerDetailResponseDto>.Success(dto);
-            }
-            catch (Exception ex)
-            {
-                return Result<CustomerDetailResponseDto>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        public Result<IEnumerable<CustomerDetailResponseDto>> GetAllCustomers()
-        {
-            try
-            {
-                var customers = _customerRepository.GetAll()
-                    .Where(c => c.DeletedDate == null)
-                    .OrderBy(c => c.Name)
-                    .Select(MapToCustomerResponseDto);
-
-                return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<CustomerDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        public Result<CustomerDetailResponseDto> GetCustomerByPhone(string phone)
-        {
-            try
-            {
-                var c = _customerRepository.SearchByPhone(phone);
-                if (c == null || c.DeletedDate != null)
-                    return Result<CustomerDetailResponseDto>.Fail("Không tìm thấy khách hàng");
-
-                var dto = MapToCustomerResponseDto(c);
-
-                return Result<CustomerDetailResponseDto>.Success(dto);
-            }
-            catch (Exception ex)
-            {
-                return Result<CustomerDetailResponseDto>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        public Result<IEnumerable<CustomerDetailResponseDto>> SearchByName(string name)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(name))
-                    return Result<IEnumerable<CustomerDetailResponseDto>>.Success(new List<CustomerDetailResponseDto>());
-
-                var customers = _customerRepository.SearchByName(name)
-                    .Where(c => c.DeletedDate == null)
-                    .OrderBy(c => c.Name)
-                    .Select(MapToCustomerResponseDto);
-                return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<CustomerDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        public Result<IEnumerable<CustomerDetailResponseDto>> GetByMemberLevel(MemberTier level)
-        {
-            try
-            {
-                var customers = _customerRepository.GetAll()
-                    .Where(c => c.DeletedDate == null && c.MemberLevel == level)
-                    .OrderBy(c => c.Name)
-                    .Select(MapToCustomerResponseDto);
-
-                return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<CustomerDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-        
-        public Result<IEnumerable<CustomerDetailResponseDto>> SearchByTotalSpent(decimal minimum, decimal maximum, DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                var customers = _customerRepository.GetAll()
-                    .Where(c => c.DeletedDate == null)
-                    .Where(cus =>
-                    {
-                        var totalSpent = cus.Orders
-                            .Where(o => o.CreatedDate >= startDate && o.CreatedDate <= endDate && o.DeletedDate == null)
-                            .Sum(o => o.TotalPrice);
-
-                        return totalSpent >= minimum && totalSpent <= maximum;
-                    })
-                    .Select(MapToCustomerResponseDto);
-
-                return Result<IEnumerable<CustomerDetailResponseDto>>.Success(customers);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<CustomerDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-        
-        public Result UpgradeMemberLevel(string customerId)
-        {
-            try
-            {
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result.Fail("Khách hàng không tồn tại");
-                
-                var currentLevel = customer.MemberLevel;
-                
-                switch (customer.MemberLevel)
-                {
-                    case MemberTier.Bronze:
-                        customer.MemberLevel = MemberTier.Silver;
-                        break;
-                    case MemberTier.Silver:
-                        customer.MemberLevel = MemberTier.Gold;
-                        break;
-                    case MemberTier.Gold:
-                        customer.MemberLevel = MemberTier.Diamond;
-                        break;
-                    case MemberTier.Diamond:
-                    default:
-                        return Result.Fail("Khách hàng đã ở mức cao nhất");
-                }
-
-                customer.UpdatedDate = DateTime.Now;
-                _customerRepository.Update(customer);
-                _customerRepository.SaveChanges();
-
-                return Result.Success($"Nâng hạng từ {currentLevel} lên {customer.MemberLevel} thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-        
-        public Result DowngradeMemberLevel(string customerId)
-        {
-            try
-            {
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result.Fail("Khách hàng không tồn tại");
-                
-                var currentLevel = customer.MemberLevel;
-                
-                switch (customer.MemberLevel)
-                {
-                    case MemberTier.Diamond:
-                        customer.MemberLevel = MemberTier.Gold;
-                        break;
-                    case MemberTier.Gold:
-                        customer.MemberLevel = MemberTier.Silver;
-                        break;
-                    case MemberTier.Silver:
-                        customer.MemberLevel = MemberTier.Bronze;
-                        break;
-                    case MemberTier.Bronze:
-                        return Result.Fail("Khách hàng đã ở mức thấp nhất");
-                }
-
-                customer.UpdatedDate = DateTime.Now;
-                _customerRepository.Update(customer);
-                _customerRepository.SaveChanges();
-
-                return Result.Success($"Hạ hạng từ {currentLevel} xuống {customer.MemberLevel} thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        public Result<MemberTier> CalculateMemberTier(decimal totalSpent)
-        {
-            try
-            {
-                MemberTier level;
-                
-                if (totalSpent >= 10000000) // 10 triệu
-                    level = MemberTier.Diamond;
-                else if (totalSpent >= 5000000) // 5 triệu
-                    level = MemberTier.Gold;
-                else if (totalSpent >= 1000000) // 1 triệu
-                    level = MemberTier.Silver;
-                else
-                    level = MemberTier.Bronze;
-
-                return Result<MemberTier>.Success(level);
-            }
-            catch (Exception ex)
-            {
-                return Result<MemberTier>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        // ==================================================================
-        // ----------------------- LỊCH SỬ MUA HÀNG -------------------------
-        // ==================================================================
-
-        /// <summary>
-        /// Lấy lịch sử mua hàng của khách hàng
-        /// </summary>
-        public Result<IEnumerable<Order>> GetCustomerOrderHistory(string customerId, DateTime fromDate, DateTime toDate)
-        {
-            try
-            {
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result<IEnumerable<Order>>.Fail("Khách hàng không tồn tại");
-
-                var orders = _orderRepository.Find(o =>
-                    o.CustomerId == customerId &&
-                    o.CreatedDate >= fromDate &&
-                    o.CreatedDate <= toDate &&
-                    o.DeletedDate == null)
-                    .OrderByDescending(o => o.CreatedDate)
-                    .ToList();
-
-                return Result<IEnumerable<Order>>.Success(orders);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<Order>>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Tính tổng tiền đã chi của khách hàng
-        /// </summary>
-        public Result<decimal> CustomerTotalSpentPerDay(string customerId, DateTime date)
-        {
-            try
-            {
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result<decimal>.Fail("Khách hàng không tồn tại");
-
-                var orders = _orderRepository.Find(o =>
-                    o.CustomerId == customerId &&
-                    o.DeletedDate == null &&
-                    o.CreatedDate == date );
-
-                var totalSpent = orders.Sum(o => o.TotalPrice);
-                return Result<decimal>.Success(totalSpent);
-            }
-            catch (Exception ex)
-            {
-                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-        
-        public Result<decimal> CustomerTotalSpentPerMonth(string customerId, int month, int year)
-        {
-            try
-            {
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result<decimal>.Fail("Khách hàng không tồn tại");
-
-                var orders = _orderRepository.Find(o =>
-                    o.CustomerId == customerId &&
-                    o.DeletedDate == null &&
-                    o.CreatedDate.Month == month &&
-                    o.CreatedDate.Year == year);
-
-                var totalSpent = orders.Sum(o => o.TotalPrice);
-                return Result<decimal>.Success(totalSpent);
-            }
-            catch (Exception ex)
-            {
-                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-        
-        public Result<decimal> CustomerTotalSpentPerYear(string customerId, int year)
-        {
-            try
-            {
-                var customer = _customerRepository.GetById(customerId);
-                if (customer == null || customer.DeletedDate != null)
-                    return Result<decimal>.Fail("Khách hàng không tồn tại");
-
-                var orders = _orderRepository.Find(o =>
-                    o.CustomerId == customerId &&
-                    o.DeletedDate == null &&
-                    o.CreatedDate.Year == year);
-
-                var totalSpent = orders.Sum(o => o.TotalPrice);
-                return Result<decimal>.Success(totalSpent);
-            }
-            catch (Exception ex)
-            {
-                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-
-        // ==================================================================
-        // ----------------------- HÀM HELPER --------------------------------
-        // ==================================================================
-        private string GenerateCustomerId()
-        {
-            var lastCustomer = _customerRepository.GetAll()
-                .OrderByDescending(c => c.CustomerId)
-                .FirstOrDefault();
-                
-            if (lastCustomer == null || !lastCustomer.CustomerId.StartsWith("KH"))
-                return "KH0001";
-            
-            var lastNumber = int.Parse(lastCustomer.CustomerId.Substring(2));
-            return $"KH{(lastNumber + 1):D4}";
-        }
-        
-        /// <summary>
-        /// Maps Customer entity to CustomerResponseDTO
-        /// </summary>
-        private CustomerDetailResponseDto MapToCustomerResponseDto(Customer cus)
-        {
-            var orders = _orderRepository.GetByCustomer(cus.CustomerId).ToList();
-            return new CustomerDetailResponseDto
-            {
-                CustomerId = cus.CustomerId,
-                Name = cus.Name,
-                Address = cus.Address,
-                Email = cus.Email,
-                LoyaltyPoints = cus.LoyaltyPoints,
-                Phone = cus.Phone,
-                MemberLevel = cus.MemberLevel,
-                CreatedDate = cus.CreatedDate,
-                TotalOrders = orders.Count(),
-                TotalSpent = orders.Sum(o => o.TotalPrice)
+                CustomerId = customerId,
+                Name = dto.Name.Trim(),
+                Phone = dto.Phone,
+                Email = dto.Email,
+                Address = dto.Address,
+                LoyaltyPoints = 0,
+                MemberLevel = MemberTier.Bronze,
+                CreatedDate = DateTime.Now
             };
+
+            await _unitOfWork.Customers.AddAsync(customer);
+            await _unitOfWork.Customers.SaveChangesAsync();
+
+            return Result<string>.Success(customerId, "Thêm khách hàng thành công");
         }
 
-        // ==================================================================
-        // ----------------------- LIST VIEW METHODS -------------------------
-        // ==================================================================
-        public Result<IEnumerable<CustomerListResponseDto>> GetCustomerList()
+        // ============================================================
+        // UPDATE CUSTOMER
+        // ============================================================
+        public async Task<Result> UpdateCustomerAsync(string customerId, UpdateCustomerRequestDto dto)
         {
-            try
+            var c = await _unitOfWork.Customers.GetByIdAsync(customerId);
+            if (c == null || c.DeletedDate != null)
+                return Result.Fail("Khách hàng không tồn tại");
+
+            if (string.IsNullOrWhiteSpace(dto.Name))
+                return Result.Fail("Tên không được trống");
+
+            if (string.IsNullOrWhiteSpace(dto.Phone) || !dto.Phone.All(char.IsDigit))
+                return Result.Fail("Số điện thoại không hợp lệ");
+
+            if (dto.Phone != c.Phone)
             {
-             
-                var customers = _customerRepository.GetAllForListView().ToList();
+                var dup = await _unitOfWork.Customers.SearchByPhoneAsync(dto.Phone);
+                if (dup != null && dup.CustomerId != c.CustomerId)
+                    return Result.Fail("Số điện thoại đã được sử dụng");
+            }
 
+            c.Name = dto.Name;
+            c.Phone = dto.Phone;
+            c.Email = dto.Email;
+            c.Address = dto.Address;
 
-                var result = customers.Select(customer => new CustomerListResponseDto
+            if (dto.MemberLevel.HasValue) c.MemberLevel = dto.MemberLevel.Value;
+            if (dto.LoyaltyPoints.HasValue) c.LoyaltyPoints = dto.LoyaltyPoints.Value;
+
+            c.UpdatedDate = DateTime.Now;
+
+            _unitOfWork.Customers.Update(c);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success("Cập nhật thành công");
+        }
+
+        // ============================================================
+        // DELETE CUSTOMER
+        // ============================================================
+        public async Task<Result> DeleteCustomerAsync(string customerId)
+        {
+            var c = await _unitOfWork.Customers.GetByIdAsync(customerId);
+            if (c == null || c.DeletedDate != null)
+                return Result.Fail("Khách hàng không tồn tại");
+
+            var hasOrders = await _unitOfWork.Orders
+                .Query(o => o.CustomerId == customerId && o.DeletedDate == null)
+                .AnyAsync();
+
+            if (hasOrders)
+                return Result.Fail("Không thể xóa khách có đơn hàng");
+
+            c.DeletedDate = DateTime.Now;
+
+            _unitOfWork.Customers.Update(c);
+            await _unitOfWork.Customers.SaveChangesAsync();
+
+            return Result.Success("Đã xóa");
+        }
+
+        // ============================================================
+        // GET BY ID
+        // ============================================================
+        public async Task<Result<CustomerDetailResponseDto>> GetCustomerByIdAsync(string customerId)
+        {
+            var c = await _unitOfWork.Customers.Query(x => x.CustomerId == customerId && x.DeletedDate == null)
+                .Select(cus => new CustomerDetailResponseDto
                 {
-                    CustomerId = customer.CustomerId,
-                    Name = customer.Name,
-                    Phone = customer.Phone,
-                    MemberLevel = customer.MemberLevel,
-                    LoyaltyPoints = customer.LoyaltyPoints
-                }).ToList();
+                    CustomerId = cus.CustomerId,
+                    Name = cus.Name,
+                    Address = cus.Address,
+                    Email = cus.Email,
+                    Phone = cus.Phone,
+                    MemberLevel = cus.MemberLevel,
+                    LoyaltyPoints = cus.LoyaltyPoints,
+                    CreatedDate = cus.CreatedDate,
 
-                return Result<IEnumerable<CustomerListResponseDto>>.Success(result);
-            }
-            catch (Exception ex)
+                    TotalOrders = _unitOfWork.Orders.Query(o => o.CustomerId == cus.CustomerId && o.DeletedDate == null).Count(),
+                    TotalSpent = _unitOfWork.Orders.Query(o => o.CustomerId == cus.CustomerId && o.DeletedDate == null).Sum(o => (decimal?)o.TotalPrice) ?? 0
+                })
+                .FirstOrDefaultAsync();
+
+            if (c == null)
+                return Result<CustomerDetailResponseDto>.Fail("Không tìm thấy");
+
+            return Result<CustomerDetailResponseDto>.Success(c);
+        }
+
+        // ============================================================
+        // GET ALL
+        // ============================================================
+        public async Task<Result<IEnumerable<CustomerDetailResponseDto>>> GetAllCustomersAsync()
+        {
+            var result = await _unitOfWork.Customers.Query(c => c.DeletedDate == null)
+                .Select(cus => new CustomerDetailResponseDto
+                {
+                    CustomerId = cus.CustomerId,
+                    Name = cus.Name,
+                    Address = cus.Address,
+                    Email = cus.Email,
+                    Phone = cus.Phone,
+                    MemberLevel = cus.MemberLevel,
+                    LoyaltyPoints = cus.LoyaltyPoints,
+                    CreatedDate = cus.CreatedDate,
+                    TotalOrders = _unitOfWork.Orders.Query(o => o.CustomerId == cus.CustomerId).Count(),
+                    TotalSpent = _unitOfWork.Orders.Query(o => o.CustomerId == cus.CustomerId).Sum(o => (decimal?)o.TotalPrice) ?? 0
+                })
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+
+            return Result<IEnumerable<CustomerDetailResponseDto>>.Success(result);
+        }
+        
+        public async Task<Result<CustomerDetailResponseDto>> GetCustomerByPhoneAsync(string phone)
+        {
+            var customer = await _unitOfWork.Customers
+                .Query(c => c.Phone == phone && c.DeletedDate == null)
+                .FirstOrDefaultAsync();
+
+            if (customer == null)
+                return Result<CustomerDetailResponseDto>.Fail("Không tìm thấy");
+
+            return Result<CustomerDetailResponseDto>.Success(new CustomerDetailResponseDto
             {
-                return Result<IEnumerable<CustomerListResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
+                CustomerId = customer.CustomerId,
+                Name = customer.Name,
+                Phone = customer.Phone,
+                Email = customer.Email
+            });
+        }
+
+
+        // ============================================================
+        // SEARCH BY NAME
+        // ============================================================
+        public async Task<Result<IEnumerable<CustomerDetailResponseDto>>> SearchByNameAsync(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Result<IEnumerable<CustomerDetailResponseDto>>.Success(new List<CustomerDetailResponseDto>());
+
+            var result = await _unitOfWork.Customers
+                .SearchByName(name)
+                .Where(c => c.DeletedDate == null)
+                .OrderBy(c => c.Name)
+                .Select(cus => new CustomerDetailResponseDto
+                {
+                    CustomerId = cus.CustomerId,
+                    Name = cus.Name,
+                    Phone = cus.Phone,
+                    Email = cus.Email,
+                    Address = cus.Address,
+                    LoyaltyPoints = cus.LoyaltyPoints,
+                    MemberLevel = cus.MemberLevel,
+                    CreatedDate = cus.CreatedDate,
+                    TotalOrders = _unitOfWork.Orders.Query(o => o.CustomerId == cus.CustomerId).Count(),
+                    TotalSpent = _unitOfWork.Orders.Query(o => o.CustomerId == cus.CustomerId).Sum(o => (decimal?)o.TotalPrice) ?? 0
+                })
+                .ToListAsync();
+
+            return Result<IEnumerable<CustomerDetailResponseDto>>.Success(result);
+        }
+
+        // ============================================================
+        // GET BY MEMBER LEVEL
+        // ============================================================
+        public async Task<Result<IEnumerable<CustomerDetailResponseDto>>> GetByMemberLevelAsync(MemberTier level)
+        {
+            var result = await _unitOfWork.Customers
+                .Query(c => c.MemberLevel == level && c.DeletedDate == null)
+                .OrderBy(c => c.Name)
+                .Select(cus => new CustomerDetailResponseDto
+                {
+                    CustomerId = cus.CustomerId,
+                    Name = cus.Name,
+                    Phone = cus.Phone,
+                    Email = cus.Email,
+                    Address = cus.Address,
+                    LoyaltyPoints = cus.LoyaltyPoints,
+                    MemberLevel = cus.MemberLevel,
+                    CreatedDate = cus.CreatedDate,
+                    TotalOrders = _unitOfWork.Orders.Query(o => o.CustomerId == cus.CustomerId).Count(),
+                    TotalSpent = _unitOfWork.Orders.Query(o => o.CustomerId == cus.CustomerId).Sum(o => (decimal?)o.TotalPrice) ?? 0
+                })
+                .ToListAsync();
+
+            return Result<IEnumerable<CustomerDetailResponseDto>>.Success(result);
+        }
+
+        // ============================================================
+        // SEARCH BY TOTAL SPENT
+        // ============================================================
+        public async Task<Result<IEnumerable<CustomerDetailResponseDto>>> SearchByTotalSpentAsync(
+            decimal min, decimal max, DateTime start, DateTime end)
+        {
+            var result = await _unitOfWork.Customers.Query(c => c.DeletedDate == null)
+                .Select(cus => new
+                {
+                    Customer = cus,
+                    TotalSpent = _unitOfWork.Orders.Query(o =>
+                        o.CustomerId == cus.CustomerId &&
+                        o.DeletedDate == null &&
+                        o.CreatedDate >= start &&
+                        o.CreatedDate <= end
+                    ).Sum(o => (decimal?)o.TotalPrice) ?? 0
+                })
+                .Where(x => x.TotalSpent >= min && x.TotalSpent <= max)
+                .Select(x => new CustomerDetailResponseDto
+                {
+                    CustomerId = x.Customer.CustomerId,
+                    Name = x.Customer.Name,
+                    Phone = x.Customer.Phone,
+                    Email = x.Customer.Email,
+                    Address = x.Customer.Address,
+                    LoyaltyPoints = x.Customer.LoyaltyPoints,
+                    MemberLevel = x.Customer.MemberLevel,
+                    CreatedDate = x.Customer.CreatedDate,
+                    TotalSpent = x.TotalSpent,
+                    TotalOrders = _unitOfWork.Orders.Query(o => o.CustomerId == x.Customer.CustomerId).Count()
+                })
+                .ToListAsync();
+
+            return Result<IEnumerable<CustomerDetailResponseDto>>.Success(result);
+        }
+
+        // ============================================================
+        // MEMBER LEVEL UP/DOWN
+        // ============================================================
+        public async Task<Result> UpgradeMemberLevelAsync(string customerId)
+        {
+            var c = await _unitOfWork.Customers.GetByIdAsync(customerId);
+            if (c == null || c.DeletedDate != null)
+                return Result.Fail("Không tìm thấy");
+
+            if (c.MemberLevel == MemberTier.Diamond)
+                return Result.Fail("Đã cao nhất");
+
+            c.MemberLevel += 1;
+            c.UpdatedDate = DateTime.Now;
+
+            _unitOfWork.Customers.Update(c);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success("Nâng hạng thành công");
+        }
+
+        public async Task<Result> DowngradeMemberLevelAsync(string customerId)
+        {
+            var c = await _unitOfWork.Customers.GetByIdAsync(customerId);
+            if (c == null || c.DeletedDate != null)
+                return Result.Fail("Không tìm thấy");
+
+            if (c.MemberLevel == MemberTier.Bronze)
+                return Result.Fail("Đã thấp nhất");
+
+            c.MemberLevel -= 1;
+            c.UpdatedDate = DateTime.Now;
+
+            _unitOfWork.Customers.Update(c);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success("Hạ hạng thành công");
+        }
+        
+        public Task<Result<MemberTier>> CalculateMemberTierAsync(decimal totalSpent)
+        {
+            MemberTier level;
+            
+            if (totalSpent >= 10000000) // 10 triệu
+                level = MemberTier.Diamond;
+            else if (totalSpent >= 5000000) // 5 triệu
+                level = MemberTier.Gold;
+            else if (totalSpent >= 1000000) // 1 triệu
+                level = MemberTier.Silver;
+            else
+                level = MemberTier.Bronze;
+
+            return Task.FromResult(Result<MemberTier>.Success(level));
+        }
+
+        // ============================================================
+        // TOTAL SPENT
+        // ============================================================
+        public async Task<Result<decimal>> CustomerTotalSpentPerDayAsync(string customerId, DateTime date)
+        {
+            var total = await _unitOfWork.Orders.Query(o =>
+                o.CustomerId == customerId &&
+                o.DeletedDate == null &&
+                DbFunctions.TruncateTime(o.CreatedDate) == date.Date
+            ).SumAsync(o => (decimal?)o.TotalPrice) ?? 0;
+
+            return Result<decimal>.Success(total);
+        }
+
+        public async Task<Result<decimal>> CustomerTotalSpentPerMonthAsync(string customerId, int month, int year)
+        {
+            var total = await _unitOfWork.Orders.Query(o =>
+                o.CustomerId == customerId &&
+                o.DeletedDate == null &&
+                o.CreatedDate.Month == month &&
+                o.CreatedDate.Year == year
+            ).SumAsync(o => (decimal?)o.TotalPrice) ?? 0;
+
+            return Result<decimal>.Success(total);
+        }
+
+        public async Task<Result<decimal>> CustomerTotalSpentPerYearAsync(string customerId, int year)
+        {
+            var total = await _unitOfWork.Orders.Query(o =>
+                o.CustomerId == customerId &&
+                o.DeletedDate == null &&
+                o.CreatedDate.Year == year
+            ).SumAsync(o => (decimal?)o.TotalPrice) ?? 0;
+
+            return Result<decimal>.Success(total);
+        }
+        
+        public async Task<Result<IEnumerable<Order>>> GetCustomerOrderHistoryAsync(string customerId, DateTime from, DateTime to)
+        {
+            var orders = await _unitOfWork.Orders
+                .Query(o => o.CustomerId == customerId && o.CreatedDate >= from && o.CreatedDate <= to)
+                .ToListAsync();
+
+            return Result<IEnumerable<Order>>.Success(orders);
+        }
+
+
+
+        // ============================================================
+        // HELPER FUNCTIONS
+        // ============================================================
+        private async Task<string> GenerateCustomerIdAsync()
+        {
+            var last = await _unitOfWork.Customers.Query(x => x.CustomerId.StartsWith("KH"))
+                .OrderByDescending(x => x.CustomerId)
+                .FirstOrDefaultAsync();
+
+            if (last == null)
+                return "KH0001";
+
+            var number = int.Parse(last.CustomerId.Substring(2)) + 1;
+            return $"KH{number:D4}";
         }
     }
 }

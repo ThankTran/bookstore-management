@@ -37,9 +37,16 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             InitializeComponent();
             _customerService = customerService;
 
-            // Lấy tổng số từ service
-            var result = customerService.GetCustomerList();
+            Loaded += async (s, e) => await LoadTotalRecordsAsync();
+        }
+        
+        private async Task LoadTotalRecordsAsync()
+        {
+            var result = await _customerService.GetAllCustomersAsync();
+
             _totalRecords = result.IsSuccess ? result.Data.Count() : 0;
+
+            // Cập nhật UI an toàn (đã trên UI thread)
             txtTotalRecords.Text = _totalRecords.ToString();
         }
 
@@ -72,7 +79,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             Close();
         }
 
-        private void BtnExport_Click(object sender, RoutedEventArgs e)
+        private async void BtnExport_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -87,7 +94,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 }
 
                 //  LẤY DỮ LIỆU TỪ SERVICE
-                var result = _customerService.GetCustomerList();
+                var result = await _customerService.GetAllCustomersAsync();
                 if (!result.IsSuccess || result.Data == null || !result.Data.Any())
                 {
                     MessageBox.Show(result.ErrorMessage ?? "Không có dữ liệu để xuất!",
@@ -101,8 +108,8 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 var selectedFormat = ((ComboBoxItem)cbFileFormat.SelectedItem).Tag.ToString();
 
                 // Tạo tên file
-                string fileName = $"DanhSachKhachHang_{DateTime.Now:yyyyMMdd_HHmmss}";
-                string defaultPath = System.IO.Path.Combine(
+                var fileName = $"DanhSachKhachHang_{DateTime.Now:yyyyMMdd_HHmmss}";
+                var defaultPath = System.IO.Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                         "Downloads");
 
@@ -138,7 +145,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
         /// <summary>
         /// Xuất ra file Excel
         /// </summary>
-        private void ExportToExcel(string path, string fileName)
+        private async Task ExportToExcel(string path, string fileName)
         {
             var saveDialog = new SaveFileDialog
             {
@@ -152,7 +159,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 return;
 
             // ✅ LẤY DỮ LIỆU TỪ SERVICE
-            var result = _customerService.GetCustomerList();
+            var result = await _customerService.GetAllCustomersAsync();
             if (!result.IsSuccess || result.Data == null)
             {
                 MessageBox.Show(result.ErrorMessage ?? "Không lấy được danh sách khách hàng để xuất!",
@@ -226,7 +233,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
         /// <summary>
         /// Xuất ra file CSV
         /// </summary>
-        private void ExportToCsv(string path, string fileName)
+        private async Task ExportToCsv(string path, string fileName)
         {
             var saveDialog = new SaveFileDialog
             {
@@ -240,7 +247,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 return;
 
             // ✅ LẤY DỮ LIỆU TỪ SERVICE
-            var result = _customerService.GetCustomerList();
+            var result = await _customerService.GetAllCustomersAsync();
             if (!result.IsSuccess || result.Data == null)
             {
                 MessageBox.Show(result.ErrorMessage ?? "Không lấy được danh sách khách hàng để xuất!",

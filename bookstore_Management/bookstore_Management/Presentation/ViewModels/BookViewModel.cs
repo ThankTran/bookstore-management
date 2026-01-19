@@ -5,12 +5,15 @@ using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
-using Moq;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.Data.Repositories.Interfaces;
+using bookstore_Management.DTOs.Book.Responses;
+
 namespace bookstore_Management.Presentation.ViewModels
 {
     internal class BookViewModel : BaseViewModel
@@ -18,10 +21,9 @@ namespace bookstore_Management.Presentation.ViewModels
         #region các khai báo
         //lấy service
         private readonly IBookService _bookService;      
-
         //dữ liệu để view binding
         private ObservableCollection<Book> _books;
-        public ObservableCollection<Book> Books
+        private ObservableCollection<Book> Books
         {
             get { return _books; }
             set
@@ -58,13 +60,13 @@ namespace bookstore_Management.Presentation.ViewModels
         }
 
         //keyword để tìm kiếm
-        private string _searchKeywork;
-        public string SearchKeywork
+        private string _searchKeyword;
+        public string SearchKeyword
         {
-            get => _searchKeywork;
+            get => _searchKeyword;
             set
             {
-                _searchKeywork = value;
+                _searchKeyword = value;
                 OnPropertyChanged();
                 SearchBookCommand.Execute(null);
             }
@@ -86,10 +88,9 @@ namespace bookstore_Management.Presentation.ViewModels
         #endregion
 
         #region Load book from db
-        private void LoadBooksFromDatabase()
+        private async Task LoadBooksFromDatabase()
         {
-            var result = _bookService.GetAllBooks();
-
+            var result = await _bookService.GetAllBooksAsync();
             if (!result.IsSuccess)
             {
                 // Xử lý lỗi, để sau này làm thông báo lỗi sau
@@ -98,72 +99,56 @@ namespace bookstore_Management.Presentation.ViewModels
             }
             if (result.Data == null) return; // Tránh lỗi khi Data rỗng
 
-            var books = result.Data.Select(dto => new Book
-            {
-                BookId = dto.BookId,
-                Name = dto.Name,
-                Author = dto.Author,
-                Publisher = new Publisher
-                {
-                    Name = dto.PublisherName 
-                },
-                Category = dto.Category,
-                SalePrice = dto.SalePrice,
-                Stock = dto.StockQuantity,
-            });
+            var books = result.Data.Select(MapDtoToBook);
 
             Books = new ObservableCollection<Book>(books);
         }
         #endregion
 
         #region constructor
-        public BookViewModel(IBookService bookService)
+        public BookViewModel()
         {
             //_bookService = bookService ?? new BookService();
             var context = new BookstoreDbContext();   
-            
-            _bookService = new BookService(
-            new BookRepository(context),
-            new PublisherRepository(context),
-            new ImportBillDetailRepository(context)
-            );
+            var unitOfWork = new  UnitOfWork(context);
+
+            _bookService = new BookService(unitOfWork);
             
 
             Books = new ObservableCollection<Book>();
-
-            LoadBooksFromDatabase();
+            _ = LoadBooksFromDatabase();
 
             #region AddCommand
-            AddBookCommand = new RelayCommand<object>((p) =>
-            {
+            AddBookCommand = new RelayCommand<object>(p => 
+            Task.Run(async () =>
+                {
                 var dialog = new Views.Dialogs.Books.AddBookDialog();
                 if (dialog.ShowDialog() == true)
                 {
                     // Call service to add book to database
                     var newBookDto = new DTOs.Book.Requests.CreateBookRequestDto
                     {
-                        Id = dialog.BookID,
                         Name = dialog.BookName,
                         Author = dialog.Author,
                         Category = dialog.Category,
                         SalePrice = dialog.SalePrice,
                         PublisherName = dialog.cbPublisher.SelectedItem as string,
                     };
-                    var result = _bookService.CreateBook(newBookDto);
+                    var result = await _bookService.CreateBookAsync(newBookDto);
                     if (!result.IsSuccess)
                     {
                         MessageBox.Show("Lỗi khi thêm sách: " + result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                     // Reload books from database
-                    LoadBooksFromDatabase();
+                    _ = LoadBooksFromDatabase();
                 }
-            });
+            }));
             #endregion
-
             #region RemoveCommand
             RemoveBookCommand = new RelayCommand<object>((p) =>
-            {
+            Task.Run(async () =>
+                {
                 var book = p as Book;
                 if (book == null)
                 {
@@ -171,14 +156,14 @@ namespace bookstore_Management.Presentation.ViewModels
                     return;
                 }
 
-                bool confirmed = Views.Dialogs.Share.Delete.ShowForBook(
+                var confirmed = Views.Dialogs.Share.Delete.ShowForBook(
                     bookName: book.Name,
                     bookId: book.BookId
                 );
 
                 if (!confirmed) return;
 
-                var result = _bookService.DeleteBook(book.BookId);
+                var result = await _bookService.DeleteBookAsync(book.BookId);
                 if (!result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi xóa sách: " + result.ErrorMessage,
@@ -187,12 +172,12 @@ namespace bookstore_Management.Presentation.ViewModels
                                     MessageBoxImage.Error);
                     return;
                 }
-                LoadBooksFromDatabase();
-            });
+                _ = LoadBooksFromDatabase();
+            }));
             #endregion
-
             #region EditCommand
-            EditBookCommand = new RelayCommand<object>((p) =>
+            EditBookCommand = new RelayCommand<object>((p) => 
+        Task.Run(async () =>
             {
                 var dialog = new Views.Dialogs.Books.UpdateBook();
                 var book = p as Book;
@@ -227,7 +212,7 @@ namespace bookstore_Management.Presentation.ViewModels
                         PublisherName = book.Publisher?.Name
                     };
 
-                    var result = _bookService.UpdateBook(book.BookId, updateDto);
+                    var result = await _bookService.UpdateBookAsync(book.BookId, updateDto);
                     if (!result.IsSuccess)
                     {
                         MessageBox.Show("Lỗi khi cập nhật / chỉnh sửa sách");
@@ -236,19 +221,19 @@ namespace bookstore_Management.Presentation.ViewModels
 
                     LoadBooksFromDatabase();
                 }
-            });
+            }));
             #endregion
-
             #region SearchCommand
             SearchBookCommand = new RelayCommand<object>((p) =>
-            {
-                if (string.IsNullOrEmpty(SearchKeywork))
+            Task.Run( async () =>
+                {
+                if (string.IsNullOrEmpty(SearchKeyword))
                 {
                     LoadBooksFromDatabase();//k nhập gì thì hiện lại list
                     return;
                 }
 
-                var result = _bookService.SearchByName(SearchKeywork);
+                var result = await _bookService.SearchByNameAsync(SearchKeyword);
                 if (!result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi tìm sách");
@@ -257,20 +242,9 @@ namespace bookstore_Management.Presentation.ViewModels
                 Books.Clear();
                 foreach (var b in result.Data)
                 {
-                    Books.Add(new Book
-                    {
-                        BookId = b.BookId,
-                        Name = b.Name,
-                        Author = b.Author,
-                        Category = b.Category,
-                        SalePrice = b.SalePrice,
-                        Publisher = new Publisher
-                        {
-                            Name = b.PublisherName
-                        },
-                    });
+                    Books.Add(MapDtoToBook(b));
                 }
-            });
+            }));
             #endregion
 
             //chưa làm xong
@@ -280,7 +254,6 @@ namespace bookstore_Management.Presentation.ViewModels
 
             });
             #endregion
-
             #region ExportCommand
             ExportCommand = new RelayCommand<object>((p) =>
             {
@@ -288,7 +261,28 @@ namespace bookstore_Management.Presentation.ViewModels
             });
             #endregion
 
+            
+
         }
+        #endregion
+        
+        #region helper class
+        private Book MapDtoToBook(BookDetailResponseDto dto)
+        {
+            return new Book
+            {
+                BookId = dto.BookId,
+                Name = dto.Name,
+                Author = dto.Author,
+                Publisher = new Publisher
+                {
+                    Name = dto.PublisherName
+                },
+                Category = dto.Category,
+                SalePrice = dto.SalePrice
+            };
+        }
+
         #endregion
     }
 }

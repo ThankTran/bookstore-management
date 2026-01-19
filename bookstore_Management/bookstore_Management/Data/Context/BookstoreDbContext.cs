@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure.Annotations;
 using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Context
@@ -112,8 +114,26 @@ namespace bookstore_Management.Data.Context
             // ============================================
             // INDEXES (Tối ưu tìm kiếm)
             // ============================================
-
             
+            // name trong publisher
+            modelBuilder.Entity<Publisher>()
+                .Property(p => p.Name)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Publishers_Name")
+                    )
+                );
+            
+            modelBuilder.Entity<Book>()
+                .Property(b => b.DeletedDate)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Book_DeletedDate")
+                    )
+                );
+
         }
     }
 }

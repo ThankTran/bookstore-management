@@ -1,28 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Implementations
 {
-    internal class OrderRepository : Repository<Order,string>, IOrderRepository
+    internal class OrderRepository : Repository<Order, string>, IOrderRepository
     {
         public OrderRepository(BookstoreDbContext context) : base(context) { }
 
-        public IEnumerable<Order> GetByCustomer(string customerId)
+        public async Task<IEnumerable<Order>> GetByCustomerAsync(string customerId)
         {
-            return Find(o => o.CustomerId == customerId);
+            return await DbSet
+                .Where(o => o.CustomerId == customerId && o.DeletedDate == null)
+                .ToListAsync();
         }
 
-        public IEnumerable<Order> GetByStaff(string staffId)
+        public async Task<IEnumerable<Order>> GetByStaffAsync(string staffId)
         {
-            return Find(o => o.StaffId == staffId);
+            return await DbSet
+                .Where(o => o.StaffId == staffId && o.DeletedDate == null)
+                .ToListAsync();
         }
 
-        public IEnumerable<Order> GetByDateRange(DateTime start, DateTime end)
+        public async Task<IEnumerable<Order>> GetByDateRangeAsync(DateTime start, DateTime end)
         {
-            return Find(o => o.CreatedDate >= start && o.CreatedDate <= end);
+            return await DbSet
+                .Where(o => o.CreatedDate >= start 
+                            && o.CreatedDate <= end 
+                            && o.DeletedDate == null)
+                .ToListAsync();
         }
     }
 }

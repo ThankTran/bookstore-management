@@ -6,6 +6,7 @@ using bookstore_Management.Services.Interfaces;
 using DocumentFormat.OpenXml.VariantTypes;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -69,9 +70,9 @@ namespace bookstore_Management.Presentation.ViewModels
         #endregion
 
         #region load cus from database
-        public void LoadCusFromDatabase()
+        public async Task LoadCusFromDatabase()
         {
-            var result = _customerService.GetAllCustomers();
+            var result = await _customerService.GetAllCustomersAsync();
 
             if (!result.IsSuccess)
             {
@@ -97,19 +98,16 @@ namespace bookstore_Management.Presentation.ViewModels
         }
         #endregion
 
-        public CustomerViewModel(ICustomerService customerService)
+        public  CustomerViewModel()
         {
-            //_customerService = customerService??new CustomerService();
-            var context = new BookstoreDbContext();
-
-            _customerService = new CustomerService(
-            new CustomerRepository(context),
-            new OrderRepository(context)
-            );
+            var context = new BookstoreDbContext();   
+            var unitOfWork = new  UnitOfWork(context);
+            
+            _customerService = new CustomerService(unitOfWork);
 
             Customers = new ObservableCollection<Customer>();
 
-            LoadCusFromDatabase();
+            _ = LoadCusFromDatabase();
 
             #region AddCommand
             AddCusCommand = new RelayCommand<object>((p) =>
@@ -123,18 +121,19 @@ namespace bookstore_Management.Presentation.ViewModels
                         Address=dialog.Address,
                         Email=dialog.Email,
                     };
-                    var result = _customerService.AddCustomer(newCusDto);
-                    if (!result.IsSuccess)
+                    var result = _customerService.AddCustomerAsync(newCusDto);
+                    if (!result.Result.IsSuccess)
                     {
                         MessageBox.Show("Lỗi khi thêm khách hàng");
                         return;
                     }
-                    LoadCusFromDatabase();
+                    _ = LoadCusFromDatabase();
                 }
             });
             #endregion
             #region EditCommand
             EditCusCommand = new RelayCommand<object>((p) => 
+            Task.Run(async () =>
             { 
                 var dialog = new Presentation.Views.Dialogs.Customers.UpdateCustomer();
                 var cus = p as Customer;
@@ -154,15 +153,15 @@ namespace bookstore_Management.Presentation.ViewModels
                         Address = dialog.Address,
                         Email = dialog.Email,
                     };
-                    var result = _customerService.UpdateCustomer(cus.CustomerId, updateCusDto);
+                    var result = await _customerService.UpdateCustomerAsync(cus.CustomerId, updateCusDto);
                     if (!result.IsSuccess)
                     {
                         MessageBox.Show("Lỗi khi sửa khách hàng");
                         return;
                     }
-                    LoadCusFromDatabase();
+                    _ = LoadCusFromDatabase();
                 }
-            });
+            }));
             #endregion
             #region RemoveCommand
             RemoveCusCommand = new RelayCommand<object>((p) => 
@@ -176,13 +175,13 @@ namespace bookstore_Management.Presentation.ViewModels
                 bool confirmed = Views.Dialogs.Share.Delete.ShowForCustomer(cus.Name, cus.CustomerId);
                 if (!confirmed) return;
                 
-                var result = _customerService.DeleteCustomer(cus.CustomerId);
-                if (!result.IsSuccess)
+                var result = _customerService.DeleteCustomerAsync(cus.CustomerId);
+                if (!result.Result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi xóa khách hàng");
                     return;
                 }
-                LoadCusFromDatabase();
+                _ = LoadCusFromDatabase();
             });
             #endregion
             #region SearchCommand
@@ -190,22 +189,22 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 if (string.IsNullOrEmpty(SearchKeyword))
                 {
-                    LoadCusFromDatabase();
+                    _ = LoadCusFromDatabase();
                     return;
                 }
-                var result = _customerService.SearchByName(SearchKeyword);
-                if (!result.IsSuccess)
+                var result = _customerService.SearchByNameAsync(SearchKeyword);
+                if (!result.Result.IsSuccess)
                 {
-                    MessageBox.Show("Lỗi khi tìm kiếm khách hàng: " + result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Lỗi khi tìm kiếm khách hàng: " + result.Result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                if (result.Data == null)
+                if (result.Result.Data == null)
                 {
                     MessageBox.Show("db không có dữ liệu!");
                     return; // Tránh lỗi khi Data rỗng
                 }
                 Customers.Clear();
-                foreach(var c in result.Data)
+                foreach(var c in result.Result.Data)
                 {
                     Customers.Add(new Customer
                     {

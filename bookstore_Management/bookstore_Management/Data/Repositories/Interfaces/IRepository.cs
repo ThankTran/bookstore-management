@@ -2,42 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace bookstore_Management.Data.Repositories.Interfaces
+public interface IRepository<T, TKey> where T : class
 {
-    /// <summary>
-    /// Generic repository interface cho CRUD operations
-    /// Sử dụng overload để có nhiều tên
-    /// </summary>
-    /// <typeparam name="T">Class</typeparam>
-    /// <typeparam name="TKey">Kiểu dữ lệu khóa chính</typeparam>
-    internal interface IRepository<T, TKey> where T : class
-    {
-        // Get
-        IEnumerable<T> GetAll(); // lấy hết thông tin từ bảng
-        T GetById(TKey id); // lấy thông tin dựa trên khóa chính
-        IEnumerable<T> Find(Expression<Func<T, bool>> predicate); // tìm thông tin
-        bool Exists(Expression<Func<T, bool>> predicate); // kiểm tra tồn tại
-        int Count(); // đếm
-        int Count(Expression<Func<T, bool>> predicate); // đếm có điều kiện
-        
-        // Create
-        void Add(T item); // thêm thông tin
-        void Add(IEnumerable<T> items); // overload thêm nhiều thông tin
-        
-        // Update
-        void Update(T item); // sửa thông tin
-        void Update(IEnumerable<T> items); // overload sửa nhiều thông tin
-        
-        // Delete 
-        void Delete(T item);
-        
-        
-        // Save
-        int SaveChanges(); // lưu thông tin
-        
-        
-    }
+    IQueryable<T> Query(Expression<Func<T, bool>> predicate = null);
+
+    Task<IEnumerable<T>> GetAllAsync();
+    Task<T> GetByIdAsync(TKey id);
+    Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+
+    Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+    Task<int> CountAsync();
+    Task<int> CountAsync(Expression<Func<T, bool>> predicate);
+
+    Task AddAsync(T entity);
+    Task AddRangeAsync(IEnumerable<T> entities);
+
+    void Update(T entity);
+    void UpdateRange(IEnumerable<T> entities);
+    void Delete(T entity);
+
+    Task<int> SaveChangesAsync();
 }

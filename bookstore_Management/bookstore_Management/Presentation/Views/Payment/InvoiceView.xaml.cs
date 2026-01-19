@@ -56,30 +56,18 @@ namespace bookstore_Management.Presentation.Views.Orders
             var context = new BookstoreDbContext();
 
             // Import Bill Service
-            var importBillRepo = new ImportBillRepository(context);
-            var importDetailRepo = new ImportBillDetailRepository(context);
+     
             var bookRepo = new BookRepository(context);
-            var publisherRepo = new PublisherRepository(context);
+            var unitOfWork = new UnitOfWork(context);
 
             _importBillService = new ImportBillService(
-                importBillRepo,
-                importDetailRepo,
-                bookRepo,
-                publisherRepo
+                unitOfWork
             );
 
             // Order Service
-            var orderRepo = new OrderRepository(context);
-            var orderDetailRepo = new OrderDetailRepository(context);
-            var customerRepo = new CustomerRepository(context);
-            var staffRepo = new StaffRepository(context);
 
             _orderService = new OrderService(
-                orderRepo,
-                orderDetailRepo,
-                bookRepo,
-                customerRepo,
-                staffRepo
+                unitOfWork
             );
         }
 
@@ -87,21 +75,21 @@ namespace bookstore_Management.Presentation.Views.Orders
 
         #region Data Loading
 
-        private void LoadAllInvoices()
+        private async void LoadAllInvoices()
         {
             try
             {
                 var displayItems = new List<InvoiceDisplayItem>();
 
                 // Load Import Bills
-                var importResult = _importBillService.GetAllImportBills();
+                var importResult = await _importBillService.GetAllImportBillsAsync();
                 if (importResult.IsSuccess && importResult.Data != null)
                 {
                     displayItems.AddRange(importResult.Data.Select(MapImportBillToDisplay));
                 }
 
                 // Load Order Bills
-                var orderResult = _orderService.GetAllOrders();
+                var orderResult = await _orderService.GetAllOrdersAsync();
                 if (orderResult.IsSuccess && orderResult.Data != null)
                 {
                     displayItems.AddRange(orderResult.Data.Select(MapOrderToDisplay));
@@ -194,7 +182,7 @@ namespace bookstore_Management.Presentation.Views.Orders
             ApplyFilter(InvoiceFilterType.Export);
         }
 
-        private void BtnAddImport_Click(object sender, RoutedEventArgs e)
+        private async void BtnAddImport_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new CreateImportBill { Owner = Application.Current.MainWindow };
 
@@ -205,7 +193,7 @@ namespace bookstore_Management.Presentation.Views.Orders
             if (dialog.ShowDialog() == true)
             {
                 var dto = dialog.GetImportBillData();
-                var result = _importBillService.CreateImportBill(dto);
+                var result = await _importBillService.CreateImportBillAsync(dto);
 
                 if (result.IsSuccess)
                 {
@@ -221,7 +209,7 @@ namespace bookstore_Management.Presentation.Views.Orders
             }
         }
 
-        private void BtnAddExport_Click(object sender, RoutedEventArgs e)
+        private async void BtnAddExport_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new CreateOrderBill { Owner = Application.Current.MainWindow };
 
@@ -232,7 +220,7 @@ namespace bookstore_Management.Presentation.Views.Orders
             if (dialog.ShowDialog() == true)
             {
                 var dto = dialog.GetOrderData();
-                var result = _orderService.CreateOrder(dto);
+                var result = await _orderService.CreateOrderAsync(dto);
 
                 if (result.IsSuccess)
                 {
@@ -368,7 +356,7 @@ namespace bookstore_Management.Presentation.Views.Orders
             }
         }
 
-        private void DeleteInvoice(InvoiceDisplayItem item)
+        private async void DeleteInvoice(InvoiceDisplayItem item)
         {
             var confirm = MessageBox.Show(
                 $"Bạn có chắc muốn xóa {(item.InvoiceType == InvoiceType.Import ? "phiếu nhập" : "hóa đơn bán")} {item.InvoiceId}?\n" +
@@ -384,7 +372,7 @@ namespace bookstore_Management.Presentation.Views.Orders
             {
                 if (item.InvoiceType == InvoiceType.Import)
                 {
-                    var result = _importBillService.DeleteImportBill(item.InvoiceId);
+                    var result = await _importBillService.DeleteImportBillAsync(item.InvoiceId);
 
                     if (result.IsSuccess)
                     {
@@ -400,7 +388,7 @@ namespace bookstore_Management.Presentation.Views.Orders
                 }
                 else
                 {
-                    var result = _orderService.DeleteOrder(item.InvoiceId);
+                    var result =await _orderService.DeleteOrderAsync(item.InvoiceId);
 
                     if (result.IsSuccess)
                     {

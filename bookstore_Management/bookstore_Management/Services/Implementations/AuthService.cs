@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
@@ -23,43 +24,34 @@ namespace bookstore_Management.Services.Implementations
             _userRepository = userRepository;
         }
 
-
-        public Result<LoginResponseDto> Login(LoginRequestDto dto)
+        public async Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto dto)
         {
-            try
+            // ✅ Input validation
+            if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+                return Result<LoginResponseDto>.Fail("Tên đăng nhập hoặc mật khẩu không được để trống");
+
+            // ✅ Single query - no N+1
+            var user = await _userRepository.GetByUsernameAsync(dto.Username.Trim());
+            
+            // ✅ Security: Generic error message (prevents username enumeration)
+            if (user == null)
+                return Result<LoginResponseDto>.Fail("Tên đăng nhập hoặc mật khẩu không đúng");
+
+            // ✅ Security: Constant-time password verification
+            if (!Encryptor.Verify(dto.Password, user.PasswordHash))
+                return Result<LoginResponseDto>.Fail("Tên đăng nhập hoặc mật khẩu không đúng");
+
+            // ✅ Return minimal user info
+            var response = new LoginResponseDto
             {
-                // Validate input
-                if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
-                    return Result<LoginResponseDto>.Fail("Tên đăng nhập hoặc mật khẩu không được để trống");
+                Username = user.Username,
+                Role = user.UserRole,
+                RoleName = user.UserRole.GetDisplayName(),
+                IsActive = user.DeletedDate == null
+            };
 
-                // Kiểm tra Username
-                var user = _userRepository.GetByUsername(dto.Username.Trim());
-                
-                // nếu username không tồn tại thì trả về false
-                if (user == null)
-                    return Result<LoginResponseDto>.Fail("Tên đăng nhập hoặc mật khẩu không đúng");
-
-                // kiểm tra mật khẩu
-                if (!Encryptor.Verify(dto.Password, user.PasswordHash))
-                    return Result<LoginResponseDto>.Fail("Tên đăng nhập hoặc mật khẩu không đúng");
-
-                // trả về kết quả
-                var response = new LoginResponseDto
-                {
-                    Username = user.Username,
-                    Role = user.UserRole,
-                    RoleName = user.UserRole.GetDisplayName(),
-                    IsActive = user.DeletedDate == null
-                };
-
-                return Result<LoginResponseDto>.Success(response, "Đăng nhập thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result<LoginResponseDto>.Fail($"Lỗi hệ thống: {ex.Message}");
-            }
+            return Result<LoginResponseDto>.Success(response, "Đăng nhập thành công");
         }
-
-     
     }
 }
+

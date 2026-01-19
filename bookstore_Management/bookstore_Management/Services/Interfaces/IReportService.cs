@@ -1,37 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using bookstore_Management.Core.Results;
 using bookstore_Management.DTOs.Common.Reports;
+
 namespace bookstore_Management.Services.Interfaces
 {
     public interface IReportService
     {
         // Báo cáo doanh thu
-        Result<decimal> GetTotalRevenue(DateTime fromDate, DateTime toDate); // xu hướng doanh thu
-        Result<decimal> GetTotalProfit(DateTime fromDate, DateTime toDate); // lợi nhuận
-        Result<decimal> GetAverageOrderValue(DateTime fromDate, DateTime toDate);
+        Task<Result<decimal>> GetTotalRevenueAsync(DateTime fromDate, DateTime toDate);
+        Task<Result<decimal>> GetTotalProfitAsync(DateTime fromDate, DateTime toDate);
+        Task<Result<decimal>> GetAverageOrderValueAsync(DateTime fromDate, DateTime toDate);
+        
         // Báo cáo đơn hàng
-        Result<int> GetTotalOrderCount(DateTime fromDate, DateTime toDate);
+        Task<Result<int>> GetTotalOrderCountAsync(DateTime fromDate, DateTime toDate);
         
         // Báo cáo khách hàng mới
-        Result<int> GetTotalCustomerCount(DateTime fromDate, DateTime toDate);
+        Task<Result<int>> GetTotalCustomerCountAsync(DateTime fromDate, DateTime toDate);
 
         // Báo cáo sách bán chạy
-        Result<IEnumerable<BookSalesReportResponseDto>> GetTopSellingBooks(DateTime fromDate, DateTime toDate, int topCount = 10);
-        Result<IEnumerable<BookSalesReportResponseDto>> GetLowestSellingBooks(DateTime fromDate, DateTime toDate, int bottomCount = 5);
-        
+        Task<Result<IEnumerable<BookSalesReportResponseDto>>> GetTopSellingBooksAsync(DateTime fromDate, DateTime toDate, int topCount = 10);
+        Task<Result<IEnumerable<BookSalesReportResponseDto>>> GetLowestSellingBooksAsync(DateTime fromDate, DateTime toDate, int bottomCount = 5);
         
         // Báo cáo kho
-        Result<InventorySummaryReportResponseDto> GetInventorySummary();
-        Result<decimal> GetInventoryValue();
+        Task<Result<InventorySummaryReportResponseDto>> GetInventorySummaryAsync();
+        Task<Result<decimal>> GetInventoryValueAsync();
 
         // Báo cáo khách hàng
-        Result<IEnumerable<CustomerSpendingReportResponseDto>> GetTopSpendingCustomers(int topCount = 10);
+        Task<Result<IEnumerable<CustomerSpendingReportResponseDto>>> GetTopSpendingCustomersAsync(int topCount = 10);
         
         // Báo cáo tỉ lệ khách hàng vãng lai và thân thiết
-        Result<CustomerPurchaseRatioDto> GetWalkInToMemberPurchaseRatio(DateTime fromDate, DateTime toDate);
+        Task<Result<CustomerPurchaseRatioDto>> GetWalkInToMemberPurchaseRatioAsync(DateTime fromDate, DateTime toDate);
 
         // Báo cáo nhà cung cấp
-        Result<IEnumerable<PublisherImportReportResponseDto>> GetPublisherImportReport(DateTime fromDate, DateTime toDate);
+        Task<Result<IEnumerable<PublisherImportReportResponseDto>>> GetPublisherImportReportAsync(DateTime fromDate, DateTime toDate);
     }
 }

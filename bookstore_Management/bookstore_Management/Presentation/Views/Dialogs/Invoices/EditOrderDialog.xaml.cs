@@ -39,13 +39,9 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
             // Initialize service
             var context = new BookstoreDbContext();
-            var orderRepo = new OrderRepository(context);
-            var detailRepo = new OrderDetailRepository(context);
-            var bookRepo = new BookRepository(context);
-            var customerRepo = new CustomerRepository(context);
-            var staffRepo = new StaffRepository(context);
+            var unitOfWork = new UnitOfWork(context);
 
-            _orderService = new OrderService(orderRepo, detailRepo, bookRepo, customerRepo, staffRepo);
+            _orderService = new OrderService(unitOfWork);
 
             dgOrderDetails.ItemsSource = _orderDetails;
         }
@@ -55,11 +51,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             LoadOrderData();
         }
 
-        private void LoadOrderData()
+        private async void LoadOrderData()
         {
             try
             {
-                var result = _orderService.GetOrderById(_orderId);
+                var result = await _orderService.GetOrderByIdAsync(_orderId);
 
                 if (!result.IsSuccess || result.Data == null)
                 {
@@ -114,7 +110,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             }
         }
 
-        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             if (!ValidateForm()) return;
 
@@ -143,7 +139,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
                     Notes = tbNotes.Text?.Trim()
                 };
 
-                var result = _orderService.UpdateOrder(_orderId, updateDto);
+                var result = await _orderService.UpdateOrderAsync(_orderId, updateDto);
 
                 if (result.IsSuccess)
                 {

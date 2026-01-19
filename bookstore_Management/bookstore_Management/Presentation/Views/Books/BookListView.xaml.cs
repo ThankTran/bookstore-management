@@ -15,8 +15,7 @@ namespace bookstore_Management.Views.Books
         public BookListView()
         {
             InitializeComponent();
-            IBookService bookService = new BookService();
-            _viewModel = new BookViewModel(bookService);
+            _viewModel = new BookViewModel();
             this.DataContext = _viewModel;
         }
         #region Event Handlers
@@ -28,8 +27,7 @@ namespace bookstore_Management.Views.Books
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
             InitializeComponent();
-            IBookService bookService = new BookService();
-            _viewModel = new BookViewModel(bookService);
+            _viewModel = new BookViewModel();
             this.DataContext = _viewModel;
         }
 

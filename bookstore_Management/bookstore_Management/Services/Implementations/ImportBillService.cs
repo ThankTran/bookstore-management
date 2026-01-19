@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.DTOs.ImportBill.Requests;
@@ -10,364 +12,293 @@ using bookstore_Management.Services.Interfaces;
 
 namespace bookstore_Management.Services.Implementations
 {
-    /// <summary>
-    /// Service quản lý hóa đơn nhập từ nhà cung cấp
-    /// </summary>
     public class ImportBillService : IImportBillService
     {
-        private readonly IImportBillRepository _importBillRepository;
-        private readonly IImportBillDetailRepository _importBillDetailRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly IPublisherRepository _publisherRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        internal ImportBillService(
-            IImportBillRepository importBillRepository,
-            IImportBillDetailRepository importBillDetailRepository,
-            IBookRepository bookRepository,
-            IPublisherRepository publisherRepository)
+        internal ImportBillService(IUnitOfWork unitOfWork)
         {
-            _importBillRepository = importBillRepository;
-            _importBillDetailRepository = importBillDetailRepository;
-            _bookRepository = bookRepository;
-            _publisherRepository = publisherRepository;
+            _unitOfWork = unitOfWork;
         }
 
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<string> CreateImportBill(CreateImportBillRequestDto dto)
+        public async Task<Result<string>> CreateImportBillAsync(CreateImportBillRequestDto dto)
         {
-            try
+            if (string.IsNullOrWhiteSpace(dto.PublisherId))
+                return Result<string>.Fail("Nhà cung cấp bắt buộc");
+
+            var supplier = await _unitOfWork.Publishers.GetByIdAsync(dto.PublisherId);
+            if (supplier == null || supplier.DeletedDate != null)
+                return Result<string>.Fail("Nhà cung cấp không tồn tại");
+
+            if (dto.ImportBillDetails == null || !dto.ImportBillDetails.Any())
+                return Result<string>.Fail("Hóa đơn phải có ít nhất 1 sách");
+
+            // Lấy toàn bộ Book 1 lần
+            var bookIds = dto.ImportBillDetails.Select(x => x.BookId).ToList();
+            var books = await _unitOfWork.Books.Query(x => bookIds.Contains(x.BookId) && x.DeletedDate == null)
+                                                .ToListAsync();
+
+            if (books.Count != bookIds.Count)
+                return Result<string>.Fail("Một số sách không tồn tại");
+
+            var importId = await GenerateImportIdAsync();
+
+            decimal totalAmount = 0;
+            var details = new List<ImportBillDetail>();
+
+            foreach (var item in dto.ImportBillDetails)
             {
-                if (string.IsNullOrWhiteSpace(dto.PublisherId))
-                    return Result<string>.Fail("Nhà cung cấp bắt buộc");
+                if (item.Quantity <= 0)
+                    return Result<string>.Fail("Số lượng phải > 0");
 
-                var supplier = _publisherRepository.GetById(dto.PublisherId);
-                if (supplier == null || supplier.DeletedDate != null)
-                    return Result<string>.Fail("Nhà cung cấp không tồn tại");
+                if (item.ImportPrice <= 0)
+                    return Result<string>.Fail("Giá nhập phải > 0");
 
-                if (dto.ImportBillDetails == null || !dto.ImportBillDetails.Any())
-                    return Result<string>.Fail("Hóa đơn phải có ít nhất 1 sách");
+                var line = item.Quantity * item.ImportPrice;
+                totalAmount += line;
 
-                decimal totalAmount = 0;
-                var details = new List<ImportBillDetail>();
-
-                foreach (var item in dto.ImportBillDetails)
+                details.Add(new ImportBillDetail
                 {
-                    var book = _bookRepository.GetById(item.BookId);
-                    if (book == null || book.DeletedDate != null)
-                        return Result<string>.Fail($"Sách {item.BookId} không tồn tại");
+                    ImportId = importId,
+                    BookId = item.BookId,
+                    Quantity = item.Quantity,
+                    ImportPrice = item.ImportPrice
+                });
 
-                    if (item.Quantity <= 0)
-                        return Result<string>.Fail($"Số lượng sách {book.Name} phải > 0");
-                    if (item.ImportPrice <= 0)
-                        return Result<string>.Fail($"Giá nhập sách {book.Name} phải > 0");
-
-                    var lineTotal = item.ImportPrice * item.Quantity;
-                    totalAmount += lineTotal;
-                    
-                    book.UpdatedDate = DateTime.Now;
-                    _bookRepository.Update(book);
-
-                    details.Add(new ImportBillDetail
-                    {
-                        ImportId = "", // set sau
-                        BookId = item.BookId,
-                        Quantity = item.Quantity,
-                        ImportPrice = item.ImportPrice
-                    });
-                }
-
-                var importId = GenerateImportId();
-                foreach (var d in details)
-                {
-                    d.ImportId = importId;
-                }
-
-                var importBill = new ImportBill
-                {
-                    Id = importId,
-                    PublisherId = dto.PublisherId,
-                    TotalAmount = totalAmount,
-                    Notes = string.IsNullOrWhiteSpace(dto.Notes) ? null : dto.Notes.Trim(),
-                    CreatedBy = string.IsNullOrWhiteSpace(dto.CreatedBy) ? "SYSTEM" : dto.CreatedBy,
-                    CreatedDate = DateTime.Now,
-                    ImportBillDetails = details
-                };
-
-                _importBillRepository.Add(importBill);
-                _importBillRepository.SaveChanges();
-                _bookRepository.SaveChanges();
-
-                // Cập nhật tồn kho theo kho nhập
-                foreach (var item in details)
-                {
-                    var stock = _bookRepository.GetById(item.BookId);
-                    stock.Stock+= item.Quantity;
-                    stock.UpdatedDate = DateTime.Now;
-
-                }
-                _bookRepository.SaveChanges();
-
-                return Result<string>.Success(importId, "Tạo hóa đơn nhập thành công");
+                var book = books.First(x => x.BookId == item.BookId);
+                book.Stock += item.Quantity;
+                book.UpdatedDate = DateTime.Now;
             }
-            catch (Exception ex)
+
+            var importBill = new ImportBill
             {
-                return Result<string>.Fail($"Lỗi: {ex.Message}");
-            }
+                Id = importId,
+                PublisherId = dto.PublisherId,
+                TotalAmount = totalAmount,
+                Notes = string.IsNullOrWhiteSpace(dto.Notes) ? null : dto.Notes.Trim(),
+                CreatedBy = string.IsNullOrWhiteSpace(dto.CreatedBy) ? "SYSTEM" : dto.CreatedBy,
+                CreatedDate = DateTime.Now,
+                ImportBillDetails = details
+            };
+
+            await _unitOfWork.ImportBills.AddAsync(importBill);
+
+            // Save all changes only once
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result<string>.Success(importId, "Tạo hóa đơn nhập thành công");
         }
 
         // ==================================================================
         // ----------------------- SỬA / XÓA --------------------------------
         // ==================================================================
-        public Result UpdateImportBill(string importBillId, UpdateImportBillRequestDto dto)
+        public async Task<Result> UpdateImportBillAsync(string importBillId, UpdateImportBillRequestDto dto)
         {
-            try
-            {
-                var bill = _importBillRepository.GetById(importBillId);
-                if (bill == null || bill.DeletedDate != null)
-                    return Result.Fail("Hóa đơn nhập không tồn tại");
+            var bill = await _unitOfWork.ImportBills.GetByIdAsync(importBillId);
+            if (bill == null || bill.DeletedDate != null)
+                return Result.Fail("Hóa đơn nhập không tồn tại");
 
-                bill.Notes = string.IsNullOrWhiteSpace(dto.Notes) ? bill.Notes : dto.Notes.Trim();
-                bill.UpdatedDate = DateTime.Now;
+            bill.Notes = string.IsNullOrWhiteSpace(dto.Notes) ? bill.Notes : dto.Notes.Trim();
+            bill.UpdatedDate = DateTime.Now;
 
-                _importBillRepository.Update(bill);
-                _importBillRepository.SaveChanges();
-                return Result.Success("Cập nhật hóa đơn nhập thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
+            _unitOfWork.ImportBills.Update(bill);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success("Cập nhật hóa đơn nhập thành công");
         }
 
-        public Result DeleteImportBill(string importBillId)
+        public async Task<Result> DeleteImportBillAsync(string importBillId)
         {
-            try
-            {
-                var bill = _importBillRepository.GetById(importBillId);
-                if (bill == null || bill.DeletedDate != null)
-                    return Result.Fail("Hóa đơn nhập không tồn tại");
+            var bill = await _unitOfWork.ImportBills.GetByIdAsync(importBillId);
+            if (bill == null || bill.DeletedDate != null)
+                return Result.Fail("Hóa đơn nhập không tồn tại");
 
-                bill.DeletedDate = DateTime.Now;
-                _importBillRepository.Update(bill);
-                _importBillRepository.SaveChanges();
+            bill.DeletedDate = DateTime.Now;
 
-                return Result.Success("Đã xóa hóa đơn nhập");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
+            _unitOfWork.ImportBills.Update(bill);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success("Đã xóa hóa đơn nhập");
         }
 
         // ==================================================================
         // ----------------------- TRUY VẤN ---------------------------------
         // ==================================================================
-        public Result<ImportBillResponseDto> GetImportBillById(string importBillId)
+        public async Task<Result<ImportBillResponseDto>> GetImportBillByIdAsync(string importBillId)
         {
-            try
-            {
-                var bill = _importBillRepository.GetById(importBillId);
-                if (bill == null || bill.DeletedDate != null)
-                    return Result<ImportBillResponseDto>.Fail("Hóa đơn nhập không tồn tại");
+            var bill = await _unitOfWork.ImportBills
+                .Query(b => b.Id == importBillId && b.DeletedDate == null)
+                .Include(b => b.Publisher)
+                .Include(b => b.ImportBillDetails)
+                .Include(b => b.ImportBillDetails.Select(d => d.Book))
+                .FirstOrDefaultAsync();
 
-                var dto = MapToImportBillResponseDto(bill);
-                return Result<ImportBillResponseDto>.Success(dto);
-            }
-            catch (Exception ex)
-            {
-                return Result<ImportBillResponseDto>.Fail($"Lỗi: {ex.Message}");
-            }
+            if (bill == null)
+                return Result<ImportBillResponseDto>.Fail("Hóa đơn nhập không tồn tại");
+
+            return Result<ImportBillResponseDto>.Success(MapToImportBillResponseDto(bill));
         }
 
-        public Result<IEnumerable<ImportBillResponseDto>> GetAllImportBills()
+
+        public async Task<Result<IEnumerable<ImportBillResponseDto>>> GetAllImportBillsAsync()
         {
-            try
-            {
-                var bills = _importBillRepository.GetAll()
-                    .Where(b => b.DeletedDate == null)
-                    .OrderByDescending(b => b.CreatedDate)
-                    .Select(MapToImportBillResponseDto);
-                return Result<IEnumerable<ImportBillResponseDto>>.Success(bills);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<ImportBillResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
+            var list = await _unitOfWork.ImportBills.Query(b => b.DeletedDate == null)
+                .Include(b => b.Publisher)
+                .Include(b => b.ImportBillDetails)
+                .OrderByDescending(b => b.CreatedDate)
+                .ToListAsync();
+
+            return Result<IEnumerable<ImportBillResponseDto>>.Success(
+                list.Select(MapToImportBillResponseDto).ToList()
+            );
         }
 
-        public Result<IEnumerable<ImportBillResponseDto>> GetBySupplier(string supplierId)
+        public async Task<Result<IEnumerable<ImportBillResponseDto>>> GetBySupplierAsync(string supplierId)
         {
-            try
-            {
-                var bills = _importBillRepository.GetByPublisher(supplierId)
-                    .Where(b => b.DeletedDate == null)
-                    .OrderByDescending(b => b.CreatedDate)
-                    .Select(MapToImportBillResponseDto);
-                return Result<IEnumerable<ImportBillResponseDto>>.Success(bills);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<ImportBillResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
+            var list = await _unitOfWork.ImportBills.Query(
+                b => b.PublisherId == supplierId && b.DeletedDate == null)
+                .Include(b => b.Publisher)
+                .Include(b => b.ImportBillDetails)
+                .OrderByDescending(b => b.CreatedDate)
+                .ToListAsync();
+
+            return Result<IEnumerable<ImportBillResponseDto>>.Success(
+                list.Select(MapToImportBillResponseDto).ToList()
+            );
         }
 
-        public Result<IEnumerable<ImportBillResponseDto>> GetByDateRange(DateTime fromDate, DateTime toDate)
+        public async Task<Result<IEnumerable<ImportBillResponseDto>>> GetByDateRangeAsync(DateTime fromDate, DateTime toDate)
         {
-            try
-            {
-                var bills = _importBillRepository.GetByDateRange(fromDate, toDate)
-                    .Where(b => b.DeletedDate == null)
-                    .OrderByDescending(b => b.CreatedDate)
-                    .Select(MapToImportBillResponseDto);
-                return Result<IEnumerable<ImportBillResponseDto>>.Success(bills);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<ImportBillResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
+            var list = await _unitOfWork.ImportBills.Query(
+                b => b.CreatedDate >= fromDate && b.CreatedDate <= toDate && b.DeletedDate == null)
+                .Include(b => b.Publisher)
+                .Include(b => b.ImportBillDetails)
+                .OrderByDescending(b => b.CreatedDate)
+                .ToListAsync();
+
+            return Result<IEnumerable<ImportBillResponseDto>>.Success(
+                list.Select(MapToImportBillResponseDto).ToList()
+            );
         }
 
         // ==================================================================
         // ----------------------- CHI TIẾT --------------------------------
         // ==================================================================
-        public Result RemoveImportItem(string importBillId, string bookId)
+        public async Task<Result> RemoveImportItemAsync(string importBillId, string bookId)
         {
-            try
-            {
-                var detail = _importBillDetailRepository.GetByImportId(importBillId)
-                    .FirstOrDefault(d => d.BookId == bookId);
-                if (detail == null)
-                    return Result.Fail("Không tìm thấy sách trong hóa đơn");
+            await _unitOfWork.ImportBillDetails.SoftDeleteAsync(importBillId, bookId);
+            await RecalculateBillTotalAsync(importBillId);
+            await _unitOfWork.SaveChangesAsync();
 
-                _importBillDetailRepository.SoftDelete(importBillId, bookId);
-                _importBillDetailRepository.SaveChanges();
-
-                RecalculateBillTotal(importBillId);
-                return Result.Success("Đã xóa sách khỏi hóa đơn");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
+            return Result.Success("Đã xóa sách khỏi hóa đơn");
         }
 
-        public Result UpdateImportItem(string importBillId, string bookId, int newQuantity, decimal? newPrice)
+        public async Task<Result> UpdateImportItemAsync(string importBillId, string bookId, int newQuantity, decimal? newPrice)
         {
-            try
-            {
-                if (newQuantity <= 0)
-                    return Result.Fail("Số lượng phải > 0");
+            if (newQuantity <= 0)
+                return Result.Fail("Số lượng phải > 0");
 
-                var detail = _importBillDetailRepository.GetByImportId(importBillId)
-                    .FirstOrDefault(d => d.BookId == bookId);
-                if (detail == null)
-                    return Result.Fail("Không tìm thấy sách trong hóa đơn");
+            var detail = await _unitOfWork.ImportBillDetails.Query(
+                d => d.ImportId == importBillId && d.BookId == bookId && d.DeletedDate == null)
+                .FirstOrDefaultAsync();
 
-                detail.Quantity = newQuantity;
-                if (newPrice.HasValue && newPrice.Value > 0)
-                    detail.ImportPrice = newPrice.Value;
+            if (detail == null)
+                return Result.Fail("Không tìm thấy sách trong hóa đơn");
 
-                _importBillDetailRepository.Update(detail);
-                _importBillDetailRepository.SaveChanges();
+            detail.Quantity = newQuantity;
+            if (newPrice.HasValue && newPrice.Value > 0)
+                detail.ImportPrice = newPrice.Value;
 
-                // Nếu có đổi giá nhập, đồng bộ sang Book.ImportPrice
-                if (newPrice.HasValue && newPrice.Value > 0)
-                {
-                    var book = _bookRepository.GetById(bookId);
-                    if (book != null && book.DeletedDate == null)
-                    {
-                        book.UpdatedDate = DateTime.Now;
-                        _bookRepository.Update(book);
-                        _bookRepository.SaveChanges();
-                    }
-                }
+            _unitOfWork.ImportBillDetails.Update(detail);
 
-                RecalculateBillTotal(importBillId);
-                return Result.Success("Đã cập nhật chi tiết");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
+            await RecalculateBillTotalAsync(importBillId);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success("Đã cập nhật chi tiết");
         }
 
-        public Result<IEnumerable<ImportBillDetailResponseDto>> GetImportDetails(string importBillId)
+        public async Task<Result<IEnumerable<ImportBillDetailResponseDto>>> GetImportDetailsAsync(string importBillId)
         {
-            try
+            var details = await _unitOfWork.ImportBillDetails.Query(
+                d => d.ImportId == importBillId && d.DeletedDate == null)
+                .Include(d => d.Book)
+                .ToListAsync();
+
+            var list = details.Select(d => new ImportBillDetailResponseDto
             {
-                var details = _importBillDetailRepository.GetByImportId(importBillId)
-                    .Where(d => d.DeletedDate == null)
-                    .Select(d => new ImportBillDetailResponseDto
-                    {
-                        BookId = d.BookId,
-                        BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
-                        Author = _bookRepository.GetById(d.BookId)?.Author ?? "Unknown",
-                        Quantity = d.Quantity,
-                        ImportPrice = d.ImportPrice,
-                        Subtotal = d.Quantity * d.ImportPrice
-                    });
-                return Result<IEnumerable<ImportBillDetailResponseDto>>.Success(details);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<ImportBillDetailResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
+                BookId = d.BookId,
+                BookName = d.Book?.Name,
+                Author = d.Book?.Author,
+                Quantity = d.Quantity,
+                ImportPrice = d.ImportPrice,
+                Subtotal = d.Quantity * d.ImportPrice
+            }).ToList();
+
+            return Result<IEnumerable<ImportBillDetailResponseDto>>.Success(list);
         }
+
 
         // ==================================================================
         // ----------------------- BÁO CÁO ---------------------------------
         // ==================================================================
-        public Result<decimal> CalculateTotalImportBySupplier(string supplierId, DateTime fromDate, DateTime toDate)
+        public async Task<Result<decimal>> CalculateTotalImportBySupplierAsync(string supplierId, DateTime fromDate, DateTime toDate)
         {
-            try
-            {
-                var bills = _importBillRepository.GetByPublisher(supplierId)
-                    .Where(b => b.CreatedDate >= fromDate && b.CreatedDate <= toDate && b.DeletedDate == null);
-                var total = bills.Sum(b => b.TotalAmount);
-                return Result<decimal>.Success(total);
-            }
-            catch (Exception ex)
-            {
-                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
-            }
+            var total = await _unitOfWork.ImportBills.Query(
+                b => b.PublisherId == supplierId &&
+                     b.CreatedDate >= fromDate &&
+                     b.CreatedDate <= toDate &&
+                     b.DeletedDate == null)
+                .SumAsync(b => b.TotalAmount);
+
+            return Result<decimal>.Success(total);
         }
 
-        public Result<decimal> CalculateTotalImportByDateRange(DateTime fromDate, DateTime toDate)
+        public async Task<Result<decimal>> CalculateTotalImportByDateRangeAsync(DateTime fromDate, DateTime toDate)
         {
-            try
-            {
-                var bills = _importBillRepository.GetByDateRange(fromDate, toDate)
-                    .Where(b => b.DeletedDate == null);
-                var total = bills.Sum(b => b.TotalAmount);
-                return Result<decimal>.Success(total);
-            }
-            catch (Exception ex)
-            {
-                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
-            }
+            var total = await _unitOfWork.ImportBills.Query(
+                b => b.CreatedDate >= fromDate &&
+                     b.CreatedDate <= toDate &&
+                     b.DeletedDate == null)
+                .SumAsync(b => b.TotalAmount);
+
+            return Result<decimal>.Success(total);
         }
 
         // ==================================================================
         // ----------------------- HELPER -----------------------------------
         // ==================================================================
-        private void RecalculateBillTotal(string importBillId)
+        private async Task RecalculateBillTotalAsync(string importBillId)
         {
-            var bill = _importBillRepository.GetById(importBillId);
+            var details = await _unitOfWork.ImportBillDetails.Query(
+                d => d.ImportId == importBillId && d.DeletedDate == null)
+                .ToListAsync();
+
+            var bill = await _unitOfWork.ImportBills.GetByIdAsync(importBillId);
             if (bill == null) return;
 
-            var details = _importBillDetailRepository.GetByImportId(importBillId);
             bill.TotalAmount = details.Sum(d => d.ImportPrice * d.Quantity);
             bill.UpdatedDate = DateTime.Now;
 
-            _importBillRepository.Update(bill);
-            _importBillRepository.SaveChanges();
+            _unitOfWork.ImportBills.Update(bill);
         }
 
-        /// <summary>
-        /// Maps ImportBill entity to ImportBillResponseDto
-        /// </summary>
+        private async Task<string> GenerateImportIdAsync()
+        {
+            var last = await _unitOfWork.ImportBills
+                .Query()
+                .OrderByDescending(b => b.Id)
+                .FirstOrDefaultAsync();
+
+            if (last == null || !last.Id.StartsWith("PN"))
+                return "PN0001";
+
+            var num = int.Parse(last.Id.Substring(2));
+            return $"PN{(num + 1):D4}";
+        }
+
         private static ImportBillResponseDto MapToImportBillResponseDto(ImportBill bill)
         {
             return new ImportBillResponseDto
@@ -384,26 +315,13 @@ namespace bookstore_Management.Services.Implementations
                     .Select(d => new ImportBillDetailResponseDto
                     {
                         BookId = d.BookId,
-                        BookName = d.Book?.Name ?? "Unknown",
-                        Author = d.Book?.Author ?? "Unknown",
+                        BookName = d.Book?.Name,
+                        Author = d.Book?.Author,
                         Quantity = d.Quantity,
                         ImportPrice = d.ImportPrice,
                         Subtotal = d.Quantity * d.ImportPrice
-                    }).ToList() ?? new List<ImportBillDetailResponseDto>()
+                    }).ToList()
             };
-        }
-
-        private string GenerateImportId()
-        {
-            var last = _importBillRepository.GetAll()
-                .OrderByDescending(b => b.Id)
-                .FirstOrDefault();
-
-            if (last == null || !last.Id.StartsWith("PN"))
-                return "PN0001";
-
-            var num = int.Parse(last.Id.Substring(2));
-            return $"PN{(num + 1):D4}";
         }
     }
 }

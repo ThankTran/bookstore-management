@@ -1,38 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.DTOs.Book.Requests;
 using bookstore_Management.DTOs.Book.Responses;
-using bookstore_Management.Models;
+
 namespace bookstore_Management.Services.Interfaces
 {
     public interface IBookService
     {
-        // CRUD
-        Result<string> CreateBook(CreateBookRequestDto dto);
-        Result UpdateBook(string bookId, UpdateBookRequestDto dto);
-        Result DeleteBook(string bookId);
-        Result<BookDetailResponseDto> GetBookById(string bookId);
-        Result<IEnumerable<BookDetailResponseDto>> GetAllBooks();
-        
-        
-        // Tìm kiếm & Lọc
-        Result<IEnumerable<BookDetailResponseDto>> SearchByName(string keyword);
-        Result<decimal> GetImportPrice(string bookId);
-        Result<IEnumerable<BookDetailResponseDto>> GetByCategory(BookCategory category);
-        Result<IEnumerable<BookDetailResponseDto>> GetByAuthor(string author);
-        
-        Result<IEnumerable<BookDetailResponseDto>> GetBySupplierName(string supplierName);
-        Result<IEnumerable<BookDetailResponseDto>> GetByPriceRange(decimal? minPrice, decimal? maxPrice);
-        
-        
-        
-        // Quản lý tồn kho (gọi đến StockService)
-        Result<IEnumerable<BookDetailResponseDto>> GetLowStockBooks(int minStock = 5);
-        Result<IEnumerable<BookDetailResponseDto>> GetOutOfStockBooks();
+        Task<Result<string>> CreateBookAsync(CreateBookRequestDto dto);
+        Task<Result> UpdateBookAsync(string bookId, UpdateBookRequestDto dto);
+        Task<Result> DeleteBookAsync(string bookId);
 
-        // ListviewItem (optional)
-        Result<IEnumerable<BookListResponseDto>> GetBookList();
+        Task<Result<BookDetailResponseDto>> GetBookByIdAsync(string bookId);
+        Task<Result<decimal>> GetImportPriceAsync(string bookId);
+
+        Task<Result<IEnumerable<BookDetailResponseDto>>> GetAllBooksAsync();
+        Task<Result<IEnumerable<BookDetailResponseDto>>> SearchByNameAsync(string keyword);
+        Task<Result<IEnumerable<BookDetailResponseDto>>> GetByCategoryAsync(BookCategory category);
+        Task<Result<IEnumerable<BookDetailResponseDto>>> GetByAuthorAsync(string author);
+        Task<Result<IEnumerable<BookDetailResponseDto>>> GetByPriceRangeAsync(decimal? minPrice, decimal? maxPrice);
+        Task<Result<IEnumerable<BookDetailResponseDto>>> GetByPublisherNameAsync(string publisherName);
+
+        Task<Result<IEnumerable<BookDetailResponseDto>>> GetLowStockBooksAsync(int minStock = 5);
+        Task<Result<IEnumerable<BookDetailResponseDto>>> GetOutOfStockBooksAsync();
+
+        Task<Result<IEnumerable<BookListResponseDto>>> GetBookListAsync();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using bookstore_Management.Data.Repositories.Interfaces;
+using System.Threading.Tasks;
 
 namespace bookstore_Management.Data.Repositories.Interfaces
 {
@@ -14,9 +14,11 @@ namespace bookstore_Management.Data.Repositories.Interfaces
         IImportBillRepository ImportBills { get; }
         IImportBillDetailRepository ImportBillDetails { get; }
         IUserRepository Users { get; }
-        IAuditLogRepository AuditLogs { get; }
-        
+
         int SaveChanges();
+        Task<int> SaveChangesAsync();
+
         int Complete();
+        Task<int> CompleteAsync();
     }
 }

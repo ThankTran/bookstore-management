@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
@@ -13,218 +14,164 @@ namespace bookstore_Management.Services.Implementations
 {
     public class StaffService : IStaffService
     {
-        private readonly IStaffRepository _staffRepository;
-        private readonly IOrderRepository _orderRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        internal StaffService(
-            IStaffRepository staffRepository,
-            IOrderRepository orderRepository)
+        internal StaffService(IUnitOfWork unitOfWork)
         {
-            _staffRepository = staffRepository;
-            _orderRepository = orderRepository;
+            _unitOfWork = unitOfWork;
         }
 
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<string> AddStaff(CreateStaffRequestDto dto)
+        public async Task<Result<string>> AddStaffAsync(CreateStaffRequestDto dto)
         {
-            try
+            if (string.IsNullOrWhiteSpace(dto.Name))
+                return Result<string>.Fail("Tên không được trống");
+            
+            var staffId = await GenerateStaffIdAsync();
+            
+            var staff = new Staff
             {
-                // Validate
-                if (string.IsNullOrWhiteSpace(dto.Name))
-                    return Result<string>.Fail("Tên không được trống");
-                
-                
-                // Gen Id
-                var staffId = GenerateStaffId();
-                
-                var staff = new Staff
-                {
-                    Id = staffId,
-                    Name = dto.Name.Trim(),
-                    CitizenId = dto.CitizenId.Trim(),
-                    Phone = dto.Phone,
-                    UserRole = dto.UserRole,
-                    CreatedDate = DateTime.Now,
-                    UpdatedDate = null,
-                    DeletedDate = null
-                };
-                
-                _staffRepository.Add(staff);
-                _staffRepository.SaveChanges();
-                
-                return Result<string>.Success(staffId, "Thêm nhân viên thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result<string>.Fail($"Lỗi: {ex.Message}");
-            }
+                Id = staffId,
+                Name = dto.Name.Trim(),
+                CitizenId = dto.CitizenId?.Trim(),
+                Phone = dto.Phone,
+                UserRole = dto.UserRole,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = null,
+                DeletedDate = null
+            };
+            
+            await _unitOfWork.Staffs.AddAsync(staff);
+            await _unitOfWork.SaveChangesAsync();
+            
+            return Result<string>.Success(staffId, "Thêm nhân viên thành công");
         }
 
         // ==================================================================
         // ----------------------- SỬA DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result UpdateStaff(string staffId, UpdateStaffRequestDto dto)
+        public async Task<Result> UpdateStaffAsync(string staffId, UpdateStaffRequestDto dto)
         {
-            try
-            {
-                var staff = _staffRepository.GetById(staffId);
-                if (staff == null || staff.DeletedDate != null)
-                    return Result.Fail("Nhân viên không tồn tại");
-                
-                // Validate
-                if (string.IsNullOrWhiteSpace(dto.Name))
-                    return Result.Fail("Tên không được trống");
-                
-                
-                staff.Name = dto.Name.Trim();
-                staff.CitizenId = dto.CitizenId.Trim();
-                staff.Phone = dto.Phone;
-                if (dto.UserRole.HasValue)
-                    staff.UserRole = dto.UserRole.Value;
-                staff.UpdatedDate = DateTime.Now;
-                
-                _staffRepository.Update(staff);
-                _staffRepository.SaveChanges();
-                
-                return Result.Success("Cập nhật nhân viên thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
+            var staff = await _unitOfWork.Staffs.GetByIdAsync(staffId);
+            if (staff == null || staff.DeletedDate != null)
+                return Result.Fail("Nhân viên không tồn tại");
+            
+            if (string.IsNullOrWhiteSpace(dto.Name))
+                return Result.Fail("Tên không được trống");
+            
+            staff.Name = dto.Name.Trim();
+            staff.CitizenId = dto.CitizenId?.Trim();
+            staff.Phone = dto.Phone;
+            if (dto.UserRole.HasValue)
+                staff.UserRole = dto.UserRole.Value;
+            staff.UpdatedDate = DateTime.Now;
+            
+            _unitOfWork.Staffs.Update(staff);
+            await _unitOfWork.SaveChangesAsync();
+            
+            return Result.Success("Cập nhật nhân viên thành công");
         }
 
         // ==================================================================
         // ---------------------- XÓA DỮ LIỆU -------------------------------
         // ==================================================================
-        public Result DeleteStaff(string staffId)
+        public async Task<Result> DeleteStaffAsync(string staffId)
         {
-            try
-            {
-                var staff = _staffRepository.GetById(staffId);
-                if (staff == null || staff.DeletedDate != null)
-                    return Result.Fail("Nhân viên không tồn tại");
- 
-                // Soft delete
-                staff.DeletedDate = DateTime.Now;
-                _staffRepository.Update(staff);
-                _staffRepository.SaveChanges();
-                
-                return Result.Success("Xóa nhân viên thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
+            var staff = await _unitOfWork.Staffs.GetByIdAsync(staffId);
+            if (staff == null || staff.DeletedDate != null)
+                return Result.Fail("Nhân viên không tồn tại");
+
+            staff.DeletedDate = DateTime.Now;
+            _unitOfWork.Staffs.Update(staff);
+            await _unitOfWork.SaveChangesAsync();
+            
+            return Result.Success("Xóa nhân viên thành công");
         }
 
         // ==================================================================
         // ----------------------- LẤY DỮ LIỆU ------------------------------
         // ==================================================================
-        public Result<StaffResponseDto> GetStaffById(string staffId)
+        public async Task<Result<StaffResponseDto>> GetStaffByIdAsync(string staffId)
         {
-            try
-            {
-                var staff = _staffRepository.GetById(staffId);
-                if (staff == null || staff.DeletedDate != null)
-                    return Result<StaffResponseDto>.Fail("Nhân viên không tồn tại");
-                    
-                var dto = MapToStaffResponseDto(staff);
-                return Result<StaffResponseDto>.Success(dto);
-            }
-            catch (Exception ex)
-            {
-                return Result<StaffResponseDto>.Fail($"Lỗi: {ex.Message}");
-            }
+            var staff = await _unitOfWork.Staffs.GetByIdAsync(staffId);
+            if (staff == null || staff.DeletedDate != null)
+                return Result<StaffResponseDto>.Fail("Nhân viên không tồn tại");
+                
+            var dto = await MapToStaffResponseDtoAsync(staff);
+            return Result<StaffResponseDto>.Success(dto);
         }
 
-        public Result<IEnumerable<StaffResponseDto>> GetAllStaff()
+        public async Task<Result<IEnumerable<StaffResponseDto>>> GetAllStaffAsync()
         {
-            try
-            {
-                var staff = _staffRepository.GetAll()
-                    .Where(s => s.DeletedDate == null)
-                    .OrderBy(s => s.Name)
-                    .Select(MapToStaffResponseDto);
-                return Result<IEnumerable<StaffResponseDto>>.Success(staff);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<StaffResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-        
+            var allStaff = await _unitOfWork.Staffs.GetAllAsync();
+            var staffList = allStaff
+                .Where(s => s.DeletedDate == null)
+                .OrderBy(s => s.Name)
+                .ToList();
 
-        public Result<IEnumerable<StaffResponseDto>> GetByRole(UserRole userRole)
-        {
-            try
-            {
-                var staff = _staffRepository.GetByRole(userRole)
-                    .Where(s => s.DeletedDate == null)
-                    .OrderBy(s => s.Name)
-                    .Select(MapToStaffResponseDto);
-                return Result<IEnumerable<StaffResponseDto>>.Success(staff);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<StaffResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
+            var tasks = staffList.Select(MapToStaffResponseDtoAsync);
+            var result = await Task.WhenAll(tasks);
+
+            return Result<IEnumerable<StaffResponseDto>>.Success(result);
         }
 
-        public Result<IEnumerable<StaffResponseDto>> SearchByName(string name)
+        public async Task<Result<IEnumerable<StaffResponseDto>>> GetByRoleAsync(UserRole userRole)
         {
-            try
-            {
-                var staff = _staffRepository.SearchByName(name)
+            var allStaff = await _unitOfWork.Staffs.GetByRoleAsync(userRole);
+            var staffList = allStaff
+                .Where(s => s.DeletedDate == null)
+                .OrderBy(s => s.Name)
+                .ToList();
+
+            var tasks = staffList.Select(MapToStaffResponseDtoAsync);
+            var result = await Task.WhenAll(tasks);
+
+            return Result<IEnumerable<StaffResponseDto>>.Success(result);
+        }
+
+        public async Task<Result<IEnumerable<StaffResponseDto>>> SearchByNameAsync(string name)
+        {
+            var allStaff = await Task.Run(() => 
+                _unitOfWork.Staffs.SearchByName(name)
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
-                    .Select(MapToStaffResponseDto);
-                return Result<IEnumerable<StaffResponseDto>>.Success(staff);
-            }
-            catch (Exception e)
-            {
-                return Result<IEnumerable<StaffResponseDto>>.Fail(e.Message);
-            }
+                    .ToList()
+            );
+
+            var tasks = allStaff.Select(MapToStaffResponseDtoAsync);
+            var result = await Task.WhenAll(tasks);
+
+            return Result<IEnumerable<StaffResponseDto>>.Success(result);
         }
         
         // ==================================================================
-        // ----------------------- Hàm Logic - ------------------------------
+        // ----------------------- Hàm Logic --------------------------------
         // ==================================================================
-
-        public Result ChangeRole(string staffId, UserRole newUserRole)
+        public async Task<Result> ChangeRoleAsync(string staffId, UserRole newUserRole)
         {
-            try
-            {
-                var staff = _staffRepository.GetById(staffId);
-                if (staff == null || staff.DeletedDate != null)
-                    return Result.Fail("Nhân viên không tồn tại");
-                
-                var oldRole = staff.UserRole;
-                staff.UserRole = newUserRole;
-                staff.UpdatedDate = DateTime.Now;
-                _staffRepository.Update(staff);
-                _staffRepository.SaveChanges();
-                
-                return Result.Success($"Đổi vai trò từ {oldRole} thành {newUserRole} thành công");
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail($"Lỗi: {ex.Message}");
-            }
+            var staff = await _unitOfWork.Staffs.GetByIdAsync(staffId);
+            if (staff == null || staff.DeletedDate != null)
+                return Result.Fail("Nhân viên không tồn tại");
+            
+            var oldRole = staff.UserRole;
+            staff.UserRole = newUserRole;
+            staff.UpdatedDate = DateTime.Now;
+            _unitOfWork.Staffs.Update(staff);
+            await _unitOfWork.SaveChangesAsync();
+            
+            return Result.Success($"Đổi vai trò từ {oldRole} thành {newUserRole} thành công");
         }
 
         // ==================================================================
         // ----------------------- HÀM HELPER --------------------------------
         // ==================================================================
-        /// <summary>
-        /// Maps Staff entity to StaffResponseDto
-        /// </summary>
-        private StaffResponseDto MapToStaffResponseDto(Staff staff)
+        private async Task<StaffResponseDto> MapToStaffResponseDtoAsync(Staff staff)
         {
-            var totalOrders = _orderRepository.GetByStaff(staff.Id)
-                .Count(o => o.DeletedDate == null);
+            // Tối ưu: Sử dụng CountAsync thay vì GetAllAsync rồi filter
+            var totalOrders = await _unitOfWork.Orders.CountAsync(o => 
+                o.StaffId == staff.Id && o.DeletedDate == null);
 
             return new StaffResponseDto
             {
@@ -238,9 +185,10 @@ namespace bookstore_Management.Services.Implementations
             };
         }
 
-        private string GenerateStaffId()
+        private async Task<string> GenerateStaffIdAsync()
         {
-            var lastStaff = _staffRepository.GetAll()
+            var allStaff = await _unitOfWork.Staffs.GetAllAsync();
+            var lastStaff = allStaff
                 .OrderByDescending(s => s.Id)
                 .FirstOrDefault();
                 

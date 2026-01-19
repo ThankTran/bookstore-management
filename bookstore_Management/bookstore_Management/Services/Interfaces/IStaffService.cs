@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.DTOs.Staff.Requests;
 using bookstore_Management.DTOs.Staff.Responses;
-using bookstore_Management.Models;
+
 namespace bookstore_Management.Services.Interfaces
 {
     public interface IStaffService
     {
-        // CRUD
-        Result<string> AddStaff(CreateStaffRequestDto dto);
-        Result UpdateStaff(string staffId, UpdateStaffRequestDto dto);
-        Result DeleteStaff(string staffId);
-        Result<StaffResponseDto> GetStaffById(string staffId);
-        Result<IEnumerable<StaffResponseDto>> GetAllStaff();
-        // Tìm kiếm
-        Result<IEnumerable<StaffResponseDto>> GetByRole(UserRole userRole);
-        Result<IEnumerable<StaffResponseDto>> SearchByName(string name);
-        
-
-        // Quản lý trạng thái
-        Result ChangeRole(string staffId, UserRole newUserRole);
+        Task<Result<string>> AddStaffAsync(CreateStaffRequestDto dto);
+        Task<Result> UpdateStaffAsync(string staffId, UpdateStaffRequestDto dto);
+        Task<Result> DeleteStaffAsync(string staffId);
+        Task<Result<StaffResponseDto>> GetStaffByIdAsync(string staffId);
+        Task<Result<IEnumerable<StaffResponseDto>>> GetAllStaffAsync();
+        Task<Result<IEnumerable<StaffResponseDto>>> GetByRoleAsync(UserRole userRole);
+        Task<Result<IEnumerable<StaffResponseDto>>> SearchByNameAsync(string name);
+        Task<Result> ChangeRoleAsync(string staffId, UserRole newUserRole);
     }
 }

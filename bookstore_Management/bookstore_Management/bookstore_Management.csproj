@@ -352,7 +352,6 @@
     <Compile Include="Data\Repositories\Implementations\StaffRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\PublisherRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\UserRepository.cs" />
-    <Compile Include="Data\Repositories\Implementations\AuditLogRepository.cs" />
     <Compile Include="Data\Repositories\Implementations\UnitOfWork.cs" />
     <Compile Include="Data\Repositories\Interfaces\IBookRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\ICustomerRepository.cs" />
@@ -365,7 +364,6 @@
     <Compile Include="Data\Repositories\Interfaces\IPublisherRepository.cs" />
     <Compile Include="Data\Repositories\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Data\Repositories\Interfaces\IUserRepository.cs" />
-    <Compile Include="Data\Repositories\Interfaces\IAuditLogRepository.cs" />
     <Compile Include="DTOs\Book\Requests\CreateBookRequestDto.cs" />
     <Compile Include="DTOs\Book\Requests\UpdateBookRequestDto.cs" />
     <Compile Include="DTOs\Book\Responses\BookDetailResponseDto.cs" />
@@ -412,6 +410,10 @@
     <Compile Include="Migrations\202601170425362_CreateDb.Designer.cs">
       <DependentUpon>202601170425362_CreateDb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202601181522346_CreateDb1.cs" />
+    <Compile Include="Migrations\202601181522346_CreateDb1.Designer.cs">
+      <DependentUpon>202601181522346_CreateDb1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
     <Compile Include="Models\Book.cs" />
@@ -436,7 +438,7 @@
     <Compile Include="Presentation\ViewModels\MainViewModel.cs" />
     <Compile Include="Presentation\ViewModels\PaymentViewModel.cs" />
     <Compile Include="Presentation\ViewModels\StaffViewModel.cs" />
-    <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\PublisherViewModel.cs" />
     <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
     <Compile Include="Presentation\Views\Books\BookListView.xaml.cs">
       <DependentUpon>BookListView.xaml</DependentUpon>
@@ -598,7 +600,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Services\Implementations\AuditLogService.cs" />
     <Compile Include="Services\Implementations\AuthService.cs" />
     <Compile Include="Services\Implementations\BookService.cs" />
     <Compile Include="Services\Implementations\CustomerService.cs" />
@@ -616,9 +617,7 @@
     <Compile Include="Services\Interfaces\IReportService.cs" />
     <Compile Include="Services\Interfaces\IStaffService.cs" />
     <Compile Include="Services\Interfaces\IPublisherService.cs" />
-    <Compile Include="Services\Interfaces\IAuditLogService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
-    <Compile Include="Tests\AuditLogServiceTests.cs" />
     <Compile Include="Tests\AuthServiceTests.cs" />
     <Compile Include="Tests\BookServiceTests.cs" />
     <Compile Include="Tests\CustomerServiceTests.cs" />
@@ -633,6 +632,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202601170425362_CreateDb.resx">
       <DependentUpon>202601170425362_CreateDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202601181522346_CreateDb1.resx">
+      <DependentUpon>202601181522346_CreateDb1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -687,11 +689,6 @@
     </PackageReference>
     <PackageReference Include="AutoMapper">
       <Version>10.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
-      <Version>10.0.1</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk">
       <Version>17.10.0</Version>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.DTOs.Common.Reports;
@@ -11,348 +12,273 @@ namespace bookstore_Management.Services.Implementations
 {
     public class ReportService : IReportService
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly IOrderDetailRepository _orderDetailRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly ICustomerRepository _customerRepository;
-        private readonly IImportBillRepository _importBillRepository;
-        private readonly IImportBillDetailRepository _importBillDetailRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        internal ReportService(
-            IOrderRepository orderRepository,
-            IOrderDetailRepository orderDetailRepository,
-            IBookRepository bookRepository,
-            ICustomerRepository customerRepository,
-            IImportBillRepository importBillRepository,
-            IImportBillDetailRepository importBillDetailRepository)
+        internal ReportService(IUnitOfWork unitOfWork)
         {
-            _orderRepository = orderRepository;
-            _orderDetailRepository = orderDetailRepository;
-            _bookRepository = bookRepository;
-            _customerRepository = customerRepository;
-            _importBillRepository = importBillRepository;
-            _importBillDetailRepository = importBillDetailRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Result<decimal> GetTotalRevenue(DateTime fromDate, DateTime toDate)
+        // Báo cáo doanh thu
+        public async Task<Result<decimal>> GetTotalRevenueAsync(DateTime fromDate, DateTime toDate)
         {
-            try
-            {
-                var orders = _orderRepository.Find(o =>
-                    o.CreatedDate >= fromDate &&
-                    o.CreatedDate <= toDate &&
-                    o.DeletedDate == null);
-                return Result<decimal>.Success(orders.Sum(o => o.TotalPrice));
-            }
-            catch (Exception ex)
-            {
-                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
-            }
+            var orders = await _unitOfWork.Orders.FindAsync(o =>
+                o.CreatedDate >= fromDate &&
+                o.CreatedDate <= toDate &&
+                o.DeletedDate == null);
+            
+            return Result<decimal>.Success(orders.Sum(o => o.TotalPrice));
         }
 
-        
-        public Result<decimal> GetTotalProfit(DateTime fromDate, DateTime toDate)
+        public async Task<Result<decimal>> GetTotalProfitAsync(DateTime fromDate, DateTime toDate)
         {
-            try
-            {
-                // Lợi nhuận = (tổng tiền bán - tổng tiền nhập)
-                var totalSales = _orderRepository.Find(o =>
-                    o.CreatedDate >= fromDate &&
-                    o.CreatedDate <= toDate &&
-                    o.DeletedDate == null
-                ).Select(o => o.TotalPrice).DefaultIfEmpty(0).Sum();
+            var ordersTask = _unitOfWork.Orders.FindAsync(o =>
+                o.CreatedDate >= fromDate &&
+                o.CreatedDate <= toDate &&
+                o.DeletedDate == null);
 
-                var totalImport = _importBillRepository.Find(i =>
-                    i.CreatedDate >= fromDate &&
-                    i.CreatedDate <= toDate &&
-                    i.DeletedDate == null
-                ).Select(i => i.TotalAmount).DefaultIfEmpty(0).Sum();
+            var importsTask = _unitOfWork.ImportBills.FindAsync(i =>
+                i.CreatedDate >= fromDate &&
+                i.CreatedDate <= toDate &&
+                i.DeletedDate == null);
 
-                return Result<decimal>.Success(totalSales - totalImport);
-            }
-            catch (Exception ex)
-            {
-                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
-            }
+            await Task.WhenAll(ordersTask, importsTask);
+
+            var totalSales = ordersTask.Result.Select(o => o.TotalPrice).DefaultIfEmpty(0).Sum();
+            var totalImport = importsTask.Result.Select(i => i.TotalAmount).DefaultIfEmpty(0).Sum();
+
+            return Result<decimal>.Success(totalSales - totalImport);
         }
 
-        public Result<int> GetTotalCustomerCount(DateTime fromDate, DateTime toDate)
+        public async Task<Result<decimal>> GetAverageOrderValueAsync(DateTime fromDate, DateTime toDate)
         {
-            try
-            {   
-                var customer = _customerRepository.Find( c =>
-                    c.CreatedDate >= fromDate &&
-                    c.CreatedDate <= toDate &&
-                    c.DeletedDate == null).Count();
-                return Result<int>.Success(customer);
-            }
-            catch (Exception e)
-            {
-                return Result<int>.Fail(e.Message);
-            }
-        }
-        
-        public Result<decimal> GetAverageOrderValue(DateTime fromDate, DateTime toDate)
-        {
-            try
-            {
-                var orders = _orderRepository.Find(o =>
-                    o.CreatedDate >= fromDate &&
-                    o.CreatedDate <= toDate &&
-                    o.DeletedDate == null).ToList();
-                return (!orders.Any()) ?
-                    Result<decimal>.Success(0, "Không có đơn hàng") :
-                    Result<decimal>.Success(orders.Average(o => o.TotalPrice));
-            }
-            catch (Exception ex)
-            {
-                return Result<decimal>.Fail($"Lỗi: {ex.Message}");
-            }
+            var orders = await _unitOfWork.Orders.FindAsync(o =>
+                o.CreatedDate >= fromDate &&
+                o.CreatedDate <= toDate &&
+                o.DeletedDate == null);
+
+            var ordersList = orders.ToList();
+            
+            return (!ordersList.Any()) ?
+                Result<decimal>.Success(0, "Không có đơn hàng") :
+                Result<decimal>.Success(ordersList.Average(o => o.TotalPrice));
         }
 
-        public Result<int> GetTotalOrderCount(DateTime fromDate, DateTime toDate)
+        // Báo cáo đơn hàng
+        public async Task<Result<int>> GetTotalOrderCountAsync(DateTime fromDate, DateTime toDate)
         {
-            try
-            {
-                var count = _orderRepository.Find(o =>
-                    o.CreatedDate >= fromDate &&
-                    o.CreatedDate <= toDate &&
-                    o.DeletedDate == null).Count();
-                return Result<int>.Success(count);
-            }
-            catch (Exception ex)
-            {
-                return Result<int>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-        
-
-        public Result<IEnumerable<BookSalesReportResponseDto>> GetTopSellingBooks(DateTime fromDate, DateTime toDate, int topCount = 10)
-        {
-            try
-            {
-                var details = _orderDetailRepository.Find(od =>
-                    od.Order.CreatedDate >= fromDate &&
-                    od.Order.CreatedDate <= toDate &&
-                    od.Order.DeletedDate == null);
-                var bookDict = _bookRepository.GetAll()
-                    .Where(b => b.DeletedDate == null)
-                    .ToDictionary(b => b.BookId, b => b.Name);
-                
-                var result = details
-                    .GroupBy(od => od.BookId)
-                    .Select(g => new BookSalesReportResponseDto
-                    {
-                        BookId = g.Key,
-                        BookName = bookDict.TryGetValue(g.Key, out var name) ? name : "Unknown",
-                        TotalQuantitySold = g.Sum(x => x.Quantity),
-                        TotalRevenue = g.Sum(x => x.SalePrice * x.Quantity),
-                        AveragePricePerUnit = g.Average(x => x.SalePrice)
-                    })
-                    .OrderByDescending(x => x.TotalQuantitySold)
-                    .Take(topCount)
-                    .ToList();
-
-                return Result<IEnumerable<BookSalesReportResponseDto>>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<BookSalesReportResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
+            var count = await _unitOfWork.Orders.CountAsync(o =>
+                o.CreatedDate >= fromDate &&
+                o.CreatedDate <= toDate &&
+                o.DeletedDate == null);
+            
+            return Result<int>.Success(count);
         }
 
-        public Result<IEnumerable<BookSalesReportResponseDto>> GetLowestSellingBooks(DateTime fromDate, DateTime toDate, int bottomCount = 5)
+        // Báo cáo khách hàng mới
+        public async Task<Result<int>> GetTotalCustomerCountAsync(DateTime fromDate, DateTime toDate)
         {
-            try
-            {
-                var details = _orderDetailRepository.Find(od =>
-                    od.Order.CreatedDate >= fromDate &&
-                    od.Order.CreatedDate <= toDate &&
-                    od.Order.DeletedDate == null);
-
-                var allBooks = _bookRepository.GetAll().Where(b => b.DeletedDate == null).ToList();
-
-                var report = allBooks
-                    .GroupJoin(details,
-                        b => b.BookId,
-                        d => d.BookId,
-                        (book, det) => new
-                        {
-                            book,
-                            det = det.ToList()
-                        })
-                    .Select(x => new BookSalesReportResponseDto
-                    {
-                        BookId = x.book.BookId,
-                        BookName = x.book.Name,
-                        TotalQuantitySold = x.det.Sum(d => d.Quantity),
-                        TotalRevenue = x.det.Sum(d => d.SalePrice * d.Quantity),
-                        AveragePricePerUnit = x.det.Any() ? x.det.Average(d => d.SalePrice) : 0
-                    })
-                    .OrderBy(r => r.TotalQuantitySold)
-                    .Take(bottomCount)
-                    .ToList();
-
-                return Result<IEnumerable<BookSalesReportResponseDto>>.Success(report);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<BookSalesReportResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
+            var count = await _unitOfWork.Customers.CountAsync(c =>
+                c.CreatedDate >= fromDate &&
+                c.CreatedDate <= toDate &&
+                c.DeletedDate == null);
+            
+            return Result<int>.Success(count);
         }
 
-
-        public Result<InventorySummaryReportResponseDto> GetInventorySummary()
+        // Báo cáo sách bán chạy
+        public async Task<Result<IEnumerable<BookSalesReportResponseDto>>> GetTopSellingBooksAsync(
+            DateTime fromDate, DateTime toDate, int topCount = 10)
         {
-            try
-            {
-                var books = _bookRepository.GetAll().Where(b => b.DeletedDate == null).ToList();
+            var details = await _unitOfWork.OrderDetails.FindAsync(od =>
+                od.Order.CreatedDate >= fromDate &&
+                od.Order.CreatedDate <= toDate &&
+                od.Order.DeletedDate == null);
 
-                var totalBooks = books.Count;
-                var totalQuantity = books.Sum(b => b.Stock);
+            var allBooks = await _unitOfWork.Books.GetAllAsync();
+            var bookDict = allBooks
+                .Where(b => b.DeletedDate == null)
+                .ToDictionary(b => b.BookId, b => b.Name);
 
-                // Giá trị tồn kho nên tính theo giá vốn (ImportPrice), không phải giá bán (SalePrice).
-                var bookIds = books.Select(b => b.BookId).ToList();
-                var importPrices = _importBillDetailRepository.GetLatestImportPricesByBookIds(bookIds);
-
-                var totalValue = books.Sum(b =>
-                    (importPrices.TryGetValue(b.BookId, out var price) ? price ?? 0 : 0) * b.Stock
-                );
-
-                var lowStockCount = 0;
-                var outOfStockCount = 0;
-                books.ForEach(b =>
+            var result = details
+                .GroupBy(od => od.BookId)
+                .Select(g => new BookSalesReportResponseDto
                 {
-                    if ( b.Stock == 0 ) outOfStockCount++;
-                    else if (b.Stock > 0 && b.Stock < 5) lowStockCount++;
-                });
+                    BookId = g.Key,
+                    BookName = bookDict.TryGetValue(g.Key, out var name) ? name : "Unknown",
+                    TotalQuantitySold = g.Sum(x => x.Quantity),
+                    TotalRevenue = g.Sum(x => x.SalePrice * x.Quantity),
+                    AveragePricePerUnit = g.Average(x => x.SalePrice)
+                })
+                .OrderByDescending(x => x.TotalQuantitySold)
+                .Take(topCount)
+                .ToList();
 
-                var report = new InventorySummaryReportResponseDto
-                {
-                    TotalBooks = totalBooks,
-                    TotalQuantity = totalQuantity,
-                    TotalValue = totalValue,
-                    LowStockCount = lowStockCount,
-                    OutOfStockCount = outOfStockCount
-                };
-                return Result<InventorySummaryReportResponseDto>.Success(report);
-            }
-            catch (Exception ex)
-            {
-                return Result<InventorySummaryReportResponseDto>.Fail($"Lỗi: {ex.Message}");
-            }
+            return Result<IEnumerable<BookSalesReportResponseDto>>.Success(result);
         }
 
-        public Result<decimal> GetInventoryValue()
+        public async Task<Result<IEnumerable<BookSalesReportResponseDto>>> GetLowestSellingBooksAsync(
+            DateTime fromDate, DateTime toDate, int bottomCount = 5)
         {
-            var summary = GetInventorySummary();
+            var details = await _unitOfWork.OrderDetails.FindAsync(od =>
+                od.Order.CreatedDate >= fromDate &&
+                od.Order.CreatedDate <= toDate &&
+                od.Order.DeletedDate == null);
+
+            var allBooks = await _unitOfWork.Books.GetAllAsync();
+            var booksList = allBooks.Where(b => b.DeletedDate == null).ToList();
+            var detailsList = details.ToList();
+
+            var report = booksList
+                .GroupJoin(detailsList,
+                    b => b.BookId,
+                    d => d.BookId,
+                    (book, det) => new
+                    {
+                        book,
+                        det = det.ToList()
+                    })
+                .Select(x => new BookSalesReportResponseDto
+                {
+                    BookId = x.book.BookId,
+                    BookName = x.book.Name,
+                    TotalQuantitySold = x.det.Sum(d => d.Quantity),
+                    TotalRevenue = x.det.Sum(d => d.SalePrice * d.Quantity),
+                    AveragePricePerUnit = x.det.Any() ? x.det.Average(d => d.SalePrice) : 0
+                })
+                .OrderBy(r => r.TotalQuantitySold)
+                .Take(bottomCount)
+                .ToList();
+
+            return Result<IEnumerable<BookSalesReportResponseDto>>.Success(report);
+        }
+
+        // Báo cáo kho
+        public async Task<Result<InventorySummaryReportResponseDto>> GetInventorySummaryAsync()
+        {
+            var allBooks = await _unitOfWork.Books.GetAllAsync();
+            var books = allBooks.Where(b => b.DeletedDate == null).ToList();
+
+            var totalBooks = books.Count;
+            var totalQuantity = books.Sum(b => b.Stock);
+
+            var bookIds = books.Select(b => b.BookId).ToList();
+            var importPrices = await _unitOfWork.ImportBillDetails.GetLatestImportPricesByBookIdsAsync(bookIds);
+
+            var totalValue = books.Sum(b =>
+                (importPrices.TryGetValue(b.BookId, out var price) ? price ?? 0 : 0) * b.Stock
+            );
+
+            var lowStockCount = books.Count(b => b.Stock > 0 && b.Stock < 13);
+            var outOfStockCount = books.Count(b => b.Stock == 0);
+
+            var report = new InventorySummaryReportResponseDto
+            {
+                TotalBooks = totalBooks,
+                TotalQuantity = totalQuantity,
+                TotalValue = totalValue,
+                LowStockCount = lowStockCount,
+                OutOfStockCount = outOfStockCount
+            };
+            
+            return Result<InventorySummaryReportResponseDto>.Success(report);
+        }
+
+        public async Task<Result<decimal>> GetInventoryValueAsync()
+        {
+            var summary = await GetInventorySummaryAsync();
             return (!summary.IsSuccess) ?
-                Result<decimal>.Fail(summary.ErrorMessage):
+                Result<decimal>.Fail(summary.ErrorMessage) :
                 Result<decimal>.Success(summary.Data.TotalValue);
         }
 
-        public Result<IEnumerable<CustomerSpendingReportResponseDto>> GetTopSpendingCustomers(int topCount = 10)
+        // Báo cáo khách hàng
+        public async Task<Result<IEnumerable<CustomerSpendingReportResponseDto>>> GetTopSpendingCustomersAsync(int topCount = 10)
         {
-            try
-            {
-                var customers = _customerRepository.GetAll().Where(c => c.DeletedDate == null).ToList();
-                var orders = _orderRepository.GetAll().Where(o => o.DeletedDate == null).ToList();
+            var customersTask = _unitOfWork.Customers.GetAllAsync();
+            var ordersTask = _unitOfWork.Orders.GetAllAsync();
 
-                var report = customers
-                    .Select(c =>
-                    {
-                        var cos = orders.Where(o => o.CustomerId == c.CustomerId).ToList();
-                        var totalSpent = cos.Sum(o => o.TotalPrice);
-                        return new CustomerSpendingReportResponseDto
-                        {
-                            CustomerId = c.CustomerId,
-                            CustomerName = c.Name,
-                            TotalSpent = totalSpent,
-                            TotalOrders = cos.Count(),
-                            AverageOrderValue = cos.Any() ? cos.Average(o => o.TotalPrice) : 0
-                        };
-                    })
-                    .OrderByDescending(r => r.TotalSpent)
-                    .Take(topCount)
-                    .ToList();
+            await Task.WhenAll(customersTask, ordersTask);
 
-                return Result<IEnumerable<CustomerSpendingReportResponseDto>>.Success(report);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<CustomerSpendingReportResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
+            var customers = customersTask.Result.Where(c => c.DeletedDate == null).ToList();
+            var orders = ordersTask.Result.Where(o => o.DeletedDate == null).ToList();
 
-        public Result<CustomerPurchaseRatioDto> GetWalkInToMemberPurchaseRatio(DateTime fromDate, DateTime toDate)
-        {
-            try
-            {
-                var walkIn = 0;
-                var member = 0;
-                _orderRepository.Find(o =>
-                    o.CreatedDate >= fromDate &&
-                    o.CreatedDate <= toDate &&
-                    o.DeletedDate == null).ToList().ForEach(o =>
-                    {
-                        if (o.CustomerId == null) walkIn++;
-                        else member++;
-                    });
-                var total = member + walkIn;
-                var dto = new CustomerPurchaseRatioDto
+            var report = customers
+                .Select(c =>
                 {
-                    WalkIn = walkIn,
-                    Member = member,
-                    WalkInRatio = total == 0 ? 0 : (double)walkIn / total,
-                    MemberRatio = total == 0 ? 0 : (double)member / total
-                };
-                
-                return Result<CustomerPurchaseRatioDto>.Success(dto);
-            }
-            catch (Exception ex)
-            {
-                return Result<CustomerPurchaseRatioDto>.Fail($"Lỗi: {ex.Message}");
-            }
-        }
-        
-        
-
-
-        public Result<IEnumerable<PublisherImportReportResponseDto>> GetPublisherImportReport(DateTime fromDate, DateTime toDate)
-        {
-            try
-            {
-                var bills = _importBillRepository.Find(ib =>
-                    ib.CreatedDate >= fromDate &&
-                    ib.CreatedDate <= toDate &&
-                    ib.DeletedDate == null);
-
-                var report = bills
-                    .GroupBy(ib => ib.PublisherId)
-                    .Select(g =>
+                    var customerOrders = orders.Where(o => o.CustomerId == c.CustomerId).ToList();
+                    var totalSpent = customerOrders.Sum(o => o.TotalPrice);
+                    return new CustomerSpendingReportResponseDto
                     {
-                        var supplier = g.FirstOrDefault()?.Publisher;
-                        var totalQty = g.SelectMany(x => x.ImportBillDetails ?? Enumerable.Empty<ImportBillDetail>())
-                            .Sum(d => d.Quantity);
-                        var totalValue = g.Sum(x => x.TotalAmount);
-                        return new PublisherImportReportResponseDto()
-                        {
-                            PublisherId = g.Key,
-                            PublisherName = supplier?.Name ?? "Unknown",
-                            TotalQuantity = totalQty,
-                            TotalImportValue = totalValue
-                        };
-                    })
-                    .OrderByDescending(r => r.TotalImportValue)
-                    .ToList();
+                        CustomerId = c.CustomerId,
+                        CustomerName = c.Name,
+                        TotalSpent = totalSpent,
+                        TotalOrders = customerOrders.Count,
+                        AverageOrderValue = customerOrders.Any() ? customerOrders.Average(o => o.TotalPrice) : 0
+                    };
+                })
+                .OrderByDescending(r => r.TotalSpent)
+                .Take(topCount)
+                .ToList();
 
-                return Result<IEnumerable<PublisherImportReportResponseDto>>.Success(report);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<PublisherImportReportResponseDto>>.Fail($"Lỗi: {ex.Message}");
-            }
+            return Result<IEnumerable<CustomerSpendingReportResponseDto>>.Success(report);
         }
-        
+
+        // Báo cáo tỉ lệ khách hàng vãng lai và thân thiết
+        public async Task<Result<CustomerPurchaseRatioDto>> GetWalkInToMemberPurchaseRatioAsync(
+            DateTime fromDate, DateTime toDate)
+        {
+            var orders = await _unitOfWork.Orders.FindAsync(o =>
+                o.CreatedDate >= fromDate &&
+                o.CreatedDate <= toDate &&
+                o.DeletedDate == null);
+
+            var ordersList = orders.ToList();
+            var walkIn = ordersList.Count(o => o.CustomerId == null);
+            var member = ordersList.Count(o => o.CustomerId != null);
+            var total = member + walkIn;
+
+            var dto = new CustomerPurchaseRatioDto
+            {
+                WalkIn = walkIn,
+                Member = member,
+                WalkInRatio = total == 0 ? 0 : (double)walkIn / total,
+                MemberRatio = total == 0 ? 0 : (double)member / total
+            };
+
+            return Result<CustomerPurchaseRatioDto>.Success(dto);
+        }
+
+        // Báo cáo nhà cung cấp
+        public async Task<Result<IEnumerable<PublisherImportReportResponseDto>>> GetPublisherImportReportAsync(
+            DateTime fromDate, DateTime toDate)
+        {
+            var bills = await _unitOfWork.ImportBills.FindAsync(ib =>
+                ib.CreatedDate >= fromDate &&
+                ib.CreatedDate <= toDate &&
+                ib.DeletedDate == null);
+
+            var report = bills
+                .GroupBy(ib => ib.PublisherId)
+                .Select(g =>
+                {
+                    var supplier = g.FirstOrDefault()?.Publisher;
+                    var totalQty = g.SelectMany(x => x.ImportBillDetails ?? Enumerable.Empty<ImportBillDetail>())
+                        .Where(d => d.DeletedDate == null)
+                        .Sum(d => d.Quantity);
+                    var totalValue = g.Sum(x => x.TotalAmount);
+                    return new PublisherImportReportResponseDto
+                    {
+                        PublisherId = g.Key,
+                        PublisherName = supplier?.Name ?? "Unknown",
+                        TotalQuantity = totalQty,
+                        TotalImportValue = totalValue
+                    };
+                })
+                .OrderByDescending(r => r.TotalImportValue)
+                .ToList();
+
+            return Result<IEnumerable<PublisherImportReportResponseDto>>.Success(report);
+        }
     }
-}
+} 

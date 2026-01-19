@@ -6,6 +6,7 @@ using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -84,9 +85,9 @@ namespace bookstore_Management.Presentation.ViewModels
         #endregion
 
         #region Load staff from db
-        private void LoadStaffsFromDatabase()
+        private async Task LoadStaffsFromDatabase()
         {
-            var result = _staffService.GetAllStaff();
+            var result = await _staffService.GetAllStaffAsync();
             if (!result.IsSuccess)
             {
                 // Xử lý lỗi, để sau này làm thông báo lỗi sau
@@ -109,23 +110,21 @@ namespace bookstore_Management.Presentation.ViewModels
         }
         #endregion
 
-        #region constructor
-
-        #endregion
+  
+        
         public StaffViewModel(IStaffService staffService)
         {
-            var context = new BookstoreDbContext();
+            var context = new BookstoreDbContext();   
+            var unitOfWork = new  UnitOfWork(context);
 
-            _staffService = new StaffService(
-            new StaffRepository(context),
-            new OrderRepository(context)
-            );
+            _staffService = new StaffService(unitOfWork);
 
             Staffs = new ObservableCollection<Staff>();
-            LoadStaffsFromDatabase();
+            _ = LoadStaffsFromDatabase();
 
             #region AddCommand
             AddStaffCommand = new RelayCommand<object>((p) =>
+                Task.Run(async () =>
             {
                 var dialog = new Views.Dialogs.Staffs.AddStaff();
                 if (dialog.ShowDialog() == true)
@@ -138,19 +137,20 @@ namespace bookstore_Management.Presentation.ViewModels
                         Phone = dialog.PhoneNumber,
                         UserRole = dialog.Role,
                     };
-                    var result = _staffService.AddStaff(newStaffDto);
+                    var result = await _staffService.AddStaffAsync(newStaffDto);
                     if (!result.IsSuccess)
                     {
                         MessageBox.Show("Lỗi khi thêm sách: " + result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                     // Reload books from database
-                    LoadStaffsFromDatabase();
+                    _ = LoadStaffsFromDatabase();
                 }
-            });
+            }));
             #endregion
             #region RemoveCommand
             RemoveStaffCommand = new RelayCommand<object>((p) =>
+                Task.Run(async () =>
             {
                 var staff = p as Staff;
                 if (staff == null)
@@ -163,7 +163,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
                 if (!confirmed) return;
 
-                var result = _staffService.DeleteStaff(staff.Id);
+                var result = await _staffService.DeleteStaffAsync(staff.Id);
                 if (!result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi xóa sách: " + result.ErrorMessage,
@@ -172,12 +172,13 @@ namespace bookstore_Management.Presentation.ViewModels
                                     MessageBoxImage.Error);
                     return;
                 }
-                LoadStaffsFromDatabase();
-            });
+                _ = LoadStaffsFromDatabase();
+            }));
             #endregion
             #region EditCommand
             EditStaffCommand = new RelayCommand<object>((p) =>
-            {
+            Task.Run(async () =>
+                {
                 var dialog = new Views.Dialogs.Staffs.UpdateStaff();
                 var staff = p as Staff;
                 if (staff == null)
@@ -202,23 +203,23 @@ namespace bookstore_Management.Presentation.ViewModels
                         UserRole = dialog.Role,
                     };
 
-                    var result = _staffService.UpdateStaff(staff.Id, updateDto);
+                    var result = await _staffService.UpdateStaffAsync(staff.Id, updateDto);
                     if (!result.IsSuccess)
                     {
                         MessageBox.Show("Lỗi khi cập nhật / chỉnh sửa sách");
                         return;
                     }
 
-                    LoadStaffsFromDatabase();
+                    _ = LoadStaffsFromDatabase();
                 }
-            });
+            }));
             #endregion
             #region SearchCommand
             SearchStaffCommand = new RelayCommand<object>((p) =>
             {
                 if (string.IsNullOrEmpty(SearchKeyword))
                 {
-                    LoadStaffsFromDatabase();//k nhập gì thì hiện lại list
+                    _ = LoadStaffsFromDatabase();//k nhập gì thì hiện lại list
                     return;
                 }
 

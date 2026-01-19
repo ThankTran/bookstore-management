@@ -39,11 +39,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Payment
 
         #region Load Data
 
-        private void LoadOrderData()
+        private async void LoadOrderData()
         {
             try
             {
-                var result = _orderService.GetOrderById(_orderId);
+                var result = await _orderService.GetOrderByIdAsync(_orderId);
 
                 if (!result.IsSuccess || result.Data == null)
                 {

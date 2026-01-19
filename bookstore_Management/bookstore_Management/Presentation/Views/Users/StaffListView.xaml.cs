@@ -2,6 +2,8 @@
 using bookstore_Management.Services.Interfaces;
 using System.Linq;
 using System.Windows.Controls;
+using bookstore_Management.Data.Context;
+using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Services.Implementations;
 
 namespace bookstore_Management.Presentation.Views.Users
@@ -15,13 +17,10 @@ namespace bookstore_Management.Presentation.Views.Users
         public StaffListView() 
         {
             InitializeComponent();
-            IStaffService staffService;
-
-            var context = new Data.Context.BookstoreDbContext();
-            staffService = new StaffService(
-                new Data.Repositories.Implementations.StaffRepository(context),
-                new Data.Repositories.Implementations.OrderRepository(context)
-            );
+            
+            var context = new BookstoreDbContext();
+            var unitOfWork = new UnitOfWork(context);
+            IStaffService staffService = new StaffService(unitOfWork);
 
             _viewModel = new StaffViewModel(staffService);
             this.DataContext = _viewModel;

@@ -1,67 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
+
 namespace bookstore_Management.Data.Repositories.Implementations
 {
-    internal class CustomerRepository : Repository<Customer,string>,ICustomerRepository
+    internal class CustomerRepository : Repository<Customer, string>, ICustomerRepository
     {
         public CustomerRepository(BookstoreDbContext context) : base(context) { }
 
-        public IEnumerable<Customer> SearchByName(string name)
+        public IQueryable<Customer> SearchByName(string keyword)
         {
-            return Find(c => c.Name.Contains(name) && c.DeletedDate == null);
-        }
-        
-
-        public IEnumerable<Customer> GetByMemberLevel(MemberTier tier)
-        {
-            return Find(c => c.MemberLevel == tier && c.DeletedDate == null);
-        }
-        
-        public Customer SearchByPhone(string phone)
-        {
-            return Find(c => c.Phone == phone && c.DeletedDate == null).FirstOrDefault();
+            return Query(c => c.Name.Contains(keyword) && c.DeletedDate == null);
         }
 
-        public bool UsePoint(string customerId, decimal points)
+        public Task<IEnumerable<Customer>> GetByMemberLevelAsync(MemberTier tier)
         {
-            var customers = GetById(customerId);
-            if (customers is null || customers.DeletedDate != null)
+            return FindAsync(c => c.MemberLevel == tier && c.DeletedDate == null);
+        }
+
+        public async Task<Customer> SearchByPhoneAsync(string phone)
+        {
+            return await DbSet
+                .Where(c => c.Phone == phone && c.DeletedDate == null)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> UsePointAsync(string customerId, decimal points)
+        {
+            var customer = await GetByIdAsync(customerId);
+
+            if (customer == null || customer.DeletedDate != null)
                 return false;
-            else
-            {
-                if (customers.LoyaltyPoints < points) return false;
-                customers.LoyaltyPoints -= points;
-            }
+
+            if (customer.LoyaltyPoints < points)
+                return false;
+
+            customer.LoyaltyPoints -= points;
+
+            Update(customer);
+            await SaveChangesAsync();
+
             return true;
         }
 
-        public bool AddPoint(string customerId, decimal points)
+        public async Task<bool> AddPointAsync(string customerId, decimal points)
         {
-            var customers = GetById(customerId);
-            if (customers is null || customers.DeletedDate != null)
+            var customer = await GetByIdAsync(customerId);
+
+            if (customer == null || customer.DeletedDate != null)
                 return false;
-            else
-            {
-                if (points < 0) return false;
-                customers.LoyaltyPoints += points;
-            }
+
+            if (points < 0)
+                return false;
+
+            customer.LoyaltyPoints += points;
+
+            Update(customer);
+            await SaveChangesAsync();
+
             return true;
         }
 
-        /// <summary>
-        /// Gets all active (non-deleted) customers for list view
-        /// Filters by DeletedDate == null
-        /// </summary>
-        public IEnumerable<Customer> GetAllForListView()
+        public async Task<IEnumerable<Customer>> GetAllForListViewAsync()
         {
-            return Find(c => c.DeletedDate == null);
+            return await FindAsync(c => c.DeletedDate == null);
         }
     }
 }

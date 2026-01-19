@@ -1,7 +1,7 @@
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using bookstore_Management.Data.Context;
-using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
 
@@ -12,20 +12,22 @@ namespace bookstore_Management.Data.Repositories.Implementations
         public UserRepository(BookstoreDbContext context) : base(context) { }
 
         /// <summary>
-        /// Gets user by username, đã lọc soft delete
+        /// Gets user by username, đã lọc soft delete (async)
         /// </summary>
-        public User GetByUsername(string username)
+        public async Task<User> GetByUsernameAsync(string username)
         {
-            return Find(u => u.Username == username && u.DeletedDate == null).FirstOrDefault();
+            return await DbSet
+                .Where(u => u.Username == username && u.DeletedDate == null)
+                .FirstOrDefaultAsync();
         }
 
         /// <summary>
-        /// Kiểm tra Username có tồn tại không, đã lọc soft delete
+        /// Kiểm tra Username có tồn tại không, đã lọc soft delete (async)
         /// </summary>
-        public bool UsernameExists(string username)
+        public async Task<bool> UsernameExistsAsync(string username)
         {
-            return Exists(u => u.Username == username && u.DeletedDate == null);
+            return await DbSet
+                .AnyAsync(u => u.Username == username && u.DeletedDate == null);
         }
     }
 }
-
