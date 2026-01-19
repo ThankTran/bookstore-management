@@ -13,6 +13,11 @@ namespace bookstore_Management.Models
     {
         [Key]
         [Required] 
+        [Column("user_id")]
+        [StringLength(10)] 
+        public string UserId { get; set; }
+        
+        [Required] 
         [Column("username")]
         [StringLength(50)] 
         public string Username { get; set; }
@@ -40,6 +45,9 @@ namespace bookstore_Management.Models
 
         [Column("deleted_date")]
         public DateTime? DeletedDate { get; set; }
+
+        // navigation properties
+        public virtual Staff staff { get; set; }
 
     }
 }    

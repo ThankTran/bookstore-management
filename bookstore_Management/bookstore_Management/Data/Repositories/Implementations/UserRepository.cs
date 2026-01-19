@@ -14,9 +14,9 @@ namespace bookstore_Management.Data.Repositories.Implementations
         /// <summary>
         /// Gets user by username, đã lọc soft delete
         /// </summary>
-        public User GetByUsername(string username)
+        public IEnumerable<User> GetByUsername(string username)
         {
-            return Find(u => u.Username == username && u.DeletedDate == null).FirstOrDefault();
+            return Find(u => u.Username == username && u.DeletedDate == null);
         }
 
         /// <summary>

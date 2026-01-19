@@ -76,6 +76,35 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
+        public Result<IEnumerable<decimal>> GetRevenue(DateTime fromDate, DateTime toDate, int jump = 1)
+        {
+            var revenue = new List<decimal>();
+
+            while (fromDate <= toDate)
+            {
+                var total = _orderRepository.Find(o => o.DeletedDate == null)
+                    .Sum(o => o.TotalPrice);
+                revenue.Add(total);
+                fromDate = fromDate.AddDays(jump);
+            }
+            return Result<IEnumerable<decimal>>.Success(revenue);  
+        }
+        
+        
+        public Result<IEnumerable<decimal>> GetImport(DateTime fromDate, DateTime toDate, int jump = 1)
+        {
+            var import = new List<decimal>();
+
+            while (fromDate <= toDate)
+            {
+                var total = _importBillRepository.Find(o => o.DeletedDate == null)
+                    .Sum(o => o.TotalAmount);
+                import.Add(total);
+                fromDate = fromDate.AddDays(jump);
+            }
+            return Result<IEnumerable<decimal>>.Success(import);  
+        }
+
         public Result<int> GetTotalCustomerCount(DateTime fromDate, DateTime toDate)
         {
             try

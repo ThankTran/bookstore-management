@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure.Annotations;
 using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Context
@@ -40,7 +42,7 @@ namespace bookstore_Management.Data.Context
             modelBuilder.Entity<Customer>().HasKey(c => c.CustomerId);
             modelBuilder.Entity<Staff>().HasKey(s => s.Id);
             modelBuilder.Entity<Publisher>().HasKey(s => s.Id);
-            modelBuilder.Entity<User>().HasKey(u => u.Username);
+            modelBuilder.Entity<User>().HasKey(u => u.UserId);
             modelBuilder.Entity<ImportBill>().HasKey(ib => ib.Id);
             modelBuilder.Entity<ImportBillDetail>().HasKey(ibd => new { ibd.BookId, ibd.ImportId });
             modelBuilder.Entity<AuditLog>().HasKey(al => al.Id);
@@ -106,14 +108,162 @@ namespace bookstore_Management.Data.Context
                 .WithMany()  // Book không có navigation property đến ImportBillDetail
                 .HasForeignKey(ibd => ibd.BookId)
                 .WillCascadeOnDelete(false);
-            
-            
+
+            // User → Staff (1 User là của 1 Staff)
+            modelBuilder.Entity<User>()
+                .HasRequired(u => u.staff)
+                .WithMany()  // Book không có navigation property đến ImportBillDetail
+                .HasForeignKey(s => s.StaffId)
+                .WillCascadeOnDelete(false);
+
+
 
             // ============================================
             // INDEXES (Tối ưu tìm kiếm)
             // ============================================
 
+            // Book
+            modelBuilder.Entity<Book>()
+                .Property(b => b.DeletedDate)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Book_DeletedDate")
+                    )
+                );
+
+            modelBuilder.Entity<Book>()
+                .Property(b => b.Name)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Book_Name")
+                    )
+                );
             
+            // Customer
+            modelBuilder.Entity<Customer>()
+                .Property(c => c.Name)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Customer_Name")
+                    )
+                );
+            
+            modelBuilder.Entity<Customer>()
+                .Property(c => c.DeletedDate)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Customer_DeletedDate")
+                    )
+                );
+            
+            // Staff
+            modelBuilder.Entity<Staff>()
+                .Property(c => c.Name)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Staff_Name")
+                    )
+                );
+            modelBuilder.Entity<Staff>()
+                .Property(c => c.DeletedDate)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Staff_DeletedDate")
+                    )
+                );
+            
+            // Publisher
+            modelBuilder.Entity<Publisher>()
+                .Property(p => p.Name)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Publishers_Name")
+                    )
+                );
+            
+            modelBuilder.Entity<Publisher>()
+                .Property(p => p.DeletedDate)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Publishers_DeletedDate")
+                    )
+                );
+            
+            // ImportBill
+            modelBuilder.Entity<ImportBill>()
+                .Property(p => p.DeletedDate)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_ImportBill_DeletedDate")
+                    )
+                );
+            
+            // ImportBillDetail
+            modelBuilder.Entity<ImportBillDetail>()
+                .Property(p => p.DeletedDate)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_ImportBillDetail_DeletedDate")
+                    )
+                );
+            modelBuilder.Entity<ImportBillDetail>()
+                .Property(p => p.ImportId)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_ImportBillDetail_ImportId")
+                    )
+                );
+            
+            // Order
+            modelBuilder.Entity<Order>()
+                .Property(p => p.DeletedDate)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_Order_DeletedDate")
+                    )
+                );
+                // OrderDetail
+            modelBuilder.Entity<OrderDetail>()
+                .Property(p => p.OrderId)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_OrderDetail_OrderId")
+                    )
+                );
+            
+            // User
+            modelBuilder.Entity<User>()
+                .Property(p => p.Username)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_User_Username")
+                    )
+                );
+            modelBuilder.Entity<User>()
+                .Property(p => p.DeletedDate)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_User_DeletedDate")
+                    )
+                );
+
+
+
         }
     }
 }

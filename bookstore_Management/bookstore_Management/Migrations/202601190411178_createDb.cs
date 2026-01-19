@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class CreateDb : DbMigration
+    public partial class createDb : DbMigration
     {
         public override void Up()
         {
@@ -39,7 +39,9 @@
                     })
                 .PrimaryKey(t => t.id)
                 .ForeignKey("dbo.Publishers", t => t.publisher_id)
-                .Index(t => t.publisher_id);
+                .Index(t => t.name, name: "IX_Book_Name")
+                .Index(t => t.publisher_id)
+                .Index(t => t.deleted_date, name: "IX_Book_DeletedDate");
             
             CreateTable(
                 "dbo.OrderDetails",
@@ -56,7 +58,7 @@
                 .ForeignKey("dbo.Books", t => t.book_id)
                 .ForeignKey("dbo.Orders", t => t.order_id)
                 .Index(t => t.book_id)
-                .Index(t => t.order_id);
+                .Index(t => t.order_id, name: "IX_OrderDetail_OrderId");
             
             CreateTable(
                 "dbo.Orders",
@@ -77,7 +79,8 @@
                 .ForeignKey("dbo.Customers", t => t.customer_id)
                 .ForeignKey("dbo.Staffs", t => t.staff_id)
                 .Index(t => t.staff_id)
-                .Index(t => t.customer_id);
+                .Index(t => t.customer_id)
+                .Index(t => t.deleted_date, name: "IX_Order_DeletedDate");
             
             CreateTable(
                 "dbo.Customers",
@@ -94,7 +97,9 @@
                         updated_date = c.DateTime(),
                         deleted_date = c.DateTime(),
                     })
-                .PrimaryKey(t => t.id);
+                .PrimaryKey(t => t.id)
+                .Index(t => t.name, name: "IX_Customer_Name")
+                .Index(t => t.deleted_date, name: "IX_Customer_DeletedDate");
             
             CreateTable(
                 "dbo.Staffs",
@@ -109,7 +114,9 @@
                         updated_date = c.DateTime(),
                         deleted_date = c.DateTime(),
                     })
-                .PrimaryKey(t => t.id);
+                .PrimaryKey(t => t.id)
+                .Index(t => t.name, name: "IX_Staff_Name")
+                .Index(t => t.deleted_date, name: "IX_Staff_DeletedDate");
             
             CreateTable(
                 "dbo.Publishers",
@@ -123,7 +130,9 @@
                         updated_date = c.DateTime(),
                         deleted_date = c.DateTime(),
                     })
-                .PrimaryKey(t => t.id);
+                .PrimaryKey(t => t.id)
+                .Index(t => t.name, name: "IX_Publishers_Name")
+                .Index(t => t.deleted_date, name: "IX_Publishers_DeletedDate");
             
             CreateTable(
                 "dbo.ImportBills",
@@ -140,7 +149,8 @@
                     })
                 .PrimaryKey(t => t.id)
                 .ForeignKey("dbo.Publishers", t => t.publisher_id)
-                .Index(t => t.publisher_id);
+                .Index(t => t.publisher_id)
+                .Index(t => t.deleted_date, name: "IX_ImportBill_DeletedDate");
             
             CreateTable(
                 "dbo.ImportBillDetails",
@@ -156,26 +166,33 @@
                 .ForeignKey("dbo.Books", t => t.book_id)
                 .ForeignKey("dbo.ImportBills", t => t.import_id)
                 .Index(t => t.book_id)
-                .Index(t => t.import_id);
+                .Index(t => t.import_id, name: "IX_ImportBillDetail_ImportId")
+                .Index(t => t.deleted_date, name: "IX_ImportBillDetail_DeletedDate");
             
             CreateTable(
                 "dbo.Users",
                 c => new
                     {
+                        user_id = c.String(nullable: false, maxLength: 10),
                         username = c.String(nullable: false, maxLength: 50),
                         password_hash = c.String(nullable: false, maxLength: 255),
-                        staff_id = c.String(maxLength: 100),
+                        staff_id = c.String(nullable: false, maxLength: 6),
                         role = c.Int(nullable: false),
                         created_date = c.DateTime(nullable: false),
                         updated_date = c.DateTime(),
                         deleted_date = c.DateTime(),
                     })
-                .PrimaryKey(t => t.username);
+                .PrimaryKey(t => t.user_id)
+                .ForeignKey("dbo.Staffs", t => t.staff_id)
+                .Index(t => t.username, name: "IX_User_Username")
+                .Index(t => t.staff_id)
+                .Index(t => t.deleted_date, name: "IX_User_DeletedDate");
             
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.Users", "staff_id", "dbo.Staffs");
             DropForeignKey("dbo.Books", "publisher_id", "dbo.Publishers");
             DropForeignKey("dbo.ImportBills", "publisher_id", "dbo.Publishers");
             DropForeignKey("dbo.ImportBillDetails", "import_id", "dbo.ImportBills");
@@ -184,14 +201,28 @@
             DropForeignKey("dbo.Orders", "staff_id", "dbo.Staffs");
             DropForeignKey("dbo.Orders", "customer_id", "dbo.Customers");
             DropForeignKey("dbo.OrderDetails", "book_id", "dbo.Books");
-            DropIndex("dbo.ImportBillDetails", new[] { "import_id" });
+            DropIndex("dbo.Users", "IX_User_DeletedDate");
+            DropIndex("dbo.Users", new[] { "staff_id" });
+            DropIndex("dbo.Users", "IX_User_Username");
+            DropIndex("dbo.ImportBillDetails", "IX_ImportBillDetail_DeletedDate");
+            DropIndex("dbo.ImportBillDetails", "IX_ImportBillDetail_ImportId");
             DropIndex("dbo.ImportBillDetails", new[] { "book_id" });
+            DropIndex("dbo.ImportBills", "IX_ImportBill_DeletedDate");
             DropIndex("dbo.ImportBills", new[] { "publisher_id" });
+            DropIndex("dbo.Publishers", "IX_Publishers_DeletedDate");
+            DropIndex("dbo.Publishers", "IX_Publishers_Name");
+            DropIndex("dbo.Staffs", "IX_Staff_DeletedDate");
+            DropIndex("dbo.Staffs", "IX_Staff_Name");
+            DropIndex("dbo.Customers", "IX_Customer_DeletedDate");
+            DropIndex("dbo.Customers", "IX_Customer_Name");
+            DropIndex("dbo.Orders", "IX_Order_DeletedDate");
             DropIndex("dbo.Orders", new[] { "customer_id" });
             DropIndex("dbo.Orders", new[] { "staff_id" });
-            DropIndex("dbo.OrderDetails", new[] { "order_id" });
+            DropIndex("dbo.OrderDetails", "IX_OrderDetail_OrderId");
             DropIndex("dbo.OrderDetails", new[] { "book_id" });
+            DropIndex("dbo.Books", "IX_Book_DeletedDate");
             DropIndex("dbo.Books", new[] { "publisher_id" });
+            DropIndex("dbo.Books", "IX_Book_Name");
             DropTable("dbo.Users");
             DropTable("dbo.ImportBillDetails");
             DropTable("dbo.ImportBills");

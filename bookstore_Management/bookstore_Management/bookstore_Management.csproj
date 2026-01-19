@@ -417,9 +417,9 @@
     <Compile Include="Helpers\ExcelExporter.cs" />
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
-    <Compile Include="Migrations\202601170425362_CreateDb.cs" />
-    <Compile Include="Migrations\202601170425362_CreateDb.Designer.cs">
-      <DependentUpon>202601170425362_CreateDb.cs</DependentUpon>
+    <Compile Include="Migrations\202601190411178_createDb.cs" />
+    <Compile Include="Migrations\202601190411178_createDb.Designer.cs">
+      <DependentUpon>202601190411178_createDb.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
@@ -646,8 +646,8 @@
     <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202601170425362_CreateDb.resx">
-      <DependentUpon>202601170425362_CreateDb.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202601190411178_createDb.resx">
+      <DependentUpon>202601190411178_createDb.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
