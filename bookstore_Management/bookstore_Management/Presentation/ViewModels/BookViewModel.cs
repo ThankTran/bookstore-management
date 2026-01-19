@@ -1,9 +1,6 @@
 using bookstore_Management.Core.Enums;
-using bookstore_Management.Core.Results;
-using bookstore_Management.Data.Context;
-using bookstore_Management.Data.Repositories.Implementations;
+using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
-using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using System;
 using System.Collections.ObjectModel;
@@ -11,8 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using bookstore_Management.Data.Repositories.Interfaces;
-using bookstore_Management.DTOs.Book.Responses;
+using bookstore_Management.DTOs.Book.Requests;
+using CommunityToolkit.Mvvm.Input;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
@@ -20,13 +17,15 @@ namespace bookstore_Management.Presentation.ViewModels
     {
         #region các khai báo
         //lấy service
-        private readonly IBookService _bookService;      
+        private readonly IBookService _bookService;
+        private readonly IPublisherRepository _publisherRepository;
+
         //dữ liệu để view binding
         private ObservableCollection<Book> _books;
         private ObservableCollection<Book> Books
         {
-            get { return _books; }
-            set
+            get => _books;
+            set 
             {
                 _books = value;
                 OnPropertyChanged();
@@ -61,7 +60,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         //keyword để tìm kiếm
         private string _searchKeyword;
-        public string SearchKeyword
+        private string SearchKeyword
         {
             get => _searchKeyword;
             set
@@ -80,17 +79,22 @@ namespace bookstore_Management.Presentation.ViewModels
         public ICommand EditBookCommand { get; set; }
 
         //command cho thao tác tìm kiếm - load lại
-        public ICommand SearchBookCommand { get; set; }
+        private ICommand SearchBookCommand { get; set; }
+        public ICommand LoadData { get; set; }
 
         //command cho in / xuất excel
         public ICommand ExportCommand { get; set; }
         public ICommand PrintCommand { get; set; }
+        
+        public IAsyncRelayCommand LoadBooksCommand  { get; }
         #endregion
-
+        
+        
         #region Load book from db
-        private async Task LoadBooksFromDatabase()
+        public async Task LoadBooksFromDatabase()
         {
-            var result = await _bookService.GetAllBooksAsync();
+            var result =  await _bookService.GetAllBooksAsync();
+
             if (!result.IsSuccess)
             {
                 // Xử lý lỗi, để sau này làm thông báo lỗi sau
@@ -99,159 +103,59 @@ namespace bookstore_Management.Presentation.ViewModels
             }
             if (result.Data == null) return; // Tránh lỗi khi Data rỗng
 
-            var books = result.Data.Select(MapDtoToBook);
+            var books = result.Data.Select(dto => new Book
+            {
+                BookId = dto.BookId,
+                Name = dto.Name,
+                Author = dto.Author,
+                Publisher = new Publisher
+                {
+                    Name = dto.PublisherName 
+                },
+                Category = dto.Category,
+                SalePrice = dto.SalePrice,
+                Stock = dto.StockQuantity,
+            });
 
             Books = new ObservableCollection<Book>(books);
         }
         #endregion
-
+        
+        
+        
         #region constructor
-        public BookViewModel()
+        public BookViewModel(IBookService bookService, IPublisherRepository publisherRepo)
         {
-            //_bookService = bookService ?? new BookService();
-            var context = new BookstoreDbContext();   
-            var unitOfWork = new  UnitOfWork(context);
-
-            _bookService = new BookService(unitOfWork);
-            
+            _bookService = bookService;
+            _publisherRepository = publisherRepo;
 
             Books = new ObservableCollection<Book>();
-            _ = LoadBooksFromDatabase();
 
-            #region AddCommand
-            AddBookCommand = new RelayCommand<object>(p => 
-            Task.Run(async () =>
-                {
-                var dialog = new Views.Dialogs.Books.AddBookDialog();
-                if (dialog.ShowDialog() == true)
-                {
-                    // Call service to add book to database
-                    var newBookDto = new DTOs.Book.Requests.CreateBookRequestDto
-                    {
-                        Name = dialog.BookName,
-                        Author = dialog.Author,
-                        Category = dialog.Category,
-                        SalePrice = dialog.SalePrice,
-                        PublisherName = dialog.cbPublisher.SelectedItem as string,
-                    };
-                    var result = await _bookService.CreateBookAsync(newBookDto);
-                    if (!result.IsSuccess)
-                    {
-                        MessageBox.Show("Lỗi khi thêm sách: " + result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                    // Reload books from database
-                    _ = LoadBooksFromDatabase();
-                }
-            }));
-            #endregion
-            #region RemoveCommand
-            RemoveBookCommand = new RelayCommand<object>((p) =>
-            Task.Run(async () =>
-                {
-                var book = p as Book;
-                if (book == null)
-                {
-                    MessageBox.Show("Vui lòng chọn sách để xóa");
-                    return;
-                }
+            LoadBooksCommand = new AsyncRelayCommand(LoadBooksFromDatabase);
+            
 
-                var confirmed = Views.Dialogs.Share.Delete.ShowForBook(
-                    bookName: book.Name,
-                    bookId: book.BookId
-                );
+            
 
-                if (!confirmed) return;
+            AddBookCommand = new AsyncRelayCommand(AddBookAsync);
+            
+            
 
-                var result = await _bookService.DeleteBookAsync(book.BookId);
-                if (!result.IsSuccess)
-                {
-                    MessageBox.Show("Lỗi khi xóa sách: " + result.ErrorMessage,
-                                    "Lỗi",
-                                    MessageBoxButton.OK,
-                                    MessageBoxImage.Error);
-                    return;
-                }
-                _ = LoadBooksFromDatabase();
-            }));
-            #endregion
-            #region EditCommand
-            EditBookCommand = new RelayCommand<object>((p) => 
-        Task.Run(async () =>
-            {
-                var dialog = new Views.Dialogs.Books.UpdateBook();
-                var book = p as Book;
-                if (book == null)
-                {
-                    MessageBox.Show("Vui lòng chọn sách để chỉnh sửa");
-                    return;
-                }
+            RemoveBookCommand = new AsyncRelayCommand(RemoveBookAsync);
+            EditBookCommand = new AsyncRelayCommand(EditBookAsync);
+            SearchBookCommand = new AsyncRelayCommand(SearchBookAsync);
+            LoadData = new AsyncRelayCommand(LoadBooksAsync);
 
-                //đưa dữ liệu cũ lên dialog
-                dialog.BookID = book.BookId;
-                dialog.BookName = book.Name;
-                dialog.Author = book.Author;
-                dialog.Category = book.Category;
-                //dialog.SalePrice = book.SalePrice;
-                //dialog.Publisher = book.Publisher;
-                // Giả sử Dialog có property SelectedPublisherId hoặc bạn gán trực tiếp cho ComboBox
-                //if (book.Publisher != null)
-                //{
-                //    dialog.SelectedPublisherId = book.Publisher.Id;
-                //    // ComboBox trong dialog sẽ tự nhảy đến NXB tương ứng dựa trên ID này
-                //}
-
-                if (dialog.ShowDialog() == true)
-                {
-                    var updateDto = new DTOs.Book.Requests.UpdateBookRequestDto
-                    {
-                        Name = book.Name,
-                        Author = book.Author,
-                        Category = book.Category,
-                        SalePrice = book.SalePrice,
-                        PublisherName = book.Publisher?.Name
-                    };
-
-                    var result = await _bookService.UpdateBookAsync(book.BookId, updateDto);
-                    if (!result.IsSuccess)
-                    {
-                        MessageBox.Show("Lỗi khi cập nhật / chỉnh sửa sách");
-                        return;
-                    }
-
-                    LoadBooksFromDatabase();
-                }
-            }));
-            #endregion
-            #region SearchCommand
-            SearchBookCommand = new RelayCommand<object>((p) =>
-            Task.Run( async () =>
-                {
-                if (string.IsNullOrEmpty(SearchKeyword))
-                {
-                    LoadBooksFromDatabase();//k nhập gì thì hiện lại list
-                    return;
-                }
-
-                var result = await _bookService.SearchByNameAsync(SearchKeyword);
-                if (!result.IsSuccess)
-                {
-                    MessageBox.Show("Lỗi khi tìm sách");
-                    return;
-                }
-                Books.Clear();
-                foreach (var b in result.Data)
-                {
-                    Books.Add(MapDtoToBook(b));
-                }
-            }));
-            #endregion
-
+            #region Print
             //chưa làm xong
-            #region PrintCommand 
             PrintCommand = new RelayCommand<object>((p) =>
             {
+                // Lấy danh sách đang hiển thị (Ví dụ: _datalist hoặc FilteredList)
+                var data = Books;
 
+                // Truyền data vào khi tạo cửa sổ
+                var dialog = new Views.Dialogs.Books.PrintBook(data);
+
+                dialog.ShowDialog();
             });
             #endregion
             #region ExportCommand
@@ -261,28 +165,171 @@ namespace bookstore_Management.Presentation.ViewModels
             });
             #endregion
 
-            
-
         }
         #endregion
         
-        #region helper class
-        private Book MapDtoToBook(BookDetailResponseDto dto)
+        #region AddCommand
+        private async Task AddBookAsync()
         {
-            return new Book
-            {
-                BookId = dto.BookId,
-                Name = dto.Name,
-                Author = dto.Author,
-                Publisher = new Publisher
-                {
-                    Name = dto.PublisherName
-                },
-                Category = dto.Category,
-                SalePrice = dto.SalePrice
-            };
-        }
+            var dialog = new Views.Dialogs.Books.AddBookDialog();
 
+            var publishers = await _publisherRepository.GetAllAsync();
+            var publisherNames = publishers.Select(x => x.Name).ToList();
+
+            dialog.LoadPublishers(publisherNames);
+
+            if (dialog.ShowDialog() == true)
+            {
+                var newBookDto = new CreateBookRequestDto
+                {
+                    Name = dialog.BookName,
+                    Author = dialog.Author,
+                    Category = dialog.Category,
+                    SalePrice = dialog.SalePrice,
+                    PublisherName = dialog.cbPublisher.SelectedItem as string,
+                };
+
+                var result = await _bookService.CreateBookAsync(newBookDto);
+
+                if (!result.IsSuccess)
+                {
+                    MessageBox.Show("Lỗi khi thêm sách: " + result.ErrorMessage,
+                        "Lỗi",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    return;
+                }
+
+                await LoadBooksFromDatabase();
+            }
+        }
+        #endregion
+
+        #region RemoveCommand
+        private async Task RemoveBookAsync()
+        {
+            if (SelectedBook  == null)
+            {
+                MessageBox.Show("Vui lòng chọn sách để xóa");
+                return;
+            }
+
+            var confirmed = Views.Dialogs.Share.Delete.ShowForBook(
+                bookName: SelectedBook .Name,
+                bookId: SelectedBook .BookId
+            );
+
+            if (!confirmed) return;
+
+            var result = await _bookService.DeleteBookAsync(SelectedBook .BookId);
+            if (!result.IsSuccess)
+            {
+                MessageBox.Show("Lỗi khi xóa sách: " + result.ErrorMessage,
+                    "Lỗi",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+            await LoadBooksFromDatabase();
+        }
+        #endregion
+        
+        #region EditCommand
+
+        private async Task EditBookAsync()
+        {
+            var dialog = new Views.Dialogs.Books.UpdateBook();
+            var book = SelectedBook;
+            if (book == null)
+            {
+                MessageBox.Show("Vui lòng chọn sách để chỉnh sửa");
+                return;
+            }
+            
+            var publishers = await _publisherRepository.GetAllAsync();
+            var publisherNames = publishers.Select(x => x.Name).ToList();
+
+            // Nạp danh sách vào trước
+            dialog.LoadPublishers(publisherNames);
+            var safeSalePrice = book.SalePrice ?? 0;
+            
+            //đưa dữ liệu cũ lên dialog
+            
+            dialog.BookID = book.BookId;
+            dialog.BookName = book.Name;
+            dialog.Author = book.Author;
+            dialog.Category = book.Category;
+            dialog.SalePrice = safeSalePrice;
+            dialog.Publisher = book.Publisher?.Name;
+
+            if (dialog.ShowDialog() == true)
+            {
+                var updateDto = new UpdateBookRequestDto
+                {
+                    Name = dialog.Name,
+                    Author = dialog.Author,
+                    Category = dialog.Category,
+                    SalePrice = dialog.SalePrice,
+                    PublisherName = dialog.Publisher
+                };
+
+                var result = await _bookService.UpdateBookAsync(book.BookId, updateDto);
+                if (!result.IsSuccess)
+                {
+                    MessageBox.Show("Lỗi khi cập nhật / chỉnh sửa sách");
+                    return;
+                }
+
+                await LoadBooksFromDatabase();
+            }
+        }
+        #endregion
+
+        #region SearchBookCommand
+
+        private async Task SearchBookAsync()
+        {
+            if (string.IsNullOrEmpty(SearchKeyword))
+            {
+                await LoadBooksFromDatabase();//k nhập gì thì hiện lại list
+                return;
+            }
+
+            var result = await _bookService.SearchByNameAsync(SearchKeyword);
+            
+            
+            if (!result.IsSuccess)
+            {
+                MessageBox.Show("Lỗi khi tìm sách");
+                return;
+            }
+            if (result.Data == null)
+                return;
+            
+            Books = new ObservableCollection<Book>(
+                result.Data.Select(b => new Book
+                {
+                    BookId = b.BookId,
+                    Name = b.Name,
+                    Author = b.Author,
+                    Category = b.Category,
+                    SalePrice = b.SalePrice,
+                    Publisher = new Publisher
+                    {
+                        Name = b.PublisherName
+                    },
+                })
+            );
+        }
+        #endregion
+
+        #region  loadDataCommand
+
+        private async Task LoadBooksAsync()
+        {
+            SearchKeyword = string.Empty;
+            await LoadBooksFromDatabase();
+        }
         #endregion
     }
 }

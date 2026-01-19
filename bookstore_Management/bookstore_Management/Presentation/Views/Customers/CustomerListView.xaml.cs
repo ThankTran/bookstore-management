@@ -26,7 +26,6 @@ namespace bookstore_Management.Views.Customers
             //);
             var _viewModel = new CustomerViewModel();
             this.DataContext = _viewModel;
-            //LoadSampleData();
         }
 
         private void dgCustomers_MouseDoubleClick(object sender, MouseButtonEventArgs e)

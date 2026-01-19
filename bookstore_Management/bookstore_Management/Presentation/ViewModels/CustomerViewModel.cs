@@ -62,6 +62,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         //command cho thao tác tìm kiếm - load lại
         public ICommand SearchCusCommand { get; set; }
+        public ICommand LoadData { get; set; }
 
         //command cho in / xuất excel
         public ICommand ExportCommand { get; set; }
@@ -120,6 +121,7 @@ namespace bookstore_Management.Presentation.ViewModels
                         Name=dialog.CustomerName,
                         Address=dialog.Address,
                         Email=dialog.Email,
+                        Phone=dialog.Phone,
                     };
                     var result = _customerService.AddCustomerAsync(newCusDto);
                     if (!result.Result.IsSuccess)
@@ -145,6 +147,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 dialog.CustomerName = cus.Name;
                 dialog.Phone = cus.Phone;
                 dialog.Email = cus.Email;
+                dialog.Address = cus.Address;
                 if (dialog.ShowDialog() == true)
                 {
                     var updateCusDto = new DTOs.Customer.Requests.UpdateCustomerRequestDto()
@@ -152,11 +155,13 @@ namespace bookstore_Management.Presentation.ViewModels
                         Name = dialog.CustomerName,
                         Address = dialog.Address,
                         Email = dialog.Email,
+                        Phone = dialog.Phone,
                     };
                     var result = await _customerService.UpdateCustomerAsync(cus.CustomerId, updateCusDto);
                     if (!result.IsSuccess)
                     {
-                        MessageBox.Show("Lỗi khi sửa khách hàng");
+                        // SỬA DÒNG NÀY: In ra result.ErrorMessage để biết DB đang từ chối vì lý do gì
+                        MessageBox.Show($"Chi tiết lỗi: {result.ErrorMessage}", "Lỗi thêm khách hàng", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                     _ = LoadCusFromDatabase();
@@ -178,7 +183,10 @@ namespace bookstore_Management.Presentation.ViewModels
                 var result = _customerService.DeleteCustomerAsync(cus.CustomerId);
                 if (!result.Result.IsSuccess)
                 {
-                    MessageBox.Show("Lỗi khi xóa khách hàng");
+                    MessageBox.Show($"Không thể xóa khách hàng.\nChi tiết lỗi: {result.ErrorMessage}",
+                        "Lỗi xóa dữ liệu",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                     return;
                 }
                 _ = LoadCusFromDatabase();
@@ -214,6 +222,13 @@ namespace bookstore_Management.Presentation.ViewModels
                         Email = c.Email,
                     });
                 }
+            });
+            #endregion
+            #region LoadDataCommand
+            LoadData = new RelayCommand<object>((p) =>
+            {
+                SearchKeyword = string.Empty;
+                LoadCusFromDatabase();
             });
             #endregion
             #region Print & Export

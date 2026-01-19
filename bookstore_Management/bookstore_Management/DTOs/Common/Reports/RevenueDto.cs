@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace bookstore_Management.Presentation.ViewModels
+namespace bookstore_Management.DTOs.Common.Reports
 {
-    internal class PaymentViewModel : BaseViewModel
+    internal class RevenueDto
     {
-
     }
 }

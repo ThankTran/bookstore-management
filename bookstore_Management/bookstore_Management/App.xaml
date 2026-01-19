@@ -19,6 +19,15 @@
             <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
             <converters:InverseCountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
             <converters:InverseCountToVisibilityConverter x:Key="InverseCountToVisibilityConverter"/>
+
+            <!-- Chart Colors -->
+            <SolidColorBrush x:Key="Chart1Brush" Color="#B8B3E6"/>
+            <SolidColorBrush x:Key="Chart2Brush" Color="#9B95D4"/>
+            <SolidColorBrush x:Key="Chart3Brush" Color="#8680C8"/>
+            <SolidColorBrush x:Key="Chart4Brush" Color="#6B65BC"/>
+            <SolidColorBrush x:Key="Chart5Brush" Color="#5650B0"/>
+            <SolidColorBrush x:Key="PieChartMemberBrush" Color="#A8A3D9"/>
+            <SolidColorBrush x:Key="PieChartRegularBrush" Color="#7B75C0"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

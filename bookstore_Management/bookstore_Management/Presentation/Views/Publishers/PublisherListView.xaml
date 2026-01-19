@@ -191,6 +191,7 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Cursor="Hand"
+                                Command="{Binding LoadData}"
                                 Visibility="{Binding ElementName=txtSearch, Path=Text.Length, Converter={StaticResource CountToVisibilityConverter}}">
                             <TextBlock Text="✕" 
                                        Foreground="#999999"
@@ -283,7 +284,7 @@
 
                             <!-- Mã NXB -->
                             <DataGridTextColumn Header="Mã NXB" 
-                                                Binding="{Binding MaNXB}" 
+                                                Binding="{Binding Id}" 
                                                 Width="110"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>

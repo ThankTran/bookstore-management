@@ -12,22 +12,27 @@ namespace bookstore_Management.Models
     public class User
     {
         [Key]
-        [Required] 
+        [Required]
+        [Column("user_id")]
+        [StringLength(10)]
+        public string UserId { get; set; }
+
+        [Required]
         [Column("username")]
-        [StringLength(50)] 
+        [StringLength(50)]
         public string Username { get; set; }
 
-        [Required] 
+        [Required]
         [Column("password_hash")]
-        [StringLength(255)] 
+        [StringLength(255)]
         public string PasswordHash { get; set; }
 
-        
-        [StringLength(100)] 
+
+        [StringLength(100)]
         [Column("staff_id")]
         public string StaffId { get; set; }
 
-        [Required] 
+        [Required]
         [Column("role")]
         public UserRole UserRole { get; set; } // enum: Admin, Staff, Customer
 
@@ -41,5 +46,8 @@ namespace bookstore_Management.Models
         [Column("deleted_date")]
         public DateTime? DeletedDate { get; set; }
 
+        // navigation properties
+        public virtual Staff staff { get; set; }
+
     }
-}    
+}
