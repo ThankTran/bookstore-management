@@ -1,6 +1,7 @@
 ﻿using bookstore_Management.Core.Enums;
 using bookstore_Management.DTOs.Common.Reports;
 using bookstore_Management.Services.Interfaces;
+using DocumentFormat.OpenXml.Bibliography;
 using LiveCharts;
 using LiveCharts.Wpf;
 using System;
@@ -21,12 +22,17 @@ namespace bookstore_Management.Presentation.ViewModels
         public string[] RevenueLabels { get; set; }
         public Func<double, string> MoneyFormatter { get; set; }
 
+
         // Thể loại / sách bán chạy
         public SeriesCollection CategorySeries { get; set; }
         public string[] CategoryLabels { get; set; }
 
         // Khách hàng
         public SeriesCollection CustomerSeries { get; set; }
+
+        //Doanh thu
+        public SeriesCollection ProfitSeries { get; set; }
+        public string[] ProfitLabels { get; set; }
 
         #endregion
 
@@ -98,6 +104,9 @@ namespace bookstore_Management.Presentation.ViewModels
         #region === COMMANDS ===
 
         public ICommand SelectTimeCommand { get; set; }
+        public ICommand RefreshCommand { get; set; }
+        public ICommand ShowOutOfStockDetailCommand { get; }
+
 
         #endregion
 
@@ -110,18 +119,39 @@ namespace bookstore_Management.Presentation.ViewModels
             RevenueSeries = new SeriesCollection();
             CategorySeries = new SeriesCollection();
             CustomerSeries = new SeriesCollection();
+            ProfitSeries = new SeriesCollection();
 
             MoneyFormatter = value => value.ToString("N0");
 
             SelectTimeCommand = new RelayCommand<TimeRange>(p =>
             {
                 SelectedTimeRange = p;
+                
             });
 
-            SelectedTimeRange = TimeRange.Today;
+
+            RefreshCommand = new RelayCommand<TimeRange>(p =>
+            {
+
+            });
+
+            ShowOutOfStockDetailCommand = new RelayCommand<object>(p =>
+            {
+                OpenOutOfStockDetail();
+            });
+
         }
 
         #endregion
+
+        private void OpenOutOfStockDetail()
+        {
+            MessageBox.Show($"Có {LowStockBooks} sách sắp hết hàng",
+                            "Tồn kho thấp",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
+        }
+
 
         #region === LOAD DATA ===
 
@@ -130,6 +160,8 @@ namespace bookstore_Management.Presentation.ViewModels
             LoadCategoryChart();
             LoadCustomerChart();
             LoadSummaryNumbers();
+            LoadRevenueChart();
+            LoadDoanhThuChart();
         }
 
         #endregion
@@ -192,14 +224,16 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 Title = "Thành viên",
                 Values = new ChartValues<int> { Member },
-                DataLabels = true
+                DataLabels = true,
+                Fill = (Brush)Application.Current.FindResource("PieChartMemberBrush")
             });
 
             CustomerSeries.Add(new PieSeries
             {
                 Title = "Vãng lai",
                 Values = new ChartValues<int> { WalkIn },
-                DataLabels = true
+                DataLabels = true,
+                Fill = (Brush)Application.Current.FindResource("PieChartRegularBrush")
             });
 
             OnPropertyChanged(nameof(CustomerSeries));
@@ -255,13 +289,76 @@ namespace bookstore_Management.Presentation.ViewModels
                     To = DateTime.Now;
                     break;
 
-                case TimeRange.All:
-                    From = DateTime.Now.AddYears(-2);
+                case TimeRange.ThePast30Days:
+                    From = DateTime.Now.AddDays(-30);
                     To = DateTime.Now;
                     break;
             }
         }
 
+        #endregion
+
+        #region === REVENUE TREND ===
+        public void LoadRevenueChart()
+        {
+            var result = _reportService.GetRevenue(From, To);
+
+            if (!result.IsSuccess || result.Data == null) return;
+
+            var data = result.Data.ToList();
+
+            RevenueSeries.Clear();
+
+            RevenueSeries.Add(new LineSeries
+            {
+                Title = "Doanh Thu (triệu)",
+                Values = new ChartValues<double>(data.Select(x => (double)x / 1_000_000)),
+
+                Stroke = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF9800")),
+                Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFF3E0")),
+
+                StrokeThickness = 2,
+                LineSmoothness = 0.7,
+                PointGeometrySize = 5
+            });
+
+            RevenueLabels = Enumerable.Range(0, data.Count).Select(i => $"Ngày {i}").ToArray();
+
+            OnPropertyChanged(nameof(RevenueSeries));
+            OnPropertyChanged(nameof(RevenueLabels));
+
+        }
+        #endregion
+
+        #region === dOANH THU TREND ===
+        public void LoadDoanhThuChart()
+        {
+            var result = _reportService.GetImport(From, To);
+            if (!result.IsSuccess || result.Data == null) return;
+
+            var data = result.Data.ToList();
+
+            ProfitSeries.Clear();
+
+            ProfitSeries.Add(new LineSeries
+            {
+                Title = "Tổng chi /ngày (triệu)",
+                Values = new ChartValues<double>(data.Select(x => (double)x / 1_000_000)),
+
+                Stroke = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4CAF50")),
+                Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#334CAF50")),
+
+                StrokeThickness = 2,
+                LineSmoothness = 0.7,
+                PointGeometrySize = 5
+            });
+
+            ProfitLabels = Enumerable.Range(0, data.Count).Select(i => $"Ngày {i}").ToArray();
+
+            OnPropertyChanged(nameof(ProfitSeries));
+            OnPropertyChanged(nameof(ProfitLabels));
+
+        }
         #endregion
     }
 }

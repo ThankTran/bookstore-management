@@ -25,10 +25,20 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Accounts
         {
             InitializeComponent();
 
+
             // Generate temporary book ID
             tbAccountID.Text = "Tự động tạo khi lưu";
         }
 
+
+        public void LoadStaffId(List<string> staffIds)
+        {
+            cbStaffId.ItemsSource = staffIds;
+            if (staffIds != null && staffIds.Count > 0)
+            {
+                cbStaffId.SelectedIndex = 0;
+            }
+        }
         #region Properties for Data Binding
 
         public string AccountID

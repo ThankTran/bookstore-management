@@ -10,7 +10,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Presentation/AppResources/Styles/StatisticStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>      
+        </ResourceDictionary>
 
 
     </UserControl.Resources>
@@ -43,170 +43,181 @@
                     </StackPanel>
 
                     <!-- Refresh Button -->
-                    <Border Background="{StaticResource PrimaryBrush}"
+                    <!--<Border Background="{StaticResource PrimaryBrush}"
                             CornerRadius="10"
                             Padding="15,8"
                             Cursor="Hand"
                             HorizontalAlignment="Right"
                             Margin="0,0,0,0"
                             Height="35">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-                            <TextBlock Text="🔄" 
-                                       FontSize="14"
-                                       Margin="0,0,5,0"/>
-                            <TextBlock Text="Làm mới"
-                                       FontSize="13"
-                                       Foreground="White"
-                                       FontWeight="SemiBold"
-                                       VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
+                        --><!--<Button BorderThickness ="0" Background ="Transparent">
+                            --><!--Command ="{Binding RefreshCommand}"--><!--
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+
+                                <TextBlock Text="🔄"
+                                           FontSize="14"
+                                           Margin="0,0,5,0"/>
+                                <TextBlock Text="Làm mới"
+                                           FontSize="13"
+                                           Foreground="White"
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+
+                            </StackPanel>
+                        </Button>--><!--
+                    </Border>-->
                 </Grid>
 
-                <!-- Time Filter Section -->
                 <Border Grid.Row="1"
                         Background="White"
                         CornerRadius="15"
                         BorderBrush="#E0E0E0"
                         BorderThickness="1"
                         Padding="20">
-                    <Border.Effect>
-                        <DropShadowEffect Color="#000000" BlurRadius="10" ShadowDepth="2" Opacity="0.08"/>
-                    </Border.Effect>
-
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-
-                        <!-- Quick Filter Buttons -->
                         <StackPanel Grid.Column="0" 
-                                    Orientation="Horizontal"
-                                    VerticalAlignment="Center">
+                                 Orientation="Horizontal"
+                                 VerticalAlignment="Center">
                             <TextBlock Text="📅" 
-                                       FontSize="20"
-                                       VerticalAlignment="Center"
-                                       Margin="0,0,15,0"/>
+                                    FontSize="20"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,15,0"/>
                             <TextBlock Text="Xem nhanh:" 
-                                       FontSize="13"
-                                       Foreground="#666666"
-                                       FontWeight="SemiBold"
-                                       VerticalAlignment="Center"
-                                       Margin="0,0,10,0"/>
+                                    FontSize="13"
+                                    Foreground="#666666"
+                                    FontWeight="SemiBold"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,10,0"/>
 
-                            <!-- Today Button -->
-                            <Button BorderThickness="0"
-                                    Background="Transparent"
-                                    Command="{Binding SelectTimeCommand}"
-                                    CommandParameter="{x:Static enums:TimeRange.Today}">
-                                <Border x:Name="btnToday"
-                                        Background="{StaticResource PrimaryBrush}"
-                                        CornerRadius="8"
-                                        Padding="12,6"
-                                        Margin="0,0,8,0"
-                                        Cursor="Hand">
-                                
-                                        <TextBlock Text="Hôm nay"
-                                                FontSize="12"
-                                                Foreground="White"
-                                                FontWeight="SemiBold"/>
-                           
+
+                            <Button Command="{Binding SelectTimeCommand}" 
+                                    CommandParameter="{x:Static enums:TimeRange.Today}"
+                                    Background="Transparent" BorderThickness="0">
+                                <Border CornerRadius="8" Padding="12,6" Margin="0,0,8,0" Cursor="Hand">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#F5F5F5"/>
+                                            <Setter Property="TextElement.Foreground" Value="#666666"/>
+
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedTimeRange}" Value="{x:Static enums:TimeRange.Today}">
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                                    <Setter Property="TextElement.Foreground" Value="White"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+
+                                    <TextBlock Text="Hôm nay" FontSize="12" FontWeight="SemiBold"/>
                                 </Border>
                             </Button>
 
-                            <!-- This Week -->
-                            <Button BorderThickness="0"
-                                        Background="Transparent"
-                                        Command="{Binding SelectTimeCommand}"
-                                        CommandParameter="{x:Static enums:TimeRange.ThisWeek}">
-                                    <Border x:Name="btnThisWeek"
-                                        Background="#F5F5F5"
-                                        CornerRadius="8"
-                                        Padding="12,6"
-                                        Margin="0,0,8,0"
-                                        Cursor="Hand">
-
-                                        <TextBlock Text="Tuần này"
-                                               FontSize="12"
-                                               Foreground="#666666"
-                                               FontWeight="SemiBold"/>
-
+                            <Button Command="{Binding SelectTimeCommand}" 
+                                    CommandParameter="{x:Static enums:TimeRange.ThisWeek}"
+                                    Background="Transparent" BorderThickness="0">
+                                <Border CornerRadius="8" Padding="12,6" Margin="0,0,8,0" Cursor="Hand">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#F5F5F5"/>
+                                            <Setter Property="TextElement.Foreground" Value="#666666"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedTimeRange}" Value="{x:Static enums:TimeRange.ThisWeek}">
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                                    <Setter Property="TextElement.Foreground" Value="White"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="Tuần này" FontSize="12" FontWeight="SemiBold"/>
                                 </Border>
                             </Button>
 
-                            <Button BorderThickness="0"
-                                    Background="Transparent"
-                                    Command="{Binding SelectTimeCommand}"
-                                    CommandParameter="{x:Static enums:TimeRange.ThisMonth}">
-                                <Border x:Name="btnThisMonth"
-                                    Background="#F5F5F5"
-                                    CornerRadius="8"
-                                    Padding="12,6"
-                                    Margin="0,0,8,0"
-                                    Cursor="Hand">
-                                    <TextBlock Text="Tháng này"
-                                           FontSize="12"
-                                           Foreground="#666666"
-                                           FontWeight="SemiBold"/>
+                            <Button Command="{Binding SelectTimeCommand}" 
+                                    CommandParameter="{x:Static enums:TimeRange.ThisMonth}"
+                                    Background="Transparent" BorderThickness="0">
+                                <Border CornerRadius="8" Padding="12,6" Margin="0,0,8,0" Cursor="Hand">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#F5F5F5"/>
+                                            <Setter Property="TextElement.Foreground" Value="#666666"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedTimeRange}" Value="{x:Static enums:TimeRange.ThisMonth}">
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                                    <Setter Property="TextElement.Foreground" Value="White"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="Tháng này" FontSize="12" FontWeight="SemiBold"/>
                                 </Border>
                             </Button>
 
-                            <Button BorderThickness="0"
-                                Background="Transparent"
-                                Command="{Binding SelectTimeCommand}"
-                                    CommandParameter="{x:Static enums:TimeRange.ThisQuarter}">
-                                <Border x:Name="btnThisQuarter"
-                                    Background="#F5F5F5"
-                                    CornerRadius="8"
-                                    Padding="12,6"
-                                    Margin="0,0,8,0"
-                                    Cursor="Hand">
-                                    <TextBlock Text="Quý này"
-                                            FontSize="12"
-                                            Foreground="#666666"
-                                            FontWeight="SemiBold"/>
+                            <Button Command="{Binding SelectTimeCommand}" 
+                                      CommandParameter="{x:Static enums:TimeRange.ThisQuarter}"
+                                      Background="Transparent" BorderThickness="0">
+                                <Border CornerRadius="8" Padding="12,6" Margin="0,0,8,0" Cursor="Hand">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#F5F5F5"/>
+                                            <Setter Property="TextElement.Foreground" Value="#666666"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedTimeRange}" Value="{x:Static enums:TimeRange.ThisQuarter}">
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                                    <Setter Property="TextElement.Foreground" Value="White"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="Quý này" FontSize="12" FontWeight="SemiBold"/>
                                 </Border>
                             </Button>
 
-                            <Button BorderThickness="0"
-                                    Background="Transparent"
-                                    Command="{Binding SelectTimeCommand}"
-                                    CommandParameter="{x:Static enums:TimeRange.ThisYear}">
-                                <Border x:Name="btnThisYear"
-                                    Background="#F5F5F5"
-                                    CornerRadius="8"
-                                    Padding="12,6"
-                                    Margin="0,0,8,0"
-                                    Cursor="Hand">
-                                    <TextBlock Text="Năm nay"
-                                           FontSize="12"
-                                           Foreground="#666666"
-                                           FontWeight="SemiBold"/>
+                            <Button Command="{Binding SelectTimeCommand}" 
+                                      CommandParameter="{x:Static enums:TimeRange.ThisYear}"
+                                      Background="Transparent" BorderThickness="0">
+                                <Border CornerRadius="8" Padding="12,6" Margin="0,0,8,0" Cursor="Hand">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#F5F5F5"/>
+                                            <Setter Property="TextElement.Foreground" Value="#666666"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedTimeRange}" Value="{x:Static enums:TimeRange.ThisYear}">
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                                    <Setter Property="TextElement.Foreground" Value="White"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="Năm này" FontSize="12" FontWeight="SemiBold"/>
                                 </Border>
                             </Button>
 
-                            <Button BorderThickness="0"
-                                    Background="Transparent"
-                                    Command="{Binding SelectTimeCommand}"
-                                    CommandParameter="{x:Static enums:TimeRange.ThePast30Days}">
-                                <Border x:Name="btnLast30Days"
-                                    Background="#F5F5F5"
-                                    CornerRadius="8"
-                                    Padding="12,6"
-                                    Cursor="Hand">
-                                    <TextBlock Text="30 ngày qua"
-                                           FontSize="12"
-                                           Foreground="#666666"
-                                           FontWeight="SemiBold"/>
+                            <Button Command="{Binding SelectTimeCommand}" 
+                                      CommandParameter="{x:Static enums:TimeRange.ThePast30Days}"
+                                      Background="Transparent" BorderThickness="0">
+                                <Border CornerRadius="8" Padding="12,6" Margin="0,0,8,0" Cursor="Hand">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#F5F5F5"/>
+                                            <Setter Property="TextElement.Foreground" Value="#666666"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedTimeRange}" Value="{x:Static enums:TimeRange.ThePast30Days}">
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                                    <Setter Property="TextElement.Foreground" Value="White"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="30 ngày qua" FontSize="12" FontWeight="SemiBold"/>
                                 </Border>
                             </Button>
-                            
-                            
-                            
-                        </StackPanel>            
-                      
+
+                        </StackPanel>
                     </Grid>
                 </Border>
             </Grid>
@@ -476,6 +487,10 @@
                                 Padding="8,4"
                                 HorizontalAlignment="Left"
                                 Cursor="Hand">
+                                <Border.InputBindings>
+                                    <MouseBinding Gesture="LeftClick"
+                                                 Command="{Binding ShowOutOfStockDetailCommand}"/>
+                                </Border.InputBindings>
                                 <TextBlock Text="Xem chi tiết →"
                                        FontSize="11"
                                        Foreground="#F44336"
@@ -513,10 +528,10 @@
                                            VerticalAlignment="Center"/>
                             </Border>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Xu hướng Doanh thu" 
+                                <TextBlock Text="Doanh thu " 
                                            Style="{StaticResource CardHeaderText}"
                                            Margin="0,0,0,2"/>
-                                <TextBlock Text="30 ngày gần nhất"
+                                <TextBlock Text="Tổng thu / ngày"
                                            FontSize="12"
                                            Foreground="#999999"/>
                             </StackPanel>
@@ -562,7 +577,7 @@
                                            VerticalAlignment="Center"/>
                             </Border>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Thể loại bán chạy" 
+                                <TextBlock Text="Sách bán chạy" 
                                            Style="{StaticResource CardHeaderText}"
                                            Margin="0,0,0,2"/>
                                 <TextBlock Text="Top 5"
@@ -571,102 +586,11 @@
                             </StackPanel>
                         </StackPanel>
 
-                        <!-- Bar Chart -->
-                        <!--<lvc:CartesianChart Grid.Row="1" 
-                                            Series="{Binding CategorySeries}"
-                                            Height="200"
-                                            Margin="0,10,0,10">
-                            <lvc:CartesianChart.AxisY>
-                                <lvc:Axis ShowLabels="False"/>
-                            </lvc:CartesianChart.AxisY>
-                            <lvc:CartesianChart.AxisX>
-                                <lvc:Axis ShowLabels="False"/>
-                            </lvc:CartesianChart.AxisX>
-                        </lvc:CartesianChart>-->
- 
-
-
-
-                        <!-- Legend -->
-                        <!--<WrapPanel Grid.Row="2" 
-                                   HorizontalAlignment="Center"
-                                   Margin="0,10,0,0">
-                            <StackPanel Orientation="Horizontal" Margin="5">
-                                <Ellipse Style="{StaticResource SmallLegendDot}" 
-                                         Fill="{StaticResource Chart1Brush}"/>
-                                <TextBlock Text="Thiếu nhi" 
-                                           Style="{StaticResource LegendSmallText}"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="5">
-                                <Ellipse Style="{StaticResource SmallLegendDot}" 
-                                         Fill="{StaticResource Chart2Brush}"/>
-                                <TextBlock Text="Văn học" 
-                                           Style="{StaticResource LegendSmallText}"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="5">
-                                <Ellipse Style="{StaticResource SmallLegendDot}" 
-                                         Fill="{StaticResource Chart3Brush}"/>
-                                <TextBlock Text="Kinh tế" 
-                                           Style="{StaticResource LegendSmallText}"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="5">
-                                <Ellipse Style="{StaticResource SmallLegendDot}" 
-                                         Fill="{StaticResource Chart4Brush}"/>
-                                <TextBlock Text="Tâm lý" 
-                                           Style="{StaticResource LegendSmallText}"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="5">
-                                <Ellipse Style="{StaticResource SmallLegendDot}" 
-                                         Fill="{StaticResource Chart5Brush}"/>
-                                <TextBlock Text="Giáo khoa" 
-                                           Style="{StaticResource LegendSmallText}"/>
-                            </StackPanel>
-                        </WrapPanel>-->
-                        <!--<ItemsControl Grid.Row="2"
-                             ItemsSource="{Binding CategoryLegends}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel HorizontalAlignment="Center"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" Margin="5">
-                                        <Ellipse Style="{StaticResource SmallLegendDot}"
-                                                   Fill="{Binding Color}"/>
-                                        <TextBlock Text="{Binding CategoryName}"
-                                                    Style="{StaticResource LegendSmallText}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>-->
-                        <!--<ItemsControl Grid.Row="2"
-                                HorizontalAlignment="Center"
-                                Margin="0,10,0,0"
-                                ItemsSource="{Binding Top5Categories}">   
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" Margin="5">
-                                        <Ellipse Style="{StaticResource SmallLegendDot}"
-                                                Fill="{Binding Color}"/>
-                                        <TextBlock Text="{Binding CategoryName}"
-                                                Style="{StaticResource LegendSmallText}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>-->
                         <lvc:CartesianChart Grid.Row="1"
                             Series="{Binding CategorySeries}"
                             LegendLocation="Bottom"
                             Height="200"
-                            Margin="0,10,0,10"> 
+                            Margin="0,10,0,10">
 
                             <lvc:CartesianChart.AxisY>
                                 <lvc:Axis ShowLabels="False"/>
@@ -677,9 +601,7 @@
                             </lvc:CartesianChart.AxisX>
 
                         </lvc:CartesianChart>
-
-
-
+                        
                     </Grid>
                 </Border>
             </Grid>
@@ -820,10 +742,10 @@
                                            VerticalAlignment="Center"/>
                             </Border>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Lợi nhuận &amp; Chi phí" 
+                                <TextBlock Text="Chi phí" 
                                            Style="{StaticResource CardHeaderText}"
                                            Margin="0,0,0,2"/>
-                                <TextBlock Text="Tháng này"
+                                <TextBlock Text="Tổng chi / ngày"
                                            FontSize="12"
                                            Foreground="#999999"/>
                             </StackPanel>

@@ -31,8 +31,15 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             // Generate temporary book ID
             tbBookID.Text = "Tự động tạo khi lưu";
         }
+        public void LoadPublishers(System.Collections.IEnumerable publishers)
+        {
+            cbPublisher.ItemsSource = publishers;
+            cbPublisher.SelectedIndex = 0;
+        }
+
 
         #region Properties for Data Binding
+
 
         public string BookID
         {

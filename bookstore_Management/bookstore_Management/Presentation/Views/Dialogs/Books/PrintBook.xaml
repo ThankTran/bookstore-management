@@ -70,6 +70,7 @@
                             ToolTip="Đóng">
                             <Button Background="Transparent"
                                 BorderThickness="0"
+                                Click="Close_Click"
                                 Cursor="Hand">
                                 <TextBlock Text="✕" 
                                        FontSize="16"

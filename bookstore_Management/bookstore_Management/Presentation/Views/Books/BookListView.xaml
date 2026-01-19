@@ -4,7 +4,7 @@
              Background="{StaticResource BackgroundBrush}">
 
     <Border Background="{StaticResource BackgroundBrush}"
-            CornerRadius="0,0,10,0"
+            CornerRadius="0,0,15,0"
             ClipToBounds="True">
 
         <Grid Margin="20">
@@ -206,10 +206,10 @@
             <!-- Data Grid Section -->
             <Border Grid.Row="2"
                     Background="White"
-                    CornerRadius="15"
                     BorderBrush="#E0E0E0"
                     BorderThickness="1"
-                    Padding="0">
+                    Padding="0"
+                    CornerRadius="15">
                 
                 <Border.Effect>
                     <DropShadowEffect Color="#000000" 
@@ -329,7 +329,7 @@
 
                             <!-- Nhà xuất bản -->
                             <DataGridTextColumn Header="Nhà xuất bản" 
-                                                Binding="{Binding Puplisher}" 
+                                                Binding="{Binding Publisher.Name}" 
                                                 Width="Auto"
                                                 IsReadOnly="True"
                                                 ElementStyle="{StaticResource CenterAlignedCell}"/>

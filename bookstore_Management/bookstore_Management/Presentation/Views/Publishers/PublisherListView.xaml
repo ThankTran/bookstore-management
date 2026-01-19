@@ -83,6 +83,7 @@
                                 BorderThickness="0"
                                 Padding="12,8"
                                 ToolTip="In danh sách"
+                                Command="{Binding PrintCommand}"
                                 Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Presentation/AppResources/Images/Icons/Functions/print.png" 
@@ -284,7 +285,7 @@
 
                             <!-- Mã NXB -->
                             <DataGridTextColumn Header="Mã NXB" 
-                                                Binding="{Binding MaNXB}" 
+                                                Binding="{Binding Id}" 
                                                 Width="110"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>

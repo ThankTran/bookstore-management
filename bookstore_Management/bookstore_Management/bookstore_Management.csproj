@@ -41,6 +41,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Printing" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -157,6 +161,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\PrintCustomer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Customers\UpdateCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -177,11 +185,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Invoices\ExportExcelInvoice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Invoices\PrintInvoice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\Views\Dialogs\Invoices\SelectBookDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\Views\Dialogs\Payment\ExportExcelPayment.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Payment\Pay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -371,7 +391,6 @@
     <Compile Include="DTOs\Book\Responses\BookDetailResponseDto.cs" />
     <Compile Include="DTOs\Book\Responses\BookListResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\BookSalesReportResponseDto.cs" />
-    <Compile Include="DTOs\Common\Reports\CategoryReport.cs" />
     <Compile Include="DTOs\Common\Reports\CustomerPurchaseRatioDto.cs" />
     <Compile Include="DTOs\Common\Reports\CustomerSpendingReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventoryReportResponseDto.cs" />
@@ -411,7 +430,9 @@
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
     <Compile Include="Migrations\202601190411178_createDb.cs" />
-    <Compile Include="Migrations\202601190411178_createDb.Designer.cs" />
+    <Compile Include="Migrations\202601190411178_createDb.Designer.cs">
+      <DependentUpon>202601190411178_createDb.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
     <Compile Include="Models\Book.cs" />
@@ -477,6 +498,9 @@
     <Compile Include="Presentation\Views\Dialogs\Customers\ExportExcelCustomer.xaml.cs">
       <DependentUpon>ExportExcelCustomer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\PrintCustomer.xaml.cs">
+      <DependentUpon>PrintCustomer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Invoices\CreateImportBill.xaml.cs">
       <DependentUpon>CreateImportBill.xaml</DependentUpon>
     </Compile>
@@ -489,6 +513,12 @@
     <Compile Include="Presentation\Views\Dialogs\Invoices\EditOrderDialog.xaml.cs">
       <DependentUpon>EditOrderDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Invoices\ExportExcelInvoice.xaml.cs">
+      <DependentUpon>ExportExcelInvoice.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Invoices\PrintInvoice.xaml.cs">
+      <DependentUpon>PrintInvoice.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Invoices\SelectBookDialog.xaml.cs">
       <DependentUpon>SelectBookDialog.xaml</DependentUpon>
     </Compile>
@@ -500,6 +530,9 @@
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Payment\ExportExcelPayment.xaml.cs">
       <DependentUpon>ExportExcelPayment.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Payment\Pay.xaml.cs">
+      <DependentUpon>Pay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Payment\PrintPayment.xaml.cs">
       <DependentUpon>PrintPayment.xaml</DependentUpon>
@@ -605,6 +638,7 @@
     <Compile Include="Services\Implementations\ImportBillService.cs" />
     <Compile Include="Services\Implementations\OrderService.cs" />
     <Compile Include="Services\Implementations\ReportService.cs" />
+    <Compile Include="Services\Implementations\SessionService.cs" />
     <Compile Include="Services\Implementations\StaffService.cs" />
     <Compile Include="Services\Implementations\PublisherService.cs" />
     <Compile Include="Services\Implementations\UserService.cs" />
@@ -631,7 +665,9 @@
     <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202601190411178_createDb.resx" />
+    <EmbeddedResource Include="Migrations\202601190411178_createDb.resx">
+      <DependentUpon>202601190411178_createDb.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -685,9 +721,6 @@
     </PackageReference>
     <PackageReference Include="AutoMapper">
       <Version>10.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="iTextSharp">
-      <Version>5.5.13.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <Version>10.0.1</Version>
