@@ -219,7 +219,7 @@ namespace bookstore_Management.Presentation.ViewModels
                     return;
                 }
 
-                var result = _userService.GetByUsername(SearchKeyword);
+                var result = _userService.SearchByUsername(SearchKeyword);
                 if (!result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi tìm ");
