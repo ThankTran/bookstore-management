@@ -36,9 +36,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Printing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -155,10 +157,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\Views\Dialogs\Customers\PrintCustomer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Presentation\Views\Dialogs\Customers\UpdateCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -176,14 +174,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\Views\Dialogs\Invoices\EditOrderDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Presentation\Views\Dialogs\Invoices\ExportExcelInvoice.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Presentation\Views\Dialogs\Invoices\PrintInvoice.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -336,6 +326,7 @@
     <Compile Include="Core\Enums\PaymentType.cs" />
     <Compile Include="Core\Enums\PermissionAction.cs" />
     <Compile Include="Core\Enums\StaffStatus.cs" />
+    <Compile Include="Core\Enums\TimeRange.cs" />
     <Compile Include="Core\Enums\UserRole.cs" />
     <Compile Include="Core\Exceptions\BookstoreException.cs" />
     <Compile Include="Core\Exceptions\DataNotFoundException.cs" />
@@ -385,6 +376,7 @@
     <Compile Include="DTOs\Common\Reports\InventoryReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\InventorySummaryReportResponseDto.cs" />
     <Compile Include="DTOs\Common\Reports\PublisherImportReportResponseDto.cs" />
+    <Compile Include="DTOs\Common\Reports\RevenueDto.cs" />
     <Compile Include="DTOs\Customer\Requests\CreateCustomerRequestDto.cs" />
     <Compile Include="DTOs\Customer\Requests\UpdateCustomerRequestDto.cs" />
     <Compile Include="DTOs\Customer\Responses\CustomerDetailResponseDto.cs" />
@@ -418,15 +410,14 @@
     <Compile Include="Helpers\PdfExporter.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
     <Compile Include="Migrations\202601190411178_createDb.cs" />
-    <Compile Include="Migrations\202601190411178_createDb.Designer.cs">
-      <DependentUpon>202601190411178_createDb.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Migrations\202601190411178_createDb.Designer.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditLog.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\ImportBill.cs" />
     <Compile Include="Models\ImportBillDetail.cs" />
+    <Compile Include="Models\PrintColumnDef.cs" />
     <Compile Include="Models\Staff.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />
@@ -441,9 +432,11 @@
     <Compile Include="Presentation\ViewModels\CustomerViewModel.cs" />
     <Compile Include="Presentation\ViewModels\DashboardViewModel.cs" />
     <Compile Include="Presentation\ViewModels\InventoryViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\InvoiceViewModel.cs" />
     <Compile Include="Presentation\ViewModels\LoginViewModel.cs" />
     <Compile Include="Presentation\ViewModels\MainViewModel.cs" />
     <Compile Include="Presentation\ViewModels\PaymentViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\PrintViewModel.cs" />
     <Compile Include="Presentation\ViewModels\StaffViewModel.cs" />
     <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
     <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
@@ -483,9 +476,6 @@
     <Compile Include="Presentation\Views\Dialogs\Customers\ExportExcelCustomer.xaml.cs">
       <DependentUpon>ExportExcelCustomer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Customers\PrintCustomer.xaml.cs">
-      <DependentUpon>PrintCustomer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Invoices\CreateImportBill.xaml.cs">
       <DependentUpon>CreateImportBill.xaml</DependentUpon>
     </Compile>
@@ -497,12 +487,6 @@
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Invoices\EditOrderDialog.xaml.cs">
       <DependentUpon>EditOrderDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Invoices\ExportExcelInvoice.xaml.cs">
-      <DependentUpon>ExportExcelInvoice.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\Views\Dialogs\Invoices\PrintInvoice.xaml.cs">
-      <DependentUpon>PrintInvoice.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Invoices\SelectBookDialog.xaml.cs">
       <DependentUpon>SelectBookDialog.xaml</DependentUpon>
@@ -646,9 +630,7 @@
     <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202601190411178_createDb.resx">
-      <DependentUpon>202601190411178_createDb.cs</DependentUpon>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202601190411178_createDb.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -732,6 +714,9 @@
     <Content Include="Presentation\AppResources\Fonts\Quicksand-SemiBold.ttf" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\preview.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\calendar.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\lock.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\reset.png" />
+    <Resource Include="Presentation\AppResources\Images\Icons\Actions\unlock.png" />
     <Content Include="Services\ServiceOverview.md" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\export.png" />
     <Resource Include="Presentation\AppResources\Images\Icons\Functions\print.png" />

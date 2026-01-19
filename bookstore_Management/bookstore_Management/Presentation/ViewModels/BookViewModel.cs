@@ -58,13 +58,13 @@ namespace bookstore_Management.Presentation.ViewModels
         }
 
         //keyword để tìm kiếm
-        private string _searchKeywork;
-        public string SearchKeywork
+        private string _searchKeyword;
+        public string SearchKeyword
         {
-            get => _searchKeywork;
+            get => _searchKeyword;
             set
             {
-                _searchKeywork = value;
+                _searchKeyword = value;
                 OnPropertyChanged();
                 SearchBookCommand.Execute(null);
             }
@@ -79,6 +79,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         //command cho thao tác tìm kiếm - load lại
         public ICommand SearchBookCommand { get; set; }
+        public ICommand LoadData { get; set; }
 
         //command cho in / xuất excel
         public ICommand ExportCommand { get; set; }
@@ -160,7 +161,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
             #region RemoveCommand
             RemoveBookCommand = new RelayCommand<object>((p) =>
             {
@@ -190,7 +190,6 @@ namespace bookstore_Management.Presentation.ViewModels
                 LoadBooksFromDatabase();
             });
             #endregion
-
             #region EditCommand
             EditBookCommand = new RelayCommand<object>((p) =>
             {
@@ -238,17 +237,16 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
             #region SearchCommand
             SearchBookCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(SearchKeywork))
+                if (string.IsNullOrEmpty(SearchKeyword))
                 {
                     LoadBooksFromDatabase();//k nhập gì thì hiện lại list
                     return;
                 }
 
-                var result = _bookService.SearchByName(SearchKeywork);
+                var result = _bookService.SearchByName(SearchKeyword);
                 if (!result.IsSuccess)
                 {
                     MessageBox.Show("Lỗi khi tìm sách");
@@ -272,15 +270,27 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
-
-            //chưa làm xong
-            #region PrintCommand 
-            PrintCommand = new RelayCommand<object>((p) =>
+            #region LoadDataCommand
+            LoadData = new RelayCommand<object>((p) =>
             {
-
+                SearchKeyword = string.Empty;
+                LoadBooksFromDatabase();
             });
             #endregion
 
+            #region
+            //chưa làm xong
+            PrintCommand = new RelayCommand<object>((p) =>
+            {
+                // Lấy danh sách đang hiển thị (Ví dụ: _datalist hoặc FilteredList)
+                var data = Books;
+
+                // Truyền data vào khi tạo cửa sổ
+                var dialog = new Views.Dialogs.Books.PrintBook(data);
+
+                dialog.ShowDialog();
+            });
+            #endregion
             #region ExportCommand
             ExportCommand = new RelayCommand<object>((p) =>
             {

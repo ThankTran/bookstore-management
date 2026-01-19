@@ -157,6 +157,7 @@
                                  VerticalContentAlignment="Center"
                                  FontSize="13"
                                  Foreground="#666666"
+                                 Text="{ Binding SearchKeyword, UpdateSourceTrigger=PropertyChanged}"   
                                  FontFamily="{StaticResource PrimaryFont}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
@@ -186,6 +187,7 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Cursor="Hand"
+                                Command="{Binding LoadData}"
                                 Visibility="{Binding ElementName=txtSearch, Path=Text.Length, Converter={StaticResource CountToVisibilityConverter}}">
                             <TextBlock Text="✕" 
                                        Foreground="#999999"

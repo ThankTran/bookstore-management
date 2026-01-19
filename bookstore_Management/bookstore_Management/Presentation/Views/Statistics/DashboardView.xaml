@@ -1,7 +1,8 @@
-﻿<UserControl x:Class="bookstore_Management.Views.Statistics.DashboardView"
+﻿<UserControl x:Class="bookstore_Management.Presentation.Views.Statistics.DashboardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:enums="clr-namespace:bookstore_Management.Core.Enums"
              Background="{StaticResource BackgroundBrush}">
 
     <UserControl.Resources>
@@ -9,7 +10,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Presentation/AppResources/Styles/StatisticStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        </ResourceDictionary>      
+
+
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -94,86 +97,116 @@
                                        Margin="0,0,10,0"/>
 
                             <!-- Today Button -->
-                            <Border x:Name="btnToday"
-                                    Background="{StaticResource PrimaryBrush}"
-                                    CornerRadius="8"
-                                    Padding="12,6"
-                                    Margin="0,0,8,0"
-                                    Cursor="Hand">
-                                <TextBlock Text="Hôm nay"
-                                           FontSize="12"
-                                           Foreground="White"
-                                           FontWeight="SemiBold"/>
-                            </Border>
+                            <Button BorderThickness="0"
+                                    Background="Transparent"
+                                    Command="{Binding SelectTimeCommand}"
+                                    CommandParameter="{x:Static enums:TimeRange.Today}">
+                                <Border x:Name="btnToday"
+                                        Background="{StaticResource PrimaryBrush}"
+                                        CornerRadius="8"
+                                        Padding="12,6"
+                                        Margin="0,0,8,0"
+                                        Cursor="Hand">
+                                
+                                        <TextBlock Text="Hôm nay"
+                                                FontSize="12"
+                                                Foreground="White"
+                                                FontWeight="SemiBold"/>
+                           
+                                </Border>
+                            </Button>
 
                             <!-- This Week -->
-                            <Border x:Name="btnThisWeek"
+                            <Button BorderThickness="0"
+                                        Background="Transparent"
+                                        Command="{Binding SelectTimeCommand}"
+                                        CommandParameter="{x:Static enums:TimeRange.ThisWeek}">
+                                    <Border x:Name="btnThisWeek"
+                                        Background="#F5F5F5"
+                                        CornerRadius="8"
+                                        Padding="12,6"
+                                        Margin="0,0,8,0"
+                                        Cursor="Hand">
+
+                                        <TextBlock Text="Tuần này"
+                                               FontSize="12"
+                                               Foreground="#666666"
+                                               FontWeight="SemiBold"/>
+
+                                </Border>
+                            </Button>
+
+                            <Button BorderThickness="0"
+                                    Background="Transparent"
+                                    Command="{Binding SelectTimeCommand}"
+                                    CommandParameter="{x:Static enums:TimeRange.ThisMonth}">
+                                <Border x:Name="btnThisMonth"
                                     Background="#F5F5F5"
                                     CornerRadius="8"
                                     Padding="12,6"
                                     Margin="0,0,8,0"
                                     Cursor="Hand">
-                                <TextBlock Text="Tuần này"
+                                    <TextBlock Text="Tháng này"
                                            FontSize="12"
                                            Foreground="#666666"
                                            FontWeight="SemiBold"/>
-                            </Border>
+                                </Border>
+                            </Button>
 
-                            <!-- This Month -->
-                            <Border x:Name="btnThisMonth"
+                            <Button BorderThickness="0"
+                                Background="Transparent"
+                                Command="{Binding SelectTimeCommand}"
+                                    CommandParameter="{x:Static enums:TimeRange.ThisQuarter}">
+                                <Border x:Name="btnThisQuarter"
                                     Background="#F5F5F5"
                                     CornerRadius="8"
                                     Padding="12,6"
                                     Margin="0,0,8,0"
                                     Cursor="Hand">
-                                <TextBlock Text="Tháng này"
-                                           FontSize="12"
-                                           Foreground="#666666"
-                                           FontWeight="SemiBold"/>
-                            </Border>
+                                    <TextBlock Text="Quý này"
+                                            FontSize="12"
+                                            Foreground="#666666"
+                                            FontWeight="SemiBold"/>
+                                </Border>
+                            </Button>
 
-                            <!-- This Quarter -->
-                            <Border x:Name="btnThisQuarter"
+                            <Button BorderThickness="0"
+                                    Background="Transparent"
+                                    Command="{Binding SelectTimeCommand}"
+                                    CommandParameter="{x:Static enums:TimeRange.ThisYear}">
+                                <Border x:Name="btnThisYear"
                                     Background="#F5F5F5"
                                     CornerRadius="8"
                                     Padding="12,6"
                                     Margin="0,0,8,0"
                                     Cursor="Hand">
-                                <TextBlock Text="Quý này"
+                                    <TextBlock Text="Năm nay"
                                            FontSize="12"
                                            Foreground="#666666"
                                            FontWeight="SemiBold"/>
-                            </Border>
+                                </Border>
+                            </Button>
 
-                            <!-- This Year -->
-                            <Border x:Name="btnThisYear"
-                                    Background="#F5F5F5"
-                                    CornerRadius="8"
-                                    Padding="12,6"
-                                    Margin="0,0,8,0"
-                                    Cursor="Hand">
-                                <TextBlock Text="Năm nay"
-                                           FontSize="12"
-                                           Foreground="#666666"
-                                           FontWeight="SemiBold"/>
-                            </Border>
-
-                            <!-- Last 30 Days -->
-                            <Border x:Name="btnLast30Days"
+                            <Button BorderThickness="0"
+                                    Background="Transparent"
+                                    Command="{Binding SelectTimeCommand}"
+                                    CommandParameter="{x:Static enums:TimeRange.ThePast30Days}">
+                                <Border x:Name="btnLast30Days"
                                     Background="#F5F5F5"
                                     CornerRadius="8"
                                     Padding="12,6"
                                     Cursor="Hand">
-                                <TextBlock Text="30 ngày qua"
+                                    <TextBlock Text="30 ngày qua"
                                            FontSize="12"
                                            Foreground="#666666"
                                            FontWeight="SemiBold"/>
-                            </Border>
-                        </StackPanel>
-
-                        
-
-                       
+                                </Border>
+                            </Button>
+                            
+                            
+                            
+                        </StackPanel>            
+                      
                     </Grid>
                 </Border>
             </Grid>
@@ -216,9 +249,10 @@
                                    Foreground="#666666"
                                    VerticalAlignment="Center">
                             <Run Text="Từ"/>
-                            <Run Text="{Binding FromDate, StringFormat='{}{0:dd/MM/yyyy}'}" FontWeight="SemiBold"/>
-                            <Run Text="đến"/>
-                            <Run Text="{Binding ToDate, StringFormat='{}{0:dd/MM/yyyy}'}" FontWeight="SemiBold"/>
+                            <Run Text="{Binding From, StringFormat='{}{0:dd/MM/yyyy}'}"/>
+                            <Run Text=" đến "/>
+                            <Run Text="{Binding To, StringFormat='{}{0:dd/MM/yyyy}'}"/>
+
                         </TextBlock>
                     </StackPanel>
                 </Border>
@@ -267,7 +301,7 @@
                                            FontWeight="Medium"/>
                                 </StackPanel>
                             </StackPanel>
-                            <TextBlock Text="{Binding TotalRevenue, StringFormat={}{0:N0} ₫}"
+                            <TextBlock Text="{Binding TodayRevenue, StringFormat={}{0:N0} ₫}"
                                    FontSize="20"
                                    FontWeight="Bold"
                                    Foreground="#4CAF50"
@@ -322,7 +356,7 @@
                                            FontWeight="Medium"/>
                                 </StackPanel>
                             </StackPanel>
-                            <TextBlock Text="{Binding TotalOrders}"
+                            <TextBlock Text="{Binding TodayOrders}"
                                    FontSize="20"
                                    FontWeight="Bold"
                                    Foreground="#2196F3"
@@ -432,7 +466,7 @@
                                            FontWeight="Medium"/>
                                 </StackPanel>
                             </StackPanel>
-                            <TextBlock Text="{Binding LowStockItems, StringFormat={}{0} đầu sách}"
+                            <TextBlock Text="{Binding LowStockBooks, StringFormat={}{0} đầu sách}"
                                    FontSize="20"
                                    FontWeight="Bold"
                                    Foreground="#F44336"
@@ -491,6 +525,7 @@
                         <!-- Line Chart -->
                         <lvc:CartesianChart Grid.Row="1" 
                                             Series="{Binding RevenueSeries}"
+                                            LegendLocation="None"
                                             Height="280"
                                             Margin="0,10,0,0">
                             <lvc:CartesianChart.AxisY>
@@ -530,15 +565,15 @@
                                 <TextBlock Text="Thể loại bán chạy" 
                                            Style="{StaticResource CardHeaderText}"
                                            Margin="0,0,0,2"/>
-                                <TextBlock Text="Top 5 trong tháng"
+                                <TextBlock Text="Top 5"
                                            FontSize="12"
                                            Foreground="#999999"/>
                             </StackPanel>
                         </StackPanel>
 
                         <!-- Bar Chart -->
-                        <lvc:CartesianChart Grid.Row="1" 
-                                            Series="{Binding TopCategoriesSeries}"
+                        <!--<lvc:CartesianChart Grid.Row="1" 
+                                            Series="{Binding CategorySeries}"
                                             Height="200"
                                             Margin="0,10,0,10">
                             <lvc:CartesianChart.AxisY>
@@ -547,10 +582,13 @@
                             <lvc:CartesianChart.AxisX>
                                 <lvc:Axis ShowLabels="False"/>
                             </lvc:CartesianChart.AxisX>
-                        </lvc:CartesianChart>
+                        </lvc:CartesianChart>-->
+ 
+
+
 
                         <!-- Legend -->
-                        <WrapPanel Grid.Row="2" 
+                        <!--<WrapPanel Grid.Row="2" 
                                    HorizontalAlignment="Center"
                                    Margin="0,10,0,0">
                             <StackPanel Orientation="Horizontal" Margin="5">
@@ -583,7 +621,65 @@
                                 <TextBlock Text="Giáo khoa" 
                                            Style="{StaticResource LegendSmallText}"/>
                             </StackPanel>
-                        </WrapPanel>
+                        </WrapPanel>-->
+                        <!--<ItemsControl Grid.Row="2"
+                             ItemsSource="{Binding CategoryLegends}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel HorizontalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="5">
+                                        <Ellipse Style="{StaticResource SmallLegendDot}"
+                                                   Fill="{Binding Color}"/>
+                                        <TextBlock Text="{Binding CategoryName}"
+                                                    Style="{StaticResource LegendSmallText}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>-->
+                        <!--<ItemsControl Grid.Row="2"
+                                HorizontalAlignment="Center"
+                                Margin="0,10,0,0"
+                                ItemsSource="{Binding Top5Categories}">   
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="5">
+                                        <Ellipse Style="{StaticResource SmallLegendDot}"
+                                                Fill="{Binding Color}"/>
+                                        <TextBlock Text="{Binding CategoryName}"
+                                                Style="{StaticResource LegendSmallText}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>-->
+                        <lvc:CartesianChart Grid.Row="1"
+                            Series="{Binding CategorySeries}"
+                            LegendLocation="Bottom"
+                            Height="200"
+                            Margin="0,10,0,10"> 
+
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis ShowLabels="False"/>
+                            </lvc:CartesianChart.AxisY>
+
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis ShowLabels="False"/>
+                            </lvc:CartesianChart.AxisX>
+
+                        </lvc:CartesianChart>
+
+
+
                     </Grid>
                 </Border>
             </Grid>
@@ -632,7 +728,7 @@
                             </Grid.ColumnDefinitions>
 
                             <lvc:PieChart Grid.Column="0"
-                                          Series="{Binding CustomerDistributionSeries}"
+                                          Series="{Binding CustomerSeries}"
                                           LegendLocation="None"
                                           InnerRadius="70"
                                           Height="220"
@@ -676,7 +772,7 @@
                                                    Foreground="#666666"
                                                    FontWeight="Medium"/>
                                     </StackPanel>
-                                    <TextBlock Text="80% (800 người)" 
+                                    <TextBlock Text="{Binding Member}" 
                                                FontSize="12"
                                                FontWeight="Bold"
                                                Foreground="{StaticResource PrimaryBrush}"
@@ -694,7 +790,7 @@
                                                    Foreground="#666666"
                                                    FontWeight="Medium"/>
                                     </StackPanel>
-                                    <TextBlock Text="20% (200 người)" 
+                                    <TextBlock Text="{Binding WalkIn}" 
                                                FontSize="12"
                                                FontWeight="Bold"
                                                Foreground="#666666"
@@ -735,19 +831,19 @@
 
                         <!-- Horizontal Bar Chart -->
                         <lvc:CartesianChart Grid.Row="1" 
-                                            Series="{Binding ProfitCostSeries}"
+                                            Series="{Binding ProfitSeries}"
                                             Height="280"
                                             Margin="0,10,0,0">
                             <lvc:CartesianChart.AxisY>
-                                <lvc:Axis Labels="{Binding ProfitCostLabels}"
+                                <lvc:Axis Labels="{Binding ProfitLabels}"
                                           FontSize="12"
                                           Foreground="{StaticResource LegendTextBrush}"
                                           FontWeight="Medium"/>
                             </lvc:CartesianChart.AxisY>
                             <lvc:CartesianChart.AxisX>
                                 <lvc:Axis FontSize="11"
-                                          Foreground="{StaticResource AxisTextBrush}"
-                                          LabelFormatter="{Binding ProfitCostFormatter}"/>
+                                          Foreground="{StaticResource AxisTextBrush}"/>
+                                <!--LabelFormatter="{Binding ProfitCostFormatter}"/>-->
                             </lvc:CartesianChart.AxisX>
                         </lvc:CartesianChart>
                     </Grid>
