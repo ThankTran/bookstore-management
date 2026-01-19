@@ -248,13 +248,8 @@ namespace bookstore_Management.Services.Implementations
                     (importPrices.TryGetValue(b.BookId, out var price) ? price ?? 0 : 0) * b.Stock
                 );
 
-                var lowStockCount = 0;
-                var outOfStockCount = 0;
-                books.ForEach(b =>
-                {
-                    if ( b.Stock == 0 ) outOfStockCount++;
-                    else if (b.Stock > 0 && b.Stock < 5) lowStockCount++;
-                });
+                var outOfStockCount = books.Count(b => b.Stock == 0); 
+                var lowStockCount = books.Count(b => b.Stock > 0 && b.Stock < 5);
 
                 var report = new InventorySummaryReportResponseDto
                 {
