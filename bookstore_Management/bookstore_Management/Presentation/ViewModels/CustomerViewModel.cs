@@ -1,6 +1,7 @@
 ﻿using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
+using bookstore_Management.Presentation.Views.Dialogs.Customers;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using DocumentFormat.OpenXml.VariantTypes;
@@ -233,7 +234,12 @@ namespace bookstore_Management.Presentation.ViewModels
             });
             #endregion
             #region Print & Export
-            PrintCommand = new RelayCommand<object>((p)=> { });
+            PrintCommand = new RelayCommand<object>((p)=> 
+            {
+                var data = Customers;
+                var dialog = new PrintCustomer(data);
+                dialog.ShowDialog();
+            });
             ExportCommand = new RelayCommand<object>((p) => { });
             #endregion
         }

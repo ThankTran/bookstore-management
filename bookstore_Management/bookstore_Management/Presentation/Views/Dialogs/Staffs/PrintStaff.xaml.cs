@@ -1,92 +1,66 @@
-﻿using bookstore_Management.Presentation.Views.Dialogs.Share;
+﻿using bookstore_Management.Models;
+using bookstore_Management.Presentation.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace bookstore_Management.Presentation.Views.Dialogs.Staffs
-{
-    /// <summary>
-    /// Interaction logic for PrintStaff.xaml
-    /// </summary>
-    public partial class PrintStaff : Window
+{    public partial class PrintStaff : Window
     {
-        // Generic data source - can be any IEnumerable
-        private IEnumerable<object> _dataSource;
-        private string _documentTitle;
-        private int _recordCount;
+        private PrintViewModel _viewModel;
+        private string _documentTitle = "Danh sách nhân viên";
 
-        public PrintStaff()
+        // Constructor nhận dữ liệu từ bên ngoài vào
+        public PrintStaff(IEnumerable<Staff> dataToPrint)
         {
             InitializeComponent();
+
+            // 1. Khai báo các cột in (GIỐNG BOOK)
+            var columns = new List<PrintColumnDef>
+            {
+                new PrintColumnDef { Header = "Mã NV", PropertyPath = "StaffCode" },
+                new PrintColumnDef { Header = "Tên Nhân Viên", PropertyPath = "FullName" },
+                new PrintColumnDef { Header = "Chức Vụ", PropertyPath = "Position" },
+                new PrintColumnDef { Header = "SĐT", PropertyPath = "PhoneNumber" },
+                new PrintColumnDef { Header = "Email", PropertyPath = "Email" },
+                new PrintColumnDef { Header = "Ngày Vào Làm", PropertyPath = "JoinDate" }
+            };
+
+            // 2. KHỞI TẠO VIEWMODEL
+            _viewModel = new PrintViewModel(dataToPrint, columns, _documentTitle);
+
+            // 3. Gán DataContext
+            this.DataContext = _viewModel;
         }
-
-        /// <summary>
-        /// Constructor với data source tùy chỉnh
-        /// </summary>
-        public PrintStaff(string title, IEnumerable<object> dataSource, int recordCount = 0) : this()
-        {
-            _documentTitle = title;
-            _dataSource = dataSource;
-            _recordCount = recordCount > 0 ? recordCount : dataSource?.Count() ?? 0;
-
-            // Update UI
-            txtTitle.Text = $"In {title}";
-            txtRecordCount.Text = $"• Sẽ in {_recordCount} bản ghi";
-        }
-
-        #region Event Handlers
 
         private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (e.ButtonState == MouseButtonState.Pressed) DragMove();
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        // ================== CORE ==================
+
+        private FlowDocument CreatePrintDocument()
+        {
+            // Lấy khổ giấy
+            if (cbPaperSize.SelectedItem is ComboBoxItem item)
             {
-                DragMove();
+                _viewModel.PaperSize = item.Content.ToString();
             }
-        }
 
-        private void BtnClose_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
-            Close();
-        }
+            // Lấy hướng giấy
+            _viewModel.IsPortrait = rbPortrait.IsChecked == true;
 
-        private void BtnIncrease_Click(object sender, RoutedEventArgs e)
-        {
-            if (int.TryParse(txtCopies.Text, out int copies))
-            {
-                if (copies < 99)
-                {
-                    txtCopies.Text = (copies + 1).ToString();
-                }
-            }
-        }
-
-        private void BtnDecrease_Click(object sender, RoutedEventArgs e)
-        {
-            if (int.TryParse(txtCopies.Text, out int copies))
-            {
-                if (copies > 1)
-                {
-                    txtCopies.Text = (copies - 1).ToString();
-                }
-            }
-        }
-
-        private void NumberOnly_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            Regex regex = new Regex("[^0-9]+");
-            e.Handled = regex.IsMatch(e.Text);
+            return _viewModel.CreateDocument();
         }
 
         private void BtnPreview_Click(object sender, RoutedEventArgs e)
@@ -94,7 +68,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Staffs
             try
             {
                 var doc = CreatePrintDocument();
-
                 PreviewContainer.Visibility = Visibility.Visible;
                 DocPreview.Document = doc;
             }
@@ -105,52 +78,44 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Staffs
             }
         }
 
-
         private void BtnPrint_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Get settings
-                int copies = int.Parse(txtCopies.Text);
-                bool isColor = chkColor.IsChecked ?? false;
-                bool isDuplex = chkDuplex.IsChecked ?? false;
+                if (!int.TryParse(txtCopies.Text, out int copies) || copies < 1) copies = 1;
                 bool savePDF = chkSavePDF.IsChecked ?? false;
 
-                // Confirm
-                var result = MessageBox.Show(
+                var confirm = MessageBox.Show(
                     $"Bạn có chắc muốn in {copies} bản {_documentTitle}?",
                     "Xác nhận in",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
 
-                if (result == MessageBoxResult.No)
-                    return;
+                if (confirm == MessageBoxResult.No) return;
 
-                // Print
-                var printDialog = new System.Windows.Controls.PrintDialog();
+                PrintDialog printDialog = new PrintDialog();
 
                 if (printDialog.ShowDialog() == true)
                 {
                     var document = CreatePrintDocument();
 
-                    for (int i = 0; i < copies; i++)
-                    {
-                        printDialog.PrintDocument(((IDocumentPaginatorSource)document).DocumentPaginator, _documentTitle);
-                    }
+                    document.PageWidth = printDialog.PrintableAreaWidth;
 
-                    // Save PDF if option enabled
+                    if (printDialog.PrintTicket != null)
+                        printDialog.PrintTicket.CopyCount = copies;
+
+                    printDialog.PrintDocument(
+                        ((IDocumentPaginatorSource)document).DocumentPaginator,
+                        _documentTitle);
+
                     if (savePDF)
                     {
-                        SaveAsPDF(document);
+                        SaveAsXps(document);
                     }
 
-                    MessageBox.Show(
-                        $"Đã in thành công {copies} bản!",
-                        "Thành công",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
+                    MessageBox.Show("In thành công!", "Thông báo",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    DialogResult = true;
                     Close();
                 }
             }
@@ -161,198 +126,41 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Staffs
             }
         }
 
-        #endregion
+        // ================== UTIL ==================
 
-        #region Helper Methods
-
-        /// <summary>
-        /// Tạo FlowDocument để in
-        /// </summary>
-        private FlowDocument CreatePrintDocument()
-        {
-            var doc = new FlowDocument
-            {
-                PagePadding = new Thickness(50),
-                FontFamily = new FontFamily("Arial"),
-                FontSize = 12
-            };
-
-            // Add title
-            var titleParagraph = new Paragraph(new Run(_documentTitle))
-            {
-                FontSize = 18,
-                FontWeight = FontWeights.Bold,
-                TextAlignment = TextAlignment.Center,
-                Margin = new Thickness(0, 0, 0, 20)
-            };
-            doc.Blocks.Add(titleParagraph);
-
-            // Add date
-            var dateParagraph = new Paragraph(new Run($"Ngày in: {DateTime.Now:dd/MM/yyyy HH:mm}"))
-            {
-                FontSize = 10,
-                TextAlignment = TextAlignment.Right,
-                Margin = new Thickness(0, 0, 0, 20)
-            };
-            doc.Blocks.Add(dateParagraph);
-
-            // Add table with data
-            if (_dataSource != null && _dataSource.Any())
-            {
-                var table = CreateDataTable();
-                doc.Blocks.Add(table);
-            }
-
-            // Add footer
-            var footerParagraph = new Paragraph(new Run($"Tổng số: {_recordCount} bản ghi"))
-            {
-                FontSize = 10,
-                FontStyle = FontStyles.Italic,
-                Margin = new Thickness(0, 20, 0, 0)
-            };
-            doc.Blocks.Add(footerParagraph);
-
-            return doc;
-        }
-
-        /// <summary>
-        /// Tạo bảng dữ liệu động
-        /// </summary>
-        private Table CreateDataTable()
-        {
-            var table = new Table
-            {
-                CellSpacing = 0,
-                BorderBrush = Brushes.Black,
-                BorderThickness = new Thickness(1)
-            };
-
-            if (_dataSource == null || !_dataSource.Any())
-                return table;
-
-            // Get properties from first item
-            var firstItem = _dataSource.First();
-            var properties = firstItem.GetType().GetProperties()
-                .Where(p => p.CanRead && IsSimpleType(p.PropertyType))
-                .ToList();
-
-            // Add columns
-            foreach (var prop in properties)
-            {
-                table.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
-            }
-
-            // Create row group
-            var rowGroup = new TableRowGroup();
-            table.RowGroups.Add(rowGroup);
-
-            // Add header row
-            var headerRow = new TableRow { Background = Brushes.LightGray };
-            foreach (var prop in properties)
-            {
-                var cell = new TableCell(new Paragraph(new Run(prop.Name)))
-                {
-                    FontWeight = FontWeights.Bold,
-                    Padding = new Thickness(5),
-                    BorderBrush = Brushes.Black,
-                    BorderThickness = new Thickness(1)
-                };
-                headerRow.Cells.Add(cell);
-            }
-            rowGroup.Rows.Add(headerRow);
-
-            // Add data rows
-            foreach (var item in _dataSource)
-            {
-                var dataRow = new TableRow();
-                foreach (var prop in properties)
-                {
-                    var value = prop.GetValue(item)?.ToString() ?? "";
-                    var cell = new TableCell(new Paragraph(new Run(value)))
-                    {
-                        Padding = new Thickness(5),
-                        BorderBrush = Brushes.Black,
-                        BorderThickness = new Thickness(1)
-                    };
-                    dataRow.Cells.Add(cell);
-                }
-                rowGroup.Rows.Add(dataRow);
-            }
-
-            return table;
-        }
-
-        /// <summary>
-        /// Lưu document thành PDF
-        /// </summary>
-        private void SaveAsPDF(FlowDocument document)
+        private void SaveAsXps(FlowDocument doc)
         {
             try
             {
-                var saveDialog = new Microsoft.Win32.SaveFileDialog
+                var dlg = new Microsoft.Win32.SaveFileDialog
                 {
-                    Filter = "PDF Files (*.pdf)|*.pdf",
-                    FileName = $"{_documentTitle}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf"
+                    FileName = "DanhSachNhanVien_" + DateTime.Now.ToString("ddMMyyyy_HHmm"),
+                    DefaultExt = ".xps",
+                    Filter = "XPS Documents (.xps)|*.xps"
                 };
 
-                if (saveDialog.ShowDialog() == true)
+                if (dlg.ShowDialog() == true)
                 {
-                    // Sử dụng thư viện iTextSharp hoặc PdfSharp để convert
-                    // Code mẫu - cần cài package: Install-Package iTextSharp
+                    using (var package = System.IO.Packaging.Package.Open(dlg.FileName, System.IO.FileMode.Create))
+                    using (var xpsDoc = new System.Windows.Xps.Packaging.XpsDocument(package, System.IO.Packaging.CompressionOption.Maximum))
+                    {
+                        var writer = System.Windows.Xps.Packaging.XpsDocument.CreateXpsDocumentWriter(xpsDoc);
+                        writer.Write(((IDocumentPaginatorSource)doc).DocumentPaginator);
+                    }
 
-                    MessageBox.Show($"Đã lưu PDF: {saveDialog.FileName}", "Thành công",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Lưu file thành công!", "Thông báo");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi lưu PDF: {ex.Message}", "Lỗi",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Không thể lưu file: " + ex.Message);
             }
         }
 
-        /// <summary>
-        /// Kiểm tra xem type có phải simple type không (để hiển thị trong bảng)
-        /// </summary>
-        private bool IsSimpleType(Type type)
+        private void NumberOnly_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            return type.IsPrimitive
-                || type.IsEnum
-                || type == typeof(string)
-                || type == typeof(decimal)
-                || type == typeof(DateTime)
-                || type == typeof(TimeSpan)
-                || type == typeof(Guid);
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
-
-        #endregion
-
-        #region Static Factory Methods
-
-        /// <summary>
-        /// Tạo dialog in cho danh sách nhân viên
-        /// </summary>
-        public static PrintStaff ForStaffList(IEnumerable<object> staffList)
-        {
-            return new PrintStaff("Danh Sách Nhân Viên", staffList);
-        }
-
-        /// <summary>
-        /// Tạo dialog in cho danh sách sách
-        /// </summary>
-        public static PrintStaff ForBookList(IEnumerable<object> bookList)
-        {
-            return new PrintStaff("Danh Sách Sách", bookList);
-        }
-
-        /// <summary>
-        /// Tạo dialog in cho danh sách khách hàng
-        /// </summary>
-        public static PrintStaff ForCustomerList(IEnumerable<object> customerList)
-        {
-            return new PrintStaff("Danh Sách Khách Hàng", customerList);
-        }
-
-        #endregion
     }
 }

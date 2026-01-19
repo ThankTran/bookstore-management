@@ -3,6 +3,8 @@ using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
+using bookstore_Management.Presentation.Views.Dialogs.Accounts;
+using bookstore_Management.Presentation.Views.Dialogs.Staffs;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using System;
@@ -404,6 +406,21 @@ namespace bookstore_Management.Presentation.ViewModels
                 //    MessageBox.Show("Đổi mật khẩu thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 //}
             });
+
+            #region PrintCommand 
+            PrintCommand = new RelayCommand<object>((p) =>
+            {
+                var data = Users;
+                var dialog = new PrintAccount(data);
+                dialog.ShowDialog();
+            });
+            #endregion
+            #region ExportCommand
+            ExportCommand = new RelayCommand<object>((p) =>
+            {
+
+            });
+            #endregion
 
         }
     }

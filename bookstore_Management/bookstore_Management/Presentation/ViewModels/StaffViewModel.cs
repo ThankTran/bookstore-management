@@ -2,6 +2,7 @@
 using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
+using bookstore_Management.Presentation.Views.Dialogs.Staffs;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using System.Collections.ObjectModel;
@@ -242,7 +243,9 @@ namespace bookstore_Management.Presentation.ViewModels
             #region PrintCommand 
             PrintCommand = new RelayCommand<object>((p) =>
             {
-
+                var data = Staffs;
+                var dialog = new PrintStaff(data);
+                dialog.ShowDialog();
             });
             #endregion
             #region ExportCommand

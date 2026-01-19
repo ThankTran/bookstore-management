@@ -11,7 +11,8 @@ namespace bookstore_Management.Models
         public string Header { get; set; }       // Tên hiển thị trên đầu bảng (VD: "Họ tên")
         public string PropertyPath { get; set; } // Tên biến trong Code (VD: "Name")
         public double WidthStar { get; set; } = 1; // Độ rộng tỉ lệ (1*, 2*...)
-        
+
+        public Func<object, string> ValueFormatter { get; set; }
     }
 }
 

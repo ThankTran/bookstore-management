@@ -286,7 +286,6 @@ namespace bookstore_Management.Presentation.ViewModels
             #endregion
 
             #region Print
-            //chưa làm xong
             PrintCommand = new RelayCommand<object>((p) =>
             {
                 // Lấy danh sách đang hiển thị (Ví dụ: _datalist hoặc FilteredList)

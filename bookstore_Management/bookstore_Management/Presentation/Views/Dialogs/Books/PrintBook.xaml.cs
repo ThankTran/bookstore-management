@@ -89,11 +89,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
         {
             try
             {
-                // 1. Lấy thông tin từ UI
+                // Lấy thông tin từ UI
                 if (!int.TryParse(txtCopies.Text, out int copies) || copies < 1) copies = 1;
                 bool savePDF = chkSavePDF.IsChecked ?? false;
 
-                // 2. Xác nhận in
+                // Xác nhận in
                 var result = MessageBox.Show(
                     $"Bạn có chắc muốn in {copies} bản {_documentTitle}?",
                     "Xác nhận in",
@@ -136,7 +136,6 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             }
         }
 
-        // Hàm phụ: Lưu file XPS (Native WPF)
         private void SaveAsXps(FlowDocument doc)
         {
             try

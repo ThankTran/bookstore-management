@@ -2,6 +2,7 @@
 using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.Models;
+using bookstore_Management.Presentation.Views.Dialogs.Publishers;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using System.Collections.ObjectModel;
@@ -238,7 +239,9 @@ namespace bookstore_Management.Presentation.ViewModels
             #region Print & Export
             PrintCommand = new RelayCommand<object>((p) =>
             {
-
+                var data = Publishers;
+                var dialog = new PrintPublisher(data);
+                dialog.ShowDialog();
             });
             ExportCommand = new RelayCommand<object>((p) =>
             {
