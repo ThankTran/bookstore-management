@@ -36,7 +36,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-
     <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -46,7 +45,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -633,6 +631,7 @@
     <Compile Include="Services\Implementations\ImportBillService.cs" />
     <Compile Include="Services\Implementations\OrderService.cs" />
     <Compile Include="Services\Implementations\ReportService.cs" />
+    <Compile Include="Services\Implementations\SessionService.cs" />
     <Compile Include="Services\Implementations\StaffService.cs" />
     <Compile Include="Services\Implementations\PublisherService.cs" />
     <Compile Include="Services\Implementations\UserService.cs" />
