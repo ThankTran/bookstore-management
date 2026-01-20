@@ -22,7 +22,6 @@ namespace bookstore_Management.Views.Books
         #region Event Handlers
         private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
-            // Lấy chỉ số dòng (bắt đầu từ 0) + 1
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
         private void btnEdit_Click(object sender, RoutedEventArgs e)

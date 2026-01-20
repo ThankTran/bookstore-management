@@ -1,8 +1,11 @@
-﻿using System.Windows.Controls;
+﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.Models;
 using bookstore_Management.Presentation.ViewModels;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using DocumentFormat.OpenXml.VariantTypes;
+using System.Windows;
+using System.Windows.Controls;
 
 
 namespace bookstore_Management.Presentation.Views.Publishers
@@ -16,6 +19,7 @@ namespace bookstore_Management.Presentation.Views.Publishers
         public PublisherListView()
         {
             InitializeComponent();
+          
             IPublisherService publisherService;
 
             var context = new Data.Context.BookstoreDbContext();

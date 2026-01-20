@@ -153,7 +153,8 @@
                                         Width="195" 
                                         HorizontalAlignment="Center" 
                                         VerticalAlignment="Center" 
-                                        BorderBrush="Transparent"/>
+                                        BorderBrush="Transparent"
+                                        Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </Border>
 
@@ -167,11 +168,12 @@
                             <Image Source="/Presentation/AppResources/Images/Icons/Login/lock.png" 
                                     Width="15" 
                                     Margin="8,0,0,0"/>
-                            <PasswordBox Background="Transparent" 
-                                            Width="195" 
-                                            HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center" 
-                                            BorderBrush="Transparent"/>
+                            <PasswordBox x:Name="pbPassword"
+                                    Background="Transparent" 
+                                    Width="195" 
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center" 
+                                    BorderBrush="Transparent"/>            
                         </StackPanel>
                     </Border>
 
@@ -180,7 +182,8 @@
 
                         <Border CornerRadius="10" Background="#585ab8" Margin="10,29,10,40" BorderThickness="0" >
                             <Button x:Name="btnLogin" 
-                                    Click="btnLogin_Click"                                
+                                    Command="{Binding LoginCommand}"
+                                    CommandParameter="{Binding ElementName=pbPassword}"
                                     Style="{StaticResource btnLoginEffect}">
                                 <TextBlock Text="LOGIN" FontWeight="ExtraBold" Foreground="White" FontSize="15" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Button>

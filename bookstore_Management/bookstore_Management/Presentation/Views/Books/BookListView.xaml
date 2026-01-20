@@ -83,6 +83,7 @@
                                 BorderThickness="0"
                                 Padding="12,8"
                                 ToolTip="In danh sách"
+                                Command="{Binding PrintCommand}"
                                 Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Presentation/AppResources/Images/Icons/Functions/print.png" 
@@ -154,7 +155,7 @@
                         </Button>
 
                         <!-- Search TextBox -->
-                        <TextBox
+                        <TextBox x:Name="txtSearch"
                         Grid.Column="1"
                         Background="Transparent"
                         BorderThickness="0"
@@ -162,7 +163,7 @@
                         FontSize="13"
                         Foreground="#666666"
                         FontFamily="{StaticResource PrimaryFont}"
-                        Text="{Binding SearchKeyword, UpdateSourceTrigger=PropertyChanged}">
+                        Text="{ Binding SearchKeyword, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
                                     <Style.Triggers>
@@ -191,8 +192,10 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Cursor="Hand"
+                                Command="{Binding LoadData}"
                                 Visibility="{Binding ElementName=txtSearch, Path=Text.Length, Converter={StaticResource CountToVisibilityConverter}}">
-                            <TextBlock Foreground="#999999"
+                            <TextBlock Text="X"
+                                        Foreground="#999999"
                                        FontSize="12"
                                        FontWeight="Bold"/>
                         </Button>
@@ -326,7 +329,7 @@
 
                             <!-- Nhà xuất bản -->
                             <DataGridTextColumn Header="Nhà xuất bản" 
-                                                Binding="{Binding Puplisher}" 
+                                                Binding="{Binding Publisher.Name}" 
                                                 Width="Auto"
                                                 IsReadOnly="True"
                                                 ElementStyle="{StaticResource CenterAlignedCell}"/>

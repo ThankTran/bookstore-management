@@ -18,5 +18,7 @@ namespace bookstore_Management.Services.Interfaces
         Result<UserRole> GetUserRole(string userId);
         Result<bool> Login(string username, string password);
         Result<IEnumerable<UserResponseDto>> GetAll();
+        Result<UserResponseDto> GetByUsername(string username);
+
     }
 }

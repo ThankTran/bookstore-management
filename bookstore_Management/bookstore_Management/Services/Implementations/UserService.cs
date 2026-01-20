@@ -59,6 +59,17 @@ namespace bookstore_Management.Services.Implementations
             }
         }
 
+        public Result<UserResponseDto> GetByUsername(string username)
+        {
+            var user = _userRepository.GetByUsername(username)
+                .FirstOrDefault(u => u.DeletedDate == null);
+
+            if (user == null)
+                return Result<UserResponseDto>.Fail("User không tồn tại");
+
+            return Result<UserResponseDto>.Success(MapToUserResponseDto(user));
+        }
+
         public Result ChangePassword(string userId, ChangePasswordRequestDto dto)
         {
             try
@@ -77,7 +88,7 @@ namespace bookstore_Management.Services.Implementations
             {
                 return Result.Fail($"Lỗi: {ex.Message}");
             }
-        } 
+        }
 
         public Result Deactivate(string userId)
         {
@@ -108,7 +119,7 @@ namespace bookstore_Management.Services.Implementations
 
 
                 var dto = MapToUserResponseDto(user);
-                
+
                 return Result<UserResponseDto>.Success(dto);
             }
             catch (Exception ex)
@@ -122,8 +133,8 @@ namespace bookstore_Management.Services.Implementations
             try
             {
                 var user = _userRepository.GetByUsername(username)
-                    .Where(u => u.DeletedDate != null)
-                    .Select ( MapToUserResponseDto);
+                    .Where(u => u.DeletedDate == null)
+                    .Select(MapToUserResponseDto).ToList();
                 return Result<IEnumerable<UserResponseDto>>.Success(user);
             }
             catch (Exception ex)
@@ -137,7 +148,7 @@ namespace bookstore_Management.Services.Implementations
             try
             {
                 var users = _userRepository.GetAll().Where(u => u.DeletedDate == null)
-                    .Select( MapToUserResponseDto);
+                    .Select(MapToUserResponseDto);
                 return Result<IEnumerable<UserResponseDto>>.Success(users);
             }
             catch (Exception ex)
@@ -150,12 +161,14 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var  user = _userRepository.GetByUsername(username).FirstOrDefault();
+                var user = _userRepository.GetByUsername(username).FirstOrDefault();
                 if (user == null || user.DeletedDate != null)
                     return Result<bool>.Fail("User không tồn tại");
-                return  (!Encryptor.Verify(password, user.PasswordHash)) ? 
-                    Result<bool>.Success(true) : 
-                    Result<bool>.Success(false);
+                if (!Encryptor.Verify(password, user.PasswordHash))
+                    return Result<bool>.Fail("Mật khẩu không đúng");
+
+                return Result<bool>.Success(true);
+
             }
             catch (Exception ex)
             {
@@ -175,7 +188,7 @@ namespace bookstore_Management.Services.Implementations
                 return Result<UserRole>.Fail($"Lỗi: {ex.Message}");
             }
         }
-        
+
         private UserResponseDto MapToUserResponseDto(User user)
         {
             return new UserResponseDto
@@ -186,7 +199,6 @@ namespace bookstore_Management.Services.Implementations
                 CreateDate = user.CreatedDate
             };
         }
-        
+
     }
 }
-

@@ -1,6 +1,7 @@
 ﻿using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
+using bookstore_Management.Presentation.Views.Dialogs.Customers;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using DocumentFormat.OpenXml.VariantTypes;
@@ -61,6 +62,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         //command cho thao tác tìm kiếm - load lại
         public ICommand SearchCusCommand { get; set; }
+        public ICommand LoadData { get; set; }
 
         //command cho in / xuất excel
         public ICommand ExportCommand { get; set; }
@@ -122,6 +124,7 @@ namespace bookstore_Management.Presentation.ViewModels
                         Name=dialog.CustomerName,
                         Address=dialog.Address,
                         Email=dialog.Email,
+                        Phone=dialog.Phone,
                     };
                     var result = _customerService.AddCustomer(newCusDto);
                     if (!result.IsSuccess)
@@ -146,6 +149,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 dialog.CustomerName = cus.Name;
                 dialog.Phone = cus.Phone;
                 dialog.Email = cus.Email;
+                dialog.Address = cus.Address;
                 if (dialog.ShowDialog() == true)
                 {
                     var updateCusDto = new DTOs.Customer.Requests.UpdateCustomerRequestDto()
@@ -153,11 +157,13 @@ namespace bookstore_Management.Presentation.ViewModels
                         Name = dialog.CustomerName,
                         Address = dialog.Address,
                         Email = dialog.Email,
+                        Phone = dialog.Phone,
                     };
                     var result = _customerService.UpdateCustomer(cus.CustomerId, updateCusDto);
                     if (!result.IsSuccess)
                     {
-                        MessageBox.Show("Lỗi khi sửa khách hàng");
+                        // SỬA DÒNG NÀY: In ra result.ErrorMessage để biết DB đang từ chối vì lý do gì
+                        MessageBox.Show($"Chi tiết lỗi: {result.ErrorMessage}", "Lỗi thêm khách hàng", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                     LoadCusFromDatabase();
@@ -179,7 +185,10 @@ namespace bookstore_Management.Presentation.ViewModels
                 var result = _customerService.DeleteCustomer(cus.CustomerId);
                 if (!result.IsSuccess)
                 {
-                    MessageBox.Show("Lỗi khi xóa khách hàng");
+                    MessageBox.Show($"Không thể xóa khách hàng.\nChi tiết lỗi: {result.ErrorMessage}",
+                        "Lỗi xóa dữ liệu",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                     return;
                 }
                 LoadCusFromDatabase();
@@ -217,8 +226,20 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
+            #region LoadDataCommand
+            LoadData = new RelayCommand<object>((p) =>
+            {
+                SearchKeyword = string.Empty;
+                LoadCusFromDatabase();
+            });
+            #endregion
             #region Print & Export
-            PrintCommand = new RelayCommand<object>((p)=> { });
+            PrintCommand = new RelayCommand<object>((p)=> 
+            {
+                var data = Customers;
+                var dialog = new PrintCustomer(data);
+                dialog.ShowDialog();
+            });
             ExportCommand = new RelayCommand<object>((p) => { });
             #endregion
         }

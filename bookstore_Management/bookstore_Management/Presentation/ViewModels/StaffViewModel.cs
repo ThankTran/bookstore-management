@@ -2,6 +2,7 @@
 using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
+using bookstore_Management.Presentation.Views.Dialogs.Staffs;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using System.Collections.ObjectModel;
@@ -28,21 +29,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        ////để lấy data từ list
-        //public Array BookCategories => Enum.GetValues(typeof(BookCategory));
-
-        //private BookCategory _category;
-        //public BookCategory Category
-        //{
-        //    get => _category;
-        //    set
-        //    {
-        //        _category = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
+       
         //sách đã chọn để xóa/sửa
         private Staff _selectedStaff;
         public Staff SelectedStafff
@@ -77,6 +64,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         //command cho thao tác tìm kiếm - load lại
         public ICommand SearchStaffCommand { get; set; }
+        public ICommand LoadData { get; set; }
 
         //command cho in / xuất excel
         public ICommand ExportCommand { get; set; }
@@ -222,25 +210,32 @@ namespace bookstore_Management.Presentation.ViewModels
                     return;
                 }
 
-                //var result = _staffService.SearchByName(SearchKeyword);
-                //if (!result.IsSuccess)
-                //{
-                //    MessageBox.Show("Lỗi khi tìm sách");
-                //    return;
-                //}
-                //Staffs.Clear();
-                //foreach (var s in result.Data)
-                //{
-                //    Staffs.Add(new Staff
-                //    {
-                //        Id = s.Id,
-                //        Name = s.Name,
-                //        CitizenId = s.CitizenId,
-                //        Phone = s.Phone,
-                //        UserRole = s.UserRole,
-                //        CreatedDate = s.CreatedDate,
-                //    });
-                //}
+                var result = _staffService.SearchByName(SearchKeyword);
+                if (!result.IsSuccess)
+                {
+                    MessageBox.Show("Lỗi khi tìm sách");
+                    return;
+                }
+                Staffs.Clear();
+                foreach (var s in result.Data)
+                {
+                    Staffs.Add(new Staff
+                    {
+                        Id = s.Id,
+                        Name = s.Name,
+                        CitizenId = s.CitizenId,
+                        Phone = s.Phone,
+                        UserRole = s.UserRole,
+                        CreatedDate = s.CreatedDate,
+                    });
+                }
+            });
+            #endregion
+            #region LoadDataCommand
+            LoadData = new RelayCommand<object>((p) =>
+            {
+                SearchKeyword = string.Empty;
+                LoadStaffsFromDatabase();
             });
             #endregion
 
@@ -248,7 +243,9 @@ namespace bookstore_Management.Presentation.ViewModels
             #region PrintCommand 
             PrintCommand = new RelayCommand<object>((p) =>
             {
-
+                var data = Staffs;
+                var dialog = new PrintStaff(data);
+                dialog.ShowDialog();
             });
             #endregion
             #region ExportCommand

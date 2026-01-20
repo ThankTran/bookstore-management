@@ -222,7 +222,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
                 return false;
             }
 
-            if (!Regex.IsMatch(tbCustomerName.Text, @"^[a-zA-Z\s]+$"))
+            if (!Regex.IsMatch(tbCustomerName.Text, @"^[\p{L}\s]+$"))
             {
                 ShowValidationError("Tên khách hàng chỉ được chứa chữ cái và khoảng trắng!");
                 tbCustomerName.Focus();

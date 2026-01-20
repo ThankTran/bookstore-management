@@ -7,8 +7,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        ResizeMode="NoResize"
-        Loaded="Window_Loaded">
+        ResizeMode="NoResize">
 
     <Window.Resources>
         <Style x:Key="BillTextStyle" TargetType="TextBlock">
@@ -46,8 +45,7 @@
             <Border Grid.Row="0"
                     Background="#2196F3"
                     CornerRadius="20,20,0,0"
-                    Padding="30,20"
-                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                    Padding="30,20">
                 <Grid>
                     <StackPanel Orientation="Horizontal">
                         <Border Background="White"
@@ -148,8 +146,8 @@
                                                Style="{StaticResource BillHeaderStyle}"
                                                Width="120"/>
                                     <TextBlock x:Name="tbStaffName"
-                                               Text="Nguyễn Văn A"
-                                               Style="{StaticResource BillTextStyle}"/>
+                                                Text="{Binding SelectedStaff.Name}"
+                                                Style="{StaticResource BillTextStyle}"/>
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal">
@@ -157,7 +155,7 @@
                                                Style="{StaticResource BillHeaderStyle}"
                                                Width="120"/>
                                     <TextBlock x:Name="tbCustomerName"
-                                               Text="Khách vãng lai"
+                                               Text="{Binding SelectedCustomer.Name}"
                                                Style="{StaticResource BillTextStyle}"/>
                                 </StackPanel>
                             </StackPanel>
@@ -168,7 +166,7 @@
                                                Style="{StaticResource BillHeaderStyle}"
                                                Width="120"/>
                                     <TextBlock x:Name="tbDate"
-                                               Text="19/01/2026"
+                                               Text="{Binding BillDate}"
                                                Style="{StaticResource BillTextStyle}"/>
                                 </StackPanel>
 
@@ -177,7 +175,7 @@
                                                Style="{StaticResource BillHeaderStyle}"
                                                Width="120"/>
                                     <TextBlock x:Name="tbTime"
-                                               Text="14:30"
+                                               Text="{Binding BillTime}"
                                                Style="{StaticResource BillTextStyle}"/>
                                 </StackPanel>
 
@@ -186,7 +184,7 @@
                                                Style="{StaticResource BillHeaderStyle}"
                                                Width="120"/>
                                     <TextBlock x:Name="tbPaymentMethod"
-                                               Text="Tiền mặt"
+                                               Text="{Binding SelectedPaymentMethod.Display}"
                                                Style="{StaticResource BillTextStyle}"/>
                                 </StackPanel>
                             </StackPanel>
@@ -235,8 +233,8 @@
                                        Margin="0,0,10,0"/>
                         </Grid>
 
-                        <!-- Items List -->
-                        <ItemsControl x:Name="icItems">
+                         <!--Items List--> 
+                        <!--<ItemsControl x:Name="icItems">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="0,0,0,8" MinHeight="30">
@@ -279,7 +277,110 @@
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
+                        </ItemsControl>-->
+                        <!--<ItemsControl ItemsSource="{Binding CartItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Text="{Binding ProductName}"/>
+                                        <TextBlock Text="{Binding Quantity}"/>
+                                        <TextBlock Text="{Binding Total, StringFormat={}{0:N0}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>-->
+                        <ItemsControl ItemsSource="{Binding CartItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,8" MinHeight="30">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="120"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- STT -->
+                                        <TextBlock Grid.Column="0"
+                                               Text="{Binding STT}"
+                                               Style="{StaticResource BillTextStyle}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>     
+
+                                        <!-- Tên sách -->
+                                        <TextBlock Grid.Column="1"
+                                               Text="{Binding ProductName}"
+                                               Style="{StaticResource BillTextStyle}"
+                                               TextWrapping="Wrap"
+                                               Margin="10,0,0,0"
+                                               VerticalAlignment="Center"/>
+
+                                        <!-- Số lượng -->
+                                        <TextBlock Grid.Column="2"
+                                                Text="{Binding Quantity}"
+                                                Style="{StaticResource BillTextStyle}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+
+                                        <!-- Đơn giá -->
+                                        <TextBlock Grid.Column="3"
+                                               Text="{Binding UnitPrice, StringFormat={}{0:N0}}"
+                                               Style="{StaticResource BillTextStyle}"
+                                               HorizontalAlignment="Right"
+                                               Margin="0,0,10,0"
+                                               VerticalAlignment="Center"/>
+
+                                        <!-- Thành tiền -->
+                                        <TextBlock Grid.Column="4"
+                                               Text="{Binding Total, StringFormat={}{0:N0}}"
+                                               Style="{StaticResource BillTextStyle}"
+                                               HorizontalAlignment="Right"
+                                               Margin="0,0,10,0"
+                                               VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
                         </ItemsControl>
+
+
+
+
+                        <!--<ItemsControl ItemsSource="{Binding CartItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="120"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0"
+                           Text="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, 
+                                          Path=Items.IndexOf(DataContext) + 1}"/>
+
+                                        <TextBlock Grid.Column="1"
+                           Text="{Binding ProductName}"/>
+
+                                        <TextBlock Grid.Column="2"
+                           Text="{Binding Quantity}"
+                           HorizontalAlignment="Center"/>
+
+                                        <TextBlock Grid.Column="3"
+                           Text="{Binding UnitPrice, StringFormat={}{0:N0}}"
+                           HorizontalAlignment="Right"/>
+
+                                        <TextBlock Grid.Column="4"
+                           Text="{Binding Total, StringFormat={}{0:N0}}"
+                           HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>-->
+
 
                         <Border Height="1" Background="#E0E0E0" Margin="0,15,0,15"/>
 
@@ -310,12 +411,12 @@
                                            Style="{StaticResource BillHeaderStyle}"
                                            FontSize="16"
                                            Foreground="#2196F3"/>
-                                <TextBlock x:Name="tbTotal"
-                                           Text="0 ₫"
+                                <TextBlock Text="{Binding Total, StringFormat={}{0:N0} ₫}"
                                            Style="{StaticResource BillHeaderStyle}"
                                            FontSize="18"
                                            Foreground="#2196F3"
                                            HorizontalAlignment="Right"/>
+
                             </Grid>
 
                             <TextBlock x:Name="tbTotalInWords"
@@ -427,9 +528,10 @@
                                 <DropShadowEffect Color="#4CAF50" BlurRadius="15" ShadowDepth="3" Opacity="0.3"/>
                             </Border.Effect>
                             <Button Background="Transparent"
-                                    BorderThickness="0"
-                                    Cursor="Hand"
-                                    Click="BtnPrint_Click">
+                                    BorderThickness="0"                                    
+                                     Cursor="Hand"
+                                    Command="{Binding CheckoutCommand}">
+                               
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="🖨" FontSize="16" FontWeight="Bold" Foreground="White" 
                                                Margin="0,0,8,0" VerticalAlignment="Center"/>

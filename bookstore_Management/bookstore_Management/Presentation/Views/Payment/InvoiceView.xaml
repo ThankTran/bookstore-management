@@ -52,7 +52,7 @@
                         <Button Background="Transparent"
                                 BorderThickness="0"
                                 Cursor="Hand"
-                                Click="TabAll_Click">
+                                Command="{Binding FilterAllCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📊" 
                                            FontSize="16"
@@ -76,8 +76,8 @@
                             Cursor="Hand">
                         <Button Background="Transparent"
                                 BorderThickness="0"
-                                Cursor="Hand"
-                                Click="TabImport_Click">
+                                Command="{Binding FilterImportCommand}"
+                                Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📥" 
                                            FontSize="16"
@@ -100,8 +100,8 @@
                             Cursor="Hand">
                         <Button Background="Transparent"
                                 BorderThickness="0"
-                                Cursor="Hand"
-                                Click="TabExport_Click">
+                                Command="{Binding FilterExportCommand}"
+                                Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📤" 
                                            FontSize="16"
@@ -132,7 +132,7 @@
                                        Foreground="#2E7D32"
                                        FontWeight="SemiBold"/>
                             <TextBlock x:Name="tbImportCount"
-                                       Text="0" 
+                                       Text="{Binding TotalImportInvoices}"
                                        FontSize="13"
                                        Foreground="#2E7D32"
                                        FontWeight="Bold"/>
@@ -149,7 +149,7 @@
                                        Foreground="#1976D2"
                                        FontWeight="SemiBold"/>
                             <TextBlock x:Name="tbExportCount"
-                                       Text="0" 
+                                       Text="{Binding TotalExportInvoices}" 
                                        FontSize="13"
                                        Foreground="#1976D2"
                                        FontWeight="Bold"/>
@@ -186,8 +186,8 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Padding="15,8"
-                                Cursor="Hand"
-                                Click="BtnAddImport_Click">
+                                Command="{Binding AddImportCommand}"
+                                Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📥" 
                                            FontSize="16"
@@ -216,8 +216,8 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Padding="15,8"
-                                Cursor="Hand"
-                                Click="BtnAddExport_Click">
+                                Command="{Binding AddExportCommand}"
+                                Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📤" 
                                            FontSize="16"
@@ -248,8 +248,7 @@
                                 BorderThickness="0"
                                 Padding="12,8"
                                 ToolTip="In danh sách"
-                                Cursor="Hand"
-                                Click="BtnPrint_Click">
+                                Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Presentation/AppResources/Images/Icons/Functions/print.png" 
                                        Width="20" 
@@ -323,8 +322,8 @@
                                  VerticalContentAlignment="Center"
                                  FontSize="13"
                                  Foreground="#666666"
-                                 FontFamily="{StaticResource PrimaryFont}"
-                                 TextChanged="TxtSearch_TextChanged">
+                                 Text="{ Binding SearchKeywork, UpdateSourceTrigger=PropertyChanged}"       
+                                 FontFamily="{StaticResource PrimaryFont}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
                                     <Style.Triggers>
@@ -402,7 +401,7 @@
                                            Foreground="#666666"
                                            VerticalAlignment="Center"/>
                                 <TextBlock x:Name="tbTotalCount"
-                                           Text="0"
+                                           Text="{Binding TotalInvoices}"
                                            FontSize="14"
                                            FontWeight="Bold"
                                            Foreground="{StaticResource PrimaryBrush}"
@@ -422,6 +421,8 @@
                               x:Name="dgInvoices"
                               Style="{StaticResource MainDataGrid}"
                               ItemsSource="{Binding Invoices}"
+                              SelectedItem="{Binding SelectedInvoice}"
+                              LoadingRow="dgInvoices_LoadingRow"
                               AutoGenerateColumns="False"
                               MouseDoubleClick="DataGrid_MouseDoubleClick"
                               Margin="0">
@@ -574,7 +575,7 @@
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" 
                                                     HorizontalAlignment="Center">
-                                            <!-- View Button -->
+                                            <!-- View Button --><!--
                                             <Border Background="#E3F2FD"
                                                     CornerRadius="6"
                                                     Margin="0,0,5,0"
@@ -584,12 +585,11 @@
                                                         Background="Transparent"
                                                         Width="32"
                                                         Height="32"
-                                                        Tag="{Binding}"
-                                                        Click="BtnView_Click">
+                                                        Tag="{Binding}">
                                                     <TextBlock Text="👁" 
                                                                FontSize="16"/>
                                                 </Button>
-                                            </Border>
+                                            </Border>-->
 
                                             <!-- Edit Button -->
                                             <Border Background="#FFF3E0"
@@ -601,14 +601,17 @@
                                                         Background="Transparent"
                                                         Width="32"
                                                         Height="32"
-                                                        Tag="{Binding}"
-                                                        Click="BtnEdit_Click">
+                                                        Command="{Binding DataContext.EditCommand,
+                                                                  RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+
+                                                        Tag="{Binding}">
                                                     <TextBlock Text="✏️" 
                                                                FontSize="16"/>
                                                 </Button>
                                             </Border>
 
-                                            <!-- Print Button -->
+                                            <!-- Print Button --><!--
                                             <Border Background="#E8F5E9"
                                                     CornerRadius="6"
                                                     Margin="0,0,5,0"
@@ -618,12 +621,12 @@
                                                         Background="Transparent"
                                                         Width="32"
                                                         Height="32"
-                                                        Tag="{Binding}"
-                                                        Click="BtnPrint_Click">
+                                                        Command="{Binding PrintCommand}"
+                                                        Tag="{Binding}">
                                                     <TextBlock Text="🖨" 
                                                                FontSize="16"/>
                                                 </Button>
-                                            </Border>
+                                            </Border>-->
 
                                             <!-- Delete Button -->
                                             <Border Background="#FFEBEE"
@@ -634,8 +637,11 @@
                                                         Background="Transparent"
                                                         Width="32"
                                                         Height="32"
-                                                        Tag="{Binding}"
-                                                        Click="BtnDelete_Click">
+                                                          Command="{Binding DataContext.DeleteCommand,
+                                                                    RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+
+                                                        Tag="{Binding}">
                                                     <TextBlock Text="🗑" 
                                                                FontSize="16"/>
                                                 </Button>

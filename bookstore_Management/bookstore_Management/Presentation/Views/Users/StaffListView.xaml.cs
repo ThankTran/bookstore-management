@@ -1,8 +1,11 @@
-﻿using bookstore_Management.Presentation.ViewModels;
+﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.Models;
+using bookstore_Management.Presentation.ViewModels;
+using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
-using bookstore_Management.Services.Implementations;
 
 namespace bookstore_Management.Presentation.Views.Users
 {
@@ -13,8 +16,11 @@ namespace bookstore_Management.Presentation.Views.Users
     {
         private StaffViewModel _viewModel;
         public StaffListView() 
-        {
+        {            
             InitializeComponent();
+
+            
+            
             IStaffService staffService;
 
             var context = new Data.Context.BookstoreDbContext();
