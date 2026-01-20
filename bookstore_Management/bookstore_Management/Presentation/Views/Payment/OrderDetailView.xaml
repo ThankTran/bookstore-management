@@ -42,7 +42,8 @@
                                 Cursor="Hand">
                             <Button Background="Transparent"
                                     BorderThickness="0"
-                                    Cursor="Hand">
+                                    Cursor="Hand"
+                                    Click ="BtnBack_Click">
                                 <TextBlock Text="←" 
                                            FontSize="20"
                                            FontWeight="Bold"
@@ -67,44 +68,53 @@
 
                     <!-- Action Buttons -->
                     <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center">
-                        <!-- Print Invoice Button -->
-                        <Border Background="White"
-                                CornerRadius="10"
-                                BorderBrush="#E0E0E0"
-                                BorderThickness="1"
-                                Padding="15,8"
-                                Margin="0,0,10,0"
-                                Cursor="Hand">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🖨️" 
-                                           FontSize="16"
-                                           Margin="0,0,8,0"/>
-                                <TextBlock Text="In hóa đơn"
-                                           FontSize="13"
-                                           FontWeight="SemiBold"
-                                           Foreground="#666666"
-                                           VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
+                                 HorizontalAlignment="Right"
+                                 VerticalAlignment="Center">
+                     
+                         <!-- Print Invoice Button -->
+                         <Button Click="BtnPrint_Click"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Cursor="Hand"
+                                 Margin="0,0,10,0">
+                             <Border Background="White"
+                                     CornerRadius="10"
+                                     BorderBrush="#E0E0E0"
+                                     BorderThickness="1"
+                                     Padding="15,8">
+                                 <StackPanel Orientation="Horizontal">
+                                     <TextBlock Text="🖨️"
+                                                FontSize="16"
+                                                Margin="0,0,8,0"/>
+                                     <TextBlock Text="In hóa đơn"
+                                                FontSize="13"
+                                                FontWeight="SemiBold"
+                                                Foreground="#666666"
+                                                VerticalAlignment="Center"/>
+                                 </StackPanel>
+                             </Border>
+                         </Button>
 
-                        <!-- Cancel Order Button -->
-                        <Border Background="#FFEBEE"
-                                CornerRadius="10"
-                                Padding="15,8"
-                                Cursor="Hand">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="❌" 
-                                           FontSize="16"
-                                           Margin="0,0,8,0"/>
-                                <TextBlock Text="Hủy đơn"
-                                           FontSize="13"
-                                           FontWeight="SemiBold"
-                                           Foreground="#F44336"
-                                           VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
+                         <!-- Cancel Order Button -->
+                         <Button Click="BtnCancel_Click"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Cursor="Hand">
+                             <Border Background="#FFEBEE"
+                                     CornerRadius="10"
+                                     Padding="15,8">
+                                 <StackPanel Orientation="Horizontal">
+                                     <TextBlock Text="❌"
+                                                FontSize="16"
+                                                Margin="0,0,8,0"/>
+                                     <TextBlock Text="Hủy đơn"
+                                                FontSize="13"
+                                                FontWeight="SemiBold"
+                                                Foreground="#F44336"
+                                                VerticalAlignment="Center"/>
+                                 </StackPanel>
+                             </Border>
+                         </Button>
                     </StackPanel>
                 </Grid>
 

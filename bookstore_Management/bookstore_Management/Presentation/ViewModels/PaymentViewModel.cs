@@ -139,25 +139,60 @@ namespace bookstore_Management.Presentation.ViewModels
         public decimal Subtotal
         {
             get => _subtotal;
-            set { _subtotal = value; OnPropertyChanged(); }
+            set
+            {
+                _subtotal = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(DiscountAmount)); // 👈 BẮT BUỘC
+            }
         }
+
+        public decimal DiscountAmount => Subtotal - Total;
 
         public decimal LoyaltyPoints
         {
             get => _loyaltyPoints;
             set { _loyaltyPoints = value; OnPropertyChanged(); }
         }
+        private string _loyaltyInput;
+        public string LoyaltyInput
+        {
+            get => _loyaltyInput;
+            set
+            {
+                _loyaltyInput = value;
+                ParseLoyalty();
+                OnPropertyChanged();
+            }
+        }
+
 
         public decimal Discount
         {
             get => _discount;
             set { _discount = value; OnPropertyChanged(); }
         }
+        private string _discountInput;
+        public string DiscountInput
+        {
+            get => _discountInput;
+            set
+            {
+                _discountInput = value;
+                ParseDiscount();
+                OnPropertyChanged();
+            }
+        }
 
         public decimal Total
         {
             get => _total;
-            set { _total = value; OnPropertyChanged(); }
+            set
+            {
+                _total = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(DiscountAmount)); // 👈 BẮT BUỘC
+            }
         }
 
         private bool _isEditingLoyalty;
@@ -247,7 +282,7 @@ namespace bookstore_Management.Presentation.ViewModels
             });
             EditSubtotalCommand = new RelayCommand(() =>
             {
-                string input = Interaction.InputBox("Điểm", "Chiết khấu", "0");
+                string input = Interaction.InputBox("Giảm giá", "Chiết khấu", "0");
                 if (!string.IsNullOrEmpty(input) && int.TryParse(input, out int i))
                 {
                     Subtotal = i;
@@ -256,13 +291,27 @@ namespace bookstore_Management.Presentation.ViewModels
             });
             EditDiscountCommand = new RelayCommand(() =>
             {
-                string input = Interaction.InputBox("Điểm", "Discount", "0");
-                if (!string.IsNullOrEmpty(input) && int.TryParse(input, out int i))
+                string input = Interaction.InputBox("Nhập chiết khấu (%)", "Discount", Discount.ToString());
+
+                if (string.IsNullOrWhiteSpace(input))
+                    return;
+
+                if (!decimal.TryParse(input, out var value))
                 {
-                    Discount = i;
+                    MessageBox.Show("Chiết khấu phải là số!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
+
+                if (value < 0 || value > 100)
+                {
+                    MessageBox.Show("Chiết khấu phải từ 0 đến 100%", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                Discount = value;
                 RecalculateTotals();
             });
+
 
             FinishEditLoyaltyCommand = new RelayCommand(() =>
             {
@@ -486,7 +535,7 @@ namespace bookstore_Management.Presentation.ViewModels
         {
             if (SelectedCustomer != null && SelectedCustomer.Id != null)
             {
-                // giữ nguyên logic comment như bạn
+                LoyaltyPoints = SelectedCustomer.LoyaltyPoints; // ✅ LẤY TỪ DB
             }
             else
             {
@@ -495,6 +544,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
             RecalculateTotals();
         }
+
 
         #endregion
 
@@ -565,6 +615,37 @@ namespace bookstore_Management.Presentation.ViewModels
                 RecalculateTotals();
             }
         }
+
+        private void ParseDiscount()
+        {
+            if (!decimal.TryParse(DiscountInput, out var value))
+                value = 0;
+
+            if (value < 0)
+                value = 0;
+
+            if (value > 100)
+                value = 100;
+
+            Discount = value;
+            RecalculateTotals();
+        }
+
+        private void ParseLoyalty()
+        {
+            if (!decimal.TryParse(LoyaltyInput, out var value))
+                value = 0;
+
+            if (value < 0)
+                value = 0;
+
+            if (value > Subtotal)
+                value = Subtotal;
+
+            LoyaltyPoints = value;
+            RecalculateTotals();
+        }
+
         public void ConfirmCheckout()
         {
             Checkout();
@@ -587,68 +668,25 @@ namespace bookstore_Management.Presentation.ViewModels
         private void RecalculateTotals()
         {
             Subtotal = CartItems.Sum(x => x.Total);
-            CompletedCount = CartItems.Count;
-
-            OnPropertyChanged(nameof(HasItemsInCart));
-            CheckoutCommand.NotifyCanExecuteChanged();
-
 
             var afterPoints = Subtotal - LoyaltyPoints;
             if (afterPoints < 0) afterPoints = 0;
 
-            var afterDiscount = afterPoints -( afterPoints * Discount / 100);
+            var afterDiscount = afterPoints - (afterPoints * Discount / 100);
             if (afterDiscount < 0) afterDiscount = 0;
 
             Total = afterDiscount;
+
+            OnPropertyChanged(nameof(DiscountAmount));
         }
+
+
 
 
         #endregion
 
         #region Checkout
 
-        //private void Checkout()
-        //{
-        //    if (!CanCheckout()) return;
-
-        //    try
-        //    {
-        //        var dto = new CreateOrderRequestDto
-        //        {
-        //            CustomerId = SelectedCustomer?.Id,
-        //            StaffId = SelectedStaff?.Id, // 👈 THÊM DÒNG NÀY
-        //            PaymentMethod = SelectedPaymentMethod?.Type ?? PaymentType.Cash,
-        //            Discount = Subtotal > 0 ? Discount / Subtotal : 0,
-        //            Notes = null,
-        //        };
-
-
-        //        var result = _orderService.CreateOrder(dto);
-
-        //        if (!result.IsSuccess)
-        //        {
-        //            MessageBox.Show(result.ErrorMessage, "Lỗi",
-        //                MessageBoxButton.OK, MessageBoxImage.Error);
-        //            return;
-        //        }
-
-        //        ClearCart();
-
-        //        MessageBox.Show(
-        //            $"Tạo đơn hàng thành công!\nMã đơn: {result.Data}",
-        //            "Thành công",
-        //            MessageBoxButton.OK,
-        //            MessageBoxImage.Information);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(
-        //            $"Lỗi thanh toán: {ex.Message}",
-        //            "Lỗi",
-        //            MessageBoxButton.OK,
-        //            MessageBoxImage.Error);
-        //    }
-        //}
         private void Checkout()
         {
             if (!CartItems.Any())

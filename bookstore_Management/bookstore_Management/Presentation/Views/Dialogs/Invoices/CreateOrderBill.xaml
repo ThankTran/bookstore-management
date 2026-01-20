@@ -156,8 +156,8 @@
                                           Background="Transparent"
                                           FontSize="13"
                                           ItemsSource="{Binding Staffs}"
-                                          SelectedItem="{Binding SelectedStaff, Mode=TwoWay}">
-                                </ComboBox>
+                                          SelectedItem="{Binding SelectedStaff, Mode=TwoWay}"
+                                          DisplayMemberPath="Display"/>
                             </Border>
                         </StackPanel>
 

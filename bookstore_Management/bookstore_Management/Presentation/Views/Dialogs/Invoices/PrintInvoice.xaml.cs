@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using bookstore_Management.Presentation.ViewModels;
 
 namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 {
@@ -298,17 +299,29 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
             printDoc.PrintPage += (s, ev) =>
             {
-                var graphics = ev.Graphics;
+                var g = ev.Graphics;
                 var font = new System.Drawing.Font("Arial", 12);
+                var bold = new System.Drawing.Font("Arial", 12, System.Drawing.FontStyle.Bold);
                 var brush = System.Drawing.Brushes.Black;
-                float yPos = 20;
 
-                // TODO: Implement actual printing logic with invoice data
-                graphics.DrawString($"Hóa đơn: {_invoiceId}", font, brush, 20, yPos);
-                yPos += 30;
-                graphics.DrawString($"Ngày: {DateTime.Now:dd/MM/yyyy HH:mm}", font, brush, 20, yPos);
+                float y = 20;
 
-                // Add more invoice details here...
+                if (_invoiceType == InvoiceType.Import && _invoiceData is ImportBillResponseDto import)
+                {
+                    g.DrawString("PHIẾU NHẬP HÀNG", bold, brush, 20, y); y += 30;
+                    g.DrawString($"Mã phiếu: {import.Id}", font, brush, 20, y); y += 25;
+                    g.DrawString($"Ngày: {import.CreatedDate:dd/MM/yyyy HH:mm}", font, brush, 20, y); y += 25;
+                    g.DrawString($"NXB: {import.PublisherName}", font, brush, 20, y); y += 25;
+                    g.DrawString($"Tổng tiền: {import.TotalAmount:N0} ₫", font, brush, 20, y);
+                }
+                else if (_invoiceType == InvoiceType.Export && _invoiceData is OrderResponseDto order)
+                {
+                    g.DrawString("HÓA ĐƠN BÁN HÀNG", bold, brush, 20, y); y += 30;
+                    g.DrawString($"Mã HĐ: {order.OrderId}", font, brush, 20, y); y += 25;
+                    g.DrawString($"Ngày: {order.CreatedDate:dd/MM/yyyy HH:mm}", font, brush, 20, y); y += 25;
+                    g.DrawString($"Khách hàng: {order.CustomerName ?? "Khách vãng lai"}", font, brush, 20, y); y += 25;
+                    g.DrawString($"Tổng tiền: {order.TotalPrice:N0} ₫", font, brush, 20, y);
+                }
             };
 
             printDoc.Print();

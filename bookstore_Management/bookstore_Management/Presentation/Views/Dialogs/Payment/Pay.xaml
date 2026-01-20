@@ -390,7 +390,7 @@
                                 <TextBlock Text="Tạm tính:"
                                            Style="{StaticResource BillTextStyle}"/>
                                 <TextBlock x:Name="tbSubtotal"
-                                           Text="0 ₫"
+                                           Text="{Binding Subtotal, StringFormat={}{0:N0} ₫}"
                                            Style="{StaticResource BillTextStyle}"
                                            HorizontalAlignment="Right"/>
                             </Grid>
@@ -399,7 +399,7 @@
                                 <TextBlock Text="Giảm giá:"
                                            Style="{StaticResource BillTextStyle}"/>
                                 <TextBlock x:Name="tbDiscount"
-                                           Text="0 ₫"
+                                           Text="{Binding DiscountAmount, StringFormat={}{0:N0} ₫}"
                                            Style="{StaticResource BillTextStyle}"
                                            HorizontalAlignment="Right"/>
                             </Grid>

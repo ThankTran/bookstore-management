@@ -1,4 +1,5 @@
-﻿using bookstore_Management.Data.Context;
+﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
 using bookstore_Management.Presentation.Views.Dialogs.Customers;
@@ -93,6 +94,8 @@ namespace bookstore_Management.Presentation.ViewModels
                   Phone = dto.Phone,  
                   Email = dto.Email,
                   Address = dto.Address,
+                  LoyaltyPoints = dto.LoyaltyPoints,
+                 
             });
 
             Customers = new ObservableCollection<Customer>(cuss);
@@ -116,6 +119,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region AddCommand
             AddCusCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role == UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var dialog = new Presentation.Views.Dialogs.Customers.AddCustomer();
                 if (dialog.ShowDialog() == true)
                 {
@@ -125,6 +133,7 @@ namespace bookstore_Management.Presentation.ViewModels
                         Address=dialog.Address,
                         Email=dialog.Email,
                         Phone=dialog.Phone,
+                        
                     };
                     var result = _customerService.AddCustomer(newCusDto);
                     if (!result.IsSuccess)
@@ -138,7 +147,12 @@ namespace bookstore_Management.Presentation.ViewModels
             #endregion
             #region EditCommand
             EditCusCommand = new RelayCommand<object>((p) => 
-            { 
+            {
+                if (SessionModel.Role == UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var dialog = new Presentation.Views.Dialogs.Customers.UpdateCustomer();
                 var cus = p as Customer;
                 if (cus == null)
@@ -150,6 +164,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 dialog.Phone = cus.Phone;
                 dialog.Email = cus.Email;
                 dialog.Address = cus.Address;
+         
                 if (dialog.ShowDialog() == true)
                 {
                     var updateCusDto = new DTOs.Customer.Requests.UpdateCustomerRequestDto()
@@ -172,6 +187,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region RemoveCommand
             RemoveCusCommand = new RelayCommand<object>((p) => 
             {
+                if (SessionModel.Role == UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var cus = p as Customer;
                 if (cus == null)
                 {
@@ -235,6 +255,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region Print & Export
             PrintCommand = new RelayCommand<object>((p)=> 
             {
+                if (SessionModel.Role == UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var data = Customers;
                 var dialog = new PrintCustomer(data);
                 dialog.ShowDialog();

@@ -195,7 +195,7 @@ namespace bookstore_Management.Services.Implementations
 
                 order.DeletedDate = DateTime.Now;
                 _orderRepository.Update(order);
-                _orderRepository.SaveChanges();
+                 _orderRepository.SaveChanges();
 
                 return Result.Success("Hủy đơn hàng thành công");
             }
@@ -346,7 +346,18 @@ namespace bookstore_Management.Services.Implementations
                 TotalPrice = order.TotalPrice,
                 Discount = order.Discount,
                 PaymentMethod = order.PaymentMethod,
-                Notes = order.Notes
+                Notes = order.Notes,
+                OrderDetails = _orderDetailRepository.GetByOrder(order.OrderId)
+                    .Select(d => new OrderDetailResponseDto
+                    {
+                        OrderId = d.OrderId,
+                        BookId = d.BookId,
+                        BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
+                        SalePrice = d.SalePrice,
+                        Quantity = d.Quantity,
+                        Subtotal = d.Subtotal,
+                        Notes = d.Notes
+                    }).ToList()
             };
         }
     }

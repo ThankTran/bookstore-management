@@ -15,6 +15,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 {
     public partial class ExportExcelInvoice : Window
     {
+        private bool _isLoaded = false;
         private readonly IImportBillService _importBillService;
         private readonly IOrderService _orderService;
 
@@ -29,6 +30,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
             _importBillService = importBillService;
             _orderService = orderService;
+
+            Loaded += ExportExcelInvoice_Loaded;
+        }
+        
+        private void ExportExcelInvoice_Loaded(object sender, RoutedEventArgs e)
+        {
+            _isLoaded = true;
 
             LoadData();
             UpdateStatistics();
@@ -50,6 +58,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
                 _allOrders = orderResult.IsSuccess && orderResult.Data != null
                     ? orderResult.Data.ToList()
                     : new List<OrderResponseDto>();
+                _isLoaded = true;
             }
             catch (Exception ex)
             {
@@ -62,6 +71,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         #region Event Handlers
         private void DateRange_Changed(object sender, RoutedEventArgs e)
         {
+            if (!_isLoaded) return;
             if (rbCustomRange?.IsChecked == true)
             {
                 customDatePanel.Visibility = Visibility.Visible;
@@ -338,19 +348,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
         private void ExportToXLSX(string filePath, List<ImportBillResponseDto> imports, List<OrderResponseDto> orders)
         {
-            // TODO: Implement using EPPlus or ClosedXML
-            // For now, export as CSV with .xlsx extension as placeholder
-
-            MessageBox.Show(
-                "Chức năng xuất Excel (.xlsx) đang phát triển.\n" +
-                "Hiện tại sẽ xuất dạng CSV.\n\n" +
-                "Để sử dụng đầy đủ, cần cài thêm thư viện:\n" +
-                "- EPPlus (Free for non-commercial)\n" +
-                "- ClosedXML (Open source)",
-                "Thông báo",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information
-            );
+            
 
             // Change extension to CSV
             var csvPath = Path.ChangeExtension(filePath, ".csv");

@@ -24,6 +24,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
     /// </summary>
     public partial class EditOrderDialog : Window
     {
+        private bool _isLoaded = false;
         private readonly IOrderService _orderService;
         private readonly string _orderId;
         private OrderResponseDto _originalData;
@@ -47,12 +48,15 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
             _orderService = new OrderService(orderRepo, detailRepo, bookRepo, customerRepo, staffRepo);
 
-            dgOrderDetails.ItemsSource = _orderDetails;
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadOrderData();
+            dgOrderDetails.ItemsSource = _orderDetails;
+            dgOrderDetails.Items.Refresh();
+            _isLoaded = true;
         }
 
         private void LoadOrderData()
@@ -184,7 +188,9 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
         private void Discount_TextChanged(object sender, TextChangedEventArgs e)
         {
-            UpdateTotals();
+
+            if (!_isLoaded) return;
+                UpdateTotals();
         }
 
         private void NumericOnly_PreviewTextInput(object sender, TextCompositionEventArgs e)

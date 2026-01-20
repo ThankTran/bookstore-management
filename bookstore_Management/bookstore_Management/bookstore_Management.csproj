@@ -189,6 +189,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Invoices\PrintInvoice.xaml" />
     <Page Include="Presentation\Views\Dialogs\Invoices\SelectBookDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -514,6 +515,7 @@
     <Compile Include="Presentation\Views\Dialogs\Invoices\ExportExcelInvoice.xaml.cs">
       <DependentUpon>ExportExcelInvoice.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Invoices\PrintInvoice.xaml.cs" />
     <Compile Include="Presentation\Views\Dialogs\Invoices\SelectBookDialog.xaml.cs">
       <DependentUpon>SelectBookDialog.xaml</DependentUpon>
     </Compile>

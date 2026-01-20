@@ -1,9 +1,11 @@
-﻿using bookstore_Management.Data.Context;
+﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.DTOs.ImportBill.Responses;
 using bookstore_Management.DTOs.Order.Responses;
 using bookstore_Management.Models;
 using bookstore_Management.Presentation.Views.Dialogs.Invoices;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using CommunityToolkit.Mvvm.Input;
@@ -117,6 +119,7 @@ namespace bookstore_Management.Presentation.ViewModels
         public ICommand DeleteCommand { get; }
         public ICommand PrintCommand { get; }
         public ICommand EditCommand { get; }
+        public ICommand ExportCommand { get; }
 
         public ICommand SearchCommand { get; set; }
 
@@ -150,8 +153,10 @@ namespace bookstore_Management.Presentation.ViewModels
             );
 
             AddImportCommand = new RelayCommand(
+
                 () => AddImportInvoice()
             );
+
 
             AddExportCommand = new RelayCommand(
                 () => AddExportInvoice()
@@ -163,12 +168,24 @@ namespace bookstore_Management.Presentation.ViewModels
             );
 
             PrintCommand = new RelayCommand<object>((p) =>
+            {
+                if (SelectedInvoice == null)
                 {
-                    MessageBox.Show("Tính năng này đang phát triển! Vui lòng thử lại sau.");
+                    MessageBox.Show("Vui lòng chọn hóa đơn cần in!");
                     return;
                 }
-               
-            );
+
+                var print = new PrintInvoice(
+                    SelectedInvoice.InvoiceId,
+                    SelectedInvoice.InvoiceType,
+                    SelectedInvoice
+                );
+
+                print.ShowDialog();
+            });
+
+
+            ExportCommand = new RelayCommand(() => ExportInvoice());
 
             SearchCommand = new RelayCommand<object>((p) =>
             {
@@ -208,7 +225,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         #region Load Data
 
-        private void LoadAllInvoices()
+        public void LoadAllInvoices()
         {
             try
             {
@@ -317,6 +334,11 @@ namespace bookstore_Management.Presentation.ViewModels
 
         private void AddImportInvoice()
         {
+            if (SessionModel.Role == UserRole.InventoryManager && SessionModel.Role != UserRole.CustomerManager)
+            {
+                MessageBox.Show("Bạn không có quyền này");
+                return;
+            }
             var dialog = new CreateImportBill
             {
                 Owner = Application.Current.MainWindow
@@ -357,6 +379,11 @@ namespace bookstore_Management.Presentation.ViewModels
 
         private void AddExportInvoice()
         {
+            if (SessionModel.Role == UserRole.InventoryManager && SessionModel.Role != UserRole.CustomerManager)
+            {
+                MessageBox.Show("Bạn không có quyền này");
+                return;
+            }
             var dialog = new CreateOrderBill
             {
                 Owner = Application.Current.MainWindow
@@ -390,16 +417,19 @@ namespace bookstore_Management.Presentation.ViewModels
 
         private void DeleteSelectedInvoice()
         {
+            if (SessionModel.Role == UserRole.InventoryManager || SessionModel.Role == UserRole.CustomerManager)
+            {
+                MessageBox.Show("Bạn không có quyền này");
+                return;
+            }
             if (SelectedInvoice == null) return;
 
-            var confirm = MessageBox.Show(
-                $"Bạn có chắc muốn xóa hóa đơn {SelectedInvoice.InvoiceId}?",
-                "Xác nhận",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning
+            bool confirmed = Delete.ShowForInvoice(
+                SelectedInvoice.InvoiceId,
+                Application.Current.MainWindow
             );
 
-            if (confirm != MessageBoxResult.Yes) return;
+            if (!confirmed) return;
 
             if (SelectedInvoice.InvoiceType == InvoiceType.Import)
                 _importBillService.DeleteImportBill(SelectedInvoice.InvoiceId);
@@ -434,25 +464,41 @@ namespace bookstore_Management.Presentation.ViewModels
 
         private void EditInvoice(InvoiceDisplayItem invoice)
         {
+            if (SessionModel.Role == UserRole.InventoryManager || SessionModel.Role == UserRole.CustomerManager)
+            {
+                MessageBox.Show("Bạn không có quyền này");
+                return;
+            }
             if (invoice == null) return;
 
             if (invoice.InvoiceType == InvoiceType.Import)
             {
-                MessageBox.Show($"Mở form sửa Phiếu nhập: {invoice.InvoiceId}");
-                // TODO: mở dialog EditImportBill
+                var dialog = new EditImportBillDialog(invoice.InvoiceId);
+                dialog.ShowDialog();
             }
             else
             {
-                MessageBox.Show($"Mở form sửa Hóa đơn bán: {invoice.InvoiceId}");
-                // TODO: mở dialog EditOrderBill
+                var dialog = new EditOrderDialog(invoice.InvoiceId);
+                dialog.ShowDialog();
             }
+        }
+        
+        private void ExportInvoice()
+        {
+            if (SessionModel.Role == UserRole.InventoryManager || SessionModel.Role == UserRole.CustomerManager)
+            {
+                MessageBox.Show("Bạn không có quyền này");
+                return;
+            }
+            var dialog = new ExportExcelInvoice(_importBillService, _orderService);
+            dialog.ShowDialog();
         }
 
 
 
         #endregion
     }
-    public class InvoiceDisplayItem
+    public class InvoiceDisplayItem     
     {
         public int STT { get; set; }
         public string InvoiceId { get; set; }

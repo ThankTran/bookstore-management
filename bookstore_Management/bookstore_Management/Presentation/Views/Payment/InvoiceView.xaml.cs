@@ -14,6 +14,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using bookstore_Management.Presentation.Views.Payment;
 
 namespace bookstore_Management.Presentation.Views.Orders
 {
@@ -51,28 +52,34 @@ namespace bookstore_Management.Presentation.Views.Orders
                 OpenDetailView(item);
             }
         }
+
         private void OpenDetailView(InvoiceDisplayItem item)
         {
             if (item.InvoiceType == InvoiceType.Import)
             {
-                // TODO: Navigate to ImportDetailView with item.InvoiceId
-                MessageBox.Show($"Mở chi tiết phiếu nhập: {item.InvoiceId}", "Thông báo");
+                var detailView = new ImportDetailView();
+                detailView.LoadImportBillAsync(item.InvoiceId);
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.MainFrame.Content = detailView;
+                }
             }
             else
             {
-                // TODO: Navigate to OrderDetailView with item.InvoiceId
-                MessageBox.Show($"Mở chi tiết hóa đơn bán: {item.InvoiceId}", "Thông báo");
+                var detailView = new OrderDetailView();
+                detailView.LoadOrderAsync(item.InvoiceId);
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.MainFrame.Content = detailView;
+                }
             }
         }
 
         private void dgInvoices_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header=(e.Row.GetIndex()+1).ToString();
-        }
-
-        private void dgInvoices_LoadingRow_1(object sender, DataGridRowEventArgs e)
-        {
-
         }
     }
 }

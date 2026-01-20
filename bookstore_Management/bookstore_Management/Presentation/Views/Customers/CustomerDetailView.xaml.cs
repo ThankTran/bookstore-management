@@ -36,17 +36,38 @@ namespace bookstore_Management.Views.Customers
             txtMaKH.Text = customer.CustomerId;
             txtTenKH.Text = customer.Name;
             txtSDT.Text = customer.Phone;
-            //txtHangThanhVien.Text = customer.MemberLevel;
-            //txtDoanhThu.Text = string.Format("{0:N0} VNĐ", customer.DoanhThu);
-            //txtDiaChi.Text = customer.Address.ToString();
-            //txtDiaChi.Text = "123 Nguyễn Văn Linh, Quận 7, TP.HCM";
-            //txtEmail.Text = customer.CustomerId.ToLower() + "@email.com";
-
+            txtEmail.Text = customer.Email;
+            txtDiaChi.Text = customer.Address;
             txtDiemTichLuy.Text = customer.LoyaltyPoints.ToString();
+            txtHangThanhVien.Text = customer.MemberLevel.ToString();
+            txtDoanhThu.Text = TinhTongDoanhThu(customer.CustomerId);
 
             LoadPurchaseHistory(customer.CustomerId);
             #endregion
         }
+        //public void LoadCustomer(string customerId)
+        //{
+        //    using (var context = new BookstoreDbContext())
+        //    {
+        //        var customer = context.Customers
+        //            .FirstOrDefault(c => c.CustomerId == customerId);
+
+        //        if (customer == null) return;
+
+        //        txtMaKH.Text = customer.CustomerId;
+        //        txtTenKH.Text = customer.Name;
+        //        txtSDT.Text = customer.Phone;
+        //        txtEmail.Text = customer.Email;
+        //        txtDiaChi.Text = customer.Address;
+        //        txtDiemTichLuy.Text = customer.LoyaltyPoints.ToString();
+        //        txtHangThanhVien.Text = customer.MemberLevel.ToString();
+
+        //        txtDoanhThu.Text = TinhTongDoanhThu(customer.CustomerId);
+
+        //        LoadPurchaseHistory(customer.CustomerId);
+        //    }
+        //}
+
 
         #endregion
 
@@ -74,14 +95,12 @@ namespace bookstore_Management.Views.Customers
                 // 1. Mở kết nối Database
                 using (var context = new BookstoreDbContext())
                 {
-                    // 2. Truy vấn: Tìm các hóa đơn của khách hàng này
-                    // Giả sử bảng hóa đơn tên là 'Orders' và có cột 'CustomerId'
                     var orders = context.Orders
                                         .Where(x => x.CustomerId == customerId && x.DeletedDate == null) // Lọc theo khách + chưa xóa
-                                        .OrderByDescending(x => x.CreatedDate) // Đơn mới nhất lên đầu
+                                        .OrderByDescending(x => x.CreatedDate) 
                                         .ToList();
 
-                    // 3. Nếu không có đơn nào thì dừng
+                    // không có đơn nào thì dừng
                     if (orders == null || orders.Count == 0)
                     {
                         dgHistories.ItemsSource = null; // Xóa dữ liệu cũ trên lưới (nếu có)
@@ -112,6 +131,19 @@ namespace bookstore_Management.Views.Customers
             }
         }
 
+        private string TinhTongDoanhThu(string customerId)
+        {
+            using (var context = new BookstoreDbContext())
+            {
+                var total = context.Orders
+                    .Where(o => o.CustomerId == customerId && o.DeletedDate == null)
+                    .Sum(o => (decimal?)o.TotalPrice) ?? 0;
+
+                return string.Format("{0:N0} VNĐ", total);
+            }
+        }
+
+
         // Xử lý khi người dùng nhấn nút quay lại danh sách khách hàng
         private void btnReturn_Click(object sender, RoutedEventArgs e)
         {
@@ -121,7 +153,7 @@ namespace bookstore_Management.Views.Customers
         #endregion
     }
 
-    #region Models
+    #region Models tạm
 
     // Model lịch sử mua hàng dùng hiển thị trong DataGrid
     public class PurchaseHistory
