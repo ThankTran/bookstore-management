@@ -5,9 +5,7 @@ using bookstore_Management.Presentation.Views.Orders;
 using bookstore_Management.Presentation.Views.Publishers;
 using bookstore_Management.Presentation.Views.Statistics;
 using bookstore_Management.Presentation.Views.Users;
-using bookstore_Management.Services; // Nơi chứa SessionService
-// using bookstore_Management.Presentation.Views.Books; // Nhớ using các View khác của bạn
-// using bookstore_Management.Presentation.Views.Staff;
+using bookstore_Management.Services;
 using bookstore_Management.Services.Interfaces;
 using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
@@ -37,7 +35,6 @@ namespace bookstore_Management.Presentation.ViewModels
 
         public ObservableCollection<BookSalesReportResponseDto> TopSellingBooks { get; set; }
 
-        // --- 2. CONFIG PHÂN QUYỀN ---
         // Key: Tên chức năng (giống trong Excel), Value: True (Hiện) / False (Ẩn)
         public Dictionary<string, bool> MenuConfig { get; set; }
 
@@ -69,42 +66,30 @@ namespace bookstore_Management.Presentation.ViewModels
         private void LoadPermissions()
         {
             MenuConfig = new Dictionary<string, bool>();
+            var role = SessionModel.Role;
 
-            var currentUser = SessionService.Instance.CurrentUser;
-            var role = currentUser?.Role; 
-
-            // 1. Trang chủ / Dashboard: Tất cả đều có quyền Full Access
             MenuConfig["Dashboard"] = true;
-
-            // 2. Quản lý sách: Tất cả đều được xem hoặc sửa (Full/Seen) -> Hiện Menu
             MenuConfig["Book"] = true;
-
-            // 3. Quản lý hóa đơn (Bán hàng): Tất cả đều được xem hoặc sửa -> Hiện Menu
             MenuConfig["Billing"] = true;
 
-            // - CustomerManager: No access
             MenuConfig["Stock"] = role != UserRole.CustomerManager;
 
-            // - Administrator: Full
-            // - SalesManager: Seen
-            // - Còn lại (SalesStaff, Inventory, CustomerMgr): No access
-            MenuConfig["User"] = (role == UserRole.Administrator || role == UserRole.SalesManager);
+            MenuConfig["User"] =
+                role == UserRole.Administrator ||
+                role == UserRole.SalesManager;
 
-            // 6. Quản lý khách hàng (Customer): Tất cả đều có quyền (Full/Seen)
             MenuConfig["Customer"] = true;
 
-            // - SalesStaff, CustomerManager: No access
-            bool canViewSupplier = role == UserRole.Administrator ||
-                                   role == UserRole.SalesManager ||
-                                   role == UserRole.InventoryManager;
-            MenuConfig["Supplier"] = canViewSupplier;
+            MenuConfig["Supplier"] =
+                role == UserRole.Administrator ||
+                role == UserRole.SalesManager ||
+                role == UserRole.InventoryManager;
 
-            // 8. Báo cáo (Report): Tất cả đều có quyền (Full/Seen)
             MenuConfig["Report"] = true;
 
-            // Cập nhật giao diện
             OnPropertyChanged(nameof(MenuConfig));
         }
+
 
         private void InitializeCommands()
         {

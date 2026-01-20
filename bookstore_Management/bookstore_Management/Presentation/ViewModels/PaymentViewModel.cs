@@ -607,21 +607,74 @@ namespace bookstore_Management.Presentation.ViewModels
 
         #region Checkout
 
+        //private void Checkout()
+        //{
+        //    if (!CanCheckout()) return;
+
+        //    try
+        //    {
+        //        var dto = new CreateOrderRequestDto
+        //        {
+        //            CustomerId = SelectedCustomer?.Id,
+        //            StaffId = SelectedStaff?.Id, // 👈 THÊM DÒNG NÀY
+        //            PaymentMethod = SelectedPaymentMethod?.Type ?? PaymentType.Cash,
+        //            Discount = Subtotal > 0 ? Discount / Subtotal : 0,
+        //            Notes = null,
+        //        };
+
+
+        //        var result = _orderService.CreateOrder(dto);
+
+        //        if (!result.IsSuccess)
+        //        {
+        //            MessageBox.Show(result.ErrorMessage, "Lỗi",
+        //                MessageBoxButton.OK, MessageBoxImage.Error);
+        //            return;
+        //        }
+
+        //        ClearCart();
+
+        //        MessageBox.Show(
+        //            $"Tạo đơn hàng thành công!\nMã đơn: {result.Data}",
+        //            "Thành công",
+        //            MessageBoxButton.OK,
+        //            MessageBoxImage.Information);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(
+        //            $"Lỗi thanh toán: {ex.Message}",
+        //            "Lỗi",
+        //            MessageBoxButton.OK,
+        //            MessageBoxImage.Error);
+        //    }
+        //}
         private void Checkout()
         {
-            if (!CanCheckout()) return;
+            if (!CartItems.Any())
+            {
+                MessageBox.Show("Đơn hàng phải có ít nhất 1 sách");
+                return;
+            }
 
             try
             {
+                var orderDetails = CartItems.Select(item => new OrderDetailCreateRequestDto
+                {
+                    BookId = item.ProductId,
+                    Quantity = item.Quantity,
+                    //Notes = item.UnitPrice,
+                }).ToList();
+
                 var dto = new CreateOrderRequestDto
                 {
                     CustomerId = SelectedCustomer?.Id,
-                    StaffId = SelectedStaff?.Id, // 👈 THÊM DÒNG NÀY
+                    StaffId = SelectedStaff?.Id,
                     PaymentMethod = SelectedPaymentMethod?.Type ?? PaymentType.Cash,
                     Discount = Subtotal > 0 ? Discount / Subtotal : 0,
                     Notes = null,
+                    OrderDetails = orderDetails // ✅ DÒNG QUYẾT ĐỊNH
                 };
-
 
                 var result = _orderService.CreateOrder(dto);
 
@@ -649,6 +702,7 @@ namespace bookstore_Management.Presentation.ViewModels
                     MessageBoxImage.Error);
             }
         }
+
 
         private bool CanCheckout()
         {

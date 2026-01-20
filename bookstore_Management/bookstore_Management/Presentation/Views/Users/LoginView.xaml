@@ -182,9 +182,11 @@
 
                         <Border CornerRadius="10" Background="#585ab8" Margin="10,29,10,40" BorderThickness="0" >
                             <Button x:Name="btnLogin" 
-                                    Command="{Binding LoginCommand}"
-                                    CommandParameter="{Binding ElementName=pbPassword}"
+                                    Click="btnLogin_Click"
                                     Style="{StaticResource btnLoginEffect}">
+
+                                    <!--Command="{Binding LoginCommand}"
+                                     CommandParameter="{Binding ElementName=pbPassword}"-->
                                 <TextBlock Text="LOGIN" FontWeight="ExtraBold" Foreground="White" FontSize="15" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Button>
                         </Border>
