@@ -27,18 +27,12 @@ namespace bookstore_Management.Presentation.Views
         public HomeView()
         {
             InitializeComponent();
-            IReportService reportService;
+            
             var context = new BookstoreDbContext();
-            reportService = new ReportService(
-            new OrderRepository(context),
-            new OrderDetailRepository(context),
-            new BookRepository(context),
-            new CustomerRepository(context),
-            new ImportBillRepository(context),
-            new ImportBillDetailRepository(context)
-            );
-            var _viewModel = new MainViewModel(reportService);
-            this.DataContext = _viewModel;
+            var unitOfWork = new UnitOfWork(context);
+            IReportService reportService = new ReportService(unitOfWork);
+            var viewModel = new MainViewModel(reportService);
+            this.DataContext = viewModel;
 
         }
 
@@ -58,7 +52,7 @@ namespace bookstore_Management.Presentation.Views
 
             if (main != null)
             {
-                main.MainFrame.Content = new Orders.InvoiceView();
+                main.MainFrame.Content = new InvoiceView();
                 main.SetClickedButtonColor(main.btnBills);
             }            
         }
@@ -79,7 +73,7 @@ namespace bookstore_Management.Presentation.Views
 
             if (main != null)
             {
-                main.MainFrame.Content = new Orders.InvoiceView();
+                main.MainFrame.Content = new InvoiceView();
                 main.SetClickedButtonColor(main.btnBills);
             }
         }

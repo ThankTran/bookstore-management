@@ -35,5 +35,7 @@ namespace bookstore_Management.Data.Repositories.Implementations
                             && o.DeletedDate == null)
                 .ToListAsync();
         }
+        
+        
     }
 }

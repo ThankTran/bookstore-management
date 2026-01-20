@@ -11,13 +11,14 @@ namespace bookstore_Management.Services.Interfaces
         // Báo cáo doanh thu
         Task<Result<decimal>> GetTotalRevenueAsync(DateTime fromDate, DateTime toDate);
         Task<Result<decimal>> GetTotalProfitAsync(DateTime fromDate, DateTime toDate);
-        Task<Result<decimal>> GetAverageOrderValueAsync(DateTime fromDate, DateTime toDate);
         
         // Báo cáo đơn hàng
         Task<Result<int>> GetTotalOrderCountAsync(DateTime fromDate, DateTime toDate);
         
         // Báo cáo khách hàng mới
         Task<Result<int>> GetTotalCustomerCountAsync(DateTime fromDate, DateTime toDate);
+        Result<IEnumerable<decimal>> GetImport(DateTime fromDate, DateTime toDate, int jump = 1);
+        Result<IEnumerable<decimal>> GetRevenue(DateTime fromDate, DateTime toDate, int jump = 1);
 
         // Báo cáo sách bán chạy
         Task<Result<IEnumerable<BookSalesReportResponseDto>>> GetTopSellingBooksAsync(DateTime fromDate, DateTime toDate, int topCount = 10);

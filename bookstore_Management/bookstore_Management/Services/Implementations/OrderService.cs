@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using bookstore_Management.Core.Results;
@@ -219,6 +220,23 @@ namespace bookstore_Management.Services.Implementations
 
             return Result<IEnumerable<OrderResponseDto>>.Success(orders);
         }
+        
+        public async Task<Result<IEnumerable<OrderResponseDto>>> SearchOrderBillsAsync(string keyword)
+        {
+            keyword = keyword?.Trim().ToLower() ?? "";
+
+            var list = await _unitOfWork.Orders
+                .Query(o => o.DeletedDate == null &&
+                            o.OrderId.ToString().ToLower().Contains(keyword))
+                .Include(o => o.Customer)
+                .Include(o => o.Staff)
+                .Include(o => o.OrderDetails)
+                .OrderByDescending(o => o.CreatedDate)
+                .ToListAsync();
+
+            return list.Select(MapToOrderResponseDto).ToList();
+        }
+
 
         public async Task<Result<IEnumerable<OrderResponseDto>>> GetOrdersByStaffAsync(string staffId)
         {

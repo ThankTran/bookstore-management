@@ -36,7 +36,7 @@ namespace bookstore_Management.Views.Books
         
         private async void BookListView_Loaded(object sender, RoutedEventArgs e)
         {
-            await _viewModel.LoadBooksFromDatabase();
+            await ((BookViewModel)DataContext).LoadBooksFromDatabase();
         }
         #endregion
     }

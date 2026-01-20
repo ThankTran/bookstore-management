@@ -84,6 +84,7 @@
                                 BorderThickness="0"
                                 Padding="12,8"
                                 ToolTip="In danh sách"
+                                Command="{Binding PrintCommand}"
                                 Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Presentation/AppResources/Images/Icons/Functions/print.png" 

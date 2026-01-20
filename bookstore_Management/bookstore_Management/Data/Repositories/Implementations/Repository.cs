@@ -30,7 +30,8 @@ public class Repository<T, TKey> : IRepository<T, TKey> where T : class
     {
         return await DbSet.FindAsync(id);
     }
-
+    
+  
     public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
     {
         return await DbSet.Where(predicate).ToListAsync();

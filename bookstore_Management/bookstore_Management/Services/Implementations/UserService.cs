@@ -104,13 +104,11 @@ namespace bookstore_Management.Services.Implementations
             return Result<UserResponseDto>.Success(MapToDto(user));
         }
 
-        public async Task<Result<UserResponseDto>> GetByUsernameAsync(string username)
+        public Result<IEnumerable<UserResponseDto>> GetByUsername(string username)
         {
-            var user = await _userRepository.GetByUsernameAsync(username);
-            if (user == null || user.DeletedDate != null)
-                return Result<UserResponseDto>.Fail("User không tồn tại");
+            var user = _userRepository.GetByUsernameAsync(username).Select(MapToDto);
 
-            return Result<UserResponseDto>.Success(MapToDto(user));
+            return Result<IEnumerable<UserResponseDto>>.Success(user);
         }
 
         public async Task<Result<IEnumerable<UserResponseDto>>> GetAllAsync()
@@ -124,9 +122,9 @@ namespace bookstore_Management.Services.Implementations
             return Result<IEnumerable<UserResponseDto>>.Success(filtered);
         }
 
-        public async Task<Result<bool>> LoginAsync(string username, string password)
+        public Result<bool> LoginAsync(string username, string password)
         {
-            var user = await _userRepository.GetByUsernameAsync(username);
+            var user = _userRepository.GetByUsernameAsync(username).FirstOrDefault();
             if (user == null || user.DeletedDate != null)
                 return Result<bool>.Fail("User không tồn tại");
 

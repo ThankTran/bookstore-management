@@ -71,7 +71,7 @@ namespace bookstore_Management.Presentation.ViewModels
             }
         }
         #endregion
-
+        
         #region Khai báo command
         //khai báo command cho thao tác thêm, xóa, sửa sách
         public ICommand AddBookCommand { get; set; }
@@ -88,7 +88,6 @@ namespace bookstore_Management.Presentation.ViewModels
         
         public IAsyncRelayCommand LoadBooksCommand  { get; }
         #endregion
-        
         
         #region Load book from db
         public async Task LoadBooksFromDatabase()
@@ -121,8 +120,6 @@ namespace bookstore_Management.Presentation.ViewModels
         }
         #endregion
         
-        
-        
         #region constructor
         public BookViewModel(IBookService bookService, IPublisherRepository publisherRepo)
         {
@@ -132,21 +129,13 @@ namespace bookstore_Management.Presentation.ViewModels
             Books = new ObservableCollection<Book>();
 
             LoadBooksCommand = new AsyncRelayCommand(LoadBooksFromDatabase);
-            
-
-            
-
             AddBookCommand = new AsyncRelayCommand(AddBookAsync);
-            
-            
-
             RemoveBookCommand = new AsyncRelayCommand(RemoveBookAsync);
             EditBookCommand = new AsyncRelayCommand(EditBookAsync);
             SearchBookCommand = new AsyncRelayCommand(SearchBookAsync);
             LoadData = new AsyncRelayCommand(LoadBooksAsync);
 
             #region Print
-            //chưa làm xong
             PrintCommand = new RelayCommand<object>((p) =>
             {
                 // Lấy danh sách đang hiển thị (Ví dụ: _datalist hoặc FilteredList)

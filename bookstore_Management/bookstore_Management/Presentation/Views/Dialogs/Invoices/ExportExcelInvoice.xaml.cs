@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -35,18 +36,18 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         }
 
         #region Data Loading
-        private void LoadData()
+        private async Task LoadData()
         {
             try
             {
                 // Load all imports
-                var importResult = _importBillService.GetAllImportBills();
+                var importResult = await _importBillService.GetAllImportBillsAsync();
                 _allImports = importResult.IsSuccess && importResult.Data != null
                     ? importResult.Data.ToList()
                     : new List<ImportBillResponseDto>();
 
                 // Load all orders
-                var orderResult = _orderService.GetAllOrders();
+                var orderResult = await _orderService.GetAllOrdersAsync();
                 _allOrders = orderResult.IsSuccess && orderResult.Data != null
                     ? orderResult.Data.ToList()
                     : new List<OrderResponseDto>();

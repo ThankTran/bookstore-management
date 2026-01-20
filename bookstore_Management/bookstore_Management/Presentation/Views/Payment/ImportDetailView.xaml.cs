@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,17 +13,183 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using bookstore_Management.Data.Context;
+using bookstore_Management.Data.Repositories.Implementations;
+using bookstore_Management.DTOs.ImportBill.Responses;
+using bookstore_Management.Services.Implementations;
+using bookstore_Management.Services.Interfaces;
+using bookstore_Management.Presentation.Views;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
+using bookstore_Management.Presentation.ViewModels;
 
 namespace bookstore_Management.Presentation.Views.Payment
 {
     /// <summary>
     /// Interaction logic for ImportDetailView.xaml
     /// </summary>
-    public partial class ImportDetailView : UserControl
+    public partial class ImportDetailView : UserControl, IDisposable
     {
+        private readonly IImportBillService _importBillService;
+        private readonly BookstoreDbContext _context;
+        private readonly UnitOfWork _unitOfWork;
+        private string _currentImportBillId;
+
         public ImportDetailView()
         {
             InitializeComponent();
+            // Lưu reference để dispose sau
+            _context = new BookstoreDbContext();
+            _unitOfWork = new UnitOfWork(_context);
+            _importBillService = new ImportBillService(_unitOfWork);
         }
+
+        public async Task LoadImportBillAsync(string importBillId)
+        {
+            if (string.IsNullOrEmpty(importBillId)) return;
+
+            _currentImportBillId = importBillId;
+            var result = await _importBillService.GetImportBillByIdAsync(importBillId);
+
+            if (!result.IsSuccess || result.Data == null)
+            {
+                MessageBox.Show("Không thể tải thông tin phiếu nhập: " + result.ErrorMessage, 
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var importBill = result.Data;
+            
+            // Load details
+            var detailsResult = await _importBillService.GetImportDetailsAsync(importBillId);
+            if (detailsResult.IsSuccess && detailsResult.Data != null)
+            {
+                var details = detailsResult.Data.Select((d, index) => new
+                {
+                    Index = index + 1,
+                    d.BookId,
+                    d.BookName,
+                    d.Quantity,
+                    d.ImportPrice,
+                    d.Subtotal
+                }).ToList();
+
+                dgImportDetails.ItemsSource = details;
+
+                // Calculate summary
+                var totalItems = details.Count;
+                var totalQuantity = details.Sum(d => d.Quantity);
+                txtSummary.Text = $"Tổng số mặt hàng: {totalItems} | Tổng số lượng: {totalQuantity} cuốn";
+            }
+
+            // Set header info
+            txtImportBillId.Text = $"Mã phiếu: {importBill.Id}";
+            txtInfoImportId.Text = importBill.Id;
+            txtSupplier.Text = importBill.PublisherName ?? "N/A";
+            txtInfoSupplier.Text = importBill.PublisherName ?? "N/A";
+            txtStatus.Text = "Đã nhập kho";
+            txtTotalAmount.Text = importBill.TotalAmount.ToString("N0") + " ₫";
+            txtGrandTotal.Text = importBill.TotalAmount.ToString("N0") + " ₫";
+            txtCreatedBy.Text = importBill.CreatedBy ?? "System";
+            txtCreatedDate.Text = importBill.CreatedDate.ToString("dd/MM/yyyy - HH:mm");
+            txtNotes.Text = importBill.Notes ?? "Không có ghi chú";
+        }
+        
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                // Reload data thay vì tạo view mới để tránh memory leak
+                if (mainWindow.MainFrame.Content is InvoiceView existingView)
+                {
+                    var viewModel = existingView.DataContext as InvoiceViewModel;
+                    _ = viewModel?.LoadAllDataAsync();
+                }
+                else
+                {
+                    mainWindow.MainFrame.Content = new InvoiceView();
+                }
+            }
+        }
+
+        private async void BtnPrint_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_currentImportBillId))
+            {
+                MessageBox.Show("Không có thông tin phiếu nhập để in.", "Thông báo", 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            // TODO: Implement print functionality
+            MessageBox.Show("Chức năng in đang được phát triển.", "Thông báo", 
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private async void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_currentImportBillId))
+            {
+                MessageBox.Show("Không có thông tin phiếu nhập để xóa.", "Thông báo", 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var confirmed = Delete.ShowForInvoice(_currentImportBillId);
+            if (!confirmed) return;
+
+            var result = await _importBillService.DeleteImportBillAsync(_currentImportBillId);
+            if (!result.IsSuccess)
+            {
+                MessageBox.Show($"Không thể xóa phiếu nhập.\nChi tiết lỗi: {result.ErrorMessage}",
+                    "Lỗi xóa dữ liệu",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            MessageBox.Show("Đã xóa phiếu nhập thành công.", "Thông báo", 
+                MessageBoxButton.OK, MessageBoxImage.Information);
+
+            // Navigate back to invoice list - reload data thay vì tạo mới
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                if (mainWindow.MainFrame.Content is InvoiceView existingView)
+                {
+                    var viewModel = existingView.DataContext as InvoiceViewModel;
+                    _ = viewModel?.LoadAllDataAsync();
+                }
+                else
+                {
+                    mainWindow.MainFrame.Content = new InvoiceView();
+                }
+            }
+        }
+
+        #region IDisposable
+
+        private bool _disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    _unitOfWork?.Dispose();
+                    _context?.Dispose();
+                }
+                _disposed = true;
+            }
+        }
+
+        #endregion
     }
 }

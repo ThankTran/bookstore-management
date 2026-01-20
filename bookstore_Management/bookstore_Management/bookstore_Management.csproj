@@ -36,7 +36,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-
     <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -46,7 +45,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -162,6 +160,10 @@
     <Page Include="Presentation\Views\Dialogs\Customers\ExportExcelCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\Views\Dialogs\Customers\PrintCustomer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Presentation\Views\Dialogs\Customers\UpdateCustomer.xaml">
       <SubType>Designer</SubType>
@@ -498,6 +500,9 @@
     <Compile Include="Presentation\Views\Dialogs\Customers\ExportExcelCustomer.xaml.cs">
       <DependentUpon>ExportExcelCustomer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Customers\PrintCustomer.xaml.cs">
+      <DependentUpon>PrintCustomer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Invoices\CreateImportBill.xaml.cs">
       <DependentUpon>CreateImportBill.xaml</DependentUpon>
     </Compile>
@@ -628,16 +633,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Services\Implementations\AuthService.cs" />
     <Compile Include="Services\Implementations\BookService.cs" />
     <Compile Include="Services\Implementations\CustomerService.cs" />
     <Compile Include="Services\Implementations\ImportBillService.cs" />
     <Compile Include="Services\Implementations\OrderService.cs" />
     <Compile Include="Services\Implementations\ReportService.cs" />
+    <Compile Include="Services\Implementations\SessionService.cs" />
     <Compile Include="Services\Implementations\StaffService.cs" />
     <Compile Include="Services\Implementations\PublisherService.cs" />
     <Compile Include="Services\Implementations\UserService.cs" />
-    <Compile Include="Services\Interfaces\IAuthService.cs" />
     <Compile Include="Services\Interfaces\IBookService.cs" />
     <Compile Include="Services\Interfaces\ICustomerService.cs" />
     <Compile Include="Services\Interfaces\IImportBillService.cs" />
@@ -646,16 +650,6 @@
     <Compile Include="Services\Interfaces\IStaffService.cs" />
     <Compile Include="Services\Interfaces\IPublisherService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
-    <Compile Include="Tests\AuthServiceTests.cs" />
-    <Compile Include="Tests\BookServiceTests.cs" />
-    <Compile Include="Tests\CustomerServiceTests.cs" />
-    <Compile Include="Tests\ImportBillServiceTests.cs" />
-    <Compile Include="Tests\OrderServiceTests.cs" />
-    <Compile Include="Tests\PermissionHelperTests.cs" />
-    <Compile Include="Tests\PublisherServiceTests.cs" />
-    <Compile Include="Tests\ReportServiceTests.cs" />
-    <Compile Include="Tests\StaffServiceTests.cs" />
-    <Compile Include="Tests\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202601190411178_createDb.resx">

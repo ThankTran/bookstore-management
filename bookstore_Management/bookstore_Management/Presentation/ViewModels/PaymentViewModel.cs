@@ -8,6 +8,6 @@ namespace bookstore_Management.Presentation.ViewModels
 {
     internal class PaymentViewModel : BaseViewModel
     {
-
+        
     }
 }

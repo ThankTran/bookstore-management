@@ -1,17 +1,14 @@
-﻿using System;
+﻿using bookstore_Management.Data.Context;
+using bookstore_Management.Data.Repositories.Implementations;
+using bookstore_Management.Services.Implementations;
+using bookstore_Management.Services.Interfaces;
+using bookstore_Management.Presentation.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
 namespace bookstore_Management.Presentation.Views.Users
 {
     /// <summary>
@@ -22,6 +19,16 @@ namespace bookstore_Management.Presentation.Views.Users
         public LoginView()
         {
             InitializeComponent();
+            IUserService userService;
+            var context = new BookstoreDbContext();
+
+            userService = new UserService(
+                new UserRepository(context),
+                new StaffRepository(context)
+            );
+             
+            DataContext = new LoginViewModel(userService);
+
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)

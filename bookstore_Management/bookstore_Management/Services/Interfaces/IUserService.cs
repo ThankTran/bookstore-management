@@ -17,11 +17,11 @@ namespace bookstore_Management.Services.Interfaces
 
         Task<Result<UserResponseDto>> GetByIdAsync(string userId);
 
-        Task<Result<UserResponseDto>> GetByUsernameAsync(string username);
+        Result<IEnumerable<UserResponseDto>> GetByUsername(string username);
 
         Task<Result<IEnumerable<UserResponseDto>>> GetAllAsync();
 
-        Task<Result<bool>> LoginAsync(string username, string password);
+        Result<bool> LoginAsync(string username, string password);
 
         Task<Result<UserRole>> GetUserRoleAsync(string userId);
     }

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,11 +16,10 @@ namespace bookstore_Management.Data.Repositories.Implementations
         /// <summary>
         /// Gets user by username, đã lọc soft delete (async)
         /// </summary>
-        public async Task<User> GetByUsernameAsync(string username)
+        public IEnumerable<User> GetByUsernameAsync(string username)
         {
-            return await DbSet
-                .Where(u => u.Username == username && u.DeletedDate == null)
-                .FirstOrDefaultAsync();
+            return DbSet
+                .Where(u => u.Username == username && u.DeletedDate == null);
         }
 
         /// <summary>

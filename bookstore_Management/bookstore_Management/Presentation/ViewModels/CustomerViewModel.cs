@@ -1,46 +1,33 @@
-﻿using bookstore_Management.Data.Context;
-using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
-using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
-using DocumentFormat.OpenXml.VariantTypes;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.Presentation.Views.Dialogs.Customers;
+using CommunityToolkit.Mvvm.Input;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
     internal class CustomerViewModel : BaseViewModel
     {
-        #region khai báo
         private readonly ICustomerService _customerService;
 
         private ObservableCollection<Customer> _customers;
         public ObservableCollection<Customer> Customers
         {
-            get { return _customers; }
-            set 
-            {
-                _customers = value; 
-                OnPropertyChanged();
-            }
+            get => _customers;
+            set { _customers = value; OnPropertyChanged(); }
         }
 
-        //cus đã chọn để xóa/sửa
         private Customer _selectedCus;
         public Customer SelectedCus
         {
             get => _selectedCus;
-            set
-            {
-                _selectedCus = value;
-                OnPropertyChanged();
-            }
+            set { _selectedCus = value; OnPropertyChanged(); }
         }
 
-        //keyword để tìm kiếm
         private string _searchKeyword;
         public string SearchKeyword
         {
@@ -49,192 +36,173 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 _searchKeyword = value;
                 OnPropertyChanged();
-                SearchCusCommand.Execute(null);
+                SearchCusCommand?.Execute(null);
             }
         }
-        #endregion
 
-        #region Khai báo command
-        //khai báo command cho thao tác thêm, xóa, sửa cus
         public ICommand AddCusCommand { get; set; }
         public ICommand RemoveCusCommand { get; set; }
         public ICommand EditCusCommand { get; set; }
-
-        //command cho thao tác tìm kiếm - load lại
         public ICommand SearchCusCommand { get; set; }
         public ICommand LoadData { get; set; }
-
-        //command cho in / xuất excel
         public ICommand ExportCommand { get; set; }
         public ICommand PrintCommand { get; set; }
 
-        #endregion
+        public CustomerViewModel(ICustomerService customerService)
+        {
+            _customerService = customerService;
+            Customers = new ObservableCollection<Customer>();
 
-        #region load cus from database
+            AddCusCommand = new AsyncRelayCommand(AddCommandAsync);
+            EditCusCommand = new AsyncRelayCommand(EditCommandAsync);
+            RemoveCusCommand = new AsyncRelayCommand(RemoveCommandAsync);
+            SearchCusCommand = new AsyncRelayCommand(SearchCusCommandAsync);
+            LoadData = new AsyncRelayCommand(LoadDataCommandAsync);
+            PrintCommand = new AsyncRelayCommand(PrintCommandAsync);
+            ExportCommand = new AsyncRelayCommand(ExportCommandAsync);
+        }
+
         public async Task LoadCusFromDatabase()
         {
             var result = await _customerService.GetAllCustomersAsync();
-
             if (!result.IsSuccess)
             {
-                // Xử lý lỗi, để sau này làm thông báo lỗi sau
-                MessageBox.Show("Lỗi khi tải dữ liệu khách hàng: " + result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Lỗi khi tải dữ liệu khách hàng: " + result.ErrorMessage);
                 return;
             }
-            if (result.Data == null)
-            {
-                MessageBox.Show("db không có dữ liệu!");
-                return; // Tránh lỗi khi Data rỗng
-            }               
+            if (result.Data == null) return;
 
-            var cuss = result.Data.Select(dto => new Customer
-            {
-                  CustomerId = dto.CustomerId,
-                  Name = dto.Name,
-                  Phone = dto.Phone,  
-                  Email = dto.Email,
-            });
-
-            Customers = new ObservableCollection<Customer>(cuss);
+            Customers = new ObservableCollection<Customer>(
+                result.Data.Select(dto => new Customer
+                {
+                    CustomerId = dto.CustomerId,
+                    Name = dto.Name,
+                    Phone = dto.Phone,
+                    Email = dto.Email
+                })
+            );
         }
-        #endregion
 
-        public  CustomerViewModel()
+        private async Task AddCommandAsync()
         {
-            var context = new BookstoreDbContext();   
-            var unitOfWork = new  UnitOfWork(context);
-            
-            _customerService = new CustomerService(unitOfWork);
+            var dialog = new AddCustomer();
+            if (dialog.ShowDialog() == true)
+            {
+                var dto = new DTOs.Customer.Requests.CreateCustomerRequestDto
+                {
+                    Name = dialog.CustomerName,
+                    Address = dialog.Address,
+                    Email = dialog.Email,
+                    Phone = dialog.Phone
+                };
+                var result = await _customerService.AddCustomerAsync(dto);
+                if (!result.IsSuccess)
+                {
+                    MessageBox.Show("Lỗi khi thêm khách hàng: " + result.ErrorMessage);
+                    return;
+                }
+                await LoadCusFromDatabase();
+            }
+        }
 
-            Customers = new ObservableCollection<Customer>();
+        private async Task EditCommandAsync()
+        {
+            var cus = SelectedCus;
+            if (cus == null)
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng để sửa.");
+                return;
+            }
 
-            _ = LoadCusFromDatabase();
+            var dialog = new UpdateCustomer
+            {
+                CustomerName = cus.Name,
+                Phone = cus.Phone,
+                Email = cus.Email,
+                Address = cus.Address
+            };
 
-            #region AddCommand
-            AddCusCommand = new RelayCommand<object>((p) =>
+            if (dialog.ShowDialog() == true)
             {
-                var dialog = new Presentation.Views.Dialogs.Customers.AddCustomer();
-                if (dialog.ShowDialog() == true)
+                var dto = new DTOs.Customer.Requests.UpdateCustomerRequestDto
                 {
-                    var newCusDto = new DTOs.Customer.Requests.CreateCustomerRequestDto()
-                    {
-                        Name=dialog.CustomerName,
-                        Address=dialog.Address,
-                        Email=dialog.Email,
-                        Phone=dialog.Phone,
-                    };
-                    var result = _customerService.AddCustomerAsync(newCusDto);
-                    if (!result.Result.IsSuccess)
-                    {
-                        MessageBox.Show("Lỗi khi thêm khách hàng");
-                        return;
-                    }
-                    _ = LoadCusFromDatabase();
-                }
-            });
-            #endregion
-            #region EditCommand
-            EditCusCommand = new RelayCommand<object>((p) => 
-            Task.Run(async () =>
-            { 
-                var dialog = new Presentation.Views.Dialogs.Customers.UpdateCustomer();
-                var cus = p as Customer;
-                if (cus == null)
+                    Name = dialog.CustomerName,
+                    Address = dialog.Address,
+                    Email = dialog.Email,
+                    Phone = dialog.Phone
+                };
+                var result = await _customerService.UpdateCustomerAsync(cus.CustomerId, dto);
+                if (!result.IsSuccess)
                 {
-                    MessageBox.Show("Vui lòng chọn khách hàng để sửa.");
+                    MessageBox.Show("Chi tiết lỗi: " + result.ErrorMessage);
                     return;
                 }
-                dialog.CustomerName = cus.Name;
-                dialog.Phone = cus.Phone;
-                dialog.Email = cus.Email;
-                dialog.Address = cus.Address;
-                if (dialog.ShowDialog() == true)
-                {
-                    var updateCusDto = new DTOs.Customer.Requests.UpdateCustomerRequestDto()
-                    {
-                        Name = dialog.CustomerName,
-                        Address = dialog.Address,
-                        Email = dialog.Email,
-                        Phone = dialog.Phone,
-                    };
-                    var result = await _customerService.UpdateCustomerAsync(cus.CustomerId, updateCusDto);
-                    if (!result.IsSuccess)
-                    {
-                        // SỬA DÒNG NÀY: In ra result.ErrorMessage để biết DB đang từ chối vì lý do gì
-                        MessageBox.Show($"Chi tiết lỗi: {result.ErrorMessage}", "Lỗi thêm khách hàng", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                    _ = LoadCusFromDatabase();
-                }
-            }));
-            #endregion
-            #region RemoveCommand
-            RemoveCusCommand = new RelayCommand<object>((p) => 
+                await LoadCusFromDatabase();
+            }
+        }
+
+        private async Task RemoveCommandAsync()
+        {
+            var cus = SelectedCus;
+            if (cus == null)
             {
-                var cus = p as Customer;
-                if (cus == null)
-                {
-                    MessageBox.Show("Vui lòng chọn khách hàng để xóa.");
-                    return;
-                }
-                bool confirmed = Views.Dialogs.Share.Delete.ShowForCustomer(cus.Name, cus.CustomerId);
-                if (!confirmed) return;
-                
-                var result = _customerService.DeleteCustomerAsync(cus.CustomerId);
-                if (!result.Result.IsSuccess)
-                {
-                    MessageBox.Show($"Không thể xóa khách hàng.\nChi tiết lỗi: {result.ErrorMessage}",
-                        "Lỗi xóa dữ liệu",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                    return;
-                }
-                _ = LoadCusFromDatabase();
-            });
-            #endregion
-            #region SearchCommand
-            SearchCusCommand = new RelayCommand<object>((p)=> 
+                MessageBox.Show("Vui lòng chọn khách hàng để xóa.");
+                return;
+            }
+
+            var confirmed = Views.Dialogs.Share.Delete.ShowForCustomer(cus.Name, cus.CustomerId);
+            if (!confirmed) return;
+
+            var result = await _customerService.DeleteCustomerAsync(cus.CustomerId);
+            if (!result.IsSuccess)
             {
-                if (string.IsNullOrEmpty(SearchKeyword))
-                {
-                    _ = LoadCusFromDatabase();
-                    return;
-                }
-                var result = _customerService.SearchByNameAsync(SearchKeyword);
-                if (!result.Result.IsSuccess)
-                {
-                    MessageBox.Show("Lỗi khi tìm kiếm khách hàng: " + result.Result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-                if (result.Result.Data == null)
-                {
-                    MessageBox.Show("db không có dữ liệu!");
-                    return; // Tránh lỗi khi Data rỗng
-                }
-                Customers.Clear();
-                foreach(var c in result.Result.Data)
-                {
-                    Customers.Add(new Customer
-                    {
-                        CustomerId = c.CustomerId,
-                        Name = c.Name,
-                        Phone = c.Phone,
-                        Email = c.Email,
-                    });
-                }
-            });
-            #endregion
-            #region LoadDataCommand
-            LoadData = new RelayCommand<object>((p) =>
+                MessageBox.Show("Không thể xóa khách hàng: " + result.ErrorMessage);
+                return;
+            }
+            await LoadCusFromDatabase();
+        }
+
+        private async Task SearchCusCommandAsync()
+        {
+            if (string.IsNullOrEmpty(SearchKeyword))
             {
-                SearchKeyword = string.Empty;
-                LoadCusFromDatabase();
-            });
-            #endregion
-            #region Print & Export
-            PrintCommand = new RelayCommand<object>((p)=> { });
-            ExportCommand = new RelayCommand<object>((p) => { });
-            #endregion
+                await LoadCusFromDatabase();
+                return;
+            }
+
+            var result = await _customerService.SearchByNameAsync(SearchKeyword);
+            if (!result.IsSuccess)
+            {
+                MessageBox.Show("Lỗi khi tìm kiếm khách hàng: " + result.ErrorMessage);
+                return;
+            }
+            if (result.Data == null) return;
+
+            Customers = new ObservableCollection<Customer>(
+                result.Data.Select(c => new Customer
+                {
+                    CustomerId = c.CustomerId,
+                    Name = c.Name,
+                    Phone = c.Phone,
+                    Email = c.Email
+                })
+            );
+        }
+
+        private async Task LoadDataCommandAsync()
+        {
+            SearchKeyword = string.Empty;
+            await LoadCusFromDatabase();
+        }
+
+        private async Task PrintCommandAsync()
+        {
+            // TODO: in danh sách khách hàng
+        }
+
+        private async Task ExportCommandAsync()
+        {
+            // TODO: xuất Excel
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using bookstore_Management.DTOs.ImportBill.Responses;
 using bookstore_Management.DTOs.Order.Responses;
-using bookstore_Management.Presentation.Views.Orders;
 using ClosedXML.Excel;
 using Microsoft.Win32;
 using System;
@@ -12,16 +11,17 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using bookstore_Management.Presentation.Views.Payment;
 
 namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 {
     public partial class PrintInvoice : Window
     {
-        private readonly InvoiceType _invoiceType;
+        private readonly InvoiceView.InvoiceType _invoiceType;
         private readonly string _invoiceId;
         private readonly object _invoiceData; // ImportBillResponseDto or OrderResponseDto
 
-        public PrintInvoice(string invoiceId, InvoiceType invoiceType, object invoiceData)
+        public PrintInvoice(string invoiceId, InvoiceView.InvoiceType invoiceType, object invoiceData)
         {
             InitializeComponent();
 
@@ -67,7 +67,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         #region Load Invoice Data
         private void LoadInvoiceData()
         {
-            if (_invoiceType == InvoiceType.Import && _invoiceData is ImportBillResponseDto import)
+            if (_invoiceType == InvoiceView.InvoiceType.Import && _invoiceData is ImportBillResponseDto import)
             {
                 tbPreviewTitle.Text = "PHIẾU NHẬP HÀNG";
                 tbInvoiceInfo.Text = $"Phiếu nhập: {import.Id}";
@@ -75,7 +75,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
                 tbPreviewDate.Text = import.CreatedDate.ToString("dd/MM/yyyy HH:mm");
                 tbPreviewCustomer.Text = $"NXB: {import.PublisherName}";
             }
-            else if (_invoiceType == InvoiceType.Export && _invoiceData is OrderResponseDto order)
+            else if (_invoiceType == InvoiceView.InvoiceType.Export && _invoiceData is OrderResponseDto order)
             {
                 tbPreviewTitle.Text = "HÓA ĐƠN BÁN HÀNG";
                 tbInvoiceInfo.Text = $"Hóa đơn: {order.OrderId}";
@@ -339,13 +339,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
             content += $"Ngày: {DateTime.Now:dd/MM/yyyy HH:mm}\n";
             content += new string('-', 50) + "\n";
 
-            if (_invoiceType == InvoiceType.Import && _invoiceData is ImportBillResponseDto import)
+            if (_invoiceType == InvoiceView.InvoiceType.Import && _invoiceData is ImportBillResponseDto import)
             {
                 content += $"PHIẾU NHẬP HÀNG\n";
                 content += $"Nhà xuất bản: {import.PublisherName}\n";
                 content += $"Tổng tiền: {import.TotalAmount:N0} ₫\n";
             }
-            else if (_invoiceType == InvoiceType.Export && _invoiceData is OrderResponseDto order)
+            else if (_invoiceType == InvoiceView.InvoiceType.Export && _invoiceData is OrderResponseDto order)
             {
                 content += $"HÓA ĐƠN BÁN HÀNG\n";
                 content += $"Khách hàng: {order.CustomerName ?? "Khách vãng lai"}\n";
@@ -391,7 +391,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
             stack.Children.Add(new TextBlock
             {
-                Text = _invoiceType == InvoiceType.Import ? "PHIẾU NHẬP HÀNG" : "HÓA ĐƠN BÁN HÀNG",
+                Text = _invoiceType == InvoiceView.InvoiceType.Import ? "PHIẾU NHẬP HÀNG" : "HÓA ĐƠN BÁN HÀNG",
                 FontSize = 20,
                 FontWeight = FontWeights.Bold,
                 HorizontalAlignment = HorizontalAlignment.Center,

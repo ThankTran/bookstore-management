@@ -21,6 +21,8 @@ namespace bookstore_Management.Services.Interfaces
    
         Task<Result> DeleteImportBillAsync(string importBillId);
 
+        Task<Result<IEnumerable<ImportBillResponseDto>>> SearchImportBillsAsync(string keyword);
+
   
         Task<Result<ImportBillResponseDto>> GetImportBillByIdAsync(string importBillId);
 

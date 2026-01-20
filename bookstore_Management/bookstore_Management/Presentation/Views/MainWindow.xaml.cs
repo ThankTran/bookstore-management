@@ -1,10 +1,9 @@
-﻿
+
 using bookstore_Management.Data.Context;
 using bookstore_Management.Models;
 using bookstore_Management.Presentation.ViewModels;
 using bookstore_Management.Presentation.Views;
 using bookstore_Management.Presentation.Views.Information;
-using bookstore_Management.Presentation.Views.Orders;
 using bookstore_Management.Presentation.Views.Payment;
 using bookstore_Management.Presentation.Views.Publishers;
 using bookstore_Management.Presentation.Views.Users;
@@ -16,6 +15,7 @@ using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using bookstore_Management.Presentation.Views.Customers;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 namespace bookstore_Management
@@ -31,12 +31,32 @@ namespace bookstore_Management
             InitializeComponent();
             SetClickedButtonColor(btnHome);
 
-
-            MainFrame.Content = new HomeView();
+            NavigateToView(new HomeView());
 
         }
 
         #region Navigation helpers
+
+        /// <summary>
+        /// Helper method để navigate đến view mới và dispose view cũ để tránh memory leak
+        /// </summary>
+        private void NavigateToView(UserControl newView)
+        {
+            // Dispose view cũ trước khi set view mới
+            if (MainFrame.Content is IDisposable oldView)
+            {
+                try
+                {
+                    oldView.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    // Log error nhưng không crash app
+                    System.Diagnostics.Debug.WriteLine($"Error disposing view: {ex.Message}");
+                }
+            }
+            MainFrame.Content = newView;
+        }
 
         // Hiển thị danh sách khách hàng
         private void LoadCustomerListPage()
@@ -48,7 +68,7 @@ namespace bookstore_Management
                 LoadCustomerDetailPage(customer);
             };
 
-            MainFrame.Content = customerListPage;
+            NavigateToView(customerListPage);
         }
 
         // Hiển thị chi tiết một khách hàng được chọn
@@ -120,7 +140,7 @@ namespace bookstore_Management
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
             SetClickedButtonColor(btnHome);
-            MainFrame.Content = new HomeView();
+            NavigateToView(new HomeView());
         }
 
         // Xử lý click menu Quản lý khách hàng
@@ -144,7 +164,7 @@ namespace bookstore_Management
             try
             {
                 SetClickedButtonColor(btnBooks);
-                MainFrame.Content = new BookListView();
+                NavigateToView(new BookListView());
             }
             catch (Exception ex)
             {
@@ -158,7 +178,7 @@ namespace bookstore_Management
             try
             {
                 SetClickedButtonColor(btnStatistics);
-                MainFrame.Content = new Presentation.Views.Statistics.DashboardView();
+                NavigateToView(new Presentation.Views.Statistics.DashboardView());
             }
             catch (Exception ex)
             {
@@ -194,7 +214,7 @@ namespace bookstore_Management
             try
             {
                 SetClickedButtonColor(btnPayment);
-                MainFrame.Content = new Presentation.Views.Payment.PaymentView();
+                NavigateToView(new Presentation.Views.Payment.PaymentView());
             }
             catch (Exception ex)
             {
@@ -222,7 +242,7 @@ namespace bookstore_Management
             try
             {
                 SetClickedButtonColor(btnStaffs);
-                MainFrame.Content = new StaffListView();
+                NavigateToView(new StaffListView());
             }
             catch (Exception ex)
             {
@@ -236,7 +256,7 @@ namespace bookstore_Management
             try
             {
                 SetClickedButtonColor(btnBills);
-                MainFrame.Content = new InvoiceView();
+                NavigateToView(new InvoiceView());
             }
             catch (Exception ex)
             {

@@ -50,19 +50,50 @@ namespace bookstore_Management.Services.Implementations
             return Result<decimal>.Success(totalSales - totalImport);
         }
 
-        public async Task<Result<decimal>> GetAverageOrderValueAsync(DateTime fromDate, DateTime toDate)
-        {
-            var orders = await _unitOfWork.Orders.FindAsync(o =>
-                o.CreatedDate >= fromDate &&
-                o.CreatedDate <= toDate &&
-                o.DeletedDate == null);
 
-            var ordersList = orders.ToList();
-            
-            return (!ordersList.Any()) ?
-                Result<decimal>.Success(0, "Không có đơn hàng") :
-                Result<decimal>.Success(ordersList.Average(o => o.TotalPrice));
+        public Result<IEnumerable<decimal>> GetRevenue(DateTime fromDate, DateTime toDate, int jump = 1)
+        {
+            var revenue = new List<decimal>();
+
+            while (fromDate <= toDate)
+            {
+                var endDate = fromDate.AddDays(jump);
+
+                var total = _unitOfWork.Orders.Query(o =>
+                        o.DeletedDate == null &&
+                        o.CreatedDate >= fromDate &&
+                        o.CreatedDate <= endDate
+                    )
+                    .Sum(o => o.TotalPrice);
+
+                revenue.Add(total);
+
+                fromDate = endDate;
+            }
+
+            return Result<IEnumerable<decimal>>.Success(revenue);
         }
+
+
+
+        public Result<IEnumerable<decimal>> GetImport(DateTime fromDate, DateTime toDate, int jump = 1)
+        {
+            var import = new List<decimal>();
+
+            while (fromDate <= toDate)
+            {
+                var total = _unitOfWork.ImportBills.Query( o =>
+                        
+                        o.DeletedDate == null &&
+                        o.CreatedDate >= fromDate &&
+                        o.CreatedDate <= toDate )
+                    .Sum(o => o.TotalAmount);
+                import.Add(total);
+                fromDate = fromDate.AddDays(jump);
+            }
+            return Result<IEnumerable<decimal>>.Success(import);  
+        }
+        
 
         // Báo cáo đơn hàng
         public async Task<Result<int>> GetTotalOrderCountAsync(DateTime fromDate, DateTime toDate)
@@ -85,6 +116,7 @@ namespace bookstore_Management.Services.Implementations
             
             return Result<int>.Success(count);
         }
+        
 
         // Báo cáo sách bán chạy
         public async Task<Result<IEnumerable<BookSalesReportResponseDto>>> GetTopSellingBooksAsync(
@@ -248,6 +280,8 @@ namespace bookstore_Management.Services.Implementations
 
             return Result<CustomerPurchaseRatioDto>.Success(dto);
         }
+        
+        
 
         // Báo cáo nhà cung cấp
         public async Task<Result<IEnumerable<PublisherImportReportResponseDto>>> GetPublisherImportReportAsync(
@@ -280,5 +314,6 @@ namespace bookstore_Management.Services.Implementations
 
             return Result<IEnumerable<PublisherImportReportResponseDto>>.Success(report);
         }
+        
     }
 } 

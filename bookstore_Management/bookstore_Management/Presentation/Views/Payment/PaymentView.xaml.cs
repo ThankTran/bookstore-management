@@ -1,27 +1,34 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.DTOs.Order.Requests;
+using bookstore_Management.DTOs.Customer.Requests;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Presentation.Views.Dialogs.Payment;
+using bookstore_Management.Presentation.Views.Dialogs.Customers;
 
 namespace bookstore_Management.Presentation.Views.Payment
 {
-    public partial class PaymentView : UserControl, INotifyPropertyChanged
+    public partial class PaymentView : UserControl, INotifyPropertyChanged, IDisposable
     {
         #region Fields & Services
 
         private readonly IOrderService _orderService;
         private readonly IBookService _bookService;
         private readonly ICustomerService _customerService;
+        private readonly BookstoreDbContext _context;
+        private readonly UnitOfWork _unitOfWork;
+        private System.Threading.Timer _searchDebounceTimer;
+        private const int SEARCH_DEBOUNCE_MS = 500;
 
         // Sample data - replace with actual data from services
         private ObservableCollection<ProductItem> _products;
@@ -60,7 +67,15 @@ namespace bookstore_Management.Presentation.Views.Payment
             {
                 _searchText = value;
                 OnPropertyChanged(nameof(SearchText));
-                FilterProducts();
+                
+                _searchDebounceTimer?.Dispose();
+                _searchDebounceTimer = new System.Threading.Timer(_ =>
+                {
+                    Application.Current.Dispatcher.InvokeAsync(new Action(async () =>
+                    {
+                        await FilterProductsAsync();
+                    }));
+                }, null, (int)SEARCH_DEBOUNCE_MS, System.Threading.Timeout.Infinite);
             }
         }
 
@@ -149,22 +164,17 @@ namespace bookstore_Management.Presentation.Views.Payment
 
             // Initialize services
             var context = new BookstoreDbContext();
-            var orderRepo = new OrderRepository(context);
-            var orderDetailRepo = new OrderDetailRepository(context);
-            var bookRepo = new BookRepository(context);
-            var customerRepo = new CustomerRepository(context);
-            var staffRepo = new StaffRepository(context);
-            var publisherRepo = new PublisherRepository(context);
-            var importBillDetailRepo = new ImportBillDetailRepository(context);
+            var unitOfWork = new UnitOfWork(context);
+            
 
-            _orderService = new OrderService(orderRepo, orderDetailRepo, bookRepo, customerRepo, staffRepo);
-            _bookService = new BookService(bookRepo, publisherRepo, importBillDetailRepo);
-            _customerService = new CustomerService(customerRepo, orderRepo);
+            _orderService = new OrderService(unitOfWork);
+            _bookService = new BookService(unitOfWork);
+            _customerService = new CustomerService(unitOfWork);
 
             // Initialize commands
             AddToCartCommand = new RelayCommand<ProductItem>(AddToCart);
             RemoveFromCartCommand = new RelayCommand<CartItem>(RemoveFromCart);
-            CheckoutCommand = new RelayCommand(Checkout, CanCheckout);
+            CheckoutCommand = new RelayCommand(async () => await CheckoutAsync(), CanCheckout);
             SaveDraftCommand = new RelayCommand(SaveDraft);
             AddNoteCommand = new RelayCommand(AddNote);
             EditSubtotalCommand = new RelayCommand(EditSubtotal);
@@ -176,8 +186,8 @@ namespace bookstore_Management.Presentation.Views.Payment
             CartItems.CollectionChanged += (_, __) => RecalculateTotals();
 
             InitializePaymentMethods();
-            LoadProducts();
-            LoadCustomers();
+            _ = LoadProductsAsync();
+            _ = LoadCustomersAsync();
         }
 
         #endregion
@@ -197,11 +207,11 @@ namespace bookstore_Management.Presentation.Views.Payment
             SelectedPaymentMethod = PaymentMethods.First(); // Mặc định tiền mặt
         }
 
-        private void LoadProducts()
+        private async Task LoadProductsAsync()
         {
             try
             {
-                var result = _bookService.GetAllBooks();
+                var result = await _bookService.GetAllBooksAsync();
 
                 if (result.IsSuccess && result.Data != null)
                 {
@@ -230,11 +240,11 @@ namespace bookstore_Management.Presentation.Views.Payment
             }
         }
 
-        private void LoadCustomers()
+        private async Task LoadCustomersAsync()
         {
             try
             {
-                var result = _customerService.GetAllCustomers();
+                var result = await _customerService.GetAllCustomersAsync();
 
                 if (result.IsSuccess && result.Data != null)
                 {
@@ -287,16 +297,16 @@ namespace bookstore_Management.Presentation.Views.Payment
             }
         }
 
-        private void FilterProducts()
+        private async Task FilterProductsAsync()
         {
             if (string.IsNullOrWhiteSpace(SearchText))
             {
-                LoadProducts();
+                await LoadProductsAsync();
                 return;
             }
 
             var search = SearchText.ToLower();
-            var result = _bookService.SearchByName(search);
+            var result = await _bookService.SearchByNameAsync(search);
 
             if (result.IsSuccess && result.Data != null)
             {
@@ -436,7 +446,7 @@ namespace bookstore_Management.Presentation.Views.Payment
 
         #region Command Handlers
 
-        private void Checkout()
+        private async Task CheckoutAsync()
         {
             if (!CanCheckout()) return;
 
@@ -470,7 +480,7 @@ namespace bookstore_Management.Presentation.Views.Payment
                 };
 
                 // Create order
-                var result = _orderService.CreateOrder(dto);
+                var result = await _orderService.CreateOrderAsync(dto);
 
                 if (!result.IsSuccess)
                 {
@@ -483,7 +493,7 @@ namespace bookstore_Management.Presentation.Views.Payment
                 }
 
                 // Get created order details
-                var orderResult = _orderService.GetOrderById(result.Data);
+                var orderResult = await _orderService.GetOrderByIdAsync(result.Data);
 
                 if (!orderResult.IsSuccess)
                 {
@@ -635,6 +645,98 @@ namespace bookstore_Management.Presentation.Views.Payment
             LoyaltyPoints = 0;
             Discount = 0;
             RecalculateTotals();
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private async void BtnAddCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var dialog = new AddCustomer
+                {
+                    Owner = Window.GetWindow(this)
+                };
+
+                if (dialog.ShowDialog() == true)
+                {
+                    // Validate form trước khi tạo
+                    if (string.IsNullOrWhiteSpace(dialog.CustomerName) || string.IsNullOrWhiteSpace(dialog.Phone))
+                    {
+                        MessageBox.Show("Vui lòng nhập đầy đủ thông tin khách hàng!", "Thông báo",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    // Tạo DTO từ dialog
+                    var dto = new CreateCustomerRequestDto
+                    {
+                        Name = dialog.CustomerName,
+                        Phone = dialog.Phone,
+                        Email = dialog.Email,
+                        Address = dialog.Address
+                    };
+
+                    // Gọi service để tạo khách hàng
+                    var result = await _customerService.AddCustomerAsync(dto);
+
+                    if (!result.IsSuccess)
+                    {
+                        MessageBox.Show($"Không thể thêm khách hàng: {result.ErrorMessage}", "Lỗi",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Reload danh sách khách hàng
+                    await LoadCustomersAsync();
+
+                    // Chọn khách hàng vừa tạo
+                    var newCustomer = Customers.FirstOrDefault(c => c.Id == result.Data);
+                    if (newCustomer != null)
+                    {
+                        SelectedCustomer = newCustomer;
+                    }
+
+                    MessageBox.Show($"Đã thêm khách hàng thành công!\nMã khách hàng: {result.Data}", "Thành công",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi thêm khách hàng: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        
+
+        #endregion
+
+        #region IDisposable
+
+        private bool _disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    _searchDebounceTimer?.Dispose();
+                    _unitOfWork?.Dispose();
+                    _context?.Dispose();
+                }
+                _disposed = true;
+            }
         }
 
         #endregion

@@ -1,31 +1,30 @@
 ﻿using bookstore_Management.Models;
 using bookstore_Management.Services.Implementations;
-using bookstore_Management.Services.Interfaces;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using bookstore_Management.Data.Context;
+using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Presentation.ViewModels;
 
-namespace bookstore_Management.Views.Customers
+namespace bookstore_Management.Presentation.Views.Customers
 {
     public partial class CustomerListView : UserControl
     {
-        public ObservableCollection<Customer> Customers { get; set; }
         public event EventHandler<Customer> CustomerSelected;
 
         public CustomerListView()
         {
             InitializeComponent();
-         
-            //var context = new BookstoreDbContext();
-            //_customerService = new CustomerService(
-            //    new CustomerRepository(context),
-            //    new OrderRepository(context)
-            //);
-            var _viewModel = new CustomerViewModel();
-            this.DataContext = _viewModel;
+            var context = new BookstoreDbContext();
+            var unitOfWork = new UnitOfWork(context);
+            var service = new CustomerService(unitOfWork);
+
+            DataContext = new CustomerViewModel(service);
+            
+            Loaded += CustomerListView_Loaded;
         }
 
         private void dgCustomers_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -39,6 +38,10 @@ namespace bookstore_Management.Views.Customers
         private void dgCustomers_LoadingRow(object sender, DataGridRowEventArgs e)
         {          
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();        
+        }
+        private async void CustomerListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            await ((CustomerViewModel)DataContext).LoadCusFromDatabase();
         }
     }
 }

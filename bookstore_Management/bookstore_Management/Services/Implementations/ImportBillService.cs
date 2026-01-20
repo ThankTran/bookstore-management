@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -155,6 +156,22 @@ namespace bookstore_Management.Services.Implementations
                 list.Select(MapToImportBillResponseDto).ToList()
             );
         }
+        
+        public async Task<Result<IEnumerable<ImportBillResponseDto>>> SearchImportBillsAsync(string keyword)
+        {
+            keyword = keyword?.Trim().ToLower() ?? "";
+
+            var list = await _unitOfWork.ImportBills
+                .Query(x => x.DeletedDate == null &&
+                            x.Id.ToString().ToLower().Contains(keyword))
+                .Include(x => x.Publisher)
+                .Include(x => x.ImportBillDetails)
+                .OrderByDescending(x => x.CreatedDate)
+                .ToListAsync();
+
+            return list.Select(MapToImportBillResponseDto).ToList();
+        }
+
 
         public async Task<Result<IEnumerable<ImportBillResponseDto>>> GetBySupplierAsync(string supplierId)
         {
@@ -163,7 +180,7 @@ namespace bookstore_Management.Services.Implementations
                 .Include(b => b.Publisher)
                 .Include(b => b.ImportBillDetails)
                 .OrderByDescending(b => b.CreatedDate)
-                .ToListAsync();
+                .ToListAsync(); 
 
             return Result<IEnumerable<ImportBillResponseDto>>.Success(
                 list.Select(MapToImportBillResponseDto).ToList()

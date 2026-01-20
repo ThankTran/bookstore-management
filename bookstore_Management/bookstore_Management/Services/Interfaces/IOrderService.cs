@@ -14,6 +14,7 @@ namespace bookstore_Management.Services.Interfaces
         Task<Result> DeleteOrderAsync(string orderId);
         Task<Result<OrderResponseDto>> GetOrderByIdAsync(string orderId);
         Task<Result<IEnumerable<OrderResponseDto>>> GetAllOrdersAsync();
+        Task<Result<IEnumerable<OrderResponseDto>>> SearchOrderBillsAsync(string keyword);
         Task<Result<IEnumerable<OrderResponseDto>>> GetOrdersByCustomerAsync(string customerId);
         Task<Result<IEnumerable<OrderResponseDto>>> GetOrdersByStaffAsync(string staffId);
         Task<Result<IEnumerable<OrderResponseDto>>> GetOrdersByDateAsync(DateTime fromDate, DateTime toDate);
