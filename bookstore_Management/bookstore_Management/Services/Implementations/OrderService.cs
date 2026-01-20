@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using bookstore_Management.Core.Results;
+using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.DTOs.Order.Requests;
 using bookstore_Management.DTOs.Order.Responses;
@@ -12,24 +13,10 @@ namespace bookstore_Management.Services.Implementations
 {
     public class OrderService : IOrderService
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly IOrderDetailRepository _orderDetailRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly ICustomerRepository _customerRepository;
-        private readonly IStaffRepository _staffRepository;
-
-        internal OrderService(
-            IOrderRepository orderRepository,
-            IOrderDetailRepository orderDetailRepository,
-            IBookRepository bookRepository,
-            ICustomerRepository customerRepository,
-            IStaffRepository staffRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public OrderService(IUnitOfWork unitOfWork)
         {
-            _orderRepository = orderRepository;
-            _orderDetailRepository = orderDetailRepository;
-            _bookRepository = bookRepository;
-            _customerRepository = customerRepository;
-            _staffRepository = staffRepository;
+            _unitOfWork = unitOfWork;
         }
 
         // ==================================================================
@@ -40,14 +27,14 @@ namespace bookstore_Management.Services.Implementations
             try
             {
                 // Validate nhân viên
-                var staff = _staffRepository.GetById(dto.StaffId);
+                var staff = _unitOfWork.Staffs.GetById(dto.StaffId);
                 if (staff == null || staff.DeletedDate != null)
                     return Result<string>.Fail("Nhân viên không tồn tại");
 
                 // Validate khách hàng (có thể null)
                 if (!string.IsNullOrEmpty(dto.CustomerId))
                 {
-                    var customer = _customerRepository.GetById(dto.CustomerId);
+                    var customer = _unitOfWork.Customers.GetById(dto.CustomerId);
                     if (customer == null || customer.DeletedDate != null)
                         return Result<string>.Fail("Khách hàng không tồn tại");
                 }
@@ -60,7 +47,7 @@ namespace bookstore_Management.Services.Implementations
 
                 foreach (var item in dto.OrderDetails)
                 {
-                    var book = _bookRepository.GetById(item.BookId);
+                    var book = _unitOfWork.Books.GetById(item.BookId);
                     if (book == null || book.DeletedDate != null)
                         return Result<string>.Fail($"Sách {item.BookId} không tồn tại");
 
@@ -74,7 +61,7 @@ namespace bookstore_Management.Services.Implementations
                     if (available < item.Quantity)
                         return Result<string>.Fail($"Sách {book.Name} không đủ hàng. Tồn: {available}");
                     book.Stock -= item.Quantity;
-                    _bookRepository.Update(book);
+                    _unitOfWork.Books.Update(book);
 
                     var lineTotal = book.SalePrice.Value * item.Quantity;
                     subtotal += lineTotal;
@@ -119,8 +106,8 @@ namespace bookstore_Management.Services.Implementations
                     OrderDetails = orderDetails
                 };
 
-                _orderRepository.Add(order);
-                _orderRepository.SaveChanges();
+                _unitOfWork.Orders.Add(order);
+                _unitOfWork.Orders.SaveChanges();
 
                 return Result<string>.Success(orderId, $"Tạo đơn hàng thành công. Tổng tiền: {finalTotal:N0} VND");
             }
@@ -142,7 +129,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var order = _orderRepository.GetById(orderId);
+                var order = _unitOfWork.Orders.GetById(orderId);
                 if (order == null || order.DeletedDate != null)
                     return Result.Fail("Đơn hàng không tồn tại");
 
@@ -157,7 +144,7 @@ namespace bookstore_Management.Services.Implementations
                     if (dto.Discount < 0)
                         return Result.Fail("Giảm giá không được âm");
 
-                    var subtotal = _orderDetailRepository.Find(od => od.OrderId == orderId).Sum(od => od.Subtotal);
+                    var subtotal = _unitOfWork.OrderDetails.Find(od => od.OrderId == orderId).Sum(od => od.Subtotal);
                     if (dto.Discount > 1)
                         return Result.Fail("Giảm giá không được lớn hơn 100%");
 
@@ -166,8 +153,8 @@ namespace bookstore_Management.Services.Implementations
                 }
 
                 order.UpdatedDate = DateTime.Now;
-                _orderRepository.Update(order);
-                _orderRepository.SaveChanges();
+                _unitOfWork.Orders.Update(order);
+                _unitOfWork.Orders.SaveChanges();
 
                 return Result.Success("Cập nhật đơn hàng thành công");
             }
@@ -181,21 +168,21 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var order = _orderRepository.GetById(orderId);
+                var order = _unitOfWork.Orders.GetById(orderId);
                 if (order == null || order.DeletedDate != null)
                     return Result.Fail("Đơn hàng không tồn tại");
 
                 foreach (var i in order.OrderDetails)
                 {
-                    var book =  _bookRepository.GetById(i.BookId);
+                    var book =  _unitOfWork.Books.GetById(i.BookId);
                     book.Stock += i.Quantity;
-                    _bookRepository.Update(book);
+                    _unitOfWork.Books.Update(book);
 
                 }
 
                 order.DeletedDate = DateTime.Now;
-                _orderRepository.Update(order);
-                 _orderRepository.SaveChanges();
+                _unitOfWork.Orders.Update(order);
+                _unitOfWork.Orders.SaveChanges();
 
                 return Result.Success("Hủy đơn hàng thành công");
             }
@@ -213,7 +200,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var order = _orderRepository.GetById(orderId);
+                var order = _unitOfWork.Orders.GetById(orderId);
                 if (order == null || order.DeletedDate != null)
                     return Result<OrderResponseDto>.Fail("Đơn hàng không tồn tại");
 
@@ -230,7 +217,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var orders = _orderRepository.GetAll()
+                var orders = _unitOfWork.Orders.GetAll()
                     .Where(o => o.DeletedDate == null)
                     .OrderByDescending(o => o.CreatedDate)
                     .Select(MapToOrderResponseDto);
@@ -246,7 +233,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var orders = _orderRepository.GetByCustomer(customerId)
+                var orders = _unitOfWork.Orders.GetByCustomer(customerId)
                     .Where(o => o.DeletedDate == null)
                     .OrderByDescending(o => o.CreatedDate)
                     .Select(MapToOrderResponseDto);
@@ -262,7 +249,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var orders = _orderRepository.GetByStaff(staffId)
+                var orders = _unitOfWork.Orders.GetByStaff(staffId)
                     .Where(o => o.DeletedDate == null)
                     .OrderByDescending(o => o.CreatedDate)
                     .Select(MapToOrderResponseDto);
@@ -278,7 +265,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var orders = _orderRepository.GetByDateRange(fromDate, toDate)
+                var orders = _unitOfWork.Orders.GetByDateRange(fromDate, toDate)
                     .Where(o => o.DeletedDate == null)
                     .OrderByDescending(o => o.CreatedDate)
                     .Select(MapToOrderResponseDto);
@@ -294,12 +281,12 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var details = _orderDetailRepository.GetByOrder(orderId)
+                var details = _unitOfWork.OrderDetails.GetByOrder(orderId)
                     .Select(d => new OrderDetailResponseDto
                     {
                         OrderId = d.OrderId,
                         BookId = d.BookId,
-                        BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
+                        BookName = _unitOfWork.Books.GetById(d.BookId)?.Name ?? "Unknown",
                         SalePrice = d.SalePrice,
                         Quantity = d.Quantity,
                         Subtotal = d.Subtotal,
@@ -318,7 +305,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         private string GenerateOrderId()
         {
-            var lastNumber = _orderRepository.GetAll()
+            var lastNumber = _unitOfWork.Orders.GetAll()
                 .Where(o => o.OrderId.StartsWith("HD"))
                 .Select(o => int.Parse(o.OrderId.Substring(2)))
                 .DefaultIfEmpty(0)
@@ -347,12 +334,12 @@ namespace bookstore_Management.Services.Implementations
                 Discount = order.Discount,
                 PaymentMethod = order.PaymentMethod,
                 Notes = order.Notes,
-                OrderDetails = _orderDetailRepository.GetByOrder(order.OrderId)
+                OrderDetails = _unitOfWork.OrderDetails.GetByOrder(order.OrderId)
                     .Select(d => new OrderDetailResponseDto
                     {
                         OrderId = d.OrderId,
                         BookId = d.BookId,
-                        BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
+                        BookName = _unitOfWork.Books.GetById(d.BookId)?.Name ?? "Unknown",
                         SalePrice = d.SalePrice,
                         Quantity = d.Quantity,
                         Subtotal = d.Subtotal,

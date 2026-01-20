@@ -9,10 +9,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.Data.Repositories.Interfaces;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class CustomerViewModel : BaseViewModel
+    public class CustomerViewModel : BaseViewModel
     {
         #region khai báo
         private readonly ICustomerService _customerService;
@@ -101,15 +102,10 @@ namespace bookstore_Management.Presentation.ViewModels
         }
         #endregion
 
-        public CustomerViewModel(ICustomerService customerService)
+        public CustomerViewModel(IUnitOfWork unitOfWork)
         {
-            //_customerService = customerService??new CustomerService();
-            var context = new BookstoreDbContext();
 
-            _customerService = new CustomerService(
-            new CustomerRepository(context),
-            new OrderRepository(context)
-            );
+            _customerService = new CustomerService(unitOfWork);
 
             Customers = new ObservableCollection<Customer>();
 

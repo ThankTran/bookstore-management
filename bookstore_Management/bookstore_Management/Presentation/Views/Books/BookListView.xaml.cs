@@ -24,13 +24,7 @@ namespace bookstore_Management.Views.Books
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
-        private void btnEdit_Click(object sender, RoutedEventArgs e)
-        {
-            InitializeComponent();
-            IBookService bookService = new BookService();
-            _viewModel = new BookViewModel(bookService);
-            this.DataContext = _viewModel;
-        }
+        
 
         #endregion
     }

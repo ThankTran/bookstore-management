@@ -16,10 +16,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class MainViewModel : BaseViewModel
+    public class MainViewModel : BaseViewModel
     {
         private readonly IReportService _reportService;
         private readonly NavigationService _navigationService;
@@ -107,20 +108,33 @@ namespace bookstore_Management.Presentation.ViewModels
             }
 
             // Gán Command
-            NavigateDashboardCmd = new RelayCommand<object>(p => NavigateIfAllowed("Dashboard", new DashboardView()));
+            NavigateDashboardCmd = new RelayCommand<object>(_ =>
+                NavigateIfAllowed("Dashboard",
+                    App.Services.GetRequiredService<DashboardView>()));
 
-            // Lưu ý: Thay new View() bằng các View thực tế của bạn
-            NavigateBookCmd = new RelayCommand<object>(p => NavigateIfAllowed("Book", new BookListView())); // Tạm thay bằng InvoiceView để test, bạn nhớ đổi lại BookView
+            NavigateBookCmd = new RelayCommand<object>(_ =>
+                NavigateIfAllowed("Book",
+                    App.Services.GetRequiredService<BookListView>()));
 
-            NavigateBillingCmd = new RelayCommand<object>(p => NavigateIfAllowed("Billing", new InvoiceView()));
+            NavigateBillingCmd = new RelayCommand<object>(_ =>
+                NavigateIfAllowed("Billing",
+                    App.Services.GetRequiredService<InvoiceView>()));
 
-            NavigateUserCmd = new RelayCommand<object>(p => NavigateIfAllowed("User", new AccountListView())); // Thay bằng UserView
+            NavigateUserCmd = new RelayCommand<object>(_ =>
+                NavigateIfAllowed("User",
+                    App.Services.GetRequiredService<AccountListView>()));
 
-            NavigateCustomerCmd = new RelayCommand<object>(p => NavigateIfAllowed("Customer", new CustomerListView())); // Thay bằng CustomerView
+            NavigateCustomerCmd = new RelayCommand<object>(_ =>
+                NavigateIfAllowed("Customer",
+                    App.Services.GetRequiredService<CustomerListView>()));
 
-            NavigateSupplierCmd = new RelayCommand<object>(p => NavigateIfAllowed("Supplier", new PublisherListView())); // Thay bằng SupplierView
+            NavigateSupplierCmd = new RelayCommand<object>(_ =>
+                NavigateIfAllowed("Supplier",
+                    App.Services.GetRequiredService<PublisherListView>()));
 
-            NavigateReportCmd = new RelayCommand<object>(p => NavigateIfAllowed("Report", new DashboardView())); // Thay bằng ReportView
+            NavigateReportCmd = new RelayCommand<object>(_ =>
+                NavigateIfAllowed("Report",
+                    App.Services.GetRequiredService<DashboardView>()));
         }
 
         private void LoadDashboardData()

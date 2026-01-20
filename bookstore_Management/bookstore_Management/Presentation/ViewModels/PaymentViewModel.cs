@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.Data.Repositories.Interfaces;
 using Microsoft.VisualBasic;
 using bookstore_Management.Models;
 
@@ -237,28 +238,13 @@ namespace bookstore_Management.Presentation.ViewModels
 
         #region Constructor (GIỮ NGUYÊN LOGIC)
 
-        public PaymentViewModel()
+        public PaymentViewModel(IUnitOfWork unitOfWork)
         {
-            // services
-            var context = new BookstoreDbContext();
-            _orderService = new OrderService(
-                new OrderRepository(context),
-                new OrderDetailRepository(context),
-                new BookRepository(context),
-                new CustomerRepository(context),
-                new StaffRepository(context));
-
-            _bookService = new BookService(
-                new BookRepository(context),
-                new PublisherRepository(context),
-                new ImportBillDetailRepository(context));
-
-            _customerService = new CustomerService(
-                new CustomerRepository(context),
-                new OrderRepository(context));
-            _staffService = new StaffService(
-                new StaffRepository(context),
-                new OrderRepository(context));
+            
+            _orderService = new OrderService(unitOfWork);
+            _bookService = new BookService(unitOfWork);
+            _customerService = new CustomerService(unitOfWork);
+            _staffService = new StaffService(unitOfWork);
 
 
             // commands

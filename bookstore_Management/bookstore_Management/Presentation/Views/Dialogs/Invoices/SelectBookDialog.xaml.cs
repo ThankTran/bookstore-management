@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using bookstore_Management.Data.Repositories.Interfaces;
 
 namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 {
@@ -25,18 +26,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
         public ImportBookItem SelectedBookItem { get; private set; }
 
-        public SelectBookDialog(string publisherId)
+        public SelectBookDialog(string publisherId, IUnitOfWork unitOfWork)
         {
             InitializeComponent();
 
             _publisherId = publisherId;
 
-            var context = new BookstoreDbContext();
-            var bookRepo = new BookRepository(context);
-            var publisherRepo = new PublisherRepository(context);
-            var importBillDetailRepo = new ImportBillDetailRepository(context);
-
-            _bookService = new BookService(bookRepo, publisherRepo, importBillDetailRepo);
+            _bookService = new BookService(unitOfWork);
         }
 
         #region Window Dragging

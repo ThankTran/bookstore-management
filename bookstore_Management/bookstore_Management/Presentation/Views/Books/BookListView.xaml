@@ -104,13 +104,15 @@
                             CornerRadius="8"
                             BorderBrush="#E0E0E0"
                             BorderThickness="1"
-                            Cursor="Hand">
+                            Cursor="Hand"
+                            >
                         <Button x:Name="btnExport"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Padding="12,8"
                                 ToolTip="Xuất Excel"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                Command="{Binding ExportCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Presentation/AppResources/Images/Icons/Functions/export.png" 
                                        Width="20" 

@@ -15,35 +15,17 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using bookstore_Management.Presentation.Views.Payment;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace bookstore_Management.Presentation.Views.Orders
 {
     public partial class InvoiceView : UserControl
     {
        
-        public InvoiceView()
+        public InvoiceView(InvoiceViewModel invoiceViewModel)
         {
             InitializeComponent();
-            
-            var context = new BookstoreDbContext();
-            IImportBillService importBillService;
-            IOrderService orderService;
-
-            importBillService = new ImportBillService(
-                new ImportBillRepository(context),
-                new ImportBillDetailRepository(context),
-                new BookRepository(context),
-                new PublisherRepository(context));
-
-            orderService = new OrderService(
-                new OrderRepository(context),
-                new OrderDetailRepository(context),
-                new BookRepository(context),
-                new CustomerRepository(context),
-                new StaffRepository(context)
-                );
-
-            DataContext = new InvoiceViewModel(importBillService, orderService);
+            DataContext = invoiceViewModel;
         }
         private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -55,25 +37,22 @@ namespace bookstore_Management.Presentation.Views.Orders
 
         private void OpenDetailView(InvoiceDisplayItem item)
         {
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow == null) return;
+            var scope = App.Services.CreateScope();
             if (item.InvoiceType == InvoiceType.Import)
             {
-                var detailView = new ImportDetailView();
+                var detailView = scope.ServiceProvider.GetRequiredService<ImportDetailView>();
+                detailView.Unloaded += (_, __) => scope.Dispose();
                 detailView.LoadImportBillAsync(item.InvoiceId);
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.MainFrame.Content = detailView;
-                }
+                mainWindow.MainFrame.Content = detailView;
             }
             else
             {
-                var detailView = new OrderDetailView();
+                var detailView = scope.ServiceProvider.GetRequiredService<OrderDetailView>();
+                detailView.Unloaded += (_, __) => scope.Dispose();
                 detailView.LoadOrderAsync(item.InvoiceId);
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.MainFrame.Content = detailView;
-                }
+                mainWindow.MainFrame.Content = detailView;
             }
         }
 

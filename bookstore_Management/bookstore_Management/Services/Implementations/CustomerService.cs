@@ -15,23 +15,13 @@ namespace bookstore_Management.Services.Implementations
 {
     public class CustomerService : ICustomerService
     {
-        private readonly ICustomerRepository _customerRepository;
-        private readonly IOrderRepository _orderRepository;
+        private readonly IUnitOfWork _unitOfWork;
         
-        internal CustomerService(ICustomerRepository customerRepository, IOrderRepository orderRepository)
+        public CustomerService(IUnitOfWork unitOfWork)
         {
-            _customerRepository = customerRepository;
-            _orderRepository = orderRepository;
+            _unitOfWork = unitOfWork;
         }
-        internal CustomerService()
-        {
-            var context = new BookstoreDbContext();
-            _customerRepository = new CustomerRepository(context);        
-        }
-        internal CustomerService(ICustomerRepository cusrepo)
-        {
-            _customerRepository= cusrepo;
-        }
+        
         
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
@@ -57,7 +47,7 @@ namespace bookstore_Management.Services.Implementations
                 
                 
                 // Kiểm tra trùng số điện thoại
-                var existing = _customerRepository.SearchByPhone(dto.Phone);
+                var existing = _unitOfWork.Customers.SearchByPhone(dto.Phone);
                 if (existing != null)
                     return Result<string>.Fail("Số điện thoại đã được đăng ký");
 
@@ -77,8 +67,8 @@ namespace bookstore_Management.Services.Implementations
                     DeletedDate = null
                 };
 
-                _customerRepository.Add(customer);
-                _customerRepository.SaveChanges();
+                _unitOfWork.Customers.Add(customer);
+                _unitOfWork.SaveChanges();
 
                 return Result<string>.Success(customerId, "Thêm khách hàng thành công");
             }
@@ -95,7 +85,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customer = _customerRepository.GetById(customerId);
+                var customer = _unitOfWork.Customers.GetById(customerId);
                 if (customer == null || customer.DeletedDate != null)
                     return Result.Fail("Khách hàng không tồn tại");
 
@@ -117,7 +107,7 @@ namespace bookstore_Management.Services.Implementations
                 // Kiểm tra phone trùng
                 if (dto.Phone != customer.Phone)
                 {
-                    var existing = _customerRepository.SearchByPhone(dto.Phone);
+                    var existing = _unitOfWork.Customers.SearchByPhone(dto.Phone);
                     if (existing != null && existing.CustomerId != customerId)
                         return Result.Fail("Số điện thoại đã được sử dụng");
                 }
@@ -132,8 +122,8 @@ namespace bookstore_Management.Services.Implementations
                     customer.LoyaltyPoints = dto.LoyaltyPoints.Value;
                 customer.UpdatedDate = DateTime.Now;
 
-                _customerRepository.Update(customer);
-                _customerRepository.SaveChanges();
+                _unitOfWork.Customers.Update(customer);
+                _unitOfWork.SaveChanges();
 
                 return Result.Success("Cập nhật khách hàng thành công");
             }
@@ -150,18 +140,18 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customer = _customerRepository.GetById(customerId);
+                var customer = _unitOfWork.Customers.GetById(customerId);
                 if (customer == null || customer.DeletedDate != null)
                     return Result.Fail("Khách hàng không tồn tại");
 
-                var orders = _orderRepository.Find(o => o.CustomerId == customerId && o.DeletedDate == null);
+                var orders = _unitOfWork.Orders.Find(o => o.CustomerId == customerId && o.DeletedDate == null);
                 if (orders.Any())
                     return Result.Fail("Không thể xóa khách hàng đã có đơn hàng");
 
                 // Soft delete
                 customer.DeletedDate = DateTime.Now;
-                _customerRepository.Update(customer);
-                _customerRepository.SaveChanges();
+                _unitOfWork.Customers.Update(customer);
+                _unitOfWork.Customers.SaveChanges();
 
                 return Result.Success("Xóa khách hàng thành công");
             }
@@ -178,7 +168,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var c = _customerRepository.GetById(customerId);
+                var c = _unitOfWork.Customers.GetById(customerId);
                 if (c == null || c.DeletedDate != null)
                     return Result<CustomerDetailResponseDto>.Fail("Khách hàng không tồn tại");
 
@@ -198,7 +188,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customers = _customerRepository.GetAll()
+                var customers = _unitOfWork.Customers.GetAll()
                     .Where(c => c.DeletedDate == null)
                     .OrderBy(c => c.Name)
                     .Select(MapToCustomerResponseDto);
@@ -215,7 +205,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var c = _customerRepository.SearchByPhone(phone);
+                var c = _unitOfWork.Customers.SearchByPhone(phone);
                 if (c == null || c.DeletedDate != null)
                     return Result<CustomerDetailResponseDto>.Fail("Không tìm thấy khách hàng");
 
@@ -236,7 +226,7 @@ namespace bookstore_Management.Services.Implementations
                 if (string.IsNullOrWhiteSpace(name))
                     return Result<IEnumerable<CustomerDetailResponseDto>>.Success(new List<CustomerDetailResponseDto>());
 
-                var customers = _customerRepository.SearchByName(name)
+                var customers = _unitOfWork.Customers.SearchByName(name)
                     .Where(c => c.DeletedDate == null)
                     .OrderBy(c => c.Name)
                     .Select(MapToCustomerResponseDto);
@@ -252,7 +242,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customers = _customerRepository.GetAll()
+                var customers = _unitOfWork.Customers.GetAll()
                     .Where(c => c.DeletedDate == null && c.MemberLevel == level)
                     .OrderBy(c => c.Name)
                     .Select(MapToCustomerResponseDto);
@@ -269,7 +259,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customers = _customerRepository.GetAll()
+                var customers = _unitOfWork.Customers.GetAll()
                     .Where(c => c.DeletedDate == null)
                     .Where(cus =>
                     {
@@ -293,7 +283,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customer = _customerRepository.GetById(customerId);
+                var customer = _unitOfWork.Customers.GetById(customerId);
                 if (customer == null || customer.DeletedDate != null)
                     return Result.Fail("Khách hàng không tồn tại");
                 
@@ -316,8 +306,8 @@ namespace bookstore_Management.Services.Implementations
                 }
 
                 customer.UpdatedDate = DateTime.Now;
-                _customerRepository.Update(customer);
-                _customerRepository.SaveChanges();
+                _unitOfWork.Customers.Update(customer);
+                _unitOfWork.SaveChanges();
 
                 return Result.Success($"Nâng hạng từ {currentLevel} lên {customer.MemberLevel} thành công");
             }
@@ -331,7 +321,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customer = _customerRepository.GetById(customerId);
+                var customer = _unitOfWork.Customers.GetById(customerId);
                 if (customer == null || customer.DeletedDate != null)
                     return Result.Fail("Khách hàng không tồn tại");
                 
@@ -353,8 +343,8 @@ namespace bookstore_Management.Services.Implementations
                 }
 
                 customer.UpdatedDate = DateTime.Now;
-                _customerRepository.Update(customer);
-                _customerRepository.SaveChanges();
+                _unitOfWork.Customers.Update(customer);
+                _unitOfWork.SaveChanges();
 
                 return Result.Success($"Hạ hạng từ {currentLevel} xuống {customer.MemberLevel} thành công");
             }
@@ -398,11 +388,11 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customer = _customerRepository.GetById(customerId);
+                var customer = _unitOfWork.Customers.GetById(customerId);
                 if (customer == null || customer.DeletedDate != null)
                     return Result<IEnumerable<Order>>.Fail("Khách hàng không tồn tại");
 
-                var orders = _orderRepository.Find(o =>
+                var orders = _unitOfWork.Orders.Find(o =>
                     o.CustomerId == customerId &&
                     o.CreatedDate >= fromDate &&
                     o.CreatedDate <= toDate &&
@@ -425,11 +415,11 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customer = _customerRepository.GetById(customerId);
+                var customer = _unitOfWork.Customers.GetById(customerId);
                 if (customer == null || customer.DeletedDate != null)
                     return Result<decimal>.Fail("Khách hàng không tồn tại");
 
-                var orders = _orderRepository.Find(o =>
+                var orders = _unitOfWork.Orders.Find(o =>
                     o.CustomerId == customerId &&
                     o.DeletedDate == null &&
                     o.CreatedDate == date );
@@ -447,11 +437,11 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customer = _customerRepository.GetById(customerId);
+                var customer = _unitOfWork.Customers.GetById(customerId);
                 if (customer == null || customer.DeletedDate != null)
                     return Result<decimal>.Fail("Khách hàng không tồn tại");
 
-                var orders = _orderRepository.Find(o =>
+                var orders = _unitOfWork.Orders.Find(o =>
                     o.CustomerId == customerId &&
                     o.DeletedDate == null &&
                     o.CreatedDate.Month == month &&
@@ -470,11 +460,11 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customer = _customerRepository.GetById(customerId);
+                var customer = _unitOfWork.Customers.GetById(customerId);
                 if (customer == null || customer.DeletedDate != null)
                     return Result<decimal>.Fail("Khách hàng không tồn tại");
 
-                var orders = _orderRepository.Find(o =>
+                var orders = _unitOfWork.Orders.Find(o =>
                     o.CustomerId == customerId &&
                     o.DeletedDate == null &&
                     o.CreatedDate.Year == year);
@@ -493,7 +483,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         private string GenerateCustomerId()
         {
-            var lastCustomer = _customerRepository.GetAll()
+            var lastCustomer = _unitOfWork.Customers.GetAll()
                 .OrderByDescending(c => c.CustomerId)
                 .FirstOrDefault();
                 
@@ -509,7 +499,7 @@ namespace bookstore_Management.Services.Implementations
         /// </summary>
         private CustomerDetailResponseDto MapToCustomerResponseDto(Customer cus)
         {
-            var orders = _orderRepository.GetByCustomer(cus.CustomerId).ToList();
+            var orders = _unitOfWork.Orders.GetByCustomer(cus.CustomerId).ToList();
             return new CustomerDetailResponseDto
             {
                 CustomerId = cus.CustomerId,
@@ -533,7 +523,7 @@ namespace bookstore_Management.Services.Implementations
             try
             {
              
-                var customers = _customerRepository.GetAllForListView().ToList();
+                var customers = _unitOfWork.Customers.GetAllForListView().ToList();
 
 
                 var result = customers.Select(customer => new CustomerListResponseDto

@@ -8,13 +8,11 @@ namespace bookstore_Management.Presentation.Views.Payment
 {
     public partial class PaymentView : UserControl
     {
-        public PaymentView()
+        public PaymentView(PaymentViewModel paymentViewModel)
         {
             InitializeComponent();
 
-            var vm = new PaymentViewModel();
-
-            // gán DataContext TRƯỚC
+            var vm = paymentViewModel;
             DataContext = vm;
 
             // subscribe event 1 lần duy nhất
@@ -28,7 +26,7 @@ namespace bookstore_Management.Presentation.Views.Payment
 
                 if (dialog.ShowDialog() == true && dialog.IsConfirmed)
                 {
-                    vm.ConfirmCheckout(); // 👈 TẠO HÓA ĐƠN Ở ĐÂY
+                    vm.ConfirmCheckout(); 
                 }
             };
 

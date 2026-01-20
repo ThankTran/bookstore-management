@@ -22,6 +22,7 @@ using bookstore_Management.Core.Enums;
 using bookstore_Management.Presentation.ViewModels;
 using bookstore_Management.Presentation.Views.Dialogs.Invoices;
 using bookstore_Management.Presentation.Views.Orders;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace bookstore_Management.Presentation.Views.Payment
 {
@@ -31,23 +32,12 @@ namespace bookstore_Management.Presentation.Views.Payment
     public partial class OrderDetailView : UserControl, IDisposable
     {
         private readonly IOrderService _orderService;
-        private readonly BookstoreDbContext context;
-        private readonly UnitOfWork _unitOfWork;
         private string _currentOrderId;
 
-        public OrderDetailView()
+        public OrderDetailView(IOrderService orderService)
         {
             InitializeComponent();
-            // Lưu reference để dispose sau
-            context = new BookstoreDbContext();
-            _unitOfWork = new UnitOfWork(context);
-            _orderService = new OrderService(
-                new OrderRepository(context),
-                new OrderDetailRepository(context),
-                new BookRepository(context),
-                new CustomerRepository(context),
-                new StaffRepository(context)
-            );
+            _orderService = orderService;
         }
 
         public void LoadOrderAsync(string orderId)
@@ -131,19 +121,13 @@ namespace bookstore_Management.Presentation.Views.Payment
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                // Reload data thay vì tạo view mới để tránh memory leak
-                if (mainWindow.MainFrame.Content is InvoiceView existingView)
-                {
-                    var viewModel = existingView.DataContext as InvoiceViewModel;
-                    viewModel?.LoadAllInvoices();
-                }
-                else
-                {
-                    mainWindow.MainFrame.Content = new InvoiceView();
-                }
-            }
+            if (mainWindow == null) return;
+
+            var scope = App.Services.CreateScope();
+            var invoiceView = scope.ServiceProvider.GetRequiredService<InvoiceView>();
+            invoiceView.Unloaded += (_, __) => scope.Dispose();
+            
+            mainWindow.MainFrame.Content = invoiceView;
         }
 
         private async void BtnPrint_Click(object sender, RoutedEventArgs e)
@@ -193,20 +177,14 @@ namespace bookstore_Management.Presentation.Views.Payment
             MessageBox.Show("Đã hủy đơn hàng thành công.", "Thông báo",
                 MessageBoxButton.OK, MessageBoxImage.Information);
 
-            // Navigate back to invoice list - reload data thay vì tạo mới
             var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                if (mainWindow.MainFrame.Content is InvoiceView existingView)
-                {
-                    var viewModel = existingView.DataContext as InvoiceViewModel;
-                    viewModel?.LoadAllInvoices();
-                }
-                else
-                {
-                    mainWindow.MainFrame.Content = new InvoiceView();
-                }
-            }
+            if (mainWindow == null) return;
+
+            var scope = App.Services.CreateScope();
+            var invoiceView = scope.ServiceProvider.GetRequiredService<InvoiceView>();
+            invoiceView.Unloaded += (_, __) => scope.Dispose();
+            
+            mainWindow.MainFrame.Content = invoiceView;
         }
 
         #region IDisposable
@@ -225,9 +203,9 @@ namespace bookstore_Management.Presentation.Views.Payment
             {
                 if (disposing)
                 {
-                    // Dispose managed resources
-                    _unitOfWork?.Dispose();
-                    context?.Dispose();
+                    // // Dispose managed resources
+                    // _unitOfWork?.Dispose();
+                    // context?.Dispose();
                 }
                 _disposed = true;
             }

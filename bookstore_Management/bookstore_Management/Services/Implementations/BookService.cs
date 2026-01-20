@@ -15,40 +15,13 @@ namespace bookstore_Management.Services.Implementations
 {
     public class BookService : IBookService
     {
-        private readonly IBookRepository _bookRepository;
-        private readonly IPublisherRepository _publisherRepository;
-        private readonly IImportBillDetailRepository _importBillDetailRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        internal BookService(
-            IBookRepository bookRepository,
-            IPublisherRepository publisherRepository,
-            IImportBillDetailRepository importBillDetailRepository)
+        public BookService(IUnitOfWork unitOfWork)
         {
-            _bookRepository = bookRepository;
-            _publisherRepository = publisherRepository;
-            _importBillDetailRepository = importBillDetailRepository;
+            _unitOfWork = unitOfWork;
         }
-        internal BookService()
-        {
-            var context = new BookstoreDbContext();
-
-            // Phải khởi tạo ĐỦ cả 3 cái
-            _bookRepository = new BookRepository(context);
-            _publisherRepository = new PublisherRepository(context); // Thêm dòng này
-            _importBillDetailRepository = new ImportBillDetailRepository(context); // Thêm dòng này
-        }
-        // Hãy đảm bảo bạn đã gán giá trị cho repository
-        internal BookService(IBookRepository bookRepo)
-        {
-            _bookRepository = bookRepo;
-        }
-        // Lưu ý: Dùng 'internal' nếu Interface của bạn không phải là public
-        internal BookService(IPublisherRepository publisherRepo, IImportBillDetailRepository billRepo)
-        {
-            _publisherRepository = publisherRepo;
-            _importBillDetailRepository = billRepo;
-        }
-
+        
         // ==================================================================
         // ---------------------- THÊM DỮ LIỆU ------------------------------
         // ==================================================================
@@ -64,19 +37,19 @@ namespace bookstore_Management.Services.Implementations
 
                 if (!string.IsNullOrWhiteSpace(dto.PublisherName))
                 {
-                    var sup = _publisherRepository.SearchByName(dto.PublisherName).FirstOrDefault();
+                    var sup = _unitOfWork.Publishers.SearchByName(dto.PublisherName).FirstOrDefault();
                     if (sup == null || sup.DeletedDate != null)
                         return Result<string>.Fail("Nhà cung cấp không tồn tại");
                 }
 
                 // Generate Book ID -- nếu không có bookId autoGen
                 var bookId = string.IsNullOrWhiteSpace(dto.Id) ? GenerateBookId() : dto.Id.Trim();
-                if (_bookRepository.Exists(b => b.BookId == bookId))
+                if (_unitOfWork.Books.Exists(b => b.BookId == bookId))
                     return Result<string>.Fail("Mã sách đã tồn tại");
 
                 // set giá trị binding
                 var salePrice = dto.SalePrice;
-                var publisher = _publisherRepository.SearchByName(dto.PublisherName).FirstOrDefault();
+                var publisher = _unitOfWork.Publishers.SearchByName(dto.PublisherName).FirstOrDefault();
 
                 // Create book
                 var book = new Book
@@ -90,8 +63,8 @@ namespace bookstore_Management.Services.Implementations
                     CreatedDate = DateTime.Now
                 };
 
-                _bookRepository.Add(book);
-                _bookRepository.SaveChanges();
+                _unitOfWork.Books.Add(book);
+                _unitOfWork.SaveChanges();
 
                 return Result<string>.Success(bookId, "Thêm sách thành công");
             }
@@ -108,7 +81,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var book = _bookRepository.GetById(bookId);
+                var book = _unitOfWork.Books.GetById(bookId);
                 if (book == null || book.DeletedDate != null)
                     return Result.Fail("Sách không tồn tại");
 
@@ -122,15 +95,15 @@ namespace bookstore_Management.Services.Implementations
                     book.SalePrice = dto.SalePrice.Value;
                 if (!string.IsNullOrWhiteSpace(dto.PublisherName))
                 {
-                    var sup = _publisherRepository.SearchByName(dto.PublisherName).FirstOrDefault();
+                    var sup = _unitOfWork.Publishers.SearchByName(dto.PublisherName).FirstOrDefault();
                     if (sup == null || sup.DeletedDate != null)
                         return Result.Fail("Nhà cung cấp không tồn tại");
                     book.PublisherId = sup.Id;
                 }
                 book.UpdatedDate = DateTime.Now;
 
-                _bookRepository.Update(book);
-                _bookRepository.SaveChanges();
+                _unitOfWork.Books.Update(book);
+                _unitOfWork.SaveChanges();
 
                 return Result.Success("Cập nhật sách thành công");
             }
@@ -147,14 +120,14 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var book = _bookRepository.GetById(bookId);
+                var book = _unitOfWork.Books.GetById(bookId);
                 if (book == null || book.DeletedDate != null)
                     return Result.Fail("Sách không tồn tại");
 
                 // Soft delete
                 book.DeletedDate = DateTime.Now;
-                _bookRepository.Update(book);
-                _bookRepository.SaveChanges();
+                _unitOfWork.Books.Update(book);
+                _unitOfWork.SaveChanges();
 
                 return Result.Success("Xóa sách thành công");
             }
@@ -176,7 +149,7 @@ namespace bookstore_Management.Services.Implementations
 
             try
             {
-                var book = _bookRepository.GetById(bookId);
+                var book = _unitOfWork.Books.GetById(bookId);
 
                 if (book == null || book.DeletedDate != null)
                     return Result<BookDetailResponseDto>.Fail("Sách không tồn tại");
@@ -195,7 +168,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var importPrice = _importBillDetailRepository.GetImportPriceByBookId(bookId);
+                var importPrice = _unitOfWork.ImportBillDetails.GetImportPriceByBookId(bookId);
                 return Result<decimal>.Success(importPrice);
             }
             catch (Exception ex)
@@ -208,7 +181,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var books = _bookRepository.GetAll()
+                var books = _unitOfWork.Books.GetAll()
                     .Where(b => b.DeletedDate == null)
                     .Select(MapToBookResponseDto)
                     .ToList();
@@ -228,7 +201,7 @@ namespace bookstore_Management.Services.Implementations
                 if (string.IsNullOrWhiteSpace(keyword))
                     return Result<IEnumerable<BookDetailResponseDto>>.Success(new List<BookDetailResponseDto>());
 
-                var books = _bookRepository.SearchByName(keyword)
+                var books = _unitOfWork.Books.SearchByName(keyword)
                     .Where(b => b.DeletedDate == null)
                     .Select(MapToBookResponseDto);
                 return Result<IEnumerable<BookDetailResponseDto>>.Success(books);
@@ -243,7 +216,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var books = _bookRepository.GetByCategory(category)
+                var books = _unitOfWork.Books.GetByCategory(category)
                     .Where(b => b.DeletedDate == null)
                     .Select(MapToBookResponseDto);
 
@@ -262,7 +235,7 @@ namespace bookstore_Management.Services.Implementations
                 if (string.IsNullOrWhiteSpace(author))
                     return Result<IEnumerable<BookDetailResponseDto>>.Success(new List<BookDetailResponseDto>());
 
-                var books = _bookRepository.GetByAuthor(author)
+                var books = _unitOfWork.Books.GetByAuthor(author)
                     .Where(b => b.DeletedDate == null)
                     .Select(MapToBookResponseDto);
                 return Result<IEnumerable<BookDetailResponseDto>>.Success(books);
@@ -277,7 +250,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var books = _bookRepository.GetByPriceRange(minPrice, maxPrice)
+                var books = _unitOfWork.Books.GetByPriceRange(minPrice, maxPrice)
                     .Where(b => b.DeletedDate == null)
                     .Select(MapToBookResponseDto);
 
@@ -293,7 +266,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var books = _bookRepository.Find(b => b.Publisher.Name == supplierName)
+                var books = _unitOfWork.Books.Find(b => b.Publisher.Name == supplierName)
                     .Select(MapToBookResponseDto);
 
                 return Result<IEnumerable<BookDetailResponseDto>>.Success(books);
@@ -310,7 +283,7 @@ namespace bookstore_Management.Services.Implementations
             {
 
 
-                var books = _bookRepository
+                var books = _unitOfWork.Books
                     .Find(b => b.DeletedDate == null)
                     .Where(b => b.Stock <= minStock)
                     .Select(MapToBookResponseDto);
@@ -328,7 +301,7 @@ namespace bookstore_Management.Services.Implementations
             try
             {
 
-                var books = _bookRepository
+                var books = _unitOfWork.Books
                     .Find(b => b.DeletedDate == null)
                     .Where(b => b.Stock == 0)
                     .Select(MapToBookResponseDto);
@@ -349,14 +322,14 @@ namespace bookstore_Management.Services.Implementations
             try
             {
 
-                var books = _bookRepository.GetAllForListView().ToList();
+                var books = _unitOfWork.Books.GetAllForListView().ToList();
 
                 if (!books.Any())
                     return Result<IEnumerable<BookListResponseDto>>.Success(new List<BookListResponseDto>());
 
 
                 var bookIds = books.Select(b => b.BookId).ToList();
-                var importPrices = _importBillDetailRepository.GetLatestImportPricesByBookIds(bookIds);
+                var importPrices = _unitOfWork.ImportBillDetails.GetLatestImportPricesByBookIds(bookIds);
 
 
                 var result = books.Select((book, index) => new BookListResponseDto
@@ -383,7 +356,7 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         private string GenerateBookId()
         {
-            var lastBook = _bookRepository.GetAll()
+            var lastBook = _unitOfWork.Books.GetAll()
                 .OrderByDescending(b => b.BookId)
                 .FirstOrDefault();
 
@@ -409,8 +382,8 @@ namespace bookstore_Management.Services.Implementations
                 SalePrice = book.SalePrice,
                 StockQuantity = book.Stock,
                 PublisherId = book.PublisherId,
-                ImportPrice = _importBillDetailRepository.GetImportPriceByBookId(book.BookId),
-                PublisherName = _publisherRepository.GetNameByPublisherId(book.PublisherId)
+                ImportPrice = _unitOfWork.ImportBillDetails.GetImportPriceByBookId(book.BookId),
+                PublisherName = _unitOfWork.Publishers.GetNameByPublisherId(book.PublisherId)
             };
         }
     }

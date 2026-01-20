@@ -13,7 +13,7 @@ namespace bookstore_Management.Data.Repositories.Interfaces
     /// </summary>
     /// <typeparam name="T">Class</typeparam>
     /// <typeparam name="TKey">Kiểu dữ lệu khóa chính</typeparam>
-    internal interface IRepository<T, TKey> where T : class
+    public interface IRepository<T, TKey> where T : class
     {
         // Get
         IEnumerable<T> GetAll(); // lấy hết thông tin từ bảng

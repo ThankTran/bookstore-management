@@ -11,34 +11,18 @@ namespace bookstore_Management.Services.Implementations
 {
     public class ReportService : IReportService
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly IOrderDetailRepository _orderDetailRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly ICustomerRepository _customerRepository;
-        private readonly IImportBillRepository _importBillRepository;
-        private readonly IImportBillDetailRepository _importBillDetailRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        internal ReportService(
-            IOrderRepository orderRepository,
-            IOrderDetailRepository orderDetailRepository,
-            IBookRepository bookRepository,
-            ICustomerRepository customerRepository,
-            IImportBillRepository importBillRepository,
-            IImportBillDetailRepository importBillDetailRepository)
+        public ReportService(IUnitOfWork unitOfWork)
         {
-            _orderRepository = orderRepository;
-            _orderDetailRepository = orderDetailRepository;
-            _bookRepository = bookRepository;
-            _customerRepository = customerRepository;
-            _importBillRepository = importBillRepository;
-            _importBillDetailRepository = importBillDetailRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public Result<decimal> GetTotalRevenue(DateTime fromDate, DateTime toDate)
         {
             try
             {
-                var orders = _orderRepository.Find(o =>
+                var orders =  _unitOfWork.Orders.Find(o =>
                     o.CreatedDate >= fromDate &&
                     o.CreatedDate <= toDate &&
                     o.DeletedDate == null);
@@ -56,13 +40,13 @@ namespace bookstore_Management.Services.Implementations
             try
             {
                 // Lợi nhuận = (tổng tiền bán - tổng tiền nhập)
-                var totalSales = _orderRepository.Find(o =>
+                var totalSales = _unitOfWork.Orders.Find(o =>
                     o.CreatedDate >= fromDate &&
                     o.CreatedDate <= toDate &&
                     o.DeletedDate == null
                 ).Select(o => o.TotalPrice).DefaultIfEmpty(0).Sum();
 
-                var totalImport = _importBillRepository.Find(i =>
+                var totalImport = _unitOfWork.ImportBills.Find(i =>
                     i.CreatedDate >= fromDate &&
                     i.CreatedDate <= toDate &&
                     i.DeletedDate == null
@@ -97,7 +81,7 @@ namespace bookstore_Management.Services.Implementations
             {
                 var endDate = fromDate.AddDays(jump);
 
-                var total = _orderRepository.Find(o =>
+                var total = _unitOfWork.Orders.Find(o =>
                         o.DeletedDate == null &&
                         o.CreatedDate >= fromDate &&
                         o.CreatedDate < endDate
@@ -122,7 +106,7 @@ namespace bookstore_Management.Services.Implementations
             {
                 var endDate = fromDate.AddDays(jump);
 
-                var total = _importBillRepository.Find(o =>
+                var total = _unitOfWork.ImportBills.Find(o =>
                         o.DeletedDate == null &&
                         o.CreatedDate >= fromDate &&
                         o.CreatedDate < endDate
@@ -140,7 +124,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {   
-                var customer = _customerRepository.Find( c =>
+                var customer = _unitOfWork.Customers.Find( c =>
                     c.CreatedDate >= fromDate &&
                     c.CreatedDate <= toDate &&
                     c.DeletedDate == null).Count();
@@ -156,7 +140,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var orders = _orderRepository.Find(o =>
+                var orders = _unitOfWork.Orders.Find(o =>
                     o.CreatedDate >= fromDate &&
                     o.CreatedDate <= toDate &&
                     o.DeletedDate == null).ToList();
@@ -174,7 +158,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var count = _orderRepository.Find(o =>
+                var count = _unitOfWork.Orders.Find(o =>
                     o.CreatedDate >= fromDate &&
                     o.CreatedDate <= toDate &&
                     o.DeletedDate == null).Count();
@@ -191,11 +175,11 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var details = _orderDetailRepository.Find(od =>
+                var details = _unitOfWork.OrderDetails.Find(od =>
                     od.Order.CreatedDate >= fromDate &&
                     od.Order.CreatedDate <= toDate &&
                     od.Order.DeletedDate == null);
-                var bookDict = _bookRepository.GetAll()
+                var bookDict = _unitOfWork.Books.GetAll()
                     .Where(b => b.DeletedDate == null)
                     .ToDictionary(b => b.BookId, b => b.Name);
                 
@@ -225,12 +209,12 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var details = _orderDetailRepository.Find(od =>
+                var details = _unitOfWork.OrderDetails.Find(od =>
                     od.Order.CreatedDate >= fromDate &&
                     od.Order.CreatedDate <= toDate &&
                     od.Order.DeletedDate == null);
 
-                var allBooks = _bookRepository.GetAll().Where(b => b.DeletedDate == null).ToList();
+                var allBooks = _unitOfWork.Books.GetAll().Where(b => b.DeletedDate == null).ToList();
 
                 var report = allBooks
                     .GroupJoin(details,
@@ -266,14 +250,14 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var books = _bookRepository.GetAll().Where(b => b.DeletedDate == null).ToList();
+                var books = _unitOfWork.Books.GetAll().Where(b => b.DeletedDate == null).ToList();
 
                 var totalBooks = books.Count;
                 var totalQuantity = books.Sum(b => b.Stock);
 
                 // Giá trị tồn kho nên tính theo giá vốn (ImportPrice), không phải giá bán (SalePrice).
                 var bookIds = books.Select(b => b.BookId).ToList();
-                var importPrices = _importBillDetailRepository.GetLatestImportPricesByBookIds(bookIds);
+                var importPrices = _unitOfWork.ImportBillDetails.GetLatestImportPricesByBookIds(bookIds);
 
                 var totalValue = books.Sum(b =>
                     (importPrices.TryGetValue(b.BookId, out var price) ? price ?? 0 : 0) * b.Stock
@@ -312,8 +296,8 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var customers = _customerRepository.GetAll().Where(c => c.DeletedDate == null).ToList();
-                var orders = _orderRepository.GetAll().Where(o => o.DeletedDate == null).ToList();
+                var customers = _unitOfWork.Customers.GetAll().Where(c => c.DeletedDate == null).ToList();
+                var orders = _unitOfWork.Orders.GetAll().Where(o => o.DeletedDate == null).ToList();
 
                 var report = customers
                     .Select(c =>
@@ -347,7 +331,7 @@ namespace bookstore_Management.Services.Implementations
             {
                 var walkIn = 0;
                 var member = 0;
-                _orderRepository.Find(o =>
+                _unitOfWork.Orders.Find(o =>
                     o.CreatedDate >= fromDate &&
                     o.CreatedDate <= toDate &&
                     o.DeletedDate == null).ToList().ForEach(o =>
@@ -379,7 +363,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bills = _importBillRepository.Find(ib =>
+                var bills = _unitOfWork.ImportBills.Find(ib =>
                     ib.CreatedDate >= fromDate &&
                     ib.CreatedDate <= toDate &&
                     ib.DeletedDate == null);

@@ -18,7 +18,7 @@ using bookstore_Management.Presentation.Views.Dialogs.Share;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class InvoiceViewModel : BaseViewModel
+    public class InvoiceViewModel : BaseViewModel
     {
         #region Services
 
@@ -375,7 +375,7 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 Owner = Application.Current.MainWindow
             };
-            var context = new BookstoreDbContext();
+            
             _staffService = new StaffService(
                 new StaffRepository(context),
                 new OrderRepository(context));

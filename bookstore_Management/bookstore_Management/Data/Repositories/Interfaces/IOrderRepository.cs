@@ -5,7 +5,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Interfaces
 {
-    internal interface IOrderRepository : IRepository<Order,string>
+    public interface IOrderRepository : IRepository<Order,string>
     {
         IEnumerable<Order> GetByCustomer(string customerId);
         IEnumerable<Order> GetByStaff(string staffId);

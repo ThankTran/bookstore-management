@@ -12,6 +12,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.Presentation.Views.Dialogs.Books;
+
 namespace bookstore_Management.Presentation.ViewModels
 {
     internal class BookViewModel : BaseViewModel
@@ -120,16 +122,12 @@ namespace bookstore_Management.Presentation.ViewModels
         #endregion
 
         #region constructor
-        public BookViewModel(IBookService bookService)
+        public BookViewModel(IUnitOfWork unitOfWork)
         {
             //_bookService = bookService ?? new BookService();
             var context = new BookstoreDbContext();
             _publisherRepository = new PublisherRepository(context);
-            _bookService = new BookService(
-            new BookRepository(context),
-            new PublisherRepository(context),
-            new ImportBillDetailRepository(context)
-            );
+            _bookService = new BookService(unitOfWork);
             
 
             Books = new ObservableCollection<Book>();
@@ -300,7 +298,16 @@ namespace bookstore_Management.Presentation.ViewModels
             #region ExportCommand
             ExportCommand = new RelayCommand<object>((p) =>
             {
-
+                 try
+                    {
+                        var data = Books.ToList();
+                        var export = new ExportExcelBook(data);
+                        export.ShowDialog();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString(), "EXPORT ERROR");
+                    }
             });
             #endregion
 
