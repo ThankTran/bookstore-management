@@ -248,6 +248,7 @@
                                 BorderThickness="0"
                                 Padding="12,8"
                                 ToolTip="In danh sách"
+                                Command="{Binding PrintCommand}"
                                 Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Presentation/AppResources/Images/Icons/Functions/print.png" 
@@ -274,6 +275,7 @@
                                 BorderThickness="0"
                                 Padding="12,8"
                                 ToolTip="Xuất Excel"
+                                Command="{Binding ExportCommand}"
                                 Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Presentation/AppResources/Images/Icons/Functions/export.png" 
@@ -610,40 +612,22 @@
                                                                FontSize="16"/>
                                                 </Button>
                                             </Border>
-
-                                            <!-- Print Button --><!--
-                                            <Border Background="#E8F5E9"
-                                                    CornerRadius="6"
-                                                    Margin="0,0,5,0"
-                                                    Cursor="Hand"
-                                                    ToolTip="In hóa đơn">
-                                                <Button Style="{StaticResource SmallIconButton}"
-                                                        Background="Transparent"
-                                                        Width="32"
-                                                        Height="32"
-                                                        Command="{Binding PrintCommand}"
-                                                        Tag="{Binding}">
-                                                    <TextBlock Text="🖨" 
-                                                               FontSize="16"/>
-                                                </Button>
-                                            </Border>-->
-
                                             <!-- Delete Button -->
                                             <Border Background="#FFEBEE"
                                                     CornerRadius="6"
                                                     Cursor="Hand"
                                                     ToolTip="Xóa hóa đơn">
                                                 <Button Style="{StaticResource SmallIconButton}"
-                                                        Background="Transparent"
                                                         Width="32"
                                                         Height="32"
-                                                          Command="{Binding DataContext.DeleteCommand,
-                                                                    RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-
-                                                        Tag="{Binding}">
-                                                    <TextBlock Text="🗑" 
-                                                               FontSize="16"/>
+                                                        Background="#FFEBEE"
+                                                        Cursor="Hand"
+                                                        ToolTip="Xóa hóa đơn"
+                                                        
+                                                        Command="{Binding DataContext.DeleteCommand,
+                                                RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}">
+                                                    <TextBlock Text="🗑" FontSize="16"/>
                                                 </Button>
                                             </Border>
                                         </StackPanel>

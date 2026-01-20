@@ -11,6 +11,8 @@ namespace bookstore_Management.Core.Enums
     /// </summary>
     public enum UserRole
     {
+        Unknown = 0,
+        
         [Display(Name = "Quản trị viên")]
         Administrator = 1,
 

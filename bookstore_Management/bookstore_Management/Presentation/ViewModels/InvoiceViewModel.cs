@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
@@ -117,6 +118,7 @@ namespace bookstore_Management.Presentation.ViewModels
         public ICommand DeleteCommand { get; }
         public ICommand PrintCommand { get; }
         public ICommand EditCommand { get; }
+        public ICommand ExportCommand { get; }
 
         public ICommand SearchCommand { get; set; }
 
@@ -163,12 +165,24 @@ namespace bookstore_Management.Presentation.ViewModels
             );
 
             PrintCommand = new RelayCommand<object>((p) =>
+            {
+                if (SelectedInvoice == null)
                 {
-                    MessageBox.Show("Tính năng này đang phát triển! Vui lòng thử lại sau.");
+                    MessageBox.Show("Vui lòng chọn hóa đơn cần in!");
                     return;
                 }
-               
-            );
+
+                var print = new PrintInvoice(
+                    SelectedInvoice.InvoiceId,
+                    SelectedInvoice.InvoiceType,
+                    SelectedInvoice
+                );
+
+                print.ShowDialog();
+            });
+
+
+            ExportCommand = new RelayCommand(() => ExportInvoice());
 
             SearchCommand = new RelayCommand<object>((p) =>
             {
@@ -208,7 +222,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         #region Load Data
 
-        private void LoadAllInvoices()
+        public void LoadAllInvoices()
         {
             try
             {
@@ -392,14 +406,12 @@ namespace bookstore_Management.Presentation.ViewModels
         {
             if (SelectedInvoice == null) return;
 
-            var confirm = MessageBox.Show(
-                $"Bạn có chắc muốn xóa hóa đơn {SelectedInvoice.InvoiceId}?",
-                "Xác nhận",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning
+            bool confirmed = Delete.ShowForInvoice(
+                SelectedInvoice.InvoiceId,
+                Application.Current.MainWindow
             );
 
-            if (confirm != MessageBoxResult.Yes) return;
+            if (!confirmed) return;
 
             if (SelectedInvoice.InvoiceType == InvoiceType.Import)
                 _importBillService.DeleteImportBill(SelectedInvoice.InvoiceId);
@@ -438,14 +450,20 @@ namespace bookstore_Management.Presentation.ViewModels
 
             if (invoice.InvoiceType == InvoiceType.Import)
             {
-                MessageBox.Show($"Mở form sửa Phiếu nhập: {invoice.InvoiceId}");
-                // TODO: mở dialog EditImportBill
+                var dialog = new EditImportBillDialog(invoice.InvoiceId);
+                dialog.ShowDialog();
             }
             else
             {
-                MessageBox.Show($"Mở form sửa Hóa đơn bán: {invoice.InvoiceId}");
-                // TODO: mở dialog EditOrderBill
+                var dialog = new EditOrderDialog(invoice.InvoiceId);
+                dialog.ShowDialog();
             }
+        }
+        
+        private void ExportInvoice()
+        {
+            var dialog = new ExportExcelInvoice(_importBillService, _orderService);
+            dialog.ShowDialog();
         }
 
 
