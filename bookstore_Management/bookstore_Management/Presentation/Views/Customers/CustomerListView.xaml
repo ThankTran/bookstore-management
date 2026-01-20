@@ -162,7 +162,7 @@
                                  VerticalContentAlignment="Center"
                                  FontSize="13"
                                  Foreground="#666666"
-                                 Text="{ Binding SearchKeyword, UpdateSourceTrigger=PropertyChanged}"                                 
+                                 Text="{ Binding SearchKeyword, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"                                
                                  FontFamily="{StaticResource PrimaryFont}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
