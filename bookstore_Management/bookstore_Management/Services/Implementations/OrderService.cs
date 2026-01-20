@@ -195,7 +195,7 @@ namespace bookstore_Management.Services.Implementations
 
                 order.DeletedDate = DateTime.Now;
                 _orderRepository.Update(order);
-                _orderRepository.SaveChanges();
+                 _orderRepository.SaveChanges();
 
                 return Result.Success("Hủy đơn hàng thành công");
             }

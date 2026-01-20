@@ -390,13 +390,12 @@
                             <Grid Margin="0,0,0,5">
                                 <TextBlock Text="Tổng thành tiền (tiền hàng)" FontSize="12" Foreground="#666"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Content="✏️"
+                                    <Button 
                                     Background="Transparent"
                                     BorderThickness="0"
                                     FontSize="10"
                                     Padding="5,0"
                                     Cursor="Hand"
-                                    Command="{Binding EditSubtotalCommand}"
                                     Margin="0,0,5,0"/>
                                     <TextBlock Text="{Binding Subtotal, StringFormat={}{0:N0}}"
                                        FontSize="12"
@@ -408,18 +407,23 @@
                             <Grid Margin="0,0,0,5">
                                 <TextBlock Text="Điểm thưởng" FontSize="12" Foreground="#666"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Content="✏️"
+                                    <Button
                                     Background="Transparent"
                                     BorderThickness="0"
                                     FontSize="10"
                                     Padding="5,0"
                                     Cursor="Hand"
-                                    Command="{Binding EditLoyaltyPointsCommand}"
                                     Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding LoyaltyPoints, StringFormat={}{0:N0}}"
-                                       FontSize="12"
-                                       FontWeight="SemiBold"
-                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                    <TextBox
+                                        Text="{Binding LoyaltyPoints, StringFormat={}{0:N0}}"
+                                        IsReadOnly="True"
+                                        BorderThickness="0"
+                                        Background="Transparent"
+                                        FontSize="12"
+                                        FontWeight="SemiBold"
+                                        Foreground="{StaticResource PrimaryBrush}"
+                                        HorizontalContentAlignment="Right"/>
+
                                 </StackPanel>
                             </Grid>
 

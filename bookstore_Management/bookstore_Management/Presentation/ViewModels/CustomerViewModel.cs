@@ -93,6 +93,8 @@ namespace bookstore_Management.Presentation.ViewModels
                   Phone = dto.Phone,  
                   Email = dto.Email,
                   Address = dto.Address,
+                  LoyaltyPoints = dto.LoyaltyPoints,
+                 
             });
 
             Customers = new ObservableCollection<Customer>(cuss);
@@ -125,6 +127,7 @@ namespace bookstore_Management.Presentation.ViewModels
                         Address=dialog.Address,
                         Email=dialog.Email,
                         Phone=dialog.Phone,
+                        
                     };
                     var result = _customerService.AddCustomer(newCusDto);
                     if (!result.IsSuccess)
@@ -150,6 +153,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 dialog.Phone = cus.Phone;
                 dialog.Email = cus.Email;
                 dialog.Address = cus.Address;
+         
                 if (dialog.ShowDialog() == true)
                 {
                     var updateCusDto = new DTOs.Customer.Requests.UpdateCustomerRequestDto()
