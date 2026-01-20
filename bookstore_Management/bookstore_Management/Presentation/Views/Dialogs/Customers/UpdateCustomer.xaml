@@ -194,6 +194,7 @@
                             <Grid>
                                 <TextBox x:Name="tbAddress"
                                              Style="{StaticResource InputTextBoxStyle}"
+                                         
                                              />
                                 <!-- PreviewTextInput="NumericOnly_PreviewTextInput" -->
 
