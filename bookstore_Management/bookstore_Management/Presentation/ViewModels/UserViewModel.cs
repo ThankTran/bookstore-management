@@ -155,6 +155,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region AddCommand
             AddUserCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role == UserRole.SalesManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var dialog = new Views.Dialogs.Accounts.AddAccountDialog();
 
                 var staffs = _staffRepository.GetAll();
@@ -183,7 +188,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region RemoveCommand
             RemoveUserCommand = new RelayCommand<object>((p) =>
             {
-
+                if (SessionModel.Role == UserRole.SalesManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var user = p as User;
                 if (user == null)
                 {
@@ -261,6 +270,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region EditCommand
             EditUserCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role == UserRole.SalesManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 try
                 {
                     // 1. Kiểm tra User đầu vào

@@ -1,4 +1,5 @@
-﻿using bookstore_Management.Data.Context;
+﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.Models;
 using bookstore_Management.Presentation.Views.Dialogs.Customers;
@@ -114,6 +115,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region AddCommand
             AddCusCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role == UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var dialog = new Presentation.Views.Dialogs.Customers.AddCustomer();
                 if (dialog.ShowDialog() == true)
                 {
@@ -137,7 +143,12 @@ namespace bookstore_Management.Presentation.ViewModels
             #endregion
             #region EditCommand
             EditCusCommand = new RelayCommand<object>((p) => 
-            { 
+            {
+                if (SessionModel.Role == UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var dialog = new Presentation.Views.Dialogs.Customers.UpdateCustomer();
                 var cus = p as Customer;
                 if (cus == null)
@@ -172,6 +183,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region RemoveCommand
             RemoveCusCommand = new RelayCommand<object>((p) => 
             {
+                if (SessionModel.Role == UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var cus = p as Customer;
                 if (cus == null)
                 {
@@ -235,6 +251,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region Print & Export
             PrintCommand = new RelayCommand<object>((p)=> 
             {
+                if (SessionModel.Role == UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var data = Customers;
                 var dialog = new PrintCustomer(data);
                 dialog.ShowDialog();

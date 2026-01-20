@@ -69,7 +69,6 @@ namespace bookstore_Management.Presentation.ViewModels
 
             var currentUser = userResult.Data;
 
-            // ✅ LƯU SESSION DUY NHẤT
             SessionModel.UserId = currentUser.AccountId;
             SessionModel.Username = currentUser.UserName;
             SessionModel.Role = currentUser.Role;

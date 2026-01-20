@@ -308,6 +308,11 @@ namespace bookstore_Management
         {
             try
             {
+                if (SessionModel.Role != UserRole.Administrator )
+                {
+                    MessageBox.Show("Bạn không có quyền truy cập trang này");
+                    return;
+                }
                 SetClickedButtonColor(btnAccount);
                 LoadAccountPage();
             }

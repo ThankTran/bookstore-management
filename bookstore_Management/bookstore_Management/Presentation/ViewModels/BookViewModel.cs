@@ -137,6 +137,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region AddCommand
             AddBookCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role != UserRole.Administrator && SessionModel.Role != UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var dialog = new Views.Dialogs.Books.AddBookDialog();
 
                 var publishers = _publisherRepository.GetAll();
@@ -169,6 +174,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region RemoveCommand
             RemoveBookCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role != UserRole.Administrator && SessionModel.Role != UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var book = p as Book;
                 if (book == null)
                 {
@@ -198,6 +208,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region EditCommand
             EditBookCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role != UserRole.Administrator && SessionModel.Role != UserRole.InventoryManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var dialog = new Views.Dialogs.Books.UpdateBook();
                 var book = p as Book;
 

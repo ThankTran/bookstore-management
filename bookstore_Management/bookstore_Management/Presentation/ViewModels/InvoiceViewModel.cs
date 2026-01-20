@@ -1,9 +1,11 @@
-﻿using bookstore_Management.Data.Context;
+﻿using bookstore_Management.Core.Enums;
+using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
 using bookstore_Management.DTOs.ImportBill.Responses;
 using bookstore_Management.DTOs.Order.Responses;
 using bookstore_Management.Models;
 using bookstore_Management.Presentation.Views.Dialogs.Invoices;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
 using CommunityToolkit.Mvvm.Input;
@@ -14,7 +16,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
-using bookstore_Management.Presentation.Views.Dialogs.Share;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
@@ -152,8 +153,10 @@ namespace bookstore_Management.Presentation.ViewModels
             );
 
             AddImportCommand = new RelayCommand(
+
                 () => AddImportInvoice()
             );
+
 
             AddExportCommand = new RelayCommand(
                 () => AddExportInvoice()
@@ -331,6 +334,11 @@ namespace bookstore_Management.Presentation.ViewModels
 
         private void AddImportInvoice()
         {
+            if (SessionModel.Role == UserRole.InventoryManager && SessionModel.Role != UserRole.CustomerManager)
+            {
+                MessageBox.Show("Bạn không có quyền này");
+                return;
+            }
             var dialog = new CreateImportBill
             {
                 Owner = Application.Current.MainWindow
@@ -371,6 +379,11 @@ namespace bookstore_Management.Presentation.ViewModels
 
         private void AddExportInvoice()
         {
+            if (SessionModel.Role == UserRole.InventoryManager && SessionModel.Role != UserRole.CustomerManager)
+            {
+                MessageBox.Show("Bạn không có quyền này");
+                return;
+            }
             var dialog = new CreateOrderBill
             {
                 Owner = Application.Current.MainWindow
@@ -404,6 +417,11 @@ namespace bookstore_Management.Presentation.ViewModels
 
         private void DeleteSelectedInvoice()
         {
+            if (SessionModel.Role == UserRole.InventoryManager || SessionModel.Role == UserRole.CustomerManager)
+            {
+                MessageBox.Show("Bạn không có quyền này");
+                return;
+            }
             if (SelectedInvoice == null) return;
 
             bool confirmed = Delete.ShowForInvoice(
@@ -446,6 +464,11 @@ namespace bookstore_Management.Presentation.ViewModels
 
         private void EditInvoice(InvoiceDisplayItem invoice)
         {
+            if (SessionModel.Role == UserRole.InventoryManager || SessionModel.Role == UserRole.CustomerManager)
+            {
+                MessageBox.Show("Bạn không có quyền này");
+                return;
+            }
             if (invoice == null) return;
 
             if (invoice.InvoiceType == InvoiceType.Import)
@@ -462,6 +485,11 @@ namespace bookstore_Management.Presentation.ViewModels
         
         private void ExportInvoice()
         {
+            if (SessionModel.Role == UserRole.InventoryManager || SessionModel.Role == UserRole.CustomerManager)
+            {
+                MessageBox.Show("Bạn không có quyền này");
+                return;
+            }
             var dialog = new ExportExcelInvoice(_importBillService, _orderService);
             dialog.ShowDialog();
         }
@@ -470,7 +498,7 @@ namespace bookstore_Management.Presentation.ViewModels
 
         #endregion
     }
-    public class InvoiceDisplayItem
+    public class InvoiceDisplayItem     
     {
         public int STT { get; set; }
         public string InvoiceId { get; set; }

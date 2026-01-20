@@ -115,6 +115,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region AddCommand
             AddPusCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role == UserRole.SalesManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var dialog = new Presentation.Views.Dialogs.Publishers.AddPublisher();
                 if(dialog.ShowDialog() == true)
                 {
@@ -138,6 +143,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region EditCommand
             EditPusCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role == UserRole.SalesManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var dialog = new Presentation.Views.Dialogs.Publishers.UpdatePublisher();
                 var pus = p as Publisher;
 
@@ -184,6 +194,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region RemoveCommand
             RemovePusCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role == UserRole.SalesManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var pus = p as Publisher;
                 if (pus == null) return;
 
@@ -239,6 +254,11 @@ namespace bookstore_Management.Presentation.ViewModels
             #region Print & Export
             PrintCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role == UserRole.SalesManager)
+                {
+                    MessageBox.Show("Bạn không có quyền này");
+                    return;
+                }
                 var data = Publishers;
                 var dialog = new PrintPublisher(data);
                 dialog.ShowDialog();
