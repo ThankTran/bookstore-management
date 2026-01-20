@@ -434,7 +434,7 @@
                         <DataGrid.Columns>
                             <!-- STT -->
                             <DataGridTextColumn Header="STT" 
-                                                Binding="{Binding STT}" 
+                                                Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}"   
                                                 Width="60"
                                                 IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>

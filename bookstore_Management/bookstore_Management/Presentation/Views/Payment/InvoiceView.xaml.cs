@@ -69,5 +69,10 @@ namespace bookstore_Management.Presentation.Views.Orders
         {
             e.Row.Header=(e.Row.GetIndex()+1).ToString();
         }
+
+        private void dgInvoices_LoadingRow_1(object sender, DataGridRowEventArgs e)
+        {
+
+        }
     }
 }
