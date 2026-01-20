@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.Data.Repositories.Interfaces;
 using bookstore_Management.DTOs.User.Requests;
-using bookstore_Management.DTOs.User.Response;
 using bookstore_Management.Models;
 using bookstore_Management.Services.Interfaces;
+using bookstore_Management.Core.Utils;
+using bookstore_Management.DTOs.User.Response;
 using bookstore_Management.Utils;
 
 namespace bookstore_Management.Services.Implementations
@@ -24,61 +24,70 @@ namespace bookstore_Management.Services.Implementations
             _staffRepository = staffRepository;
         }
 
-        public async Task<Result<string>> CreateUserAsync(CreateUserRequestDto dto)
+        public Result<string> CreateUser(CreateUserRequestDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
-                return Result<string>.Fail("Username và password bắt buộc");
-
-            if (string.IsNullOrWhiteSpace(dto.StaffId))
-                return Result<string>.Fail("Phải gắn với StaffId");
-
-            // Parallel validation để giảm queries
-            var staffTask = _staffRepository.GetByIdAsync(dto.StaffId);
-            var usernameExistsTask = _userRepository.UsernameExistsAsync(dto.Username);
-
-            await Task.WhenAll(staffTask, usernameExistsTask);
-
-            var staff = staffTask.Result;
-            if (staff == null || staff.DeletedDate != null)
-                return Result<string>.Fail("Nhân viên không tồn tại");
-
-            if (usernameExistsTask.Result)
-                return Result<string>.Fail("Username đã tồn tại");
-
-            var user = new User
+            try
             {
-                Username = dto.Username.Trim(),
-                PasswordHash = Encryptor.Hash(dto.Password),
-                StaffId = dto.StaffId,
-                UserRole = staff.UserRole,
-                CreatedDate = DateTime.Now
-            };
+                if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+                    return Result<string>.Fail("Username và password bắt buộc");
 
-            await _userRepository.AddAsync(user);
-            await _userRepository.SaveChangesAsync();
+                if (string.IsNullOrWhiteSpace(dto.StaffId))
+                    return Result<string>.Fail("Phải gắn với StaffId");
 
-            return Result<string>.Success(user.Username, "Tạo tài khoản thành công");
+                var staff = _staffRepository.GetById(dto.StaffId);
+                if (staff == null || staff.DeletedDate != null)
+                    return Result<string>.Fail("Nhân viên không tồn tại");
+
+                if (_userRepository.UsernameExists(dto.Username))
+                    return Result<string>.Fail("Username đã tồn tại");
+
+                var user = new User
+                {
+                    Username = dto.Username.Trim(),
+                    PasswordHash = Encryptor.Hash(dto.Password),
+                    StaffId = dto.StaffId,
+                    CreatedDate = DateTime.Now
+                };
+
+                _userRepository.Add(user);
+                _userRepository.SaveChanges();
+                return Result<string>.Success(user.Username, "Tạo tài khoản thành công");
+            }
+            catch (Exception ex)
+            {
+                return Result<string>.Fail($"Lỗi: {ex.Message}");
+            }
         }
 
-        public async Task<Result> ChangePasswordAsync(string userId, ChangePasswordRequestDto dto)
+        public Result<UserResponseDto> GetByUsername(string username)
         {
-            if (string.IsNullOrWhiteSpace(dto.NewPassword))
-                return Result.Fail("Mật khẩu mới không được trống");
+            var user = _userRepository.GetByUsername(username)
+                .FirstOrDefault(u => u.DeletedDate == null);
 
-            if (dto.NewPassword.Length < 6)
-                return Result.Fail("Mật khẩu phải có ít nhất 6 ký tự");
+            if (user == null)
+                return Result<UserResponseDto>.Fail("User không tồn tại");
 
-            var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null || user.DeletedDate != null)
-                return Result.Fail("User không tồn tại");
+            return Result<UserResponseDto>.Success(MapToUserResponseDto(user));
+        }
 
-            user.PasswordHash = Encryptor.Hash(dto.NewPassword);
-            user.UpdatedDate = DateTime.Now;
+        public Result ChangePassword(string userId, ChangePasswordRequestDto dto)
+        {
+            try
+            {
+                var user = _userRepository.GetById(userId);
+                if (user == null || user.DeletedDate != null)
+                    return Result.Fail("User không tồn tại");
 
-            _userRepository.Update(user);
-            await _userRepository.SaveChangesAsync();
-
-            return Result.Success("Đổi mật khẩu thành công");
+                user.PasswordHash = Encryptor.Hash(dto.NewPassword);
+                user.UpdatedDate = DateTime.Now;
+                _userRepository.Update(user);
+                _userRepository.SaveChanges();
+                return Result.Success("Đổi mật khẩu thành công");
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail($"Lỗi: {ex.Message}");
+            }
         }
 
         public async Task<Result> DeactivateAsync(string userId)
@@ -142,15 +151,16 @@ namespace bookstore_Management.Services.Implementations
             return Result<UserRole>.Success(user.UserRole);
         }
 
-        private UserResponseDto MapToDto(User user)
+        private UserResponseDto MapToUserResponseDto(User user)
         {
             return new UserResponseDto
             {
-                UserName = user.Username,
+                UserName = user.Username.Trim(),
                 Password = user.PasswordHash,
                 StaffId = user.StaffId,
                 CreateDate = user.CreatedDate
             };
         }
+
     }
 }

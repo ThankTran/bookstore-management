@@ -1,28 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
 using bookstore_Management.Core.Enums;
 using bookstore_Management.Core.Results;
 using bookstore_Management.DTOs.User.Requests;
 using bookstore_Management.DTOs.User.Response;
+using bookstore_Management.Models;
 
 namespace bookstore_Management.Services.Interfaces
 {
-    public interface IUserService
+    internal interface IUserService
     {
-        Task<Result<string>> CreateUserAsync(CreateUserRequestDto dto);
+        Result<string> CreateUser(CreateUserRequestDto dto);
+        Result ChangePassword(string userId, ChangePasswordRequestDto dto);
+        Result Deactivate(string userId);
+        Result<UserResponseDto> GetById(string userId);
+        Result<IEnumerable<UserResponseDto>> SearchByUsername(string username);
+        Result<UserRole> GetUserRole(string userId);
+        Result<bool> Login(string username, string password);
+        Result<IEnumerable<UserResponseDto>> GetAll();
+        Result<UserResponseDto> GetByUsername(string username);
 
-        Task<Result> ChangePasswordAsync(string userId, ChangePasswordRequestDto dto);
-
-        Task<Result> DeactivateAsync(string userId);
-
-        Task<Result<UserResponseDto>> GetByIdAsync(string userId);
-
-        Result<IEnumerable<UserResponseDto>> GetByUsername(string username);
-
-        Task<Result<IEnumerable<UserResponseDto>>> GetAllAsync();
-
-        Result<bool> LoginAsync(string username, string password);
-
-        Task<Result<UserRole>> GetUserRoleAsync(string userId);
     }
 }

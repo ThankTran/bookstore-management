@@ -1,6 +1,9 @@
 ﻿<Window x:Class="bookstore_Management.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:bookstore_Management.Models"
+    
+
         Title="Bookstore Management"
         Height="720" Width="1280"
         MinHeight="600" MinWidth="1024"
@@ -261,13 +264,13 @@
                                               Stretch="UniformToFill"/>
                                     </Border>
                                     <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="Quản lý" 
-                                                  FontSize="12" 
-                                                  Foreground="White"
-                                                  FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
-                                                  Opacity="0.85"
-                                                  Margin="0,0,0,2"/>
-                                        <TextBlock Text="Trần Thị Hồng Thanh" 
+                                        <TextBlock Text="{x:Static models:SessionModel.RoleDisplay}"
+                                                    FontSize="12" 
+                                                      Foreground="White"
+                                                      FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                      Opacity="0.85"
+                                                      Margin="0,0,0,2"/>
+                                        <TextBlock  Text="{x:Static models:SessionModel.Username}"
                                                   FontWeight="Bold" 
                                                   FontSize="13" 
                                                   Foreground="White"

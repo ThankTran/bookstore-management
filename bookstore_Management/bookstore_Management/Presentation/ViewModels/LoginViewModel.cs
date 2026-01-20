@@ -1,12 +1,11 @@
-﻿using bookstore_Management.Services;
-using bookstore_Management.Services.Interfaces;
-using bookstore_Management.Views;
-using CommunityToolkit.Mvvm.Input;
+using bookstore_Management.Models;
+using bookstore_Management.Services;
+using bookstore_Management.Services.Interfaces; // Chứa IUserService
+using bookstore_Management.Views; // Chứa MainWindow
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Controls; // Quan trọng: Để dùng PasswordBox
 using System.Windows.Input;
 
 namespace bookstore_Management.Presentation.ViewModels
@@ -19,72 +18,69 @@ namespace bookstore_Management.Presentation.ViewModels
         public string Username
         {
             get => _username;
-            set { _username = value; OnPropertyChanged(); }
+            set
+            {
+                _username = value;
+                OnPropertyChanged();
+            }
         }
 
+        // Commands
         public ICommand LoginCommand { get; set; }
         public ICommand CloseCommand { get; set; }
 
-        public LoginViewModel(IUserService userService)
+        internal LoginViewModel(IUserService userService)
         {
             _userService = userService;
 
-            LoginCommand = new RelayCommand<object>(LoginProcessAsync);
-            CloseCommand = new AsyncRelayCommand<object>(async p =>
+            LoginCommand = new RelayCommand<object>((p) => LoginProcess(p));
+
+            CloseCommand = new RelayCommand<object>((p) =>
             {
-                await Task.Run(() => Application.Current.Shutdown());
+                Application.Current.Shutdown();
             });
         }
 
-        private void LoginProcessAsync(object parameter)
+        private void LoginProcess(object parameter)
         {
             var passwordBox = parameter as PasswordBox;
             var password = passwordBox?.Password;
 
             if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ Tên đăng nhập và Mật khẩu!",
-                                "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Vui lòng nhập đầy đủ Tên đăng nhập và Mật khẩu!");
                 return;
             }
 
-            try
+            var loginResult = _userService.Login(Username, password);
+            if (!loginResult.IsSuccess || loginResult.Data == false)
             {
-                var loginResult = _userService.LoginAsync(Username, password);
-                if (!loginResult.IsSuccess || loginResult.Data == false)
-                {
-                    MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng!",
-                                    "Lỗi đăng nhập", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                    if (passwordBox != null) passwordBox.Password = "";
-                    return;
-                }
-
-                var userResult = _userService.GetByUsername(Username);
-                if (!userResult.IsSuccess || userResult.Data == null)
-                {
-                    MessageBox.Show("Lỗi hệ thống: Không tải được thông tin người dùng.",
-                                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                var currentUser = userResult.Data.FirstOrDefault();
-                SessionService.Instance.StartSession(currentUser);
-
-                string displayName = !string.IsNullOrEmpty(currentUser.UserName) ? currentUser.UserName : currentUser.UserName;
-                MessageBox.Show($"Xin chào {displayName}!\nQuyền truy cập: {currentUser.Role}",
-                                "Đăng nhập thành công");
-
-                var mainWindow = new MainWindow();
-                mainWindow.Show();
-
-                var currentWindow = Window.GetWindow(passwordBox);
-                currentWindow?.Close();
+                MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng!");
+                if (passwordBox != null) passwordBox.Password = "";
+                return;
             }
-            catch (Exception ex)
+
+            var userResult = _userService.GetByUsername(Username);
+            if (!userResult.IsSuccess)
             {
-                MessageBox.Show($"Có lỗi xảy ra: {ex.Message}", "Lỗi Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(userResult.ErrorMessage);
+                return;
             }
+
+            var currentUser = userResult.Data;
+
+            // ✅ LƯU SESSION DUY NHẤT
+            SessionModel.UserId = currentUser.AccountId;
+            SessionModel.Username = currentUser.UserName;
+            SessionModel.Role = currentUser.Role;
+
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
+
+            Window.GetWindow(passwordBox)?.Close();
         }
+
+
     }
+    
 }
