@@ -196,7 +196,8 @@ namespace bookstore_Management.Services.Implementations
                 UserName = user.Username.Trim(),
                 Password = user.PasswordHash,
                 StaffId = user.StaffId,
-                CreateDate = user.CreatedDate
+                CreateDate = user.CreatedDate,
+                Role = user.UserRole,                
             };
         }
 
