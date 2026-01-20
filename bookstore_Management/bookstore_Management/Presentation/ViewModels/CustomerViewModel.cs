@@ -77,14 +77,13 @@ namespace bookstore_Management.Presentation.ViewModels
 
             if (!result.IsSuccess)
             {
-                // Xử lý lỗi, để sau này làm thông báo lỗi sau
                 MessageBox.Show("Lỗi khi tải dữ liệu khách hàng: " + result.ErrorMessage, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (result.Data == null)
             {
                 MessageBox.Show("db không có dữ liệu!");
-                return; // Tránh lỗi khi Data rỗng
+                return; 
             }               
 
             var cuss = result.Data.Select(dto => new Customer
@@ -93,6 +92,7 @@ namespace bookstore_Management.Presentation.ViewModels
                   Name = dto.Name,
                   Phone = dto.Phone,  
                   Email = dto.Email,
+                  Address = dto.Address,
             });
 
             Customers = new ObservableCollection<Customer>(cuss);
@@ -162,7 +162,6 @@ namespace bookstore_Management.Presentation.ViewModels
                     var result = _customerService.UpdateCustomer(cus.CustomerId, updateCusDto);
                     if (!result.IsSuccess)
                     {
-                        // SỬA DÒNG NÀY: In ra result.ErrorMessage để biết DB đang từ chối vì lý do gì
                         MessageBox.Show($"Chi tiết lỗi: {result.ErrorMessage}", "Lỗi thêm khách hàng", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }

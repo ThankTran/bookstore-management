@@ -74,6 +74,8 @@ namespace bookstore_Management.Services.Implementations
                     if (available < item.Quantity)
                         return Result<string>.Fail($"Sách {book.Name} không đủ hàng. Tồn: {available}");
                     book.Stock -= item.Quantity;
+                    _bookRepository.Update(book);
+
                     var lineTotal = book.SalePrice.Value * item.Quantity;
                     subtotal += lineTotal;
 
@@ -124,8 +126,13 @@ namespace bookstore_Management.Services.Implementations
             }
             catch (Exception ex)
             {
-                return Result<string>.Fail($"Lỗi: {ex.Message}");
+                var msg = ex.InnerException?.InnerException?.Message
+                          ?? ex.InnerException?.Message
+                          ?? ex.Message;
+
+                return Result<string>.Fail($"Lỗi: {msg}");
             }
+
         }
 
         // ==================================================================
@@ -182,8 +189,10 @@ namespace bookstore_Management.Services.Implementations
                 {
                     var book =  _bookRepository.GetById(i.BookId);
                     book.Stock += i.Quantity;
+                    _bookRepository.Update(book);
+
                 }
-                
+
                 order.DeletedDate = DateTime.Now;
                 _orderRepository.Update(order);
                 _orderRepository.SaveChanges();
@@ -309,18 +318,18 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         private string GenerateOrderId()
         {
-            var lastOrder = _orderRepository.GetAll()
-                .OrderByDescending(o => o.OrderId)
-                .FirstOrDefault();
+            var lastNumber = _orderRepository.GetAll()
+                .Where(o => o.OrderId.StartsWith("HD"))
+                .Select(o => int.Parse(o.OrderId.Substring(2)))
+                .DefaultIfEmpty(0)
+                .Max();
 
-            if (lastOrder == null || !lastOrder.OrderId.StartsWith("HD"))
-                return "HD0001";
-
-            var lastNumber = int.Parse(lastOrder.OrderId.Substring(2));
             return $"HD{(lastNumber + 1):D4}";
         }
 
-       
+
+
+
         /// <summary>
         /// Maps Order entity to OrderResponseDto
         /// </summary>

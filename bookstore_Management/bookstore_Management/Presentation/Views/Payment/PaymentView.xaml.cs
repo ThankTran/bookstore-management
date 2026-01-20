@@ -26,7 +26,10 @@ namespace bookstore_Management.Presentation.Views.Payment
                     Owner = Window.GetWindow(this)
                 };
 
-                dialog.ShowDialog();
+                if (dialog.ShowDialog() == true && dialog.IsConfirmed)
+                {
+                    vm.ConfirmCheckout(); // 👈 TẠO HÓA ĐƠN Ở ĐÂY
+                }
             };
 
         }

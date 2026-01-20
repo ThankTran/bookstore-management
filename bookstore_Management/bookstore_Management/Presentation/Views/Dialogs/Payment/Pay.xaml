@@ -104,10 +104,10 @@
 
                         <!-- Store Info -->
                         <StackPanel HorizontalAlignment="Center" Margin="0,0,0,20">
-                            <TextBlock Text="NHÀ SÁCH ABC"
+                            <TextBlock Text="NHÀ SÁCH THM"
                                        Style="{StaticResource BillTitleStyle}"
                                        FontSize="28"/>
-                            <TextBlock Text="123 Đường ABC, Quận XYZ, TP.HCM"
+                            <TextBlock Text="123 Đường Cách Mạng Tháng 8, Quận 3, TP.HCM"
                                        Style="{StaticResource BillTextStyle}"
                                        HorizontalAlignment="Center"
                                        Margin="0,5,0,0"/>
@@ -420,7 +420,7 @@
                             </Grid>
 
                             <TextBlock x:Name="tbTotalInWords"
-                                       Text="(Bằng chữ: Không đồng)"
+                                       Text="(Bằng chữ: )"
                                        Style="{StaticResource BillTextStyle}"
                                        FontStyle="Italic"
                                        Foreground="#666666"
@@ -495,7 +495,7 @@
                 <Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <TextBlock Text="💡" FontSize="13" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <TextBlock Text="Bấm In để in hóa đơn này" 
+                        <TextBlock Text="Bấm tạo hóa đơn để xuất hóa đơn này" 
                                    FontSize="12"
                                    Foreground="#999999" 
                                    VerticalAlignment="Center"/>
@@ -530,12 +530,13 @@
                             <Button Background="Transparent"
                                     BorderThickness="0"                                    
                                      Cursor="Hand"
-                                    Command="{Binding CheckoutCommand}">
+                                    Click="Confirm_Click">
+                                <!--Command="{Binding CheckoutCommand}">-->
                                
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="🖨" FontSize="16" FontWeight="Bold" Foreground="White" 
                                                Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="In hóa đơn" FontSize="13" FontWeight="Bold" 
+                                    <TextBlock Text="Tạo hóa đơn" FontSize="13" FontWeight="Bold" 
                                                Foreground="White" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
