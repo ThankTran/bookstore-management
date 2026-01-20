@@ -123,32 +123,48 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         }
 
         #region Loading Books
+        //private void LoadBooksFromDatabase()
+        //{
+        //    try
+        //    {
+        //        var result = _bookService.GetAllBooks();
+
+        //        if (!result.IsSuccess || result.Data == null)
+        //        {
+        //            MessageBox.Show(result.ErrorMessage ?? "Không tải được danh sách sách!",
+        //                "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        //            return;
+        //        }
+
+        //        _allBooks = result.Data
+        //            .Where(dto => dto.PublisherId == _publisherId)
+        //            .ToList();
+
+        //        _filteredBooks = new List<BookDetailResponseDto>(_allBooks);
+        //        UpdateBooksList();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Lỗi khi tải danh sách sách: {ex.Message}",
+        //            "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    }
+        //}
         private void LoadBooksFromDatabase()
         {
-            try
+            var result = _bookService.GetAllBooks();
+
+            if (!result.IsSuccess || result.Data == null)
             {
-                var result = _bookService.GetAllBooks();
-
-                if (!result.IsSuccess || result.Data == null)
-                {
-                    MessageBox.Show(result.ErrorMessage ?? "Không tải được danh sách sách!",
-                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                _allBooks = result.Data
-                    .Where(dto => dto.PublisherId == _publisherId)
-                    .ToList();
-
-                _filteredBooks = new List<BookDetailResponseDto>(_allBooks);
-                UpdateBooksList();
+                MessageBox.Show("Không tải được danh sách sách!");
+                return;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tải danh sách sách: {ex.Message}",
-                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+
+            _allBooks = result.Data.ToList();   
+            _filteredBooks = new List<BookDetailResponseDto>(_allBooks);
+
+            UpdateBooksList();
         }
+
 
         #endregion
 

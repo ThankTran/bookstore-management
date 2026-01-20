@@ -1,51 +1,96 @@
 ﻿using bookstore_Management.Data.Context;
 using bookstore_Management.Data.Repositories.Implementations;
+using bookstore_Management.DTOs.ImportBill.Responses;
+using bookstore_Management.DTOs.Order.Responses;
 using bookstore_Management.Models;
+using bookstore_Management.Presentation.Views.Dialogs.Invoices;
 using bookstore_Management.Services.Implementations;
 using bookstore_Management.Services.Interfaces;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
-
 
 namespace bookstore_Management.Presentation.ViewModels
 {
     internal class InvoiceViewModel : BaseViewModel
     {
-        #region khai báo
-        private readonly IOrderService _orderService;
+        #region Services
+
         private readonly IImportBillService _importBillService;
+        private readonly IOrderService _orderService;
+        IPublisherService _publisherService;
+        IStaffService _staffService;
+        ICustomerService _customerService;
 
+        #endregion
 
-        private ObservableCollection<ImportBill> _imports;
-        public ObservableCollection<ImportBill> Imports
+        #region Data
+
+        private ObservableCollection<InvoiceDisplayItem> _invoices;
+        public ObservableCollection<InvoiceDisplayItem> Invoices
         {
-            get { return _imports; }
+            get => _invoices;
             set
             {
-                _imports = value;
+                _invoices = value;
                 OnPropertyChanged();
             }
         }
 
-        private ObservableCollection<Order> _orders;
-        public ObservableCollection<Order> Orders
+        private string _searchKeywork;
+        public string SearchKeywork
         {
-            get { return _orders; }
+            get => _searchKeywork;
             set
             {
-                _orders = value;
+                _searchKeywork = value;
+                OnPropertyChanged();
+                SearchCommand.Execute(null);
+            }
+        }
+        private int _totalInvoices;
+        public int TotalInvoices
+        {
+            get => _totalInvoices;
+            set
+            {
+                _totalInvoices = value;
                 OnPropertyChanged();
             }
         }
 
-        private Order _selectedInvoice;
-        public Order SelectedInvoice
+        private int _totalImportInvoices;
+        public int TotalImportInvoices
+        {
+            get => _totalImportInvoices;
+            set
+            {
+                _totalImportInvoices = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _totalExportInvoices;
+        public int TotalExportInvoices
+        {
+            get => _totalExportInvoices;
+            set
+            {
+                _totalExportInvoices = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<InvoiceDisplayItem> _allInvoices = new List<InvoiceDisplayItem>();
+
+
+        private InvoiceDisplayItem _selectedInvoice;
+        public InvoiceDisplayItem SelectedInvoice
         {
             get => _selectedInvoice;
             set
@@ -55,180 +100,382 @@ namespace bookstore_Management.Presentation.ViewModels
             }
         }
 
-        private string _searchKeyword;
-        public string SearchKeyword
-        {
-            get => _searchKeyword;
-            set
-            {
-                _searchKeyword = value;
-                OnPropertyChanged();
-                SearchInvoiceCommand.Execute(null);
-            }
-        }
+
+        private InvoiceFilterType _currentFilter = InvoiceFilterType.All;
+
         #endregion
 
-        #region khai báo command
-        //khai báo command cho thao tác thêm, xóa, sửa hóa đơn
-        public ICommand AddOrderCommand { get; set; }
-        public ICommand AddImportCommand { get; set; }
-        public ICommand RemoveInvoiceCommand { get; set; }
-        public ICommand EditInvoiceCommand { get; set; }
+        #region Commands
 
-        //command cho thao tác tìm kiếm - load lại
-        public ICommand SearchInvoiceCommand { get; set; }
+        public ICommand LoadCommand { get; }
+        public ICommand FilterAllCommand { get; }
+        public ICommand FilterImportCommand { get; }
+        public ICommand FilterExportCommand { get; }
 
-        //command cho in / xuất excel
-        public ICommand ExportCommand { get; set; }
-        public ICommand PrintCommand { get; set; }
+        public ICommand AddImportCommand { get; }
+        public ICommand AddExportCommand { get; }
+        public ICommand DeleteCommand { get; }
+        public ICommand PrintCommand { get; }
+        public ICommand EditCommand { get; }
+
+        public ICommand SearchCommand { get; set; }
+
         #endregion
 
-        #region Load data from db
-        private void LoadOrdersFromDatabase()
-        {
-            var result = _orderService.GetAllOrders();
-            if(!result.IsSuccess)
-            {
-                MessageBox.Show("Lỗi tải đơn hàng: " + result.ErrorMessage);
-                return;
-            }
-            if(result.Data == null) return; 
+        #region Constructor
 
-            var orders = result.Data.Select(o => new Order
-            {
-                OrderId = o.OrderId,
-                StaffId = o.StaffId,
-                CustomerId = o.CustomerId,
-                PaymentMethod = o.PaymentMethod,
-                Discount = o.Discount,
-                TotalPrice = o.TotalPrice,
-                Notes = o.Notes,
-                CreatedDate = o.CreatedDate,
-            }).ToList();
-
-            Orders = new ObservableCollection<Order>(orders);
-        }
-
-        private void LoadImportsFromDatabase()
-        {
-            var result = _importBillService.GetAllImportBills();
-            if (!result.IsSuccess)
-            {
-                MessageBox.Show("Lỗi tải hóa đơn nhập: " + result.ErrorMessage);
-                return;
-            }
-            if (result.Data == null) return;
-            var imports = result.Data.Select(i => new ImportBill
-            {
-                Id = i.Id,
-                PublisherId = i.PublisherId,
-                TotalAmount = i.TotalAmount,
-                Notes = i.Notes,
-                CreatedBy = i.CreatedBy,
-                CreatedDate = i.CreatedDate,
-
-            }).ToList();
-            Imports = new ObservableCollection<ImportBill>(imports);
-        }
-        private void LoadAllData()
-        {
-            LoadOrdersFromDatabase();
-            LoadImportsFromDatabase();
-        }
-        #endregion
-
-        #region constructor
         public InvoiceViewModel(IImportBillService importBillService, IOrderService orderService)
         {
-            //hóa đơn nhập
-            var context1 = new BookstoreDbContext();
-            _importBillService = new ImportBillService(
-            new ImportBillRepository(context1),
-            new ImportBillDetailRepository(context1),
-            new BookRepository(context1),
-            new PublisherRepository(context1)
+            _importBillService = importBillService;
+            _orderService = orderService;
+
+            Invoices = new ObservableCollection<InvoiceDisplayItem>();
+
+            Invoices = new ObservableCollection<InvoiceDisplayItem>();
+
+            LoadCommand = new RelayCommand(
+                 () => LoadAllInvoices()
+             );
+
+            FilterAllCommand = new RelayCommand(
+                () => ApplyFilter(InvoiceFilterType.All)
             );
 
-            //hóa đơn xuất
-            var context2 = new BookstoreDbContext();
-            _orderService = new OrderService(
-            new OrderRepository(context2),
-            new OrderDetailRepository(context2),
-            new BookRepository(context2),
-            new CustomerRepository(context2),
-            new StaffRepository(context2)
+            FilterImportCommand = new RelayCommand(
+                () => ApplyFilter(InvoiceFilterType.Import)
             );
 
-            Imports = new ObservableCollection<ImportBill>();
-            Orders = new ObservableCollection<Order>();
+            FilterExportCommand = new RelayCommand(
+                () => ApplyFilter(InvoiceFilterType.Export)
+            );
 
-            LoadAllData();
+            AddImportCommand = new RelayCommand(
+                () => AddImportInvoice()
+            );
 
-            #region AddCommand
-            AddImportCommand = new RelayCommand<object>((p) => 
-            {
-                var dialog = new Views.Dialogs.Invoices.CreateImportBill();
-                if(dialog.ShowDialog() == true)
+            AddExportCommand = new RelayCommand(
+                () => AddExportInvoice()
+            );
+
+            DeleteCommand = new RelayCommand(
+                () => DeleteSelectedInvoice(),
+                () => SelectedInvoice != null
+            );
+
+            PrintCommand = new RelayCommand<object>((p) =>
                 {
-                    var newImportDto = new DTOs.ImportBill.Requests.CreateImportBillRequestDto
-                    {
-                        PublisherId = dialog.PublisherId,
-                        Notes = dialog.Notes,
-                        CreatedBy = dialog.CreatedBy,
-                        //ImportBillDeatail
-                    };
-
-                    var result = _importBillService.CreateImportBill(newImportDto);
-                    if (!result.IsSuccess)
-                    {
-                        MessageBox.Show("Lỗi khi thêm hóa đơn nhập");
-                        return;
-                    }
-
-                    LoadAllData();
+                    MessageBox.Show("Tính năng này đang phát triển! Vui lòng thử lại sau.");
+                    return;
                 }
-            });
-            AddOrderCommand = new RelayCommand<object>((p) =>
+               
+            );
+
+            SearchCommand = new RelayCommand<object>((p) =>
             {
-                var dialog = new Views.Dialogs.Invoices.CreateOrderBill();
-                if (dialog.ShowDialog() == true)
+                if (string.IsNullOrWhiteSpace(SearchKeywork))
                 {
-                    var newOrderDto = new DTOs.Order.Requests.CreateOrderRequestDto
-                    {
-                        //StaffId = dialog.id
-                        //CustomerId = dialog.CustomerId,
-                        //PaymentMethod = dialog.PaymentMethod,
-                        //Discount = dialog.Discount,
-                        //Notes = dialog.Notes,
-                        //OrderDetail
-                    };
-                    LoadAllData();
+                    ApplyFilter(_currentFilter);
+                    return;
                 }
-            });
-            #endregion
-            #region EditCommand
-            EditInvoiceCommand = new RelayCommand<object>((p) =>
-            {
 
-            });
-            #endregion
-            #region RemoveCommand
-            RemoveInvoiceCommand = new RelayCommand<object>((p) =>
-            {
-                
-            });
-            #endregion
-            #region SearchCommand
-            SearchInvoiceCommand = new RelayCommand<object>((p) =>
-            {
+                var keyword = SearchKeywork.Trim().ToLower();
 
+                var filtered = _allInvoices.Where(x =>
+                    (x.InvoiceType == InvoiceType.Export &&
+                     (x.InvoiceId ?? "").ToLower().Contains(keyword))
+                    ||
+                    (x.InvoiceType == InvoiceType.Import &&
+                     (x.Partner ?? "").ToLower().Contains(keyword))
+                );
+
+                Invoices = new ObservableCollection<InvoiceDisplayItem>(
+                    filtered.OrderByDescending(x => x.CreatedDate)
+                );
             });
-            #endregion
-            #region Print&Export
 
-            #endregion
+            EditCommand = new RelayCommand<InvoiceDisplayItem>(
+                (invoice) => EditInvoice(invoice),
+                (invoice) => invoice != null
+            );
 
+
+
+
+            LoadAllInvoices();
         }
+
         #endregion
+
+        #region Load Data
+
+        private void LoadAllInvoices()
+        {
+            try
+            {
+                _allInvoices.Clear();
+
+                var importResult = _importBillService.GetAllImportBills();
+                if (importResult.IsSuccess && importResult.Data != null)
+                {
+                    _allInvoices.AddRange(
+                        importResult.Data.Select(MapImportBillToDisplay)
+                    );
+                }
+
+                var orderResult = _orderService.GetAllOrders();
+                if (orderResult.IsSuccess && orderResult.Data != null)
+                {
+                    _allInvoices.AddRange(
+                        orderResult.Data.Select(MapOrderToDisplay)
+                    );
+                }
+
+                ApplyFilter(_currentFilter);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi tải dữ liệu: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            CalTotal();
+        }
+
+        #endregion
+
+        #region Mapping
+
+        private InvoiceDisplayItem MapImportBillToDisplay(ImportBillResponseDto import)
+        {
+            return new InvoiceDisplayItem
+            {
+                InvoiceId = import.Id,
+                InvoiceType = InvoiceType.Import,
+                Partner = import.PublisherName ?? "N/A",
+                CreatedDate = import.CreatedDate,
+                TotalAmount = import.TotalAmount,
+                CreatedBy = import.CreatedBy ?? "System",
+                Notes = import.Notes
+            };
+        }
+
+        private InvoiceDisplayItem MapOrderToDisplay(OrderResponseDto order)
+        {
+            return new InvoiceDisplayItem
+            {
+                InvoiceId = order.OrderId,
+                InvoiceType = InvoiceType.Export,
+                Partner = order.CustomerName ?? "Khách vãng lai",
+                CreatedDate = order.CreatedDate,
+                TotalAmount = order.TotalPrice,
+                CreatedBy = order.StaffName ?? "N/A",
+                Notes = order.Notes
+            };
+        }
+
+        #endregion
+
+        #region Filter & Search
+
+        private void ApplyFilter(InvoiceFilterType filterType)
+        {
+            _currentFilter = filterType;
+
+            IEnumerable<InvoiceDisplayItem> source = _allInvoices;
+
+            if (filterType == InvoiceFilterType.Import)
+                source = source.Where(x => x.InvoiceType == InvoiceType.Import);
+            else if (filterType == InvoiceFilterType.Export)
+                source = source.Where(x => x.InvoiceType == InvoiceType.Export);
+
+            Invoices = new ObservableCollection<InvoiceDisplayItem>(
+                source.OrderByDescending(x => x.CreatedDate)
+            );
+        }
+
+        private void ApplySearch()
+        {
+            if (string.IsNullOrWhiteSpace(SearchKeywork))
+            {
+                ApplyFilter(_currentFilter);
+                return;
+            }
+
+            var text = SearchKeywork.ToLower();
+
+            Invoices = new ObservableCollection<InvoiceDisplayItem>(
+                _allInvoices.Where(x =>
+                    (x.InvoiceId ?? "").ToLower().Contains(text) ||
+                    (x.Partner ?? "").ToLower().Contains(text) ||
+                    (x.CreatedBy ?? "").ToLower().Contains(text)
+                )
+            );
+        }
+
+        #endregion
+
+        #region Actions
+
+        private void AddImportInvoice()
+        {
+            var dialog = new CreateImportBill
+            {
+                Owner = Application.Current.MainWindow
+            };
+
+            var context = new BookstoreDbContext();
+            _publisherService = new PublisherService(
+                new PublisherRepository(context),
+                new BookRepository(context),
+                new ImportBillRepository(context));
+
+            var publishersResult = _publisherService.GetAllPublishers();
+
+            if (!publishersResult.IsSuccess)
+            {
+                MessageBox.Show("Không thể tải danh sách nhà xuất bản",
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            dialog.LoadPublishers(publishersResult.Data);
+
+            if (dialog.ShowDialog() == true)
+            {
+                var dto = dialog.GetImportBillData();
+                var result = _importBillService.CreateImportBill(dto);
+
+                if (!result.IsSuccess)
+                {
+                    MessageBox.Show(result.ErrorMessage, "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                LoadAllInvoices();
+            }
+        }
+
+
+        private void AddExportInvoice()
+        {
+            var dialog = new CreateOrderBill
+            {
+                Owner = Application.Current.MainWindow
+            };
+            var context = new BookstoreDbContext();
+            _staffService = new StaffService(
+                new StaffRepository(context),
+                new OrderRepository(context));
+            _customerService = new CustomerService(
+                new CustomerRepository(context),
+                new OrderRepository(context));
+            dialog.LoadStaffs(_staffService.GetAllStaff().Data);
+            dialog.LoadCustomers(_customerService.GetAllCustomers().Data);
+
+            if (dialog.ShowDialog() == true)
+            {
+                var dto = dialog.GetOrderData();
+                var result = _orderService.CreateOrder(dto);
+
+                if (!result.IsSuccess)
+                {
+                    MessageBox.Show(result.ErrorMessage, "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                LoadAllInvoices();
+            }
+        }
+
+
+        private void DeleteSelectedInvoice()
+        {
+            if (SelectedInvoice == null) return;
+
+            var confirm = MessageBox.Show(
+                $"Bạn có chắc muốn xóa hóa đơn {SelectedInvoice.InvoiceId}?",
+                "Xác nhận",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning
+            );
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            if (SelectedInvoice.InvoiceType == InvoiceType.Import)
+                _importBillService.DeleteImportBill(SelectedInvoice.InvoiceId);
+            else
+                _orderService.DeleteOrder(SelectedInvoice.InvoiceId);
+
+            LoadAllInvoices();
+        }
+
+        private void PrintSelectedInvoice()
+        {
+            if (SelectedInvoice == null) return;
+
+            MessageBox.Show(
+                $"In hóa đơn {SelectedInvoice.InvoiceId}\n" +
+                $"Đối tác: {SelectedInvoice.Partner}\n" +
+                $"Tổng tiền: {SelectedInvoice.TotalAmount:N0} ₫",
+                "In hóa đơn"
+            );
+        }
+
+        public void CalTotal()
+        {
+            TotalInvoices = _allInvoices.Count;
+
+            TotalExportInvoices = _allInvoices
+                .Count(x => x.InvoiceType == InvoiceType.Export);
+
+            TotalImportInvoices = _allInvoices
+                .Count(x => x.InvoiceType == InvoiceType.Import);
+        }
+
+        private void EditInvoice(InvoiceDisplayItem invoice)
+        {
+            if (invoice == null) return;
+
+            if (invoice.InvoiceType == InvoiceType.Import)
+            {
+                MessageBox.Show($"Mở form sửa Phiếu nhập: {invoice.InvoiceId}");
+                // TODO: mở dialog EditImportBill
+            }
+            else
+            {
+                MessageBox.Show($"Mở form sửa Hóa đơn bán: {invoice.InvoiceId}");
+                // TODO: mở dialog EditOrderBill
+            }
+        }
+
+
+
+        #endregion
+    }
+    public class InvoiceDisplayItem
+    {
+        public int STT { get; set; }
+        public string InvoiceId { get; set; }
+        public InvoiceType InvoiceType { get; set; }
+        public string TypeDisplay => InvoiceType == InvoiceType.Import ? "Nhập" : "Xuất";
+        public string Partner { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string CreatedDateDisplay => CreatedDate.ToString("dd/MM/yyyy");
+        public decimal TotalAmount { get; set; }
+        public string TotalAmountDisplay => $"{TotalAmount:N0} ₫";
+        public string CreatedBy { get; set; }
+        public string Notes { get; set; }
+    }
+    public enum InvoiceType
+    {
+        Import,  // Phiếu nhập
+        Export   // Hóa đơn bán
+    }
+
+    public enum InvoiceFilterType
+    {
+        All,
+        Import,
+        Export
     }
 }

@@ -45,14 +45,18 @@ namespace bookstore_Management.Presentation.ViewModels
         private string _searchKeyword;
         public string SearchKeyword
         {
-            get { return _searchKeyword; }
+            get => _searchKeyword;
             set
             {
-                _searchKeyword = value;
-                OnPropertyChanged();
-                SearchUser();
+                if (_searchKeyword != value)
+                {
+                    _searchKeyword = value;
+                    OnPropertyChanged();
+                    SearchUser();
+                }
             }
         }
+
 
         public Array UserRoles =>Enum.GetValues(typeof(UserRole));
         //private UserRole _role;
@@ -108,19 +112,19 @@ namespace bookstore_Management.Presentation.ViewModels
 
         private void SearchUser()
         {
-            // Nếu rỗng → load lại toàn bộ
             if (string.IsNullOrWhiteSpace(SearchKeyword))
             {
                 LoadUsersFromDatabase();
                 return;
             }
+
             var result = _userService.SearchByUsername(SearchKeyword);
 
             if (!result.IsSuccess || result.Data == null)
             {
-                Users.Clear();
-                return;
+                return; 
             }
+
 
             Users = new ObservableCollection<User>(
                 result.Data.Select(u => new User
@@ -129,10 +133,11 @@ namespace bookstore_Management.Presentation.ViewModels
                     StaffId = u.StaffId,
                     Username = u.UserName,
                     UserRole = u.Role,
-                    CreatedDate = u.CreateDate,
+                    CreatedDate = u.CreateDate
                 })
             );
         }
+
 
         public UserViewModel(IUserService userService)
         {

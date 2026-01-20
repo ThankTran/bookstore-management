@@ -1,11 +1,16 @@
 ﻿using bookstore_Management.Core.Enums;
-using bookstore_Management.Services; // Nơi chứa SessionService
 using bookstore_Management.DTOs.Common.Reports;
+using bookstore_Management.Models;
 using bookstore_Management.Presentation.Views.Orders;
+using bookstore_Management.Presentation.Views.Publishers;
 using bookstore_Management.Presentation.Views.Statistics;
+using bookstore_Management.Presentation.Views.Users;
+using bookstore_Management.Services; // Nơi chứa SessionService
 // using bookstore_Management.Presentation.Views.Books; // Nhớ using các View khác của bạn
 // using bookstore_Management.Presentation.Views.Staff;
 using bookstore_Management.Services.Interfaces;
+using bookstore_Management.Views.Books;
+using bookstore_Management.Views.Customers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,10 +18,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using bookstore_Management.Views.Books;
-using bookstore_Management.Presentation.Views.Users;
-using bookstore_Management.Views.Customers;
-using bookstore_Management.Presentation.Views.Publishers;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
@@ -30,6 +31,10 @@ namespace bookstore_Management.Presentation.ViewModels
         public int TodayOrders { get; set; }
         public int NewCustomers { get; set; }
         public int LowStockBooks { get; set; }
+
+        public string CurrentUsername => SessionModel.Username;
+        public string CurrentRole => SessionModel.Role.ToString();
+
         public ObservableCollection<BookSalesReportResponseDto> TopSellingBooks { get; set; }
 
         // --- 2. CONFIG PHÂN QUYỀN ---
@@ -65,15 +70,8 @@ namespace bookstore_Management.Presentation.ViewModels
         {
             MenuConfig = new Dictionary<string, bool>();
 
-            // Lấy UserRole hiện tại (Nếu chưa login thì mặc định null hoặc khách)
-            // Lưu ý: Đảm bảo SessionService trả về đúng UserRole khớp với Enum mới
             var currentUser = SessionService.Instance.CurrentUser;
-            var role = currentUser?.Role; // Giả sử thuộc tính trong DTO là UserRole
-
-            // Nếu role null (chưa login), ẩn hết hoặc xử lý riêng. 
-            // Ở đây mình giả định đã login.
-
-            // --- LOGIC PHÂN QUYỀN THEO EXCEL ---
+            var role = currentUser?.Role; 
 
             // 1. Trang chủ / Dashboard: Tất cả đều có quyền Full Access
             MenuConfig["Dashboard"] = true;
@@ -84,12 +82,9 @@ namespace bookstore_Management.Presentation.ViewModels
             // 3. Quản lý hóa đơn (Bán hàng): Tất cả đều được xem hoặc sửa -> Hiện Menu
             MenuConfig["Billing"] = true;
 
-            // 4. Quản lý kho (Stock)
-            // - Administrator, SalesManager, SalesStaff, InventoryManager: Có quyền (Full/Seen)
             // - CustomerManager: No access
             MenuConfig["Stock"] = role != UserRole.CustomerManager;
 
-            // 5. Quản lý nhân viên (User)
             // - Administrator: Full
             // - SalesManager: Seen
             // - Còn lại (SalesStaff, Inventory, CustomerMgr): No access
@@ -98,8 +93,6 @@ namespace bookstore_Management.Presentation.ViewModels
             // 6. Quản lý khách hàng (Customer): Tất cả đều có quyền (Full/Seen)
             MenuConfig["Customer"] = true;
 
-            // 7. Quản lý nhà cung cấp (Supplier)
-            // - Administrator, SalesManager, InventoryManager: Có quyền
             // - SalesStaff, CustomerManager: No access
             bool canViewSupplier = role == UserRole.Administrator ||
                                    role == UserRole.SalesManager ||
