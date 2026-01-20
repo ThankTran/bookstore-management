@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using RelayCommand = bookstore_Management.Presentation.Views.Payment.RelayCommand;
 
 namespace bookstore_Management.Presentation.ViewModels
 {

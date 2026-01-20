@@ -448,6 +448,7 @@
     <Compile Include="Models\Publisher.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Presentation\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Presentation\Converters\CountToVisibilityConverter.cs" />
     <Compile Include="Presentation\Converters\CurrencyConverter.cs" />
     <Compile Include="Presentation\Converters\DateConverter.cs" />
     <Compile Include="Presentation\Converters\RoleToVisibilityConverter.cs" />
