@@ -6,12 +6,12 @@
 
 ## 📖 Overview
 
-**Bookstore Management System** is a Windows desktop application designed to support bookstore staff in managing daily business operations such as books, customers, invoices, inventory, and revenue statistics.
+**Bookstore Management System** is a comprehensive Windows desktop application designed to support bookstore staff in managing daily business operations including books, customers, invoices, inventory, and revenue statistics.
 
 The project is developed following **clean architecture principles** and applies the **MVVM (Model – View – ViewModel)** pattern to ensure scalability, maintainability, and separation of concerns.
 
-- 🎯 Target users: Admin, Manager, Staff  
-- 🖥 Platform: Windows Desktop  
+- 🎯 Target users: Administrator, Sales Manager, Sales Staff, Inventory Manager, Customer Manager 
+- 🖥 Platform: Windows Desktop (WPF)
 - 🧠 Purpose: Educational project & practical software engineering exercise
 
 ---
@@ -19,39 +19,60 @@ The project is developed following **clean architecture principles** and applies
 ## ✨ Features
 
 ### 🔐 Authentication & Authorization
-- Secure login system
-- Role-based access control (Admin / Staff)
+- Secure login system with password hashing (SHA-256)
+- Role-based access control (5 distinct roles)
 - Permission-based feature navigation
+- Session management
 
 ### 📚 Book Management
-- Add, update, delete books
-- Search books by name
-- Categorize books
+- Add, update, delete books with soft delete support
+- Search books by name, author, category, price range
+- Categorize books into 8 different categories
 - Manage publishers and pricing
+- Track stock levels with low-stock alerts
+- Export book lists to CSV
 
 ### 👥 Customer Management
-- Manage customer profiles
-- View purchase history
-- Membership tiers & loyalty points
-- Real-time search
+- Comprehensive customer profile management
+- View detailed purchase history
+- 4-tier membership system (Bronze, Silver, Gold, Diamond)
+- Loyalty points tracking and management
+- Real-time customer search
+- Customer spending analytics
 
 ### 🧾 Invoice & Sales Management
-- Create and manage invoices
-- Track order details
-- Calculate total revenue
-- Invoice printing support
+- Create and manage sales orders
+- Track order details with line items
+- Support multiple payment methods (Cash, Card, Bank Transfer, Debit Card)
+- Apply discounts and calculate totals
+- Invoice printing and export functionality
+- Order history and filtering by date range
+
+### 📦 Inventory Management
+- Import bill creation and tracking
+- Stock level monitoring
+- Low stock and out-of-stock alerts
+- Publisher-based inventory tracking
+- Import history and analytics
 
 ### 📊 Statistics & Reports
-- Revenue statistics
-- Best-selling books
-- Customer spending analysis
-- Export reports to Excel
+- Revenue statistics with date range filtering
+- Daily, monthly, and yearly revenue tracking
+- Best-selling and lowest-selling books analysis
+- Customer spending reports
+- Inventory summary and valuation
+- Publisher import analytics
+- Customer purchase ratio (walk-in vs. members)
+- Export reports to CSV
 
 ### 🧩 Additional Features
-- Export data to Excel
-- Print support
-- Modern, clean UI
-- Dialog-based CRUD operations
+- Modern, clean Material Design inspired UI
+- Responsive dialog-based CRUD operations
+- Data validation and error handling
+- Audit logging for system changes
+- Print support for invoices and reports
+- Animated UI transitions
+- Dark-themed color scheme
 
 ---
 
@@ -60,17 +81,53 @@ The project is developed following **clean architecture principles** and applies
 ### Runtime Environment
 - Windows 10 / 11  
 - .NET Framework 4.7.2+  
-- Microsoft SQL Server 2019+  
+- Database: Microsoft SQL Server 2019+
 
 ### Development Tools
-- Visual Studio 2022  
-- SQL Server Management Studio (SSMS)  
+- IDE: Visual Studio 2022
+- Database Management: SQL Server Management Studio (SSMS)
+- Version Control: Git, GitHub
 
-### Architecture & Patterns
-- MVVM (Model – View – ViewModel)
-- Repository Pattern
-- Service Layer
-- Manual Dependency Injection
+### Core Technologies
+- UI Framework: WPF (Windows Presentation Foundation)
+- Database ORM: Entity Framework 6.4.4
+- Object Mapping: AutoMapper 10.1.1
+- MVVM Toolkit: CommunityToolkit.Mvvm 8.2.1
+- Database Testing: NUnit 3.13.3, NUnit3TestAdapter 4.5.0
+
+---
+
+## 📦 Key NuGet Packages
+
+| Package                                   | Version | Purpose                                      |
+|-------------------------------------------|---------|----------------------------------------------|
+| AutoMapper                                | 10.1.1  | Object-to-object mapping for DTOs            |
+| CommunityToolkit.Mvvm                    | 8.2.1   | MVVM pattern implementation helpers          |
+| EntityFramework                           | 6.4.4   | Database ORM and migrations                  |
+| Microsoft.EntityFrameworkCore.Tools      | 10.0.1  | EF Core CLI tools                            |
+| NUnit                                     | 3.13.3  | Unit testing framework                      |
+| NUnit3TestAdapter                        | 4.5.0   | NUnit test adapter for Visual Studio         |
+| ClosedXML                                 | 0.105.0 | Excel file generation                       |
+| DocumentFormat.OpenXml                   | 3.4.1   | Office document manipulation                |
+| LiveCharts.Wpf                            | 0.9.7   | Interactive charts and graphs               |
+| Microsoft.Extensions.DependencyInjection | 10.0.2  | Dependency injection container              |
+| Moq                                       | 4.20.72 | Mocking framework for unit tests            |
+
+## 🏗 Architecture & Patterns
+
+- **Architecture:**
+  - Clean Architecture  
+  - Layered Architecture  
+
+- **Design Patterns:**
+  - MVVM (Model–View–ViewModel)  
+  - Repository Pattern  
+  - Unit of Work Pattern  
+  - DTO Pattern  
+  - Factory Pattern  
+
+- **Dependency Management:**
+  - Manual Dependency Injection with UnitOfWork  
 
 ---
 
@@ -79,32 +136,40 @@ The project is developed following **clean architecture principles** and applies
 ```text
 BookstoreManagement/
 │
-├── Core/                    # Constants, Enums, Exceptions, Interfaces, Results, Utils
-├── Data/
-│   ├── Context/             # DbContext
-│   └── Repositories/        # Data access layer
+├── Core/                    # Core business logic
+│   ├── Constants/           # Application constants
+│   ├── Enums/               # Enumeration types
+│   ├── Exceptions/          # Custom exceptions
+│   ├── Interfaces/          # Core interfaces
+│   ├── Results/             # Result pattern implementation
+│   ├── Utils/               # Utility classes
+│   
+├── Data/                    # Data access layer
+│   ├── Context/             # EF DbContext configuration
+│   └── Repositories/        # Repository interfaces & implementations
 │
 ├── Models/                  # Domain models
 │
-├── DTOs/                    # Request / Response DTOs
+├── DTOs/                    # Data Transfer Objects
 │
-├── Services/
-│   ├── Interfaces/
-│   └── Implementations/
+├── Services/                # Business logic layer
+│   ├── Interfaces/          # Service interfaces
+│   └── Implementations/     # Service implementations
 │
-├── Migrations/              # Database migrations
+├── Migrations/              # EF Database migrations
 │
-├── Helpers/                 # Print / Export helpers
+├── Helpers/                 # Helper utilities
 │
-├── Presentation/
-│   ├── AppResources/        # Styles, Colors, Fonts
+├── Presentation/            # UI Layer
+│   ├── AppResources/        # UI Resources
 │   ├── Converters/          # Value converters
-│   ├── Views/               # XAML Views, Dialogs
+│   ├── Views/               # XAML Views
 │   └── ViewModels/          # MVVM ViewModels
 │
 ├── Tests/                   # Unit tests
 │
-├── App.xaml
+├── App.config               # Application configuration
+├── App.xaml                 # Application entry point
 └── BookstoreManagement.sln
 
 ```
@@ -113,28 +178,114 @@ BookstoreManagement/
 
 ## ⚙️ Installation Guide
 
-### 1️⃣ Database Setup
+## Prerequisites
+- Visual Studio 2022 or later
+- .NET Framework 4.7.2 or later
+- SQL Server 2019 or later
+- SQL Server Management Studio (SSMS) - recommended
+  
+### 1️⃣ Clone the Repository
 
-### 2️⃣ Build & Run
+```bash
+git clone https://github.com/yourusername/bookstore-management.git
+cd bookstore-management
+```
+
+### 2️⃣ Database Setup
+1. Open SQL Server Management Studio (SSMS)
+
+2. Connect to your SQL Server instance
+
+3. Open App.config and update the connection string:
+```xml
+<connectionStrings>
+  <add name="BookstoreConnection"
+       connectionString="Data Source=YOUR_SERVER_NAME;
+                         Initial Catalog=BookstoreDB;
+                         Integrated Security=True;"
+       providerName="System.Data.SqlClient" />
+</connectionStrings>
+```
+4. Open **Package Manager Console** in Visual Studio:  
+   - Tools → NuGet Package Manager → Package Manager Console  
+
+5. Run the migration commands:
+```powershell
+# Create/update the database
+Update-Database
+
+# The seed data will be automatically populated
+```
+
+### 3️⃣ Build & Run
+
+1. Open the solution file **`bookstore_Management.sln`** in Visual Studio 2022  
+
+2. Restore NuGet packages:  
+   - Right-click on **Solution** → **Restore NuGet Packages**  
+
+3. Build the solution:  
+   - **Build** → **Build Solution** (`Ctrl + Shift + B`)  
+
+4. Run the application:  
+   - **Debug** → **Start Debugging** (`F5`)
+
+### 4️⃣ Default Login Credentials
+
+After running migrations, use these credentials to login:
+
+| Role              | Username             | Password          |
+|-------------------|----------------------|-------------------|
+| Administrator     | `admin`              | `Admin@123`       |
+| Customer Manager  | `cust.manager`       | `CustManager@123` |
+| Inventory Manager | `inventory.manager01`| `Inventory@123`   |
+| Sales Staff       | `sales.staff01`      | `SalesStaff@123`  |
 
 ---
 
-## 🚀 Usage
+## 🚀 Usage Guide
 
 ### 🔑 Login
 - Launch the application
-- Enter user credentials
-- The system redirects based on the user role
+- Enter username and password
+- The system redirects based on user role
 
 ### 🧭 Navigation
-- Sidebar-based navigation
+- Use the sidebar on the left to navigate between features
 - Feature availability depends on user permissions
+- Current user info is displayed at the top of the sidebar
 
-### 🛠 Admin
-- Manage books, customers, and system users
-- View statistics and reports
+### 👨‍💼 Administrator
 
-### 👩‍💼 Staff
-- Manage invoices
-- Handle sales operations
+Full system access including:
+
+- Manage books, customers, staff, and publishers  
+- Create and manage invoices and orders  
+- View comprehensive statistics and reports  
+- Manage user accounts and permissions  
+
+### 👩‍💼 Manager Roles
+
+#### Sales Manager
+
+- Create and manage sales orders  
+- View customer information  
+- Access sales reports and statistics  
+
+#### Inventory Manager
+
+- Manage book inventory and stock levels  
+- Create import bills from publishers  
+- Monitor stock alerts and reports  
+
+#### Customer Manager
+
+- Full customer profile management  
+- Update membership tiers and loyalty points  
+- View customer purchase history
+
+### 👥 Sales Staff
+
+- Process sales and create orders
 - View customer information
+- Check inventory levels
