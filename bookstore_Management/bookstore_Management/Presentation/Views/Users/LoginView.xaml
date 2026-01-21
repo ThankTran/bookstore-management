@@ -41,6 +41,86 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#585ab8"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="/Presentation/AppResources/Fonts/#Quicksand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#7F81E5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#4D4F9E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#585ab8"/>
+            <Setter Property="FontFamily" Value="/Presentation/AppResources/Fonts/#Quicksand"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#585ab8"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#F5F5FF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E9E9F5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!-- STYLE INPUT BOX -->
+        <Style x:Key="InputBox" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#585ab8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <!--sTYLE FOR BORDER LOGIN-->
         <Style x:Key="loginGridEffect" TargetType="Border">
             <!--<Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
@@ -111,8 +191,18 @@
     <Grid>
         <!--name and quotes-->
         <StackPanel Margin="96,88,430,305">
-            <TextBlock Text="Organizing the world, one book at a time." FontWeight="Light" Foreground="White" FontStyle="Italic" FontSize="10" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" HorizontalAlignment="Center"/>
-            <TextBlock Text="THM BOOKSTORE MANAGEMENT" FontWeight="Bold" Foreground="White" FontSize="17" FontFamily="/Presentation/AppResources/Fonts/#Quicksand"/>
+            <TextBlock Text="Organizing the world, one book at a time." 
+                       FontWeight="Light" 
+                       Foreground="White" 
+                       FontStyle="Italic" 
+                       FontSize="10" 
+                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand" 
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="THM BOOKSTORE MANAGEMENT" 
+                       FontWeight="Bold" 
+                       Foreground="White" 
+                       FontSize="17" 
+                       FontFamily="/Presentation/AppResources/Fonts/#Quicksand"/>
         </StackPanel>
         <!--Login-->
         <!--<Border Margin="84,63,92,54" Style="{StaticResource loginGridEffect}">-->
@@ -129,61 +219,115 @@
                             Opacity="0.4"/>
             </Border.Effect>
             <Grid>
-                <TextBlock Margin="0,15,0,255"  
-                            Text="LOGIN" 
-                            FontWeight="ExtraBold" 
-                            Foreground="#585ab8" 
-                            FontSize="20" 
-                            FontFamily="/Presentation/AppResources/Fonts/#Quicksand" 
-                            HorizontalAlignment="Center"/>
-                <StackPanel Margin="0,80,0,16">
+                <!-- Login Header -->
 
-                    <!--user and pw-->
-                    <Border CornerRadius="10" 
-                            Margin="10,0,10,0" 
-                            Background="#E9E9F5" 
-                            Height="35" 
-                            BorderThickness="2" 
-                            BorderBrush="#F9F8FD">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Presentation/AppResources/Images/Icons/Login/user.png" 
-                                    Width="15" 
-                                    Margin="8,0,0,0"/>
-                            <TextBox Background="Transparent" 
-                                        Width="195" 
-                                        HorizontalAlignment="Center" 
-                                        VerticalAlignment="Center" 
-                                        BorderBrush="Transparent"
-                                        Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
-                        </StackPanel>
-                    </Border>
 
-                    <Border CornerRadius="10"
-                            Margin="10,10,10,0"
-                            Background="#E9E9F5"
-                            Height="35"
-                            BorderThickness="2"
-                            BorderBrush="#F9F8FD">
 
+                <StackPanel Margin="0,4,0,1">
+                    <TextBlock Text="Welcome Back!"
+                              FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                              FontWeight="Bold"
+                              FontSize="27"
+                              Foreground="#333333"
+                              Margin="0,0,0,4" 
+                               Width="205"/>
+
+                    <TextBlock Text="Please login to continue"
+                              FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                              FontSize="14"
+                              Foreground="#999999"
+                              Margin="0,0,0,15" Width="155"/>
+                    <!-- Username Input -->
+                    <TextBlock Text="Username"
+                              FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                              FontWeight="Medium"
+                              FontSize="13"
+                              Foreground="#555555"
+                              Margin="0,0,0,8" Width="220"/>
+
+                    <Border Style="{StaticResource InputBox}"
+                            Height="30"
+                            Margin="0,0,0,10" 
+                            Width="220">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <!-- Lock icon -->
-                            <Image Source="/Presentation/AppResources/Images/Icons/Login/lock.png"
-                                   Width="15"
-                                   Margin="8,0,5,0"
-                                   VerticalAlignment="Center"/>
+                            <Image Source="/Presentation/AppResources/Images/Icons/Login/user.png"
+                                  Width="15"
+                                  Height="15"
+                                  Grid.Column="0"
+                                  Opacity="0.6"/>
 
-                            <!-- PasswordBox (ẩn) -->
+                            <TextBox x:Name="txtUsername"
+                                    Grid.Column="1"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                    FontSize="14"
+                                    VerticalContentAlignment="Center"
+                                    Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <VisualBrush Stretch="None" AlignmentX="Left">
+                                                            <VisualBrush.Visual>
+                                                                <TextBlock Text="Enter your username"
+                                                                          Foreground="#CCCCCC"
+                                                                          FontSize="14"
+                                                                          FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                                                          Margin="5,0,0,0"/>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                    </Border>
+
+
+
+                    <!-- Password Input -->
+                    <TextBlock Text="Password"
+                              FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                              FontWeight="Medium"
+                              FontSize="13"
+                              Foreground="#555555"
+                              Margin="0,0,0,8"
+                               Width="220"/>
+
+                    <Border Style="{StaticResource InputBox}"
+                            Height="30"
+                            Margin="0,0,0,18"
+                            Width="220">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Image Source="/Presentation/AppResources/Images/Icons/Login/lock.png"
+                                  Width="15"
+                                  Height="15"
+                                  Grid.Column="0"
+                                  Opacity="0.6"/>
+
                             <PasswordBox x:Name="pbPassword"
-                                         Grid.Column="1"
-                                         Background="Transparent"
-                                         BorderBrush="Transparent"
-                                         VerticalAlignment="Center"/>
+                                        Grid.Column="1"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        FontFamily="/Presentation/AppResources/Fonts/#Quicksand"
+                                        FontSize="14"
+                                        VerticalContentAlignment="Center"/>
 
                             <!-- TextBox (hiện) -->
                             <TextBox x:Name="tbPasswordVisible"
@@ -194,41 +338,35 @@
                                      Visibility="Collapsed"/>
 
                             <!-- Eye button -->
-                            <Button Grid.Column="2"
+                            <Button Grid.Column="1"
                                     Width="30"
                                     Background="Transparent"
                                     BorderThickness="0"
                                     Content="👁"
                                     FontSize="14"
-                                    Click="TogglePassword_Click"/>
-                            
+                                    Click="TogglePassword_Click" Margin="148,0,0,0"/>
                         </Grid>
+
                     </Border>
 
+                    <!-- Login Button -->
+                    <Button x:Name="btnLogin"
+                            Content="LOGIN"
+                            Style="{StaticResource PrimaryButton}"
+                            Height="30"
+                            Margin="0,0,0,10"
+                            Command="{Binding LoginCommand}"
+                            CommandParameter="{Binding ElementName=pbPassword}"                             Width="220"/>
+                    <!--   -->
+                    <!-- Cancel Button -->
+                    <Button x:Name="btnCancel"
+                            Content="Cancel"
+                            Style="{StaticResource SecondaryButton}"
+                            Height="30"
+                            Click="btnCancelLogin_Click"
+                            Width="220"/>
 
-                    <!--LOGIN AND Cancel-->
-                    <Grid Height="99">
 
-                        <Border CornerRadius="10" Background="#585ab8" Margin="10,29,10,40" BorderThickness="0" >
-                            <Button x:Name="btnLogin" 
-                                    Command="{Binding LoginCommand}"
-                                    CommandParameter="{Binding ElementName=pbPassword}"
-                                    Style="{StaticResource btnLoginEffect}">
-                                    <!--Command="{Binding LoginCommand}"
-                                     CommandParameter="{Binding ElementName=pbPassword}"-->
-                                <TextBlock Text="LOGIN" FontWeight="ExtraBold" Foreground="White" FontSize="15" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Button>
-                        </Border>
-
-                        <Border CornerRadius="10" Background="#E9E9F5" Margin="10,64,10,10" BorderThickness="0"  >
-                            <Button x:Name="btnCancelLogin" 
-                                    Style="{StaticResource btnLoginEffect}"
-                                    Click="btnCancelLogin_Click">
-                                <TextBlock Text="Cancel" FontWeight="ExtraBold" Foreground="#5858B5" FontSize="10" FontFamily="/Presentation/AppResources/Fonts/#Quicksand" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Button>
-                        </Border>
-
-                    </Grid>
                 </StackPanel>
             </Grid>
         </Border>
