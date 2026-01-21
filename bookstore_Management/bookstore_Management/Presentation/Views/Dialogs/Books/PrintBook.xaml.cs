@@ -29,14 +29,10 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
             var columns = new List<PrintColumnDef>
             {
                 // ... code tạo cột của bạn giữ nguyên ...
-                new PrintColumnDef { Header = "Tên Sách", PropertyPath = "Title" }, // Ví dụ
-                new PrintColumnDef { Header = "Tác Giả", PropertyPath = "Author" }  // Ví dụ
+                new PrintColumnDef { Header = "Tên Sách", PropertyPath = "Name" }, 
+                new PrintColumnDef { Header = "Tác Giả", PropertyPath = "Author" }  
             };
 
-            // 2. KHỞI TẠO VIEWMODEL TẠI ĐÂY (Lúc này đã có đủ nguyên liệu)
-            // dataToPrint: lấy từ tham số hàm
-            // columns: vừa tạo ở trên
-            // _documentTitle: đã khai báo ở trên
             _viewModel = new PrintViewModel(dataToPrint, columns, _documentTitle);
 
             // 3. Gán DataContext để giao diện nhận dữ liệu

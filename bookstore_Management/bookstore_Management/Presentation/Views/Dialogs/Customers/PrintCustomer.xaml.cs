@@ -23,11 +23,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
             // 1. ĐỊNH NGHĨA CỘT IN (GIỐNG STAFF / BOOK)
             var columns = new List<PrintColumnDef>
             {
-                new PrintColumnDef { Header = "Mã KH", PropertyPath = "CustomerCode" },
-                new PrintColumnDef { Header = "Tên khách hàng", PropertyPath = "FullName" },
-                new PrintColumnDef { Header = "SĐT", PropertyPath = "PhoneNumber" },
+                new PrintColumnDef { Header = "Mã KH", PropertyPath = "CustomerId" },
+                new PrintColumnDef { Header = "Tên khách hàng", PropertyPath = "Name" },
+                new PrintColumnDef { Header = "SĐT", PropertyPath = "Phone" },
                 new PrintColumnDef { Header = "Email", PropertyPath = "Email" },
-                new PrintColumnDef { Header = "Ngày tạo", PropertyPath = "CreatedDate" }
+                new PrintColumnDef { Header = "Địa chỉ", PropertyPath = "Address" }
             };
 
             // 2. KHỞI TẠO VIEWMODEL

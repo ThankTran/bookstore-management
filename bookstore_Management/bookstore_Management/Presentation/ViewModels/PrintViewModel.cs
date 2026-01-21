@@ -70,7 +70,8 @@ namespace bookstore_Management.Presentation.ViewModels // Đã sửa lại cho n
             {
                 PageWidth = width,
                 PageHeight = height,
-                ColumnWidth = width, // Quan trọng: Để nội dung không bị chia thành nhiều cột báo chí
+                ColumnWidth = double.PositiveInfinity,
+                // Quan trọng: Để nội dung không bị chia thành nhiều cột báo chí
                 PagePadding = new Thickness(40),
                 FontFamily = new FontFamily("Segoe UI"),
                 FontSize = 13
