@@ -26,13 +26,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 
         public ImportBookItem SelectedBookItem { get; private set; }
 
-        public SelectBookDialog(string publisherId, IUnitOfWork unitOfWork)
+        public SelectBookDialog(string publisherId, IBookService bookService)
         {
             InitializeComponent();
 
             _publisherId = publisherId;
 
-            _bookService = new BookService(unitOfWork);
+            _bookService = bookService;
         }
 
         #region Window Dragging

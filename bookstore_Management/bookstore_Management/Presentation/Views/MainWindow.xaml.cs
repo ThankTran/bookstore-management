@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
 using bookstore_Management.Presentation.Views.Orders;
 
 namespace bookstore_Management
@@ -254,8 +255,8 @@ namespace bookstore_Management
                 }
                 if (SessionModel.Role == UserRole.SalesStaff || SessionModel.Role == UserRole.CustomerManager)
                 {
-                    MessageBox.Show("Bạn không có quyền truy cập trang này");
-                    return;
+                    new Warning().ShowDialog();
+                    return ;
                 }
                 SetClickedButtonColor(btnPublisher);
                 LoadPublisherPage();
@@ -279,7 +280,7 @@ namespace bookstore_Management
                     SessionModel.Role == UserRole.InventoryManager || 
                     SessionModel.Role == UserRole.CustomerManager)
                 {
-                    MessageBox.Show("Bạn không có quyền truy cập trang này");
+                    new Warning().ShowDialog();
                     return;
                 }
                 SetClickedButtonColor(btnStaffs);
@@ -310,7 +311,7 @@ namespace bookstore_Management
             {
                 if (SessionModel.Role != UserRole.Administrator )
                 {
-                    MessageBox.Show("Bạn không có quyền truy cập trang này");
+                    new Warning().ShowDialog();
                     return;
                 }
                 SetClickedButtonColor(btnAccount);

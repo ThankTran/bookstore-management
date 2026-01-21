@@ -32,14 +32,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Customers
         /// <summary>
         /// Constructor - chỉ cần service, không cần truyền data
         /// </summary>
-        public ExportExcelCustomer(ICustomerService customerService)
+        public ExportExcelCustomer(List<Customer> customers)
         {
             InitializeComponent();
-            _customerService = customerService;
 
             // Lấy tổng số từ service
-            var result = customerService.GetCustomerList();
-            _totalRecords = result.IsSuccess ? result.Data.Count() : 0;
+            var result = customers;
+            _totalRecords = result.Count();
             txtTotalRecords.Text = _totalRecords.ToString();
         }
 

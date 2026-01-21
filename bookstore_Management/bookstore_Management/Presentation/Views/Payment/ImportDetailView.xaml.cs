@@ -34,6 +34,7 @@ namespace bookstore_Management.Presentation.Views.Payment
     {
         private readonly IImportBillService _importBillService;
         private string _currentImportBillId;
+        private ImportBillResponseDto _currentImportBill;
 
         public ImportDetailView(IImportBillService importBillService)
         {
@@ -56,6 +57,7 @@ namespace bookstore_Management.Presentation.Views.Payment
             }
 
             var importBill = result.Data;
+            _currentImportBill = importBill;
             
             // Load details
             var detailsResult = _importBillService.GetImportDetails(importBillId);
@@ -94,14 +96,12 @@ namespace bookstore_Management.Presentation.Views.Payment
         
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            var mainWindow = Application.Current.MainWindow as MainWindow;
+            var mainWindow = Window.GetWindow(this) as MainWindow;
             if (mainWindow == null) return;
 
-            var scope = App.Services.CreateScope();
-            var invoiceView = scope.ServiceProvider.GetRequiredService<InvoiceView>();
-            invoiceView.Unloaded += (_, __) => scope.Dispose();
-            
-            mainWindow.MainFrame.Content = invoiceView;
+            mainWindow.MainFrame.Content =
+                App.Services.GetRequiredService<InvoiceView>();
+
         }
 
         private void BtnPrint_Click(object sender, RoutedEventArgs e)
@@ -112,7 +112,11 @@ namespace bookstore_Management.Presentation.Views.Payment
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            var print = new PrintInvoice(_currentImportBillId, InvoiceType.Import, context);
+            var print = new PrintInvoice(
+                    _currentImportBill.Id,
+                    InvoiceType.Import,
+                    _currentImportBill
+                );
             print.ShowDialog();
         }
 
@@ -120,12 +124,18 @@ namespace bookstore_Management.Presentation.Views.Payment
         {
             if (string.IsNullOrEmpty(_currentImportBillId))
             {
-                MessageBox.Show("Không có thông tin phiếu nhập để xóa.", "Thông báo", 
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Không có thông tin phiếu nhập để xóa.",
+                    "Thông báo",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 return;
             }
 
-            var confirmed = Delete.ShowForInvoice(_currentImportBillId);
+            bool confirmed = Delete.ShowForInvoice(
+                _currentImportBill.Id,
+                Window.GetWindow(this)
+            );
+
             if (!confirmed) return;
 
             var result = _importBillService.DeleteImportBill(_currentImportBillId);
@@ -138,17 +148,16 @@ namespace bookstore_Management.Presentation.Views.Payment
                 return;
             }
 
-            MessageBox.Show("Đã xóa phiếu nhập thành công.", "Thông báo", 
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Đã xóa phiếu nhập thành công.",
+                "Thông báo",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
 
-            var mainWindow = Application.Current.MainWindow as MainWindow;
+            var mainWindow = Window.GetWindow(this) as MainWindow;
             if (mainWindow == null) return;
 
-            var scope = App.Services.CreateScope();
-            var invoiceView = scope.ServiceProvider.GetRequiredService<InvoiceView>();
-            invoiceView.Unloaded += (_, __) => scope.Dispose();
-            
-            mainWindow.MainFrame.Content = invoiceView;
+            mainWindow.MainFrame.Content =
+                App.Services.GetRequiredService<InvoiceView>();
         }
 
         #region IDisposable

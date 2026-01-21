@@ -238,13 +238,13 @@ namespace bookstore_Management.Presentation.ViewModels
 
         #region Constructor (GIỮ NGUYÊN LOGIC)
 
-        public PaymentViewModel(IUnitOfWork unitOfWork)
+        public PaymentViewModel(IOrderService orderService, IBookService bookService, ICustomerService customerService, IStaffService staffService)
         {
             
-            _orderService = new OrderService(unitOfWork);
-            _bookService = new BookService(unitOfWork);
-            _customerService = new CustomerService(unitOfWork);
-            _staffService = new StaffService(unitOfWork);
+            _orderService = orderService;
+            _bookService = bookService;
+            _customerService = customerService;
+            _staffService = staffService;
 
 
             // commands

@@ -33,6 +33,8 @@ namespace bookstore_Management.Presentation.Views.Payment
     {
         private readonly IOrderService _orderService;
         private string _currentOrderId;
+        private OrderResponseDto _currentOrder;
+
 
         public OrderDetailView(IOrderService orderService)
         {
@@ -55,6 +57,7 @@ namespace bookstore_Management.Presentation.Views.Payment
             }
 
             var order = result.Data;
+            _currentOrder = order;
 
             // Load details
             var detailsResult = _orderService.GetOrderDetails(orderId);
@@ -120,14 +123,12 @@ namespace bookstore_Management.Presentation.Views.Payment
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            var mainWindow = Application.Current.MainWindow as MainWindow;
+            var mainWindow = Window.GetWindow(this) as MainWindow;
             if (mainWindow == null) return;
 
-            var scope = App.Services.CreateScope();
-            var invoiceView = scope.ServiceProvider.GetRequiredService<InvoiceView>();
-            invoiceView.Unloaded += (_, __) => scope.Dispose();
-            
-            mainWindow.MainFrame.Content = invoiceView;
+            mainWindow.MainFrame.Content =
+                App.Services.GetRequiredService<InvoiceView>();
+
         }
 
         private async void BtnPrint_Click(object sender, RoutedEventArgs e)
@@ -144,7 +145,12 @@ namespace bookstore_Management.Presentation.Views.Payment
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            var print = new PrintInvoice(_currentOrderId, InvoiceType.Export, context);
+            var print = new PrintInvoice(
+                _currentOrder.OrderId,
+                InvoiceType.Export,
+                _currentOrder
+            );
+
             print.ShowDialog();
         }
 
@@ -152,39 +158,40 @@ namespace bookstore_Management.Presentation.Views.Payment
         {
             if (string.IsNullOrEmpty(_currentOrderId))
             {
-                MessageBox.Show("Không có thông tin đơn hàng để hủy.", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Không có thông tin phiếu nhập để xóa.",
+                    "Thông báo",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 return;
             }
 
-            var result = MessageBox.Show("Bạn có chắc chắn muốn hủy đơn hàng này không?",
-                "Xác nhận hủy đơn",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+            bool confirmed = Delete.ShowForInvoice(
+                _currentOrder.OrderId,
+                Window.GetWindow(this)
+            );
 
-            if (result != MessageBoxResult.Yes) return;
+            if (!confirmed) return;
 
-            var deleteResult = _orderService.DeleteOrder(_currentOrderId);
-            if (!deleteResult.IsSuccess)
+            var result = _orderService.DeleteOrder(_currentOrderId);
+            if (!result.IsSuccess)
             {
-                MessageBox.Show($"Không thể hủy đơn hàng.\nChi tiết lỗi: {deleteResult.ErrorMessage}",
-                    "Lỗi hủy đơn",
+                MessageBox.Show($"Không thể xóa phiếu nhập.\nChi tiết lỗi: {result.ErrorMessage}",
+                    "Lỗi xóa dữ liệu",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 return;
             }
 
-            MessageBox.Show("Đã hủy đơn hàng thành công.", "Thông báo",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Đã xóa phiếu nhập thành công.",
+                "Thông báo",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
 
-            var mainWindow = Application.Current.MainWindow as MainWindow;
+            var mainWindow = Window.GetWindow(this) as MainWindow;
             if (mainWindow == null) return;
 
-            var scope = App.Services.CreateScope();
-            var invoiceView = scope.ServiceProvider.GetRequiredService<InvoiceView>();
-            invoiceView.Unloaded += (_, __) => scope.Dispose();
-            
-            mainWindow.MainFrame.Content = invoiceView;
+            mainWindow.MainFrame.Content =
+                App.Services.GetRequiredService<InvoiceView>();
         }
 
         #region IDisposable

@@ -15,22 +15,10 @@ namespace bookstore_Management.Presentation.Views.Publishers
     /// </summary>
     public partial class PublisherListView : UserControl
     {
-        private PublisherViewModel _viewModel;
-        public PublisherListView()
+        public PublisherListView(PublisherViewModel publisherViewModel)
         {
             InitializeComponent();
-          
-            IPublisherService publisherService;
-
-            var context = new Data.Context.BookstoreDbContext();
-            publisherService = new PublisherService(
-                new Data.Repositories.Implementations.PublisherRepository(context),
-                new Data.Repositories.Implementations.BookRepository(context),
-                new Data.Repositories.Implementations.ImportBillRepository(context)
-            );
-
-            _viewModel = new PublisherViewModel(publisherService);
-            this.DataContext = _viewModel;
+            this.DataContext = publisherViewModel;
         }
 
         private void dgPublishers_LoadingRow(object sender, DataGridRowEventArgs e)

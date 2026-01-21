@@ -478,7 +478,7 @@
                                 <Button Background="Transparent"
                                 BorderThickness="0"
                                 Cursor="Hand"
-                                Command="{Binding SaveDraftCommand}"
+                                Command="{Binding CheckoutCommand}"
                                 Height="42"
                                 Width="52">
                                     <TextBlock Text="📋"

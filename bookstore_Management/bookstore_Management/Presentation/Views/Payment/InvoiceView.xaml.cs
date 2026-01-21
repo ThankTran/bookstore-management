@@ -14,6 +14,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using bookstore_Management.Presentation.Views.Payment;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,22 +38,39 @@ namespace bookstore_Management.Presentation.Views.Orders
 
         private void OpenDetailView(InvoiceDisplayItem item)
         {
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow == null) return;
-            var scope = App.Services.CreateScope();
-            if (item.InvoiceType == InvoiceType.Import)
+            try
             {
-                var detailView = scope.ServiceProvider.GetRequiredService<ImportDetailView>();
-                detailView.Unloaded += (_, __) => scope.Dispose();
-                detailView.LoadImportBillAsync(item.InvoiceId);
-                mainWindow.MainFrame.Content = detailView;
+                
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+        
+                if (mainWindow == null)
+                {
+                    MessageBox.Show("Không tìm thấy MainWindow!", "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var scope = App.Services.CreateScope();
+
+                if (item.InvoiceType == InvoiceType.Import)
+                {
+                    var detailView = scope.ServiceProvider.GetRequiredService<ImportDetailView>();
+                    detailView.Unloaded += (_, __) => scope.Dispose();
+                    detailView.LoadImportBillAsync(item.InvoiceId);
+                    mainWindow.MainFrame.Content = detailView;
+                }
+                else
+                {
+                    var detailView = scope.ServiceProvider.GetRequiredService<OrderDetailView>();
+                    detailView.Unloaded += (_, __) => scope.Dispose();
+                    detailView.LoadOrderAsync(item.InvoiceId);
+                    mainWindow.MainFrame.Content = detailView;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                var detailView = scope.ServiceProvider.GetRequiredService<OrderDetailView>();
-                detailView.Unloaded += (_, __) => scope.Dispose();
-                detailView.LoadOrderAsync(item.InvoiceId);
-                mainWindow.MainFrame.Content = detailView;
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

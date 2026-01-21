@@ -16,6 +16,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace bookstore_Management.Presentation.ViewModels
@@ -103,7 +104,8 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    var noPermission = new Warning();
+                    noPermission.ShowDialog();
                 }
             }
 

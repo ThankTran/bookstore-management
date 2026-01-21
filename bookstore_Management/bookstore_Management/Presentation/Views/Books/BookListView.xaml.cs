@@ -10,14 +10,11 @@ namespace bookstore_Management.Views.Books
 
     public partial class BookListView : UserControl
     {
-        private BookViewModel _viewModel;
 
-        public BookListView()
+        public BookListView(BookViewModel bookViewModel)
         {
             InitializeComponent();
-            IBookService bookService = new BookService();
-            _viewModel = new BookViewModel(bookService);
-            this.DataContext = _viewModel;
+            this.DataContext = bookViewModel;
         }
         #region Event Handlers
         private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

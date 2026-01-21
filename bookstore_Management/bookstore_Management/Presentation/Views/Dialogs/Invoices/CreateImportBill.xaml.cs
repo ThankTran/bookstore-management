@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using bookstore_Management.Services.Interfaces;
 
 namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 {
@@ -14,14 +15,15 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
     {
         private readonly ObservableCollection<ImportBookItem> _bookItems = new ObservableCollection<ImportBookItem>();
         private object _previousPublisher;
-
+        private readonly IBookService _bookService;
         public string PublisherId => cbPublisher.SelectedValue?.ToString();
         public string Notes => tbNotes.Text?.Trim();
         public string CreatedBy => tbCreatedBy.Text?.Trim();
 
-        public CreateImportBill()
+        public CreateImportBill(IBookService bookService)
         {
             InitializeComponent();
+            _bookService = bookService;
 
             icBooks.ItemsSource = _bookItems;
 
@@ -125,7 +127,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
                 return;
             }
 
-            var dialog = new SelectBookDialog(publisherName) { Owner = this };
+            var dialog = new SelectBookDialog(PublisherId, _bookService) { Owner = this };
 
             if (string.IsNullOrEmpty(PublisherId))
             {

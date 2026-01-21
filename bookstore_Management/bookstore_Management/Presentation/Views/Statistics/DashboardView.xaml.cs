@@ -15,25 +15,13 @@ namespace bookstore_Management.Presentation.Views.Statistics
 
     public partial class DashboardView : UserControl
     {
-        private DashboardViewModel _viewModel;
 
-        public DashboardView()
+        public DashboardView(DashboardViewModel dashboardViewModel)
         {
             InitializeComponent();
-            var context = new BookstoreDbContext();
-            IReportService reportService;
-            reportService = new ReportService(
-                new OrderRepository(context),
-                new OrderDetailRepository(context),
-                new BookRepository(context),
-                new CustomerRepository(context),
-                new ImportBillRepository(context),
-                new ImportBillDetailRepository(context)
-            );
-            _viewModel = new DashboardViewModel(reportService);
-            this.DataContext = _viewModel;
+            this.DataContext = dashboardViewModel;
 
-           _viewModel.SelectedTimeRange = TimeRange.Today;
+            dashboardViewModel.SelectedTimeRange = TimeRange.Today;
         }
 
 

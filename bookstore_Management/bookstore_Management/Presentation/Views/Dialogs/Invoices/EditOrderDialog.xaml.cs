@@ -32,21 +32,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         private readonly ObservableCollection<OrderDetailDisplayItem> _orderDetails
             = new ObservableCollection<OrderDetailDisplayItem>();
 
-        public EditOrderDialog(string orderId)
+        public EditOrderDialog( string orderId,
+            IOrderService orderService)
         {
             InitializeComponent();
 
             _orderId = orderId;
-
-            // Initialize service
-            var context = new BookstoreDbContext();
-            var orderRepo = new OrderRepository(context);
-            var detailRepo = new OrderDetailRepository(context);
-            var bookRepo = new BookRepository(context);
-            var customerRepo = new CustomerRepository(context);
-            var staffRepo = new StaffRepository(context);
-
-            _orderService = new OrderService(orderRepo, detailRepo, bookRepo, customerRepo, staffRepo);
+            _orderService = orderService;
 
 
         }

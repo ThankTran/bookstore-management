@@ -44,6 +44,16 @@ namespace bookstore_Management
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IImportBillService, ImportBillService>();
         services.AddScoped<IOrderService, OrderService>();
+        
+        // ===== REPOSITORY =====
+        services.AddScoped<IPublisherRepository, PublisherRepository>();
+        services.AddScoped<IBookRepository, BookRepository>();
+        services.AddScoped<IPublisherRepository, PublisherRepository>();
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IImportBillRepository, ImportBillRepository>();
+        services.AddScoped<IStaffRepository, StaffRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         // ===== VIEWMODELS =====
         services.AddTransient<LoginViewModel>();

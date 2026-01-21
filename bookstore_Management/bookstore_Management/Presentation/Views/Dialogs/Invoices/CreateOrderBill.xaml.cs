@@ -31,10 +31,10 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         private readonly IBookService _bookService;
         private List<BookDetailResponseDto> _allBooks = new List<BookDetailResponseDto>();
 
-        public CreateOrderBill(IUnitOfWork unitOfWork)
+        public CreateOrderBill(IBookService bookService)
         {
             InitializeComponent();
-            _bookService = new BookService(unitOfWork);
+            _bookService = bookService;
 
             DataContext = _vm;
 
