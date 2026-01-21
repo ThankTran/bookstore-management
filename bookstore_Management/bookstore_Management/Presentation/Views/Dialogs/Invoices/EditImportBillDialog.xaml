@@ -215,7 +215,7 @@
                                                         Padding="15,10">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="200"/>
+                                                            <ColumnDefinition Width="350"/>
                                                             <ColumnDefinition Width="120"/>
                                                             <ColumnDefinition Width="140"/>
                                                             <ColumnDefinition Width="150"/>
