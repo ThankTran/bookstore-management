@@ -198,7 +198,7 @@
                                              />
                                 <!-- PreviewTextInput="NumericOnly_PreviewTextInput" -->
 
-                                <TextBlock Text="₫"
+                                <TextBlock 
                                                FontSize="13"
                                                Foreground="#999999"
                                                HorizontalAlignment="Right"
