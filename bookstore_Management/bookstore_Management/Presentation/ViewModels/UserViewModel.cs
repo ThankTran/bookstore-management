@@ -12,10 +12,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.DTOs.User.Response;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class UserViewModel : BaseViewModel
+    public class UserViewModel : BaseViewModel
     {
         private readonly IUserService _userService;
         private readonly IStaffRepository _staffRepository;
@@ -139,15 +140,11 @@ namespace bookstore_Management.Presentation.ViewModels
         }
 
 
-        public UserViewModel(IUserService userService)
+        public UserViewModel(IUserService userService, IStaffRepository  staffRepository)
         {
-            var context = new BookstoreDbContext();
-            _staffRepository = new StaffRepository(context);
-            _userService = new UserService(
-                new UserRepository(context),
-                new StaffRepository(context)
-            );
-
+            _userService = userService;
+            _staffRepository = staffRepository;
+            
             Users = new ObservableCollection<User>();
 
             LoadUsersFromDatabase();
@@ -437,7 +434,17 @@ namespace bookstore_Management.Presentation.ViewModels
             #region ExportCommand
             ExportCommand = new RelayCommand<object>((p) =>
             {
+                var data = Users.Select(u => new UserResponseDto
+                {
+                    AccountId = u.UserId,
+                    StaffId = u.StaffId,
+                    UserName = u.Username,
+                    Password = "******",
+                    Role = u.UserRole
+                }).ToList();
 
+                var dialog = new ExportExelAccount(data);
+                dialog.ShowDialog();
             });
             #endregion
 

@@ -12,18 +12,11 @@ namespace bookstore_Management.Services.Implementations
 {
     public class PublisherService : IPublisherService
     {
-        private readonly IPublisherRepository _publisherRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly IImportBillRepository _importBillRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        internal PublisherService(
-            IPublisherRepository publisherRepository, 
-            IBookRepository bookRepository,
-            IImportBillRepository importBillRepository)
+        public PublisherService(IUnitOfWork unitOfWork)
         {
-            _publisherRepository = publisherRepository;
-            _bookRepository = bookRepository;
-            _importBillRepository = importBillRepository;
+            _unitOfWork = unitOfWork;
         }
 
         // ==================================================================
@@ -47,13 +40,13 @@ namespace bookstore_Management.Services.Implementations
                     return Result<string>.Fail("Email không hợp lệ");
                     
                 // Kiểm tra số điện thoại
-                var existingPhone = _publisherRepository.GetByPhone(dto.Phone);
+                var existingPhone = _unitOfWork.Publishers.GetByPhone(dto.Phone);
                 if (existingPhone != null && existingPhone.DeletedDate == null)
                     return Result<string>.Fail("Số điện thoại đã tồn tại trong hệ thống");
                 
                 if (!string.IsNullOrWhiteSpace(dto.Email))
                 {
-                    var existingEmail = _publisherRepository.GetByEmail(dto.Email.Trim());
+                    var existingEmail = _unitOfWork.Publishers.GetByEmail(dto.Email.Trim());
                     if (existingEmail != null && existingEmail.DeletedDate == null)
                         return Result<string>.Fail("Email đã tồn tại trong hệ thống");
                 }
@@ -73,8 +66,8 @@ namespace bookstore_Management.Services.Implementations
                     DeletedDate = null
                 };
                 
-                _publisherRepository.Add(supplier);
-                _publisherRepository.SaveChanges();
+                _unitOfWork.Publishers.Add(supplier);
+                _unitOfWork.Publishers.SaveChanges();
                 
                 return Result<string>.Success(publisherId, "Thêm nhà cung cấp thành công");
             }
@@ -91,7 +84,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var supplier = _publisherRepository.GetById(publisherId);
+                var supplier =  _unitOfWork.Publishers.GetById(publisherId);
                 if (supplier == null || supplier.DeletedDate != null)
                     return Result.Fail("Nhà cung cấp không tồn tại");
                     
@@ -111,7 +104,7 @@ namespace bookstore_Management.Services.Implementations
                 // Kiểm tra số điện thoại đã tồn tại 
                 if (dto.Phone != supplier.Phone)
                 {
-                    var existingPhone = _publisherRepository.GetByPhone(dto.Phone);
+                    var existingPhone =  _unitOfWork.Publishers.GetByPhone(dto.Phone);
                     if (existingPhone != null && existingPhone.Id != publisherId && existingPhone.DeletedDate == null)
                         return Result.Fail("Số điện thoại đã tồn tại trong hệ thống");
                 }
@@ -122,8 +115,8 @@ namespace bookstore_Management.Services.Implementations
                 supplier.Email = string.IsNullOrWhiteSpace(dto.Email) ? null : dto.Email.Trim();
                 supplier.UpdatedDate = DateTime.Now;
                 
-                _publisherRepository.Update(supplier);
-                _publisherRepository.SaveChanges();
+                _unitOfWork.Publishers.Update(supplier);
+                _unitOfWork.Publishers.SaveChanges();
                 
                 return Result.Success("Cập nhật nhà cung cấp thành công");
             }
@@ -140,14 +133,14 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var supplier = _publisherRepository.GetById(publisherId);
+                var supplier =  _unitOfWork.Publishers.GetById(publisherId);
                 if (supplier == null || supplier.DeletedDate != null)
                     return Result.Fail("Nhà cung cấp không tồn tại");
                 
                 // Soft delete
                 supplier.DeletedDate = DateTime.Now;
-                _publisherRepository.Update(supplier);
-                _publisherRepository.SaveChanges();
+                _unitOfWork.Publishers.Update(supplier);
+                _unitOfWork.Publishers.SaveChanges();
                 
                 return Result.Success($"Xóa nhà cung cấp {supplier.Name} thành công");
             }
@@ -164,7 +157,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var supplier = _publisherRepository.GetById(publisherId);
+                var supplier =  _unitOfWork.Publishers.GetById(publisherId);
                 if (supplier == null || supplier.DeletedDate != null)
                     return Result<PublisherResponseDto>.Fail("Nhà cung cấp không tồn tại");
 
@@ -181,7 +174,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var publishers = _publisherRepository.GetAll()
+                var publishers =  _unitOfWork.Publishers.GetAll()
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
                     .Select(MapToPublisherResponseDto);
@@ -200,7 +193,7 @@ namespace bookstore_Management.Services.Implementations
                 if (string.IsNullOrWhiteSpace(phone))
                     return Result<PublisherResponseDto>.Fail("Số điện thoại không được để trống");
                     
-                var supplier = _publisherRepository.GetByPhone(phone.Trim());
+                var supplier =  _unitOfWork.Publishers.GetByPhone(phone.Trim());
                 if (supplier == null || supplier.DeletedDate != null)
                     return Result<PublisherResponseDto>.Fail("Không tìm thấy nhà cung cấp");
 
@@ -220,7 +213,7 @@ namespace bookstore_Management.Services.Implementations
                 if (string.IsNullOrWhiteSpace(email))
                     return Result<PublisherResponseDto>.Fail("Email không được để trống");
 
-                var supplier = _publisherRepository.GetByEmail(email.Trim());
+                var supplier =  _unitOfWork.Publishers.GetByEmail(email.Trim());
                 if (supplier == null || supplier.DeletedDate != null)
                     return Result<PublisherResponseDto>.Fail("Không tìm thấy nhà cung cấp");
 
@@ -240,7 +233,7 @@ namespace bookstore_Management.Services.Implementations
                 if (string.IsNullOrWhiteSpace(name))
                     return Result<IEnumerable<PublisherResponseDto>>.Success(new List<PublisherResponseDto>());
 
-                var publishers = _publisherRepository.SearchByName(name.Trim())
+                var publishers =  _unitOfWork.Publishers.SearchByName(name.Trim())
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
                     .Select(MapToPublisherResponseDto);
@@ -258,11 +251,11 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var supplier = _publisherRepository.GetById(publisherId);
+                var supplier =  _unitOfWork.Publishers.GetById(publisherId);
                 if (supplier == null || supplier.DeletedDate != null)
                     return Result<IEnumerable<Book>>.Fail("Nhà cung cấp không tồn tại");
 
-                var books = _bookRepository.Find(b => b.PublisherId == publisherId && b.DeletedDate == null)
+                var books =  _unitOfWork.Books.Find(b => b.PublisherId == publisherId && b.DeletedDate == null)
                     .OrderBy(b => b.Name)
                     .ToList();
 
@@ -281,12 +274,12 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var supplier = _publisherRepository.GetById(publisherId);
+                var supplier =  _unitOfWork.Publishers.GetById(publisherId);
                 if (supplier == null || supplier.DeletedDate != null)
                     return Result<decimal>.Fail("Nhà cung cấp không tồn tại");
                     
                 // Lấy từ ImportBill, không phải Book
-                var importBills = _importBillRepository.Find(ib =>
+                var importBills =  _unitOfWork.ImportBills.Find(ib =>
                     ib.PublisherId == publisherId);
 
                 var totalValue = importBills.Sum(ib => ib.TotalAmount);
@@ -306,11 +299,11 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var supplier = _publisherRepository.GetById(publisherId);
+                var supplier =  _unitOfWork.Publishers.GetById(publisherId);
                 if (supplier == null || supplier.DeletedDate != null)
                     return Result<decimal>.Fail("Nhà cung cấp không tồn tại");
 
-                var importBills = _importBillRepository.Find(ib =>
+                var importBills =  _unitOfWork.ImportBills.Find(ib =>
                     ib.PublisherId == publisherId &&
                     ib.CreatedDate >= fromDate &&
                     ib.CreatedDate <= toDate);
@@ -333,7 +326,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var lastPublisher = _publisherRepository.GetAll()
+                var lastPublisher =  _unitOfWork.Publishers.GetAll()
                     .Where(s => s.Id.StartsWith("NCC"))
                     .OrderByDescending(s => s.Id)
                     .FirstOrDefault();

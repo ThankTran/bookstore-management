@@ -9,10 +9,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.DTOs.Publisher.Responses;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class PublisherViewModel : BaseViewModel
+    public class PublisherViewModel : BaseViewModel
     {
         #region các khai báo
         private readonly IPublisherService _publisherService;
@@ -103,11 +105,7 @@ namespace bookstore_Management.Presentation.ViewModels
             var billRepo = new Data.Repositories.Implementations.ImportBillRepository(context);
 
             // 2. Truyền repository đã khởi tạo vào Service
-            _publisherService = new PublisherService(
-                _publisherRepository,
-                bookRepo,
-                billRepo
-            );
+            _publisherService = publisherService;
 
             Publishers = new ObservableCollection<Publisher>();
             LoadPublishersFromDatabase();
@@ -117,7 +115,8 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 if (SessionModel.Role == UserRole.SalesManager)
                 {
-                    MessageBox.Show("Bạn không có quyền này");
+                    var noPermission = new NAdd();
+                    noPermission.ShowDialog();
                     return;
                 }
                 var dialog = new Presentation.Views.Dialogs.Publishers.AddPublisher();
@@ -145,7 +144,8 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 if (SessionModel.Role == UserRole.SalesManager)
                 {
-                    MessageBox.Show("Bạn không có quyền này");
+                    var noPermission = new NUpdate();
+                    noPermission.ShowDialog();
                     return;
                 }
                 var dialog = new Presentation.Views.Dialogs.Publishers.UpdatePublisher();
@@ -196,7 +196,8 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 if (SessionModel.Role == UserRole.SalesManager)
                 {
-                    MessageBox.Show("Bạn không có quyền này");
+                    var noPermission = new NDelete();
+                    noPermission.ShowDialog();
                     return;
                 }
                 var pus = p as Publisher;
@@ -254,11 +255,6 @@ namespace bookstore_Management.Presentation.ViewModels
             #region Print & Export
             PrintCommand = new RelayCommand<object>((p) =>
             {
-                if (SessionModel.Role == UserRole.SalesManager)
-                {
-                    MessageBox.Show("Bạn không có quyền này");
-                    return;
-                }
                 var data = Publishers;
                 var dialog = new PrintPublisher(data);
                 dialog.ShowDialog();
@@ -266,6 +262,17 @@ namespace bookstore_Management.Presentation.ViewModels
             ExportCommand = new RelayCommand<object>((p) =>
             {
 
+                var data = Publishers.Select(x => new PublisherResponseDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Phone = x.Phone,
+                    Email = x.Email,
+                    CreatedDate = x.CreatedDate
+                }).ToList();
+
+                var dialog = new ExportExcelPublisher(data);
+                dialog.ShowDialog();
             });
             #endregion
 

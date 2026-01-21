@@ -158,24 +158,53 @@
                         </StackPanel>
                     </Border>
 
-                    <Border CornerRadius="10"                             
-                            Margin="10,10,10,0" 
-                            Background="#E9E9F5" 
-                            Height="35" 
-                            BorderThickness="2" 
+                    <Border CornerRadius="10"
+                            Margin="10,10,10,0"
+                            Background="#E9E9F5"
+                            Height="35"
+                            BorderThickness="2"
                             BorderBrush="#F9F8FD">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Presentation/AppResources/Images/Icons/Login/lock.png" 
-                                    Width="15" 
-                                    Margin="8,0,0,0"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Lock icon -->
+                            <Image Source="/Presentation/AppResources/Images/Icons/Login/lock.png"
+                                   Width="15"
+                                   Margin="8,0,5,0"
+                                   VerticalAlignment="Center"/>
+
+                            <!-- PasswordBox (ẩn) -->
                             <PasswordBox x:Name="pbPassword"
-                                    Background="Transparent" 
-                                    Width="195" 
-                                    HorizontalAlignment="Center" 
-                                    VerticalAlignment="Center" 
-                                    BorderBrush="Transparent"/>            
-                        </StackPanel>
+                                         Grid.Column="1"
+                                         Background="Transparent"
+                                         BorderBrush="Transparent"
+                                         VerticalAlignment="Center"/>
+
+                            <!-- TextBox (hiện) -->
+                            <TextBox x:Name="tbPasswordVisible"
+                                     Grid.Column="1"
+                                     Background="Transparent"
+                                     BorderBrush="Transparent"
+                                     VerticalAlignment="Center"
+                                     Visibility="Collapsed"/>
+
+                            <!-- Eye button -->
+                            <Button Grid.Column="2"
+                                    Width="30"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Content="👁"
+                                    FontSize="14"
+                                    Click="TogglePassword_Click"/>
+                            
+                        </Grid>
                     </Border>
+
 
                     <!--LOGIN AND Cancel-->
                     <Grid Height="99">

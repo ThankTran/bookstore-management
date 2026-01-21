@@ -18,6 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using bookstore_Management.Data.Repositories.Interfaces;
 
 namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
 {
@@ -30,16 +31,10 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         private readonly IBookService _bookService;
         private List<BookDetailResponseDto> _allBooks = new List<BookDetailResponseDto>();
 
-        public CreateOrderBill()
+        public CreateOrderBill(IBookService bookService)
         {
             InitializeComponent();
-
-            // Khởi tạo BookService giống SelectBookDialog (để tự load sách)
-            var context = new BookstoreDbContext();
-            var bookRepo = new BookRepository(context);
-            var publisherRepo = new PublisherRepository(context);
-            var importBillDetailRepo = new ImportBillDetailRepository(context);
-            _bookService = new BookService(bookRepo, publisherRepo, importBillDetailRepo);
+            _bookService = bookService;
 
             DataContext = _vm;
 

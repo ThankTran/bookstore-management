@@ -3,7 +3,7 @@ using bookstore_Management.Data.Repositories.Interfaces;
 
 namespace bookstore_Management.Data.Repositories.Interfaces
 {
-    internal interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         IBookRepository Books { get; }
         ICustomerRepository Customers { get; }

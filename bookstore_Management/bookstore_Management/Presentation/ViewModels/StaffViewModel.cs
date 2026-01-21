@@ -9,10 +9,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.DTOs.Staff.Responses;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class StaffViewModel : BaseViewModel
+    public class StaffViewModel : BaseViewModel
     {
         #region các khai báo
         //lấy service
@@ -102,12 +104,8 @@ namespace bookstore_Management.Presentation.ViewModels
         #endregion
         public StaffViewModel(IStaffService staffService)
         {
-            var context = new BookstoreDbContext();
 
-            _staffService = new StaffService(
-            new StaffRepository(context),
-            new OrderRepository(context)
-            );
+            _staffService = staffService;
 
             Staffs = new ObservableCollection<Staff>();
             LoadStaffsFromDatabase();
@@ -115,7 +113,14 @@ namespace bookstore_Management.Presentation.ViewModels
             #region AddCommand
             AddStaffCommand = new RelayCommand<object>((p) =>
             {
-                var dialog = new Views.Dialogs.Staffs.AddStaff();
+                if (SessionModel.Role == UserRole.SalesManager)
+                {
+                    var noPermission = new NAdd();
+                    noPermission.ShowDialog();
+                    return;
+                }
+                
+                var dialog = new AddStaff();
                 if (dialog.ShowDialog() == true)
                 {
                     // Call service to add book to database
@@ -140,6 +145,12 @@ namespace bookstore_Management.Presentation.ViewModels
             #region RemoveCommand
             RemoveStaffCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role == UserRole.SalesManager)
+                {
+                    var noPermission = new NDelete();
+                    noPermission.ShowDialog();
+                    return;
+                }
                 var staff = p as Staff;
                 if (staff == null)
                 {
@@ -166,6 +177,12 @@ namespace bookstore_Management.Presentation.ViewModels
             #region EditCommand
             EditStaffCommand = new RelayCommand<object>((p) =>
             {
+                if (SessionModel.Role == UserRole.SalesManager)
+                {
+                    var noPermission = new NUpdate();
+                    noPermission.ShowDialog();
+                    return;
+                }
                 var dialog = new Views.Dialogs.Staffs.UpdateStaff();
                 var staff = p as Staff;
                 if (staff == null)
@@ -251,7 +268,19 @@ namespace bookstore_Management.Presentation.ViewModels
             #region ExportCommand
             ExportCommand = new RelayCommand<object>((p) =>
             {
+                var data = Staffs.Select(s => new StaffResponseDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    CitizenId = s.CitizenId,
+                    Phone = s.Phone,
+                    UserRole = s.UserRole,
+                    CreatedDate = s.CreatedDate,
+                    TotalOrders = 0 // nếu chưa có thì set tạm
+                }).ToList();
 
+                var dialog = new ExportExcelStaff(data);
+                dialog.ShowDialog();
             });
             #endregion
         }

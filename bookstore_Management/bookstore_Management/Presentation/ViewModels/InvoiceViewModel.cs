@@ -16,10 +16,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class InvoiceViewModel : BaseViewModel
+    public class InvoiceViewModel : BaseViewModel
     {
         #region Services
 
@@ -127,10 +128,14 @@ namespace bookstore_Management.Presentation.ViewModels
 
         #region Constructor
 
-        public InvoiceViewModel(IImportBillService importBillService, IOrderService orderService)
+        public InvoiceViewModel(IImportBillService importBillService, IOrderService orderService, IPublisherService publisherService
+        , IStaffService staffService, ICustomerService customerService)
         {
             _importBillService = importBillService;
             _orderService = orderService;
+            _publisherService = publisherService;
+            _staffService = staffService;
+            _customerService = customerService;
 
             Invoices = new ObservableCollection<InvoiceDisplayItem>();
 
@@ -167,23 +172,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 () => SelectedInvoice != null
             );
 
-            PrintCommand = new RelayCommand<object>((p) =>
-            {
-                if (SelectedInvoice == null)
-                {
-                    MessageBox.Show("Vui lòng chọn hóa đơn cần in!");
-                    return;
-                }
-
-                var print = new PrintInvoice(
-                    SelectedInvoice.InvoiceId,
-                    SelectedInvoice.InvoiceType,
-                    SelectedInvoice
-                );
-
-                print.ShowDialog();
-            });
-
+            PrintCommand = new RelayCommand<object>((p) => PrintSelectedInvoice());
 
             ExportCommand = new RelayCommand(() => ExportInvoice());
 
@@ -336,43 +325,58 @@ namespace bookstore_Management.Presentation.ViewModels
         {
             if (SessionModel.Role == UserRole.InventoryManager && SessionModel.Role != UserRole.CustomerManager)
             {
-                MessageBox.Show("Bạn không có quyền này");
+                var noPermission = new NAdd();
+                noPermission.ShowDialog();
                 return;
             }
-            var dialog = new CreateImportBill
+
+            try
             {
-                Owner = Application.Current.MainWindow
-            };
+                var dialog = new CreateImportBill(
+                    App.Services.GetRequiredService<IBookService>()
+                );
 
-            var context = new BookstoreDbContext();
-            _publisherService = new PublisherService(
-                new PublisherRepository(context),
-                new BookRepository(context),
-                new ImportBillRepository(context));
-
-            var publishersResult = _publisherService.GetAllPublishers();
-
-            if (!publishersResult.IsSuccess)
-            {
-                MessageBox.Show("Không thể tải danh sách nhà xuất bản",
-                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            dialog.LoadPublishers(publishersResult.Data);
-
-            if (dialog.ShowDialog() == true)
-            {
-                var dto = dialog.GetImportBillData();
-                var result = _importBillService.CreateImportBill(dto);
-
-                if (!result.IsSuccess)
+                var mainWindow = Application.Current.MainWindow;
+                if (mainWindow != null && dialog != mainWindow)
                 {
-                    MessageBox.Show(result.ErrorMessage, "Lỗi",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    dialog.Owner = mainWindow;
+                    dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                }
+                else
+                {
+                    dialog.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 }
 
-                LoadAllInvoices();
+                var publishersResult = _publisherService.GetAllPublishers();
+
+                if (!publishersResult.IsSuccess)
+                {
+                    MessageBox.Show("Không thể tải danh sách nhà xuất bản",
+                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+        
+                dialog.LoadPublishers(publishersResult.Data);
+
+                if (dialog.ShowDialog() == true)
+                {
+                    var dto = dialog.GetImportBillData();
+                    var result = _importBillService.CreateImportBill(dto);
+
+                    if (!result.IsSuccess)
+                    {
+                        MessageBox.Show(result.ErrorMessage, "Lỗi",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    LoadAllInvoices();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}\n\nChi tiết: {ex.StackTrace}", 
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -381,36 +385,50 @@ namespace bookstore_Management.Presentation.ViewModels
         {
             if (SessionModel.Role == UserRole.InventoryManager && SessionModel.Role != UserRole.CustomerManager)
             {
-                MessageBox.Show("Bạn không có quyền này");
-                return;
+                var noPermission = new NAdd();
+                noPermission.ShowDialog();
+                return; 
             }
-            var dialog = new CreateOrderBill
-            {
-                Owner = Application.Current.MainWindow
-            };
-            var context = new BookstoreDbContext();
-            _staffService = new StaffService(
-                new StaffRepository(context),
-                new OrderRepository(context));
-            _customerService = new CustomerService(
-                new CustomerRepository(context),
-                new OrderRepository(context));
-            dialog.LoadStaffs(_staffService.GetAllStaff().Data);
-            dialog.LoadCustomers(_customerService.GetAllCustomers().Data);
 
-            if (dialog.ShowDialog() == true)
+            try
             {
-                var dto = dialog.GetOrderData();
-                var result = _orderService.CreateOrder(dto);
+                var dialog = new CreateOrderBill(
+                    App.Services.GetRequiredService<IBookService>()
+                );
 
-                if (!result.IsSuccess)
+                var mainWindow = Application.Current.MainWindow;
+                if (mainWindow != null && dialog != mainWindow)
                 {
-                    MessageBox.Show(result.ErrorMessage, "Lỗi",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    dialog.Owner = mainWindow;
+                    dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                }
+                else
+                {
+                    dialog.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 }
 
-                LoadAllInvoices();
+                dialog.LoadStaffs(_staffService.GetAllStaff().Data);
+                dialog.LoadCustomers(_customerService.GetAllCustomers().Data);
+
+                if (dialog.ShowDialog() == true)
+                {
+                    var dto = dialog.GetOrderData();
+                    var result = _orderService.CreateOrder(dto);
+
+                    if (!result.IsSuccess)
+                    {
+                        MessageBox.Show(result.ErrorMessage, "Lỗi",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    LoadAllInvoices();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}\n\nChi tiết: {ex.StackTrace}", 
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -419,8 +437,8 @@ namespace bookstore_Management.Presentation.ViewModels
         {
             if (SessionModel.Role == UserRole.InventoryManager || SessionModel.Role == UserRole.CustomerManager)
             {
-                MessageBox.Show("Bạn không có quyền này");
-                return;
+                var noPermission = new NDelete();
+                noPermission.ShowDialog();
             }
             if (SelectedInvoice == null) return;
 
@@ -466,34 +484,31 @@ namespace bookstore_Management.Presentation.ViewModels
         {
             if (SessionModel.Role == UserRole.InventoryManager || SessionModel.Role == UserRole.CustomerManager)
             {
-                MessageBox.Show("Bạn không có quyền này");
+                var noPermission = new NUpdate();
+                noPermission.ShowDialog();
                 return;
             }
             if (invoice == null) return;
 
             if (invoice.InvoiceType == InvoiceType.Import)
             {
-                var dialog = new EditImportBillDialog(invoice.InvoiceId);
+                var dialog = new EditImportBillDialog( invoice.InvoiceId,
+                    App.Services.GetRequiredService<IImportBillService>() );
                 dialog.ShowDialog();
             }
             else
             {
-                var dialog = new EditOrderDialog(invoice.InvoiceId);
+                var dialog = new EditOrderDialog(invoice.InvoiceId,
+                    App.Services.GetRequiredService<IOrderService>());
                 dialog.ShowDialog();
             }
         }
         
         private void ExportInvoice()
         {
-            if (SessionModel.Role == UserRole.InventoryManager || SessionModel.Role == UserRole.CustomerManager)
-            {
-                MessageBox.Show("Bạn không có quyền này");
-                return;
-            }
             var dialog = new ExportExcelInvoice(_importBillService, _orderService);
             dialog.ShowDialog();
         }
-
 
 
         #endregion

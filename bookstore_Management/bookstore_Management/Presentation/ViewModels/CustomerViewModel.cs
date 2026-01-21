@@ -10,10 +10,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.Data.Repositories.Interfaces;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class CustomerViewModel : BaseViewModel
+    public class CustomerViewModel : BaseViewModel
     {
         #region khai báo
         private readonly ICustomerService _customerService;
@@ -104,13 +106,8 @@ namespace bookstore_Management.Presentation.ViewModels
 
         public CustomerViewModel(ICustomerService customerService)
         {
-            //_customerService = customerService??new CustomerService();
-            var context = new BookstoreDbContext();
 
-            _customerService = new CustomerService(
-            new CustomerRepository(context),
-            new OrderRepository(context)
-            );
+            _customerService = customerService;
 
             Customers = new ObservableCollection<Customer>();
 
@@ -121,7 +118,8 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 if (SessionModel.Role == UserRole.InventoryManager)
                 {
-                    MessageBox.Show("Bạn không có quyền này");
+                    var noPermission = new NAdd();
+                    noPermission.ShowDialog();
                     return;
                 }
                 var dialog = new Presentation.Views.Dialogs.Customers.AddCustomer();
@@ -150,7 +148,8 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 if (SessionModel.Role == UserRole.InventoryManager)
                 {
-                    MessageBox.Show("Bạn không có quyền này");
+                    var noPermission = new NUpdate();
+                    noPermission.ShowDialog();
                     return;
                 }
                 var dialog = new Presentation.Views.Dialogs.Customers.UpdateCustomer();
@@ -189,7 +188,8 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 if (SessionModel.Role == UserRole.InventoryManager)
                 {
-                    MessageBox.Show("Bạn không có quyền này");
+                    var noPermission = new NDelete();
+                    noPermission.ShowDialog();
                     return;
                 }
                 var cus = p as Customer;
@@ -255,16 +255,15 @@ namespace bookstore_Management.Presentation.ViewModels
             #region Print & Export
             PrintCommand = new RelayCommand<object>((p)=> 
             {
-                if (SessionModel.Role == UserRole.InventoryManager)
-                {
-                    MessageBox.Show("Bạn không có quyền này");
-                    return;
-                }
                 var data = Customers;
                 var dialog = new PrintCustomer(data);
                 dialog.ShowDialog();
             });
-            ExportCommand = new RelayCommand<object>((p) => { });
+            ExportCommand = new RelayCommand<object>((p) =>
+            {
+                var dialog = new ExportExcelCustomer(Customers.ToList());
+                dialog.ShowDialog();
+            });
             #endregion
         }
     }

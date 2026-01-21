@@ -15,22 +15,10 @@ namespace bookstore_Management.Presentation.Views.Users
     public partial class StaffListView : UserControl
     {
         private StaffViewModel _viewModel;
-        public StaffListView() 
+        public StaffListView(StaffViewModel staffViewModel) 
         {            
             InitializeComponent();
-
-            
-            
-            IStaffService staffService;
-
-            var context = new Data.Context.BookstoreDbContext();
-            staffService = new StaffService(
-                new Data.Repositories.Implementations.StaffRepository(context),
-                new Data.Repositories.Implementations.OrderRepository(context)
-            );
-
-            _viewModel = new StaffViewModel(staffService);
-            this.DataContext = _viewModel;
+            this.DataContext = staffViewModel;
         }
 
         private void dgStaff_LoadingRow(object sender, DataGridRowEventArgs e)

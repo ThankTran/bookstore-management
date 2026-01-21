@@ -4,7 +4,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Interfaces
 {
-    internal interface IStaffRepository : IRepository<Staff,string>
+    public interface IStaffRepository : IRepository<Staff,string>
     {
         IEnumerable<Staff> GetByRole(UserRole userRole);
         IEnumerable<Staff> SearchByName(string name);

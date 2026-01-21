@@ -8,7 +8,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Services.Interfaces
 {
-    internal interface IUserService
+    public interface IUserService
     {
         Result<string> CreateUser(CreateUserRequestDto dto);
         Result ChangePassword(string userId, ChangePasswordRequestDto dto);

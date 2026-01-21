@@ -5,7 +5,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Interfaces
 {
-    internal interface ICustomerRepository : IRepository<Customer,string>
+    public interface ICustomerRepository : IRepository<Customer,string>
     {
         IEnumerable<Customer> SearchByName(string name);
         IEnumerable<Customer> GetByMemberLevel(MemberTier tier);

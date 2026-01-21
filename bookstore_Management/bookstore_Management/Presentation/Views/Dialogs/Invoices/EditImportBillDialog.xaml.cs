@@ -25,20 +25,13 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Invoices
         private readonly string _importBillId;
         private readonly ObservableCollection<ImportBookItem> _bookItems = new ObservableCollection<ImportBookItem>();
 
-        public EditImportBillDialog(string importBillId)
+        public EditImportBillDialog(string importBillId,
+            IImportBillService importBillService)
         {
             InitializeComponent();
 
             _importBillId = importBillId;
-
-            // Initialize service
-            var context = new BookstoreDbContext();
-            var importRepo = new ImportBillRepository(context);
-            var detailRepo = new ImportBillDetailRepository(context);
-            var bookRepo = new BookRepository(context);
-            var publisherRepo = new PublisherRepository(context);
-
-            _importBillService = new ImportBillService(importRepo, detailRepo, bookRepo, publisherRepo);
+            _importBillService = importBillService;
 
             icBooks.ItemsSource = _bookItems;
             _bookItems.CollectionChanged += (_, __) => UpdateTotalAmount();

@@ -29,7 +29,7 @@ namespace bookstore_Management.Presentation.ViewModels
         public ICommand LoginCommand { get; set; }
         public ICommand CloseCommand { get; set; }
 
-        internal LoginViewModel(IUserService userService)
+        public LoginViewModel(IUserService userService)
         {
             _userService = userService;
 

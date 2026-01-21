@@ -433,6 +433,8 @@
                             <Style TargetType="ScrollBar" BasedOn="{StaticResource DataGridScrollBar}"/>
                         </DataGrid.Resources>
 
+                        
+                        
                         <DataGrid.Columns>
                             <!-- STT -->
                             <DataGridTextColumn Header="STT" 
@@ -674,4 +676,4 @@
             </Border>
         </Grid>
     </Border>
-</UserControl>
+</UserControl>   

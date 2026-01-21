@@ -23,6 +23,7 @@ using bookstore_Management.Presentation.Views.Dialogs.Share;
 using bookstore_Management.Presentation.ViewModels;
 using bookstore_Management.Presentation.Views.Dialogs.Invoices;
 using bookstore_Management.Presentation.Views.Orders;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace bookstore_Management.Presentation.Views.Payment
 {
@@ -31,21 +32,14 @@ namespace bookstore_Management.Presentation.Views.Payment
     /// </summary>
     public partial class ImportDetailView : UserControl, IDisposable
     {
-        private readonly IImportBillService importBillService;
-        private readonly BookstoreDbContext context;
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IImportBillService _importBillService;
         private string _currentImportBillId;
+        private ImportBillResponseDto _currentImportBill;
 
-        public ImportDetailView()
+        public ImportDetailView(IImportBillService importBillService)
         {
             InitializeComponent();
-            // Lưu reference để dispose sau
-            context = new BookstoreDbContext();
-            importBillService = new ImportBillService(
-                new ImportBillRepository(context),
-                new ImportBillDetailRepository(context),
-                new BookRepository(context),
-                new PublisherRepository(context));
+            _importBillService = importBillService;
         }
 
         public void LoadImportBillAsync(string importBillId)
@@ -53,7 +47,7 @@ namespace bookstore_Management.Presentation.Views.Payment
             if (string.IsNullOrEmpty(importBillId)) return;
 
             _currentImportBillId = importBillId;
-            var result = importBillService.GetImportBillById(importBillId);
+            var result = _importBillService.GetImportBillById(importBillId);
 
             if (!result.IsSuccess || result.Data == null)
             {
@@ -63,9 +57,10 @@ namespace bookstore_Management.Presentation.Views.Payment
             }
 
             var importBill = result.Data;
+            _currentImportBill = importBill;
             
             // Load details
-            var detailsResult = importBillService.GetImportDetails(importBillId);
+            var detailsResult = _importBillService.GetImportDetails(importBillId);
             if (detailsResult.IsSuccess && detailsResult.Data != null)
             {
                 var details = detailsResult.Data.Select((d, index) => new
@@ -101,20 +96,12 @@ namespace bookstore_Management.Presentation.Views.Payment
         
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                // Reload data thay vì tạo view mới để tránh memory leak
-                if (mainWindow.MainFrame.Content is InvoiceView existingView)
-                {
-                    var viewModel = existingView.DataContext as InvoiceViewModel;
-                    viewModel?.LoadAllInvoices();
-                }
-                else
-                {
-                    mainWindow.MainFrame.Content = new InvoiceView();
-                }
-            }
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow == null) return;
+
+            mainWindow.MainFrame.Content =
+                App.Services.GetRequiredService<InvoiceView>();
+
         }
 
         private void BtnPrint_Click(object sender, RoutedEventArgs e)
@@ -125,7 +112,11 @@ namespace bookstore_Management.Presentation.Views.Payment
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            var print = new PrintInvoice(_currentImportBillId, InvoiceType.Import, context);
+            var print = new PrintInvoice(
+                    _currentImportBill.Id,
+                    InvoiceType.Import,
+                    _currentImportBill
+                );
             print.ShowDialog();
         }
 
@@ -133,15 +124,21 @@ namespace bookstore_Management.Presentation.Views.Payment
         {
             if (string.IsNullOrEmpty(_currentImportBillId))
             {
-                MessageBox.Show("Không có thông tin phiếu nhập để xóa.", "Thông báo", 
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Không có thông tin phiếu nhập để xóa.",
+                    "Thông báo",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 return;
             }
 
-            var confirmed = Delete.ShowForInvoice(_currentImportBillId);
+            bool confirmed = Delete.ShowForInvoice(
+                _currentImportBill.Id,
+                Window.GetWindow(this)
+            );
+
             if (!confirmed) return;
 
-            var result = importBillService.DeleteImportBill(_currentImportBillId);
+            var result = _importBillService.DeleteImportBill(_currentImportBillId);
             if (!result.IsSuccess)
             {
                 MessageBox.Show($"Không thể xóa phiếu nhập.\nChi tiết lỗi: {result.ErrorMessage}",
@@ -151,23 +148,16 @@ namespace bookstore_Management.Presentation.Views.Payment
                 return;
             }
 
-            MessageBox.Show("Đã xóa phiếu nhập thành công.", "Thông báo", 
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Đã xóa phiếu nhập thành công.",
+                "Thông báo",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
 
-            // Navigate back to invoice list - reload data thay vì tạo mới
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                if (mainWindow.MainFrame.Content is InvoiceView existingView)
-                {
-                    var viewModel = existingView.DataContext as InvoiceViewModel;
-                    viewModel?.LoadAllInvoices();
-                }
-                else
-                {
-                    mainWindow.MainFrame.Content = new InvoiceView();
-                }
-            }
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow == null) return;
+
+            mainWindow.MainFrame.Content =
+                App.Services.GetRequiredService<InvoiceView>();
         }
 
         #region IDisposable
@@ -186,9 +176,9 @@ namespace bookstore_Management.Presentation.Views.Payment
             {
                 if (disposing)
                 {
-                    // Dispose managed resources
-                    _unitOfWork?.Dispose();
-                    context?.Dispose();
+                    // // Dispose managed resources
+                    // _unitOfWork?.Dispose();
+                    // context?.Dispose();
                 }
                 _disposed = true;
             }

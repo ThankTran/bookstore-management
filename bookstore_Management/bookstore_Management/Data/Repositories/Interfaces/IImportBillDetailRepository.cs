@@ -4,7 +4,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Interfaces
 {
-    internal interface IImportBillDetailRepository : IRepository<ImportBillDetail, (string BookId, string ImportId)>
+    public interface IImportBillDetailRepository : IRepository<ImportBillDetail, (string BookId, string ImportId)>
     {
         IEnumerable<ImportBillDetail> GetByImportId(string importId);
         decimal GetImportPriceByBookId(string bookId);

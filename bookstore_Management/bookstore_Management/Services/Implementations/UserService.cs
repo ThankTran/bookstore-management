@@ -15,13 +15,11 @@ namespace bookstore_Management.Services.Implementations
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IStaffRepository _staffRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        internal UserService(IUserRepository userRepository, IStaffRepository staffRepository)
+        public UserService(IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
-            _staffRepository = staffRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public Result<string> CreateUser(CreateUserRequestDto dto)
@@ -34,11 +32,11 @@ namespace bookstore_Management.Services.Implementations
                 if (string.IsNullOrWhiteSpace(dto.StaffId))
                     return Result<string>.Fail("Phải gắn với StaffId");
 
-                var staff = _staffRepository.GetById(dto.StaffId);
+                var staff = _unitOfWork.Staffs.GetById(dto.StaffId);
                 if (staff == null || staff.DeletedDate != null)
                     return Result<string>.Fail("Nhân viên không tồn tại");
 
-                if (_userRepository.UsernameExists(dto.Username))
+                if (_unitOfWork.Users.UsernameExists(dto.Username))
                     return Result<string>.Fail("Username đã tồn tại");
 
                 var user = new User
@@ -49,8 +47,8 @@ namespace bookstore_Management.Services.Implementations
                     CreatedDate = DateTime.Now
                 };
 
-                _userRepository.Add(user);
-                _userRepository.SaveChanges();
+                _unitOfWork.Users.Add(user);
+                _unitOfWork.Users.SaveChanges();
                 return Result<string>.Success(user.Username, "Tạo tài khoản thành công");
             }
             catch (Exception ex)
@@ -61,7 +59,7 @@ namespace bookstore_Management.Services.Implementations
 
         public Result<UserResponseDto> GetByUsername(string username)
         {
-            var user = _userRepository.GetByUsername(username)
+            var user = _unitOfWork.Users.GetByUsername(username)
                 .FirstOrDefault(u => u.DeletedDate == null);
 
             if (user == null)
@@ -74,14 +72,14 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var user = _userRepository.GetById(userId);
+                var user = _unitOfWork.Users.GetById(userId);
                 if (user == null || user.DeletedDate != null)
                     return Result.Fail("User không tồn tại");
 
                 user.PasswordHash = Encryptor.Hash(dto.NewPassword);
                 user.UpdatedDate = DateTime.Now;
-                _userRepository.Update(user);
-                _userRepository.SaveChanges();
+                _unitOfWork.Users.Update(user);
+                _unitOfWork.Users.SaveChanges();
                 return Result.Success("Đổi mật khẩu thành công");
             }
             catch (Exception ex)
@@ -94,13 +92,13 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var user = _userRepository.GetById(userId);
+                var user = _unitOfWork.Users.GetById(userId);
                 if (user == null || user.DeletedDate != null)
                     return Result.Fail("User không tồn tại");
 
                 user.DeletedDate = DateTime.Now;
-                _userRepository.Update(user);
-                _userRepository.SaveChanges();
+                _unitOfWork.Users.Update(user);
+                _unitOfWork.Users.SaveChanges();
                 return Result.Success("Đã khóa tài khoản");
             }
             catch (Exception ex)
@@ -113,7 +111,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var user = _userRepository.GetById(userId);
+                var user = _unitOfWork.Users.GetById(userId);
                 if (user == null || user.DeletedDate != null)
                     return Result<UserResponseDto>.Fail("User không tồn tại");
 
@@ -132,7 +130,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var user = _userRepository.GetByUsername(username)
+                var user = _unitOfWork.Users.GetByUsername(username)
                     .Where(u => u.DeletedDate == null)
                     .Select(MapToUserResponseDto).ToList();
                 return Result<IEnumerable<UserResponseDto>>.Success(user);
@@ -147,7 +145,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var users = _userRepository.GetAll().Where(u => u.DeletedDate == null)
+                var users = _unitOfWork.Users.GetAll().Where(u => u.DeletedDate == null)
                     .Select(MapToUserResponseDto);
                 return Result<IEnumerable<UserResponseDto>>.Success(users);
             }
@@ -161,7 +159,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var user = _userRepository.GetByUsername(username).FirstOrDefault();
+                var user = _unitOfWork.Users.GetByUsername(username).FirstOrDefault();
                 if (user == null || user.DeletedDate != null)
                     return Result<bool>.Fail("User không tồn tại");
                 if (!Encryptor.Verify(password, user.PasswordHash))
@@ -180,7 +178,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var role = _userRepository.GetById(userId).UserRole;
+                var role = _unitOfWork.Users.GetById(userId).UserRole;
                 return Result<UserRole>.Success(role);
             }
             catch (Exception ex)

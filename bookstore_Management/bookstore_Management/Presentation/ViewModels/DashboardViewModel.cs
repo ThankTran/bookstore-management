@@ -13,7 +13,7 @@ using System.Windows.Media;
 
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class DashboardViewModel : BaseViewModel
+    public class DashboardViewModel : BaseViewModel
     {
         #region === CHART PROPERTIES ===
 

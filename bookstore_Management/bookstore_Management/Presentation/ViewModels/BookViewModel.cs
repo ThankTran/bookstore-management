@@ -12,9 +12,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using bookstore_Management.Presentation.Views.Dialogs.Books;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
+
 namespace bookstore_Management.Presentation.ViewModels
 {
-    internal class BookViewModel : BaseViewModel
+    public class BookViewModel : BaseViewModel
     {
         #region các khai báo
         //lấy service
@@ -120,16 +123,12 @@ namespace bookstore_Management.Presentation.ViewModels
         #endregion
 
         #region constructor
-        public BookViewModel(IBookService bookService)
+        public BookViewModel(IPublisherRepository publisherRepository, IBookService bookService)
         {
             //_bookService = bookService ?? new BookService();
             var context = new BookstoreDbContext();
-            _publisherRepository = new PublisherRepository(context);
-            _bookService = new BookService(
-            new BookRepository(context),
-            new PublisherRepository(context),
-            new ImportBillDetailRepository(context)
-            );
+            _publisherRepository = publisherRepository;
+            _bookService = bookService;
             
 
             Books = new ObservableCollection<Book>();
@@ -141,10 +140,11 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 if (SessionModel.Role != UserRole.Administrator && SessionModel.Role != UserRole.InventoryManager)
                 {
-                    MessageBox.Show("Bạn không có quyền này");
-                    return;
+                    var noPermissionDialog = new NAdd();
+                    noPermissionDialog.ShowDialog();
+                    return; 
                 }
-                var dialog = new Views.Dialogs.Books.AddBookDialog();
+                var dialog = new AddBookDialog();
 
                 var publishers = _publisherRepository.GetAll();
                 var publisherNames = publishers.Select(x => x.Name).ToList();
@@ -178,7 +178,8 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 if (SessionModel.Role != UserRole.Administrator && SessionModel.Role != UserRole.InventoryManager)
                 {
-                    MessageBox.Show("Bạn không có quyền này");
+                    var noPerMission = new NDelete();
+                    noPerMission.ShowDialog();
                     return;
                 }
                 var book = p as Book;
@@ -212,10 +213,11 @@ namespace bookstore_Management.Presentation.ViewModels
             {
                 if (SessionModel.Role != UserRole.Administrator && SessionModel.Role != UserRole.InventoryManager)
                 {
-                    MessageBox.Show("Bạn không có quyền này");
+                    var noPermission = new NUpdate();
+                    noPermission.ShowDialog();
                     return;
                 }
-                var dialog = new Views.Dialogs.Books.UpdateBook();
+                var dialog = new UpdateBook();
                 var book = p as Book;
 
                 var publishers = _publisherRepository.GetAll();
@@ -307,7 +309,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 var data = Books;
 
                 // Truyền data vào khi tạo cửa sổ
-                var dialog = new Views.Dialogs.Books.PrintBook(data);
+                var dialog = new PrintBook(data);
 
                 dialog.ShowDialog();
             });
@@ -315,7 +317,16 @@ namespace bookstore_Management.Presentation.ViewModels
             #region ExportCommand
             ExportCommand = new RelayCommand<object>((p) =>
             {
-
+                try
+                {
+                    var data = Books.ToList();
+                    var export = new ExportExcelBook(data);
+                    export.ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "EXPORT ERROR");
+                }
             });
             #endregion
 

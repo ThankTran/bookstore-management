@@ -14,36 +14,19 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using bookstore_Management.Presentation.Views.Payment;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace bookstore_Management.Presentation.Views.Orders
 {
     public partial class InvoiceView : UserControl
     {
        
-        public InvoiceView()
+        public InvoiceView(InvoiceViewModel invoiceViewModel)
         {
             InitializeComponent();
-            
-            var context = new BookstoreDbContext();
-            IImportBillService importBillService;
-            IOrderService orderService;
-
-            importBillService = new ImportBillService(
-                new ImportBillRepository(context),
-                new ImportBillDetailRepository(context),
-                new BookRepository(context),
-                new PublisherRepository(context));
-
-            orderService = new OrderService(
-                new OrderRepository(context),
-                new OrderDetailRepository(context),
-                new BookRepository(context),
-                new CustomerRepository(context),
-                new StaffRepository(context)
-                );
-
-            DataContext = new InvoiceViewModel(importBillService, orderService);
+            DataContext = invoiceViewModel;
         }
         private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -55,25 +38,39 @@ namespace bookstore_Management.Presentation.Views.Orders
 
         private void OpenDetailView(InvoiceDisplayItem item)
         {
-            if (item.InvoiceType == InvoiceType.Import)
+            try
             {
-                var detailView = new ImportDetailView();
-                detailView.LoadImportBillAsync(item.InvoiceId);
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
+                
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+        
+                if (mainWindow == null)
                 {
+                    MessageBox.Show("Không tìm thấy MainWindow!", "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var scope = App.Services.CreateScope();
+
+                if (item.InvoiceType == InvoiceType.Import)
+                {
+                    var detailView = scope.ServiceProvider.GetRequiredService<ImportDetailView>();
+                    detailView.Unloaded += (_, __) => scope.Dispose();
+                    detailView.LoadImportBillAsync(item.InvoiceId);
+                    mainWindow.MainFrame.Content = detailView;
+                }
+                else
+                {
+                    var detailView = scope.ServiceProvider.GetRequiredService<OrderDetailView>();
+                    detailView.Unloaded += (_, __) => scope.Dispose();
+                    detailView.LoadOrderAsync(item.InvoiceId);
                     mainWindow.MainFrame.Content = detailView;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                var detailView = new OrderDetailView();
-                detailView.LoadOrderAsync(item.InvoiceId);
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.MainFrame.Content = detailView;
-                }
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

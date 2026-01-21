@@ -13,15 +13,11 @@ namespace bookstore_Management.Services.Implementations
 {
     public class StaffService : IStaffService
     {
-        private readonly IStaffRepository _staffRepository;
-        private readonly IOrderRepository _orderRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        internal StaffService(
-            IStaffRepository staffRepository,
-            IOrderRepository orderRepository)
+        public StaffService(IUnitOfWork unitOfWork)
         {
-            _staffRepository = staffRepository;
-            _orderRepository = orderRepository;
+            _unitOfWork = unitOfWork;
         }
 
         // ==================================================================
@@ -51,8 +47,8 @@ namespace bookstore_Management.Services.Implementations
                     DeletedDate = null
                 };
                 
-                _staffRepository.Add(staff);
-                _staffRepository.SaveChanges();
+                _unitOfWork.Staffs.Add(staff);
+                _unitOfWork.Staffs.SaveChanges();
                 
                 return Result<string>.Success(staffId, "Thêm nhân viên thành công");
             }
@@ -69,7 +65,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var staff = _staffRepository.GetById(staffId);
+                var staff = _unitOfWork.Staffs.GetById(staffId);
                 if (staff == null || staff.DeletedDate != null)
                     return Result.Fail("Nhân viên không tồn tại");
                 
@@ -85,8 +81,8 @@ namespace bookstore_Management.Services.Implementations
                     staff.UserRole = dto.UserRole.Value;
                 staff.UpdatedDate = DateTime.Now;
                 
-                _staffRepository.Update(staff);
-                _staffRepository.SaveChanges();
+                _unitOfWork.Staffs.Update(staff);
+                _unitOfWork.Staffs.SaveChanges();
                 
                 return Result.Success("Cập nhật nhân viên thành công");
             }
@@ -103,14 +99,14 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var staff = _staffRepository.GetById(staffId);
+                var staff = _unitOfWork.Staffs.GetById(staffId);
                 if (staff == null || staff.DeletedDate != null)
                     return Result.Fail("Nhân viên không tồn tại");
  
                 // Soft delete
                 staff.DeletedDate = DateTime.Now;
-                _staffRepository.Update(staff);
-                _staffRepository.SaveChanges();
+                _unitOfWork.Staffs.Update(staff);
+                _unitOfWork.Staffs.SaveChanges();
                 
                 return Result.Success("Xóa nhân viên thành công");
             }
@@ -127,7 +123,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var staff = _staffRepository.GetById(staffId);
+                var staff = _unitOfWork.Staffs.GetById(staffId);
                 if (staff == null || staff.DeletedDate != null)
                     return Result<StaffResponseDto>.Fail("Nhân viên không tồn tại");
                     
@@ -144,7 +140,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var staff = _staffRepository.GetAll()
+                var staff = _unitOfWork.Staffs.GetAll()
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
                     .Select(MapToStaffResponseDto);
@@ -161,7 +157,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var staff = _staffRepository.GetByRole(userRole)
+                var staff = _unitOfWork.Staffs.GetByRole(userRole)
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
                     .Select(MapToStaffResponseDto);
@@ -177,7 +173,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var staff = _staffRepository.SearchByName(name)
+                var staff = _unitOfWork.Staffs.SearchByName(name)
                     .Where(s => s.DeletedDate == null)
                     .OrderBy(s => s.Name)
                     .Select(MapToStaffResponseDto);
@@ -197,15 +193,15 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var staff = _staffRepository.GetById(staffId);
+                var staff = _unitOfWork.Staffs.GetById(staffId);
                 if (staff == null || staff.DeletedDate != null)
                     return Result.Fail("Nhân viên không tồn tại");
                 
                 var oldRole = staff.UserRole;
                 staff.UserRole = newUserRole;
                 staff.UpdatedDate = DateTime.Now;
-                _staffRepository.Update(staff);
-                _staffRepository.SaveChanges();
+                _unitOfWork.Staffs.Update(staff);
+                _unitOfWork.Staffs.SaveChanges();
                 
                 return Result.Success($"Đổi vai trò từ {oldRole} thành {newUserRole} thành công");
             }
@@ -223,7 +219,7 @@ namespace bookstore_Management.Services.Implementations
         /// </summary>
         private StaffResponseDto MapToStaffResponseDto(Staff staff)
         {
-            var totalOrders = _orderRepository.GetByStaff(staff.Id)
+            var totalOrders = _unitOfWork.Orders.GetByStaff(staff.Id)
                 .Count(o => o.DeletedDate == null);
 
             return new StaffResponseDto
@@ -240,7 +236,7 @@ namespace bookstore_Management.Services.Implementations
 
         private string GenerateStaffId()
         {
-            var lastStaff = _staffRepository.GetAll()
+            var lastStaff = _unitOfWork.Staffs.GetAll()
                 .OrderByDescending(s => s.Id)
                 .FirstOrDefault();
                 

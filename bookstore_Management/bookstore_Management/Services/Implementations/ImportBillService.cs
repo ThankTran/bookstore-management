@@ -15,21 +15,11 @@ namespace bookstore_Management.Services.Implementations
     /// </summary>
     public class ImportBillService : IImportBillService
     {
-        private readonly IImportBillRepository _importBillRepository;
-        private readonly IImportBillDetailRepository _importBillDetailRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly IPublisherRepository _publisherRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        internal ImportBillService(
-            IImportBillRepository importBillRepository,
-            IImportBillDetailRepository importBillDetailRepository,
-            IBookRepository bookRepository,
-            IPublisherRepository publisherRepository)
+        public ImportBillService(IUnitOfWork unitOfWork)
         {
-            _importBillRepository = importBillRepository;
-            _importBillDetailRepository = importBillDetailRepository;
-            _bookRepository = bookRepository;
-            _publisherRepository = publisherRepository;
+            _unitOfWork = unitOfWork;
         }
 
         // ==================================================================
@@ -42,7 +32,7 @@ namespace bookstore_Management.Services.Implementations
                 if (string.IsNullOrWhiteSpace(dto.PublisherId))
                     return Result<string>.Fail("Nhà cung cấp bắt buộc");
 
-                var supplier = _publisherRepository.GetById(dto.PublisherId);
+                var supplier = _unitOfWork.Publishers.GetById(dto.PublisherId);
                 if (supplier == null || supplier.DeletedDate != null)
                     return Result<string>.Fail("Nhà cung cấp không tồn tại");
 
@@ -54,7 +44,7 @@ namespace bookstore_Management.Services.Implementations
 
                 foreach (var item in dto.ImportBillDetails)
                 {
-                    var book = _bookRepository.GetById(item.BookId);
+                    var book = _unitOfWork.Books.GetById(item.BookId);
                     if (book == null || book.DeletedDate != null)
                         return Result<string>.Fail($"Sách {item.BookId} không tồn tại");
 
@@ -67,7 +57,7 @@ namespace bookstore_Management.Services.Implementations
                     totalAmount += lineTotal;
                     
                     book.UpdatedDate = DateTime.Now;
-                    _bookRepository.Update(book);
+                    _unitOfWork.Books.Update(book);
 
                     details.Add(new ImportBillDetail
                     {
@@ -95,19 +85,19 @@ namespace bookstore_Management.Services.Implementations
                     ImportBillDetails = details
                 };
 
-                _importBillRepository.Add(importBill);
-                _importBillRepository.SaveChanges();
-                _bookRepository.SaveChanges();
+                _unitOfWork.ImportBills.Add(importBill);
+                _unitOfWork.ImportBills.SaveChanges();
+                _unitOfWork.Books.SaveChanges();
 
                 // Cập nhật tồn kho theo kho nhập
                 foreach (var item in details)
                 {
-                    var stock = _bookRepository.GetById(item.BookId);
+                    var stock = _unitOfWork.Books.GetById(item.BookId);
                     stock.Stock+= item.Quantity;
                     stock.UpdatedDate = DateTime.Now;
 
                 }
-                _bookRepository.SaveChanges();
+                _unitOfWork.Books.SaveChanges();
 
                 return Result<string>.Success(importId, "Tạo hóa đơn nhập thành công");
             }
@@ -124,15 +114,15 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bill = _importBillRepository.GetById(importBillId);
+                var bill = _unitOfWork.ImportBills.GetById(importBillId);
                 if (bill == null || bill.DeletedDate != null)
                     return Result.Fail("Hóa đơn nhập không tồn tại");
 
                 bill.Notes = string.IsNullOrWhiteSpace(dto.Notes) ? bill.Notes : dto.Notes.Trim();
                 bill.UpdatedDate = DateTime.Now;
 
-                _importBillRepository.Update(bill);
-                _importBillRepository.SaveChanges();
+                _unitOfWork.ImportBills.Update(bill);
+                _unitOfWork.ImportBills.SaveChanges();
                 return Result.Success("Cập nhật hóa đơn nhập thành công");
             }
             catch (Exception ex)
@@ -145,13 +135,13 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bill = _importBillRepository.GetById(importBillId);
+                var bill = _unitOfWork.ImportBills.GetById(importBillId);
                 if (bill == null || bill.DeletedDate != null)
                     return Result.Fail("Hóa đơn nhập không tồn tại");
 
                 bill.DeletedDate = DateTime.Now;
-                _importBillRepository.Update(bill);
-                _importBillRepository.SaveChanges();
+                _unitOfWork.ImportBills.Update(bill);
+                _unitOfWork.ImportBills.SaveChanges();
 
                 return Result.Success("Đã xóa hóa đơn nhập");
             }
@@ -168,7 +158,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bill = _importBillRepository.GetById(importBillId);
+                var bill = _unitOfWork.ImportBills.GetById(importBillId);
                 if (bill == null || bill.DeletedDate != null)
                     return Result<ImportBillResponseDto>.Fail("Hóa đơn nhập không tồn tại");
 
@@ -185,7 +175,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bills = _importBillRepository.GetAll()
+                var bills = _unitOfWork.ImportBills.GetAll()
                     .Where(b => b.DeletedDate == null)
                     .OrderByDescending(b => b.CreatedDate)
                     .Select(MapToImportBillResponseDto);
@@ -201,7 +191,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bills = _importBillRepository.GetByPublisher(supplierId)
+                var bills = _unitOfWork.ImportBills.GetByPublisher(supplierId)
                     .Where(b => b.DeletedDate == null)
                     .OrderByDescending(b => b.CreatedDate)
                     .Select(MapToImportBillResponseDto);
@@ -217,7 +207,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bills = _importBillRepository.GetByDateRange(fromDate, toDate)
+                var bills = _unitOfWork.ImportBills.GetByDateRange(fromDate, toDate)
                     .Where(b => b.DeletedDate == null)
                     .OrderByDescending(b => b.CreatedDate)
                     .Select(MapToImportBillResponseDto);
@@ -236,13 +226,13 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var detail = _importBillDetailRepository.GetByImportId(importBillId)
+                var detail = _unitOfWork.ImportBillDetails.GetByImportId(importBillId)
                     .FirstOrDefault(d => d.BookId == bookId);
                 if (detail == null)
                     return Result.Fail("Không tìm thấy sách trong hóa đơn");
 
-                _importBillDetailRepository.SoftDelete(importBillId, bookId);
-                _importBillDetailRepository.SaveChanges();
+                _unitOfWork.ImportBillDetails.SoftDelete(importBillId, bookId);
+                _unitOfWork.ImportBillDetails.SaveChanges();
 
                 RecalculateBillTotal(importBillId);
                 return Result.Success("Đã xóa sách khỏi hóa đơn");
@@ -260,7 +250,7 @@ namespace bookstore_Management.Services.Implementations
                 if (newQuantity <= 0)
                     return Result.Fail("Số lượng phải > 0");
 
-                var detail = _importBillDetailRepository.GetByImportId(importBillId)
+                var detail = _unitOfWork.ImportBillDetails.GetByImportId(importBillId)
                     .FirstOrDefault(d => d.BookId == bookId);
                 if (detail == null)
                     return Result.Fail("Không tìm thấy sách trong hóa đơn");
@@ -269,18 +259,18 @@ namespace bookstore_Management.Services.Implementations
                 if (newPrice.HasValue && newPrice.Value > 0)
                     detail.ImportPrice = newPrice.Value;
 
-                _importBillDetailRepository.Update(detail);
-                _importBillDetailRepository.SaveChanges();
+                _unitOfWork.ImportBillDetails.Update(detail);
+                _unitOfWork.ImportBillDetails.SaveChanges();
 
                 // Nếu có đổi giá nhập, đồng bộ sang Book.ImportPrice
                 if (newPrice.HasValue && newPrice.Value > 0)
                 {
-                    var book = _bookRepository.GetById(bookId);
+                    var book = _unitOfWork.Books.GetById(bookId);
                     if (book != null && book.DeletedDate == null)
                     {
                         book.UpdatedDate = DateTime.Now;
-                        _bookRepository.Update(book);
-                        _bookRepository.SaveChanges();
+                        _unitOfWork.Books.Update(book);
+                        _unitOfWork.Books.SaveChanges();
                     }
                 }
 
@@ -297,13 +287,13 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var details = _importBillDetailRepository.GetByImportId(importBillId)
+                var details = _unitOfWork.ImportBillDetails.GetByImportId(importBillId)
                     .Where(d => d.DeletedDate == null)
                     .Select(d => new ImportBillDetailResponseDto
                     {
                         BookId = d.BookId,
-                        BookName = _bookRepository.GetById(d.BookId)?.Name ?? "Unknown",
-                        Author = _bookRepository.GetById(d.BookId)?.Author ?? "Unknown",
+                        BookName = _unitOfWork.Books.GetById(d.BookId)?.Name ?? "Unknown",
+                        Author = _unitOfWork.Books.GetById(d.BookId)?.Author ?? "Unknown",
                         Quantity = d.Quantity,
                         ImportPrice = d.ImportPrice,
                         Subtotal = d.Quantity * d.ImportPrice
@@ -323,7 +313,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bills = _importBillRepository.GetByPublisher(supplierId)
+                var bills = _unitOfWork.ImportBills.GetByPublisher(supplierId)
                     .Where(b => b.CreatedDate >= fromDate && b.CreatedDate <= toDate && b.DeletedDate == null);
                 var total = bills.Sum(b => b.TotalAmount);
                 return Result<decimal>.Success(total);
@@ -338,7 +328,7 @@ namespace bookstore_Management.Services.Implementations
         {
             try
             {
-                var bills = _importBillRepository.GetByDateRange(fromDate, toDate)
+                var bills = _unitOfWork.ImportBills.GetByDateRange(fromDate, toDate)
                     .Where(b => b.DeletedDate == null);
                 var total = bills.Sum(b => b.TotalAmount);
                 return Result<decimal>.Success(total);
@@ -354,15 +344,15 @@ namespace bookstore_Management.Services.Implementations
         // ==================================================================
         private void RecalculateBillTotal(string importBillId)
         {
-            var bill = _importBillRepository.GetById(importBillId);
+            var bill = _unitOfWork.ImportBills.GetById(importBillId);
             if (bill == null) return;
 
-            var details = _importBillDetailRepository.GetByImportId(importBillId);
+            var details = _unitOfWork.ImportBillDetails.GetByImportId(importBillId);
             bill.TotalAmount = details.Sum(d => d.ImportPrice * d.Quantity);
             bill.UpdatedDate = DateTime.Now;
 
-            _importBillRepository.Update(bill);
-            _importBillRepository.SaveChanges();
+            _unitOfWork.ImportBills.Update(bill);
+            _unitOfWork.ImportBills.SaveChanges();
         }
 
         /// <summary>
@@ -395,7 +385,7 @@ namespace bookstore_Management.Services.Implementations
 
         private string GenerateImportId()
         {
-            var last = _importBillRepository.GetAll()
+            var last = _unitOfWork.ImportBills.GetAll()
                 .OrderByDescending(b => b.Id)
                 .FirstOrDefault();
 

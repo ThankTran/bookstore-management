@@ -4,7 +4,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Interfaces
 {
-    internal interface IPublisherRepository : IRepository<Publisher,string>
+    public interface IPublisherRepository : IRepository<Publisher,string>
     {
         IEnumerable<Publisher> SearchByName(string name);
         string GetNameByPublisherId(string publisherId);

@@ -226,6 +226,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Share\NAdd.xaml" />
     <Page Include="Presentation\Views\Dialogs\Share\NDelete.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -234,6 +235,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\Views\Dialogs\Share\Print.xaml" />
     <Page Include="Presentation\Views\Dialogs\Share\Warning.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -459,7 +461,7 @@
     <Compile Include="Presentation\ViewModels\PaymentViewModel.cs" />
     <Compile Include="Presentation\ViewModels\PrintViewModel.cs" />
     <Compile Include="Presentation\ViewModels\StaffViewModel.cs" />
-    <Compile Include="Presentation\ViewModels\SupplierViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\PublisherViewModel.cs" />
     <Compile Include="Presentation\ViewModels\UserViewModel.cs" />
     <Compile Include="Presentation\Views\Books\BookListView.xaml.cs">
       <DependentUpon>BookListView.xaml</DependentUpon>
@@ -549,12 +551,16 @@
     <Compile Include="Presentation\Views\Dialogs\Share\Delete.xaml.cs">
       <DependentUpon>Delete.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\NAdd.xaml.cs">
+      <DependentUpon>NAdd.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\NDelete.xaml.cs">
       <DependentUpon>NDelete.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Views\Dialogs\Share\NUpdate.xaml.cs">
       <DependentUpon>NUpdate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\Views\Dialogs\Share\Print.xaml.cs" />
     <Compile Include="Presentation\Views\Dialogs\Share\Warning.xaml.cs">
       <DependentUpon>Warning.xaml</DependentUpon>
     </Compile>
@@ -723,6 +729,9 @@
       <Version>10.0.1</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>10.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk">
       <Version>17.10.0</Version>

@@ -24,18 +24,10 @@ namespace bookstore_Management.Presentation.Views.Users
     /// </summary>
     public partial class AccountListView : UserControl
     {
-        private UserViewModel _viewModel;
-        public AccountListView()
+        public AccountListView(UserViewModel userViewModel)
         {
             InitializeComponent();
-            var context = new BookstoreDbContext();
-            IUserService userService;
-            userService = new UserService(
-                new Data.Repositories.Implementations.UserRepository(context),
-                new Data.Repositories.Implementations.StaffRepository(context)
-            );
-            _viewModel = new UserViewModel(userService);
-            this.DataContext = _viewModel;
+            this.DataContext = userViewModel;
 
         }
 

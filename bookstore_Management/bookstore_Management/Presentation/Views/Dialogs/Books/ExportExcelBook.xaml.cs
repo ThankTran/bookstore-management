@@ -38,6 +38,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
         {
             _dataSource = books ?? new List<Book>();
             _totalRecords = _dataSource.Count;
+            Loaded += Window_Loaded;    
+        }
+        
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             txtTotalRecords.Text = _totalRecords.ToString();
         }
 

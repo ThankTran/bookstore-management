@@ -7,7 +7,7 @@ using bookstore_Management.Models;
 
 namespace bookstore_Management.Data.Repositories.Interfaces
 {
-    internal interface IUserRepository : IRepository<User, string>
+    public interface IUserRepository : IRepository<User, string>
     {
         IEnumerable<User> GetByUsername(string username);
         bool UsernameExists(string username);

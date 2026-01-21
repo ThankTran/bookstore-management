@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
+
 namespace bookstore_Management.Presentation.Views.Users
 {
     /// <summary>
@@ -16,20 +18,34 @@ namespace bookstore_Management.Presentation.Views.Users
     /// </summary>
     public partial class LoginView : Window
     {
-        public LoginView()
+        private bool _isPasswordVisible = false;
+        public LoginView(LoginViewModel loginViewModel)
         {
             InitializeComponent();
-            IUserService userService;
-            var context = new BookstoreDbContext();
-
-            userService = new UserService(
-                new UserRepository(context),
-                new StaffRepository(context)
-            );
-             
-            DataContext = new LoginViewModel(userService);
+            DataContext = loginViewModel;
 
         }
+        
+        
+
+        private void TogglePassword_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPasswordVisible)
+            {
+                pbPassword.Password = tbPasswordVisible.Text;
+                pbPassword.Visibility = Visibility.Visible;
+                tbPasswordVisible.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                tbPasswordVisible.Text = pbPassword.Password;
+                tbPasswordVisible.Visibility = Visibility.Visible;
+                pbPassword.Visibility = Visibility.Collapsed;
+            }
+
+            _isPasswordVisible = !_isPasswordVisible;
+        }
+
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {

@@ -1,25 +1,20 @@
-﻿
-using bookstore_Management.Core.Enums;
-using bookstore_Management.Data.Context;
-using bookstore_Management.Data.Repositories.Implementations;
+﻿using bookstore_Management.Core.Enums;
 using bookstore_Management.Models;
 using bookstore_Management.Presentation.ViewModels;
 using bookstore_Management.Presentation.Views;
 using bookstore_Management.Presentation.Views.Information;
-using bookstore_Management.Presentation.Views.Orders;
 using bookstore_Management.Presentation.Views.Payment;
 using bookstore_Management.Presentation.Views.Publishers;
 using bookstore_Management.Presentation.Views.Users;
-using bookstore_Management.Services.Implementations;
-using bookstore_Management.Services.Interfaces;
 using bookstore_Management.Views.Books;
 using bookstore_Management.Views.Customers;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using bookstore_Management.Presentation.Views.Statistics;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
+using bookstore_Management.Presentation.Views.Dialogs.Share;
+using bookstore_Management.Presentation.Views.Orders;
 
 namespace bookstore_Management
 {
@@ -28,66 +23,123 @@ namespace bookstore_Management
     /// </summary>
     public partial class MainWindow : Window
     {
-        // Khởi tạo cửa sổ chính
         public MainWindow()
         {
-            
             InitializeComponent();
             SetClickedButtonColor(btnHome);
-            MainFrame.Content = new HomeView();
-            //mainframe.content = new homeview();
-            //var context = new BookstoreDbContext();
-            // var reportService = new ReportService(
-            //     new OrderRepository(context),
-            //     new OrderDetailRepository(context),
-            //     new BookRepository(context),
-            //     new CustomerRepository(context),
-            //     new ImportBillRepository(context),
-            //     new ImportBillDetailRepository(context)
-            //     );
+            LoadHomePage();
         }
 
-        #region Navigation helpers
+        #region Navigation Helpers
 
-        // Hiển thị danh sách khách hàng
+        private void NavigateToView(UserControl view)
+        {
+            MainFrame.Content = view;
+        }
+
+        private void LoadHomePage()
+        {
+            var scope = App.Services.CreateScope();
+            var view = scope.ServiceProvider.GetRequiredService<HomeView>();
+            view.Unloaded += (_, __) => scope.Dispose();
+            NavigateToView(view);
+        }
+
         private void LoadCustomerListPage()
         {
-            var customerListPage = new CustomerListView();
-
-            customerListPage.CustomerSelected += (s, customer) =>
+            var scope = App.Services.CreateScope();
+            var view = scope.ServiceProvider.GetRequiredService<CustomerListView>();
+            
+            view.CustomerSelected += (s, customer) =>
             {
                 LoadCustomerDetailPage(customer);
             };
-
-            MainFrame.Content = customerListPage;
+            
+            view.Unloaded += (_, __) => scope.Dispose();
+            NavigateToView(view);
         }
 
-        // Hiển thị chi tiết một khách hàng được chọn
         private void LoadCustomerDetailPage(Customer customer)
         {
-            var customerDetailView = new CustomerDetailView();
-
-            customerDetailView.LoadCustomer(customer);
-
-            customerDetailView.ReturnToList += (s, e) =>
+            var scope = App.Services.CreateScope();
+            var view = scope.ServiceProvider.GetRequiredService<CustomerDetailView>();
+            
+            view.LoadCustomer(customer);
+            
+            view.ReturnToList += (s, e) =>
             {
                 LoadCustomerListPage();
             };
+            
+            view.Unloaded += (_, __) => scope.Dispose();
+            NavigateToView(view);
+        }
 
-            MainFrame.Content = customerDetailView;
+        private void LoadBookListPage()
+        {
+            var scope = App.Services.CreateScope();
+            var view = scope.ServiceProvider.GetRequiredService<BookListView>();
+            view.Unloaded += (_, __) => scope.Dispose();
+            NavigateToView(view);
+        }
+
+        private void LoadStatisticsPage()
+        {
+            var scope = App.Services.CreateScope();
+            var view = scope.ServiceProvider.GetRequiredService<DashboardView>();
+            view.Unloaded += (_, __) => scope.Dispose();
+            NavigateToView(view);
+        }
+
+        private void LoadPaymentPage()
+        {
+            var scope = App.Services.CreateScope();
+            var view = scope.ServiceProvider.GetRequiredService<PaymentView>();
+            view.Unloaded += (_, __) => scope.Dispose();
+            NavigateToView(view);
+        }
+
+        private void LoadPublisherPage()
+        {
+            var scope = App.Services.CreateScope();
+            var view = scope.ServiceProvider.GetRequiredService<PublisherListView>();
+            view.Unloaded += (_, __) => scope.Dispose();
+            NavigateToView(view);
+        }
+
+        private void LoadStaffPage()
+        {
+            var scope = App.Services.CreateScope();
+            var view = scope.ServiceProvider.GetRequiredService<StaffListView>();
+            view.Unloaded += (_, __) => scope.Dispose();
+            NavigateToView(view);
+        }
+
+        private void LoadInvoicePage()
+        {
+            var scope = App.Services.CreateScope();
+            var view = scope.ServiceProvider.GetRequiredService<InvoiceView>();
+            view.Unloaded += (_, __) => scope.Dispose();
+            NavigateToView(view);
+        }
+
+        private void LoadAccountPage()
+        {
+            var scope = App.Services.CreateScope();
+            var view = scope.ServiceProvider.GetRequiredService<AccountListView>();
+            view.Unloaded += (_, __) => scope.Dispose();
+            NavigateToView(view);
         }
 
         #endregion
 
-        #region Window control events
+        #region Window Control Events
 
-        // Xử lý nút đóng cửa sổ
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-        // Xử lý nút phóng to / khôi phục kích thước
         private void btnMaximize_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState == WindowState.Normal
@@ -95,7 +147,6 @@ namespace bookstore_Management
                 : WindowState.Normal;
         }
 
-        // Xử lý nút thu nhỏ cửa sổ
         private void btnMinimize_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
@@ -103,7 +154,8 @@ namespace bookstore_Management
 
         #endregion
 
-        #region menu click events
+        #region Button State Management
+
         public void ResetAllButtons()
         {
             btnHome.Tag = null;
@@ -122,19 +174,24 @@ namespace bookstore_Management
             ResetAllButtons();
             btn.Tag = "Selected";
         }
+
         #endregion
 
-        #region Sidebar menu events
-
-        // Xử lý click menu Trang chủ
+        #region Sidebar Menu Events
 
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
-            SetClickedButtonColor(btnHome);
-            MainFrame.Content = new HomeView();
+            try
+            {
+                SetClickedButtonColor(btnHome);
+                LoadHomePage();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        // Xử lý click menu Quản lý khách hàng
         private void btnCustomerManagement_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -148,14 +205,12 @@ namespace bookstore_Management
             }
         }
 
-
-        // Xử lý click menu Quản lý sách
         private void btnBooks_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 SetClickedButtonColor(btnBooks);
-                MainFrame.Content = new BookListView();
+                LoadBookListPage();
             }
             catch (Exception ex)
             {
@@ -163,49 +218,12 @@ namespace bookstore_Management
             }
         }
 
-        // Xử lý click menu Thống kê
         private void btnStatistics_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 SetClickedButtonColor(btnStatistics);
-                MainFrame.Content = new Presentation.Views.Statistics.DashboardView();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void btnLogout_Click(object sender, RoutedEventArgs e)
-        {
-            var loginView = new LoginView();
-            Application.Current.MainWindow = loginView;
-            loginView.Show();
-            this.Close();
-        }
-
-        // Xử lý khi di chuột vào nút thông tin    
-
-        private void btnI_Click(object sender, RoutedEventArgs e)
-        {
-            InforDialog infoView = new InforDialog
-            {
-                WindowStartupLocation = WindowStartupLocation.Manual,
-                Left = 15,
-                Top = 15
-            };
-            infoView.Show();
-        }
-
-        // Xử lý click menu Thanh toán
-        private void btnPayment_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                SetClickedButtonColor(btnPayment);
-                MainFrame.Content = new Presentation.Views.Payment.PaymentView();
+                LoadStatisticsPage();
             }
             catch (Exception ex)
             {
@@ -213,7 +231,19 @@ namespace bookstore_Management
             }
         }
 
-        // Xử lý click menu Quản lý nhà xuất bản
+        private void btnPayment_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SetClickedButtonColor(btnPayment);
+                LoadPaymentPage();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void btnPublisher_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -223,13 +253,13 @@ namespace bookstore_Management
                     MessageBox.Show("Role không hợp lệ. Vui lòng chọn trang khác.");
                     return;
                 }
-                if (SessionModel.Role==UserRole.SalesStaff || SessionModel.Role==UserRole.CustomerManager)
+                if (SessionModel.Role == UserRole.SalesStaff || SessionModel.Role == UserRole.CustomerManager)
                 {
-                    MessageBox.Show("Bạn không có quyền truy cập trang này");
-                    return;
+                    new Warning().ShowDialog();
+                    return ;
                 }
                 SetClickedButtonColor(btnPublisher);
-                MainFrame.Content = new PublisherListView();
+                LoadPublisherPage();
             }
             catch (Exception ex)
             {
@@ -237,7 +267,6 @@ namespace bookstore_Management
             }
         }
 
-        // Xử lý click menu Quản lý nhân viên
         private void btnStaffs_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -247,13 +276,15 @@ namespace bookstore_Management
                     MessageBox.Show("Role không hợp lệ. Vui lòng đăng nhập lại.");
                     return;
                 }
-                if (SessionModel.Role == UserRole.SalesStaff || SessionModel.Role==UserRole.InventoryManager || SessionModel.Role==UserRole.CustomerManager)
+                if (SessionModel.Role == UserRole.SalesStaff || 
+                    SessionModel.Role == UserRole.InventoryManager || 
+                    SessionModel.Role == UserRole.CustomerManager)
                 {
-                    MessageBox.Show("Bạn không có quyền truy cập trang này");
+                    new Warning().ShowDialog();
                     return;
                 }
-                SetClickedButtonColor(btnStaffs);                
-                MainFrame.Content = new StaffListView();
+                SetClickedButtonColor(btnStaffs);
+                LoadStaffPage();
             }
             catch (Exception ex)
             {
@@ -261,13 +292,12 @@ namespace bookstore_Management
             }
         }
 
-        // Xử lý click menu Hóa đơn 
         private void btnBills_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 SetClickedButtonColor(btnBills);
-                MainFrame.Content = new InvoiceView();
+                LoadInvoicePage();
             }
             catch (Exception ex)
             {
@@ -275,18 +305,53 @@ namespace bookstore_Management
             }
         }
 
-        // Xử lý click menu Tài khoản
         private void btnAccount_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (SessionModel.Role != UserRole.Administrator )
                 {
-                    MessageBox.Show("Bạn không có quyền truy cập trang này");
+                    new Warning().ShowDialog();
                     return;
                 }
                 SetClickedButtonColor(btnAccount);
-                MainFrame.Content = new AccountListView();
+                LoadAccountPage();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var scope = App.Services.CreateScope();
+                var loginView = scope.ServiceProvider.GetRequiredService<LoginView>();
+                loginView.Closed += (_, __) => scope.Dispose();
+                
+                Application.Current.MainWindow = loginView;
+                loginView.Show();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnI_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                InforDialog infoView = new InforDialog
+                {
+                    WindowStartupLocation = WindowStartupLocation.Manual,
+                    Left = 15,
+                    Top = 15
+                };
+                infoView.Show();
             }
             catch (Exception ex)
             {
@@ -295,7 +360,5 @@ namespace bookstore_Management
         }
 
         #endregion
-
-
     }
 }
