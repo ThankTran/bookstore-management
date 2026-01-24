@@ -22,12 +22,11 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Staffs
             // 1. Khai báo các cột in (GIỐNG BOOK)
             var columns = new List<PrintColumnDef>
             {
-                new PrintColumnDef { Header = "Mã NV", PropertyPath = "StaffCode" },
-                new PrintColumnDef { Header = "Tên Nhân Viên", PropertyPath = "FullName" },
-                new PrintColumnDef { Header = "Chức Vụ", PropertyPath = "Position" },
-                new PrintColumnDef { Header = "SĐT", PropertyPath = "PhoneNumber" },
-                new PrintColumnDef { Header = "Email", PropertyPath = "Email" },
-                new PrintColumnDef { Header = "Ngày Vào Làm", PropertyPath = "JoinDate" }
+                new PrintColumnDef { Header = "Mã NV", PropertyPath = "Id" },
+                new PrintColumnDef { Header = "Tên Nhân Viên", PropertyPath = "Name" },
+                new PrintColumnDef { Header = "Chức Vụ", PropertyPath = "UserRole" },
+                new PrintColumnDef { Header = "SĐT", PropertyPath = "Phone" },
+                new PrintColumnDef { Header = "CCCD", PropertyPath = "CitizenId" }
             };
 
             // 2. KHỞI TẠO VIEWMODEL

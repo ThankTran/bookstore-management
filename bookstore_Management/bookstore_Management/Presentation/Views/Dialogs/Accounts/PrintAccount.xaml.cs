@@ -29,12 +29,10 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Accounts
                 new PrintColumnDef
                     {
                         Header = "Chức vụ",
-                        PropertyPath = "Role",
-                        ValueFormatter = value => MapUserRole((UserRole)value)
+                        PropertyPath = "UserRole",                      
                     },
 
-                new PrintColumnDef { Header = "Username", PropertyPath = "UserName" },
-                new PrintColumnDef { Header = "Password", PropertyPath = "Password" }
+                new PrintColumnDef { Header = "Username", PropertyPath = "Username" },
             };
 
             // 2. KHỞI TẠO VIEWMODEL

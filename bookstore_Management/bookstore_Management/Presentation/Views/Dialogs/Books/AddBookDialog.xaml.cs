@@ -138,7 +138,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
         private void NumericOnly_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             // Only allow numbers
-            Regex regex = new Regex("[^0-9]+");
+            Regex regex = new Regex(@"[^0-9]");
             e.Handled = regex.IsMatch(e.Text);
         }
 
@@ -171,7 +171,7 @@ namespace bookstore_Management.Presentation.Views.Dialogs.Books
                 return false;
             }
 
-            if (!Regex.IsMatch(tbAuthor.Text, @"^[a-zA-Z\s]+$"))
+            if (!Regex.IsMatch(tbAuthor.Text, @"^[\p{L}\s]+$"))
             {
                 ShowValidationError("Tên tác giả chỉ được chứa chữ cái và khoảng trắng!");
                 tbAuthor.Focus();
