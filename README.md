@@ -26,8 +26,7 @@ The project is developed following **clean architecture principles** and applies
 
 ### 📚 Book Management
 - Add, update, delete books with soft delete support
-- Search books by name, author, category, price range
-- Categorize books into 8 different categories
+- Search books by name
 - Manage publishers and pricing
 - Track stock levels with low-stock alerts
 - Export book lists to CSV
@@ -35,10 +34,7 @@ The project is developed following **clean architecture principles** and applies
 ### 👥 Customer Management
 - Comprehensive customer profile management
 - View detailed purchase history
-- 4-tier membership system (Bronze, Silver, Gold, Diamond)
 - Loyalty points tracking and management
-- Real-time customer search
-- Customer spending analytics
 
 ### 🧾 Invoice & Sales Management
 - Create and manage sales orders
@@ -50,7 +46,6 @@ The project is developed following **clean architecture principles** and applies
 
 ### 📦 Inventory Management
 - Import bill creation and tracking
-- Stock level monitoring
 - Low stock and out-of-stock alerts
 - Publisher-based inventory tracking
 - Import history and analytics
@@ -59,20 +54,15 @@ The project is developed following **clean architecture principles** and applies
 - Revenue statistics with date range filtering
 - Daily, monthly, and yearly revenue tracking
 - Best-selling and lowest-selling books analysis
-- Customer spending reports
 - Inventory summary and valuation
 - Publisher import analytics
 - Customer purchase ratio (walk-in vs. members)
 - Export reports to CSV
 
 ### 🧩 Additional Features
-- Modern, clean Material Design inspired UI
 - Responsive dialog-based CRUD operations
 - Data validation and error handling
-- Audit logging for system changes
 - Print support for invoices and reports
-- Animated UI transitions
-- Dark-themed color scheme
 
 ---
 
@@ -113,21 +103,6 @@ The project is developed following **clean architecture principles** and applies
 | Microsoft.Extensions.DependencyInjection | 10.0.2  | Dependency injection container              |
 | Moq                                       | 4.20.72 | Mocking framework for unit tests            |
 
-## 🏗 Architecture & Patterns
-
-- **Architecture:**
-  - Clean Architecture  
-  - Layered Architecture  
-
-- **Design Patterns:**
-  - MVVM (Model–View–ViewModel)  
-  - Repository Pattern  
-  - Unit of Work Pattern  
-  - DTO Pattern  
-  - Factory Pattern  
-
-- **Dependency Management:**
-  - Manual Dependency Injection with UnitOfWork  
 
 ---
 
