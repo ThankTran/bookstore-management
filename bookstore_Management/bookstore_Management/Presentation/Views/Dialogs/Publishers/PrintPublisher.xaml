@@ -99,7 +99,7 @@
                             CornerRadius="10"
                             Padding="15"
                             Margin="0,0,0,20"
-                            Height="150">
+                            Height="350">
                         <Grid>
                             <TextBlock Text="📄 Preview sẽ hiển thị ở đây"
                                        FontSize="13"

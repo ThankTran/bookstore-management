@@ -309,7 +309,7 @@
                                                Foreground="White"
                                                Margin="0,0,8,0"
                                                VerticalAlignment="Center"/>
-                                    <TextBlock Text="Lưu sách"
+                                    <TextBlock Text="Lưu tài khoản"
                                                FontSize="13"
                                                FontWeight="Bold"
                                                Foreground="White"
