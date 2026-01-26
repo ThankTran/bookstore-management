@@ -126,7 +126,7 @@ namespace bookstore_Management.Presentation.ViewModels
             SelectTimeCommand = new RelayCommand<TimeRange>(p =>
             {
                 SelectedTimeRange = p;
-                
+
             });
 
 
@@ -248,7 +248,7 @@ namespace bookstore_Management.Presentation.ViewModels
             TodayRevenue = _reportService.GetTotalRevenue(From, To).Data;
             TodayOrders = _reportService.GetTotalOrderCount(From, To).Data;
             NewCustomers = _reportService.GetTotalCustomerCount(From, To).Data;
-            LowStockBooks = _reportService.GetInventorySummary().Data.OutOfStockCount;
+            LowStockBooks = _reportService.GetInventorySummary().Data.LowStockCount;
 
             OnPropertyChanged(nameof(TodayRevenue));
             OnPropertyChanged(nameof(TodayOrders));

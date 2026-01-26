@@ -182,6 +182,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 }
             });
             #endregion
+
             #region RemoveCommand
             RemoveUserCommand = new RelayCommand<object>((p) =>
             {
@@ -215,6 +216,7 @@ namespace bookstore_Management.Presentation.ViewModels
                 LoadUsersFromDatabase();
             });
             #endregion
+
             #region EditCommand
             //EditUserCommand = new RelayCommand<object>((p) =>
             //{
@@ -363,6 +365,7 @@ namespace bookstore_Management.Presentation.ViewModels
             });
             #endregion
             #endregion
+
             #region SearchCommand
             SearchUserCommand = new RelayCommand<object>(_ =>
             {
@@ -394,6 +397,7 @@ namespace bookstore_Management.Presentation.ViewModels
             });
 
             #endregion
+
             #region LoadDataCommand
             LoadData = new RelayCommand<object>((p) =>
             {
