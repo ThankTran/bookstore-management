@@ -390,13 +390,6 @@
                                                Foreground="{StaticResource PrimaryBrush}"
                                                VerticalAlignment="Center"/>
                                 </StackPanel>
-                                <Button BorderThickness="0"
-                                        Background="Transparent"
-                                        Click="Button_Click_3">
-                                    <TextBlock Text="Xem tất cả →"
-                                               Style="{StaticResource ViewAllLink}"
-                                               Foreground="{StaticResource PrimaryBrush}"/>
-                                </Button>
                             </Grid>
 
                             <!-- Order Items -->

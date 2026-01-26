@@ -201,8 +201,8 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Orientation="Horizontal">
-                            
-                            <ComboBox x:Name="cbCustomer"
+
+                                <ComboBox x:Name="cbCustomer"
                                       Grid.Column="0"
                                       ItemsSource="{Binding Customers}"
                                       SelectedItem="{Binding SelectedCustomer}"
@@ -213,13 +213,13 @@
                                       FontSize="12"
                                       Padding="12,0,0,0"
                                       VerticalContentAlignment="Center" Width="100">
-                                <ComboBox.ItemContainerStyle>
-                                    <Style TargetType="ComboBoxItem">
-                                        <Setter Property="Padding" Value="10,8"/>
-                                    </Style>
-                                </ComboBox.ItemContainerStyle>
-                            </ComboBox>
-                            <ComboBox x:Name="cbStaff"
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem">
+                                            <Setter Property="Padding" Value="10,8"/>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
+                                <ComboBox x:Name="cbStaff"
                                       Grid.Column="1"
                                       ItemsSource="{Binding Staffs}"
                                       SelectedItem="{Binding SelectedStaff}"
@@ -231,12 +231,12 @@
                                       Width="200"
                                       Padding="12,0,0,0"
                                       VerticalContentAlignment="Center" >
-                                <ComboBox.ItemContainerStyle>
-                                    <Style TargetType="ComboBoxItem">
-                                        <Setter Property="Padding" Value="10,8"/>
-                                    </Style>
-                                </ComboBox.ItemContainerStyle>
-                            </ComboBox>
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem">
+                                            <Setter Property="Padding" Value="10,8"/>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
                             </StackPanel>
 
                             <!--<Border Grid.Column="1"
@@ -313,7 +313,7 @@
                             <ItemsControl ItemsSource="{Binding CartItems}"
                                             Visibility="{Binding CartItems.Count,
                                              Converter={StaticResource CountToVisibilityConverter},
-                                             ConverterParameter=Inverse}">               
+                                             ConverterParameter=Inverse}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Border Background="{StaticResource SecondaryLightBrush}"
@@ -445,7 +445,7 @@
                                     <TextBlock Text="%"
                                                 FontSize="12"
                                                 FontWeight="SemiBold"
-                                        Foreground="{StaticResource PrimaryBrush}"/>        
+                                        Foreground="{StaticResource PrimaryBrush}"/>
                                 </StackPanel>
                             </Grid>
 
@@ -506,7 +506,7 @@
                                         Height="42"
                                         Cursor="Hand"
                                         Command="{Binding CheckoutCommand}"
-                                        IsEnabled="{Binding HasItemsInCart}">   
+                                        IsEnabled="{Binding HasItemsInCart}">
                                     <TextBlock Text="Thanh toán"
                                        FontSize="15"
                                        FontWeight="Bold"

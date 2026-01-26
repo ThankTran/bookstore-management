@@ -567,7 +567,7 @@
                             </DataGridTextColumn>
 
                             <!-- Người tạo -->
-                            <DataGridTextColumn Header="Người tạo" 
+                            <DataGridTextColumn Header="Người tạo / Mã NV" 
                                                 Binding="{Binding CreatedBy}" 
                                                 Width="140"
                                                 IsReadOnly="True"
