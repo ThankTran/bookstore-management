@@ -38,12 +38,15 @@ namespace bookstore_Management.Services.Implementations
 
                 if (_unitOfWork.Users.UsernameExists(dto.Username))
                     return Result<string>.Fail("Username đã tồn tại");
+                var role = _unitOfWork.Staffs.GetById(dto.StaffId);
 
                 var user = new User
                 {
+                    UserId = GenerateStaffId(),
                     Username = dto.Username.Trim(),
                     PasswordHash = Encryptor.Hash(dto.Password),
                     StaffId = dto.StaffId,
+                    UserRole = role.UserRole,
                     CreatedDate = DateTime.Now
                 };
 
@@ -195,8 +198,21 @@ namespace bookstore_Management.Services.Implementations
                 Password = user.PasswordHash,
                 StaffId = user.StaffId,
                 CreateDate = user.CreatedDate,
-                Role = user.UserRole,                
+                Role = user.UserRole,
             };
+        }
+
+        private string GenerateStaffId()
+        {
+            var lastStaff = _unitOfWork.Staffs.GetAll()
+                .OrderByDescending(s => s.Id)
+                .FirstOrDefault();
+
+            if (lastStaff == null || !lastStaff.Id.StartsWith("UID"))
+                return "UID0000001";
+
+            var lastNumber = int.Parse(lastStaff.Id.Substring(3)); // bỏ "UID"
+            return $"UID{(lastNumber + 1):D7}";
         }
 
     }
