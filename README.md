@@ -268,8 +268,7 @@ Full system access including:
 ---
 
 ## 🤝 Contributors
-(**Trần Thị Hồng Thanh**)[https://github.com/ThankTran]
+- **[Trần Thị Hồng Thanh](https://github.com/ThankTran)**  
+- **[Phạm Hoàng Gia Hiển](https://github.com/hienpham0344)**
+- **[Nguyễn Ái My](https://github.com/aimynguyen)**
 
-(**Phạm Hoàng Gia Hiển**)[https://github.com/hienpham0344]
-
-(**Nguyễn Ái My**)[https://github.com/aimynguyen]
